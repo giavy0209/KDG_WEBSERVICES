@@ -11,6 +11,7 @@ import StakingHistory from './Pages/StakingHistory'
 import Account from './Pages/Account'
 
 import Menu from './Components/Menu'
+import Footer from './Components/Footer'
 import socket from './socket'
 import { useEffect, useMemo } from "react";
 import Loading from './Components/Loading'
@@ -58,13 +59,14 @@ function App() {
         <Route exact={true} path={`/staking`}>
           <Staking />
         </Route>
-        <Route exact={true} path={`/staking-history`}>
+        <Route exact={true} path={`/staking/history`}>
           <StakingHistory />
         </Route>
         <Route exact={true} path={`/Account`}>
           <Account />
         </Route>
       </Switch>
+      <Footer />
     </>
   );
 }
