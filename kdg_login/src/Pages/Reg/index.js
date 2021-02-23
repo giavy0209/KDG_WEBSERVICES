@@ -1,3 +1,2 @@
-import Reg from './Reg'
-
-export default Reg
+import Reg from './Reg';
+export default Reg;

@@ -1,4 +1,4 @@
-import callapi from '../axios'
+import callapi from '../axios';
 import Axios from 'axios';
 
 export const CHANGE_LOADING = 'CHANGE_LOADING';
@@ -12,110 +12,106 @@ export const CHANGE_ROUTER = 'CHANGE_ROUTER';
 export function actChangeLoading(loading) {
     return {
         type: CHANGE_LOADING,
-        payload: { loading }
-    }
+        payload: { loading },
+    };
 }
+
 export function actChangeNews(news) {
     return {
         type: CHANGE_NEWS,
-        payload: { news }
-    }
+        payload: { news },
+    };
 }
 
 export function atcChangeLanguage(lang) {
     return {
         type: CHANGE_LANGUAGE,
-        payload: { lang }
-    }
+        payload: { lang },
+    };
 }
 
 export function actChangeCurrentUrl(url) {
     return {
         type: CHANGE_CURRENT_URL,
-        payload: { url }
-    }
+        payload: { url },
+    };
 }
 
 export function actChangeRouter(router) {
     return {
         type: CHANGE_ROUTER,
-        payload: { router }
-    }
+        payload: { router },
+    };
 }
 
 export function actChangeSettings(settings) {
     return {
         type: CHANGE_SETTINGS,
-        payload: { settings }
-    }
+        payload: { settings },
+    };
 }
 
 export function actChangeListCategories(categories) {
     return {
         type: CHANGE_LIST_CATEGORIES,
-        payload: { categories }
-    }
+        payload: { categories },
+    };
 }
-
 
 export function actChangeListContries(contries) {
     return {
         type: CHANGE_SETTINGS,
-        payload: { contries }
-    }
+        payload: { contries },
+    };
 }
 
-export function asyncGetNews(skip, take,search, language){
-    return async dispatch =>{
+export function asyncGetNews(skip, take, search, language) {
+    return async dispatch => {
         try {
-            var res = (await callapi.get(`/news?skip=${skip}&take=${take}&search=${search}&language=${language}`))
-            dispatch(actChangeNews(res.data))
-            return  res
+            var res = await callapi.get(`/news?skip=${skip}&take=${take}&search=${search}&language=${language}`);
+            dispatch(actChangeNews(res.data));
+            return res;
         } catch (error) {
-            return  error
+            return error;
         }
-    }
+    };
 }
 
-export function asyncGetNewsById(id,next, language){
-    return async dispatch =>{
+export function asyncGetNewsById(id, next, language) {
+    return async dispatch => {
         try {
-            var res = (await callapi.get(`/get_by_id_news/${id}?next=${next}&language=${language}`))
-            return  res
+            var res = await callapi.get(`/get_by_id_news/${id}?next=${next}&language=${language}`);
+            return res;
         } catch (error) {
-            return  error
+            return error;
         }
-    }
+    };
 }
-
-
 
 export function asyncGetListContries() {
     return async dispatch => {
-        dispatch(actChangeLoading(true))
-        const res = (await Axios.get('https://restcountries.eu/rest/v2/all?fields=name;alpha2Code;flag')).data
-        dispatch(actChangeListContries(res))
-        dispatch(actChangeLoading(false))
-    }
+        dispatch(actChangeLoading(true));
+        const res = (await Axios.get('https://restcountries.eu/rest/v2/all?fields=name;alpha2Code;flag')).data;
+        dispatch(actChangeListContries(res));
+        dispatch(actChangeLoading(false));
+    };
 }
 
-
 export function asyncGetSettings(hasLoading = true) {
-
     return async dispatch => {
         try {
-            hasLoading && dispatch(actChangeLoading(true))
-            var res = (await callapi.get(`/setting`))
-            const setting = {}
+            hasLoading && dispatch(actChangeLoading(true));
+            var res = await callapi.get(`/setting`);
+            const setting = {};
             res.forEach(el => {
-                setting[el.key] = el.data
-            })
-            dispatch(actChangeSettings(setting))
-            hasLoading && dispatch(actChangeLoading(false))
-            return res
+                setting[el.key] = el.data;
+            });
+            dispatch(actChangeSettings(setting));
+            hasLoading && dispatch(actChangeLoading(false));
+            return res;
         } catch (error) {
-            hasLoading && dispatch(actChangeLoading(false))
-            return error
+            hasLoading && dispatch(actChangeLoading(false));
+            return error;
         }
-    }
+    };
 }
