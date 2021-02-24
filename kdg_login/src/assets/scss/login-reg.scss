@@ -318,9 +318,14 @@ body {
                         color: #8a8c8e;
                         padding-left: 7px;
                         a {
+                            display: inline;
                             color: #005cfc;
                             text-decoration: underline;
                         }
+                    }
+                    .agreement {
+                        cursor: pointer;
+                        user-select: none;
                     }
                 }
             }

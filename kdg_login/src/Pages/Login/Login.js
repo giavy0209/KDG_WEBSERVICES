@@ -11,11 +11,11 @@ import { useLang } from '../../context/LanguageLayer';
 
 import ChooseLanguage from '../../components/ChooseLanguages';
 
-export default function Login({ ...rest }) {
+export default function Login() {
   const { email } = useParams();
   const history = useHistory();
   const dispatch = useDispatch();
-	const [{ language, LoginPageLanguage }] = useLang();
+  const [{ language, LoginPageLanguage }] = useLang();
 
   const [ValidForm, setValidForm] = useState({ email: false, password: true });
   const [Eye, setEye] = useState({ password: false });
@@ -40,10 +40,8 @@ export default function Login({ ...rest }) {
       if (res.status === 1) {
         history.push('/services');
       }
-      if (res.status === 101)
-        message.error(LoginPageLanguage[language].error101);
-      if (res.status === 102)
-        message.error(LoginPageLanguage[language].error102);
+      if (res.status === 101) message.error(LoginPageLanguage[language].error101);
+      if (res.status === 102) message.error(LoginPageLanguage[language].error102);
     },
     [dispatch, history, LoginPageLanguage, language]
   );
@@ -60,9 +58,7 @@ export default function Login({ ...rest }) {
             <h3>{LoginPageLanguage[language].title}</h3>
             <span>
               {LoginPageLanguage[language].desc1}
-              <span onClick={() => history.push('/reg')}>
-								{LoginPageLanguage[language].desc2}
-              </span>
+              <span onClick={() => history.push('/reg')}>{LoginPageLanguage[language].desc2}</span>
             </span>
             <div className='form-group'>
               <p>Email</p>
@@ -89,9 +85,7 @@ export default function Login({ ...rest }) {
               <p>{LoginPageLanguage[language].password}</p>
               <div className='input-password'>
                 <FontAwesomeIcon
-                  onClick={e => {
-                    setEye({ ...Eye, password: !Eye.password });
-                  }}
+                  onClick={e => setEye({ ...Eye, password: !Eye.password })}
                   size='1x'
                   color='#000'
                   className='eye'

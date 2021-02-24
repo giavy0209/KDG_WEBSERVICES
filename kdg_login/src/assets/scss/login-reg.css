@@ -396,7 +396,16 @@ body {
 }
 
 .form-block .right form .form-group.checkbox label a {
+  display: inline;
   color: #005cfc;
   text-decoration: underline;
+}
+
+.form-block .right form .form-group.checkbox .agreement {
+  cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
 }
 /*# sourceMappingURL=login-reg.css.map */
