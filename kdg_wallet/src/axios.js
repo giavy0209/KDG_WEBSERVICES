@@ -1,7 +1,7 @@
 import axios from 'axios'
 import {storage} from './helpers'
 
-const API_DOMAIN = "https://api.kingdomgame.co/api"
+const API_DOMAIN = "https://api.kingdomgame.org/api"
 
 function create() {
     const jwt = storage.getToken()
