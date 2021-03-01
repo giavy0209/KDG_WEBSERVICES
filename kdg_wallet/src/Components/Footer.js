@@ -14,11 +14,12 @@ export default function Footer() {
                 <p style={{ fontSize: '23px', fontWeight: 600, marginTop: '30px' }}>KINGDOM VENTURES.,LTD</p>
                 <p style={{ fontSize: '14px', marginTop: '27px' }}>
                   <svg
+                    width='0.75em'
                     aria-hidden='true'
                     focusable='false'
                     data-prefix='fas'
                     data-icon='map-marker'
-                    className='svg-inline--fa fa-map-marker fa-w-12 '
+                    className='svg-inline--fa fa-map-marker fa-w-12'
                     role='img'
                     xmlns='http://www.w3.org/2000/svg'
                     viewBox='0 0 384 512'
@@ -33,11 +34,12 @@ export default function Footer() {
                 </p>
                 <p style={{ fontSize: '14px', marginTop: '14px' }}>
                   <svg
+                    width='1em'
                     aria-hidden='true'
                     focusable='false'
                     data-prefix='fas'
                     data-icon='envelope'
-                    className='svg-inline--fa fa-envelope fa-w-16 '
+                    className='svg-inline--fa fa-envelope fa-w-16'
                     role='img'
                     xmlns='http://www.w3.org/2000/svg'
                     viewBox='0 0 512 512'

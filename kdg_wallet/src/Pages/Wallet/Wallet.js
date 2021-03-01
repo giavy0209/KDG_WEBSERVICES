@@ -7,16 +7,16 @@ import { useSelector } from 'react-redux';
 import { InputNumber } from 'antd';
 import '../../assets/css/wallet.scss';
 import nodata from '../../assets/img/nodata.png';
-import { checkLanguage } from '../../helpers';
 import callAPI from '../../axios';
 
+import { useLang } from '../../context/LanguageLayer';
 const ITEM_PER_PAGE = 10;
 
 export default function Wallet() {
   const [Page, setPage] = useState(1);
   const [History, setHistory] = useState([]);
   const [Total, setTotal] = useState(0);
-  const language = useSelector(state => state.lang);
+  const [{ language, WalletPageLanguage }] = useLang();
   const user = useSelector(state => state.user);
 
   const handleGetHistory = useCallback(async page => {
@@ -36,20 +36,20 @@ export default function Wallet() {
       <main>
         <div className='kdg-container'>
           <section className='section-prices'>
-            <h2 className='title'> {checkLanguage({ vi: 'Giá thị trường', en: 'MARKET' }, language)}</h2>
+            <h2 className='title'>{WalletPageLanguage[language].market}</h2>
             <div className='kdg-row kdg-column-4 list-price'>
               <ListChart />
             </div>
           </section>
           <section className='section-wallet'>
-            <h2 className='title'>{checkLanguage({ vi: 'thông tin số dư', en: 'BALANCE INFORMATION' }, language)}</h2>
+            <h2 className='title'>{WalletPageLanguage[language].balance_information}</h2>
             <div className='kdg-row kdg-column-2 list-coin'>
               <ListCoin />
             </div>
           </section>
 
           <section className='section-history'>
-            <h2 className='title'>{checkLanguage({ vi: 'LỊCH SỬ GIAO DỊCH', en: 'HISTORY' }, language)}</h2>
+            <h2 className='title'>{WalletPageLanguage[language].history}</h2>
             {/* <div className='list-tab'>
               <div
                 onClick={() => {
@@ -66,10 +66,10 @@ export default function Wallet() {
               <table>
                 <tbody>
                   <tr>
-                    <th>{checkLanguage({ vi: 'Thời gian', en: 'Date' }, language)}</th>
-                    <th>{checkLanguage({ vi: 'Số lượng', en: 'Volume' }, language)}</th>
+                    <th>{WalletPageLanguage[language].date}</th>
+                    <th>{WalletPageLanguage[language].volume}</th>
                     <th>Token</th>
-                    <th>{checkLanguage({ vi: 'Kiểu', en: 'Type' }, language)}</th>
+                    <th>{WalletPageLanguage[language].type}</th>
                   </tr>
 
                   {History && History.length > 0 ? (
@@ -90,53 +90,17 @@ export default function Wallet() {
                           <td>{coin.code}</td>
                           <td>
                             {type === 1
-                              ? checkLanguage(
-                                  {
-                                    vi: 'Nạp',
-                                    en: 'Deposit',
-                                  },
-                                  language
-                                )
+                              ? WalletPageLanguage[language].deposit
                               : type === 2
-                              ? checkLanguage(
-                                  {
-                                    vi: 'Rút',
-                                    en: 'Withdrawal',
-                                  },
-                                  language
-                                )
+                              ? WalletPageLanguage[language].withdrawal
                               : type === 3
-                              ? checkLanguage(
-                                  {
-                                    vi: 'Swap',
-                                    en: 'Swap',
-                                  },
-                                  language
-                                )
+                              ? WalletPageLanguage[language].swap
                               : type === 4
-                              ? checkLanguage(
-                                  {
-                                    vi: 'Stake',
-                                    en: 'Stake',
-                                  },
-                                  language
-                                )
+                              ? WalletPageLanguage[language].stake
                               : type === 5
-                              ? checkLanguage(
-                                  {
-                                    vi: 'Nhận tiền staking',
-                                    en: 'Receive stake',
-                                  },
-                                  language
-                                )
+                              ? WalletPageLanguage[language].receive_money_stake
                               : type === 6
-                              ? checkLanguage(
-                                  {
-                                    vi: 'Nhận lãi staking',
-                                    en: 'Receive profit from stake',
-                                  },
-                                  language
-                                )
+                              ? WalletPageLanguage[language].receive_profit_stake
                               : null}
                           </td>
                         </tr>
@@ -146,7 +110,7 @@ export default function Wallet() {
                     <tr>
                       <td colSpan='5'>
                         <img src={nodata} alt='' /> <br></br>
-                        {checkLanguage({ vi: 'Không có dữ liệu', en: 'No data' }, language)}
+                        {WalletPageLanguage[language].nodata}
                       </td>
                     </tr>
                   )}

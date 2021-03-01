@@ -149,11 +149,12 @@ export default function Menu() {
             </div>
             <div>
               <svg
+                width='1em'
                 aria-hidden='true'
                 focusable='false'
                 data-prefix='fas'
                 data-icon='envelope'
-                class='svg-inline--fa fa-envelope fa-w-16 '
+                class='svg-inline--fa fa-envelope fa-w-16'
                 role='img'
                 xmlns='http://www.w3.org/2000/svg'
                 viewBox='0 0 512 512'
@@ -169,6 +170,7 @@ export default function Menu() {
             <div class='lang'>
               <span>{listLanguage[language]}</span>
               <svg
+                width='0.625em'
                 aria-hidden='true'
                 focusable='false'
                 data-prefix='fas'

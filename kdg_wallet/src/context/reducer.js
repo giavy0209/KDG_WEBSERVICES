@@ -1,6 +1,6 @@
 const listLanguage = {
-    vi: 'Việt Nam',
-    en: 'English',
+    vi: 'VI',
+    en: 'EN',
 };
 
 const HomePageLanguage = {
@@ -60,10 +60,122 @@ const HomePageLanguage = {
     },
 };
 
+const WalletPageLanguage = {
+    vi: {
+        market: 'Giá thị trường',
+        balance_information: 'thông tin số dư',
+        history: 'LỊCH SỬ GIAO DỊCH',
+        date: 'Thời gian',
+        volume: 'Số lượng',
+        type: 'Kiểu',
+        deposit: 'Nạp',
+        withdrawal: 'Rút',
+        swap: 'Swap',
+        stake: 'Stake',
+        receive_money_stake: 'Nhận tiền staking',
+        receive_profit_stake: 'Nhận lãi staking',
+        nodata: 'Không có dữ liệu',
+    },
+    en: {
+        market: 'MARKET',
+        balance_information: 'BALANCE INFORMATION',
+        history: 'HISTORY',
+        date: 'Date',
+        volume: 'Volume',
+        type: 'Type',
+        deposit: 'Deposit',
+        withdrawal: 'Withdrawal',
+        swap: 'Swap',
+        stake: 'Stake',
+        receive_money_stake: 'Receive stake',
+        receive_profit_stake: 'Receive profit from stake',
+        nodata: 'No data',
+    },
+};
+
+const StakingHomePageLanguage = {
+    vi: {
+        desc1: 'mô hình kinh tế chia sẻ trong thế giới số',
+        desc2: 'Với hệ sinh thái Staking của Kingdom Game, người dùng không chỉ nắm giữ Token đơn thuần mà còn được tận hưởng thu nhập thụ động. King Wallet cung cấp dịch vụ Staking cho các loại Game Token và nhiều đồng tiền kỹ thuật số khác để hạn chế sự mất giá của Token từ lạm phát và tăng lợi tức cho người dùng.',
+        block1: 'Lợi tức cao lên tới <br/> 48%/năm',
+        block2: 'Hỗ trợ Game Token, ERC-20 <br/> và TRC-20 Token',
+        block3: 'Stake KDG nhận thêm <br/> Token Game khác miễn phí',
+        total_stake: 'Tổng Stake (~USDT)',
+        profit: 'Lợi Nhuận (~USDT)',
+        balance: 'Số dư',
+        operation: 'Hoạt động',
+        join: 'Tham gia',
+        history: 'Lịch sử',
+    },
+    en: {
+        desc1: 'SHARING ECONOMICS IN THE DIGITAL WORLD',
+        desc2: 'With the Kingdom Game ecosystem, users not only hold tokens but also enjoy additional passive income. King Wallet provides Staking program for Game Tokens and many other digital currencies to limit the devaluation of Token from inflation and increase profit for users.',
+        block1: 'High income up to <br/> 48%/year',
+        block2: 'Support Game Token, ERC-20 <br/> and TRC-20 Token',
+        block3: 'Stake KDG gets another <br/> Token Game khác for free',
+        total_stake: 'Total Stake (~USDT)',
+        profit: 'Profit (~USDT)',
+        balance: 'Balance',
+        operation: 'Operation',
+        join: 'Join',
+        history: 'History',
+    },
+};
+
+const StakingJoinPageLanguage = {
+    vi: {
+        success: 'Staking thành công',
+        back: 'Trở về',
+        profit_rate: 'Tỷ lệ lợi nhuận tham chiếu lên tới',
+        stack_package: 'Các Gói Stake',
+        choose_stack_package: 'Chọn một trong số các gói stake dưới đây:',
+        days: 'Ngày',
+        investment_amount: 'Số Lượng Đầu Tư',
+        enter_investment_amount: 'Nhập số lượng bạn muốn đầu tư',
+        available_balance: 'Số dư khả dụng:',
+        enter_stake_amount: 'Nhập số lượng đầu tư:',
+        minimum: 'Tối thiểu',
+        maximum: 'Tối đa',
+        daily_interest: 'Lợi nhuận ngày',
+        total_principal_and_interest: 'Tổng gốc & lãi',
+        confirm_information: 'Xác Nhận Thông Tin',
+        please_read: 'Vui lòng đọc kỹ quy tắc trước khi tham gia',
+        desc1: 'Lãi suất được trả lúc 8:00 hàng ngày (Tối thiểu 24 tiếng cho lần nhận lãi đầu tiên).',
+        desc2: 'Kết thúc thời hạn stake, người dùng có thể rút khoản gốc đã stake trong vòng 05 ngày bằng cách nhấn xác nhận kết thúc stake. Khoản stake không được rút sẽ được tự động gia hạn.',
+        agreement: 'Tôi đã đọc và hiểu rõ <a href="terms-of-service/1" target="_blank" className="link">cảnh báo rủi ro</a> trước khi tham gia',
+        join_now: 'Tham gia ngay',
+    },
+    en: {
+        success: 'Staking success',
+        back: 'Back',
+        profit_rate: 'Expected annual rate of return up to',
+        stack_package: 'Lookup Options',
+        choose_stack_package: 'Choose one of the Staking packages below:',
+        days: 'Days',
+        investment_amount: 'Investment Amount',
+        enter_investment_amount: 'Enter the amount you want to invest',
+        available_balance: 'Available balance:',
+        enter_stake_amount: 'Enter amount to stake:',
+        minimum: 'Minimum',
+        maximum: 'Maximum',
+        daily_interest: 'Daily interest',
+        total_principal_and_interest: 'Total principal & interest',
+        confirm_information: 'Confirm information',
+        please_read: 'Please read the rules carefully before joining',
+        desc1: 'Interest is paid at 8:00 every day (Min 24 hours for the first interest payment).',
+        desc2: 'At the end of the Stake period, users can withdraw the Stake original within 05 days by pressing the button to confirm. Stakes that are not withdrawn will be automatically renewed.',
+        agreement: 'I have read and understood the risk warning before participating <a href="terms-of-service/1" target="_blank" className="link">the risk warning</a> before participating',
+        join_now: 'Join now',
+    },
+};
+
 export const initialState = {
-    language: 'vi',
+    language: 'en',
     listLanguage,
     HomePageLanguage,
+    WalletPageLanguage,
+    StakingHomePageLanguage,
+    StakingJoinPageLanguage,
 };
 
 export const CHANGE_LANGUAGE = 'CHANGE_LANGUAGE';
