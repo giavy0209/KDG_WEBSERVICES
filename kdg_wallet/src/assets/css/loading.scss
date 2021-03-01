@@ -1,4 +1,4 @@
-.rotate-block{
+.rotate-block {
     display: block;
     position: relative;
     width: 250px;
@@ -6,7 +6,7 @@
     > * {
         position: absolute;
     }
-    .rotate-left{
+    .rotate-left {
         top: 0;
         left: 0;
         right: 0;
@@ -14,16 +14,22 @@
         transition: all 5s linear;
         animation: rotateleft 5s infinite linear;
     }
-    .middle{
+    .middle {
         top: 50%;
         left: 50%;
-        transform: translate(-50% , -50%);
+        transform: translate(-50%, -50%);
         width: 45%;
     }
 }
 
 @keyframes rotateleft {
-    0% {transform: rotate(0deg);}
-    50% {transform: rotate(-180deg);}
-    100% {transform: rotate(-360deg)}
+    0% {
+        transform: rotate(0deg);
+    }
+    50% {
+        transform: rotate(-180deg);
+    }
+    100% {
+        transform: rotate(-360deg);
+    }
 }

@@ -1,50 +1,54 @@
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { actChangeBalances, actChangeUser } from './store/authAction'
+import { actChangeBalances, actChangeUser } from './store/authAction';
 import { asyncInitAuth } from './store/authAction';
-import {  useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
-import Home from './Pages/Home'
-import Wallet from './Pages/Wallet'
-import Staking from './Pages/Staking'
-import StakingHistory from './Pages/StakingHistory'
-import Account from './Pages/Account'
+import Home from './Pages/Home';
+import Wallet from './Pages/Wallet';
+import Staking from './Pages/Staking';
+import StakingHistory from './Pages/StakingHistory';
+import Account from './Pages/Account';
 
-import Menu from './Components/Menu'
-import Footer from './Components/Footer'
-import socket from './socket'
-import { useEffect, useMemo } from "react";
-import Loading from './Components/Loading'
-import { storage } from "./helpers";
-import 'antd/dist/antd.css'
-function App() {
-  const dispatch = useDispatch()
-  const isLoading = useSelector(state => state.loading)
-  const location = useLocation()
+import Menu from './Components/Menu';
+import Footer from './Components/Footer';
+import socket from './socket';
+import { useEffect, useMemo } from 'react';
+import Loading from './Components/Loading';
+import { storage } from './helpers';
+import 'antd/dist/antd.css';
+
+export default function App() {
+  const dispatch = useDispatch();
+  const isLoading = useSelector(state => state.loading);
+  const location = useLocation();
   const refresh = new URLSearchParams(location.search).get('refresh');
+
   useMemo(() => {
     if (refresh) {
-      storage.setRefresh(refresh)
-      dispatch(asyncInitAuth())
+      storage.setRefresh(refresh);
+      dispatch(asyncInitAuth());
     } else {
-      const old_refresh = storage.getRefresh()
+      const old_refresh = storage.getRefresh();
       if (!old_refresh) {
-        window.open('http://localhost:3000', '_self')
+        // window.open('http://localhost:3000', '_self')
       } else {
-        dispatch(asyncInitAuth())
+        dispatch(asyncInitAuth());
       }
     }
-  }, [refresh,dispatch])
+  }, [refresh, dispatch]);
+
   useEffect(() => {
-    const listenBalance = (res) => {
-      dispatch(actChangeBalances(res.balances))
-    }
-    const listenUser = (res) => {
-      dispatch(actChangeUser(res.data))
-    }
-    socket.on('balances', listenBalance)
-    socket.on('user', listenUser)
+    const listenBalance = res => {
+      dispatch(actChangeBalances(res.balances));
+    };
+    const listenUser = res => {
+      dispatch(actChangeUser(res.data));
+    };
+    socket.on('balances', listenBalance);
+    socket.on('user', listenUser);
   }, [dispatch]);
+
   return (
     <>
       {isLoading && <Loading />}
@@ -70,5 +74,3 @@ function App() {
     </>
   );
 }
-
-export default App;
