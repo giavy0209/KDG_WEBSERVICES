@@ -7,15 +7,15 @@ import { validateForm } from '../../helpers';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { asyncLogin } from '../../store/authAction';
-import { useLang } from '../../context/LanguageLayer';
-
 import ChooseLanguage from '../../components/ChooseLanguages';
 
+import { useLang } from '../../context/LanguageLayer';
+
 export default function Login() {
+  const [{ language, LoginPageLanguage }] = useLang();
   const { email } = useParams();
   const history = useHistory();
   const dispatch = useDispatch();
-  const [{ language, LoginPageLanguage }] = useLang();
 
   const [ValidForm, setValidForm] = useState({ email: false, password: true });
   const [Eye, setEye] = useState({ password: false });
@@ -37,11 +37,9 @@ export default function Login() {
         submitData[pair[0]] = pair[1];
       }
       const res = await dispatch(asyncLogin(submitData));
-      if (res.status === 1) {
-        history.push('/services');
-      }
-      if (res.status === 101) message.error(LoginPageLanguage[language].error101);
-      if (res.status === 102) message.error(LoginPageLanguage[language].error102);
+      if (res.status === 1) history.push('/services');
+      if (res.status === 101) message.error(LoginPageLanguage[language].error_101);
+      if (res.status === 102) message.error(LoginPageLanguage[language].error_102);
     },
     [dispatch, history, LoginPageLanguage, language]
   );
@@ -57,8 +55,8 @@ export default function Login() {
             <ChooseLanguage />
             <h3>{LoginPageLanguage[language].title}</h3>
             <span>
-              {LoginPageLanguage[language].desc1}
-              <span onClick={() => history.push('/reg')}>{LoginPageLanguage[language].desc2}</span>
+              {LoginPageLanguage[language].desc_1}
+              <span onClick={() => history.push('/reg')}>{LoginPageLanguage[language].desc_2}</span>
             </span>
             <div className='form-group'>
               <p>Email</p>
@@ -92,24 +90,29 @@ export default function Login() {
                   icon={Eye.password ? faEye : faEyeSlash}
                 />
                 <input
+                  onChange={e => {
+                    if (!e.target.value.match(validateForm.password)) {
+                      e.target.parentElement.nextElementSibling.classList.add('show');
+                      e.target.parentElement.nextElementSibling.innerText = LoginPageLanguage[language].error_password;
+                      setValidForm({ ...ValidForm, password: false });
+                    } else {
+                      e.target.parentElement.nextElementSibling.classList.remove('show');
+                      e.target.parentElement.nextElementSibling.innerText = '';
+                      setValidForm({ ...ValidForm, password: true });
+                    }
+                  }}
                   type={Eye.password ? '' : 'password'}
                   placeholder={LoginPageLanguage[language].error_password}
                   name='password'
                 />
-                <span className='validate-error'></span>
               </div>
+              <span className='validate-error'></span>
             </div>
-            <div className='form-group half'>
-              <button
-                style={
-                  ValidForm.email && ValidForm.password
-                    ? { opacity: 1, pointerEvents: 'all' }
-                    : { opacity: 0.6, pointerEvents: 'none' }
-                }
-                className='button'
-              >
+            <div className='form-group half' style={{ position: 'relative' }}>
+              <button className={`button ${ValidForm.email && ValidForm.password ? 'valid' : 'not-valid'}`}>
                 {LoginPageLanguage[language].title}
               </button>
+              <span></span>
             </div>
             <div>
               <span

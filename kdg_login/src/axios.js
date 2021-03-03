@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { storage } from './helpers';
-
-const API_DOMAIN = 'https://kdg-api.kingdomgame.co/api';
+import { API_DOMAIN } from './constant';
 
 function create() {
     const jwt = storage.getToken();

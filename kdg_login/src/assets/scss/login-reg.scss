@@ -183,12 +183,17 @@ body {
                 background-color: #f1f3f4;
                 opacity: 0;
                 pointer-events: none;
-                li {
-                    cursor: pointer;
-                    padding: 10px 15px;
-                    width: 100px;
-                    &.active {
-                        background-color: #fff6d0;
+                ul {
+                    list-style: none;
+                    li {
+                        cursor: pointer;
+                        padding: 10px 15px;
+                        width: 100px;
+                        display: flex;
+                        align-items: center;
+                        &.active {
+                            background-color: #fff6d0;
+                        }
                     }
                 }
             }
@@ -233,12 +238,6 @@ body {
                 .input-password {
                     margin-top: 7px;
                     position: relative;
-                    .validate-error {
-                        position: absolute;
-                        top: calc(100% + 5px);
-                        left: 0;
-                        white-space: nowrap;
-                    }
                     input {
                         margin-top: 0;
                         padding-right: 15px;
@@ -297,6 +296,23 @@ body {
                         top: 50%;
                         right: 10px;
                         transform: translate(0, -50%);
+                    }
+                    &.valid {
+                        opacity: 1;
+                        pointer-events: all;
+                    }
+                    &.not-valid {
+                        opacity: 0.3;
+                        pointer-events: none;
+                    }
+                    &.not-valid + span {
+                        opacity: 0;
+                        cursor: not-allowed;
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        right: 0;
+                        bottom: 0;
                     }
                 }
                 &.checkbox {

@@ -1,5 +1,6 @@
 import React from 'react';
 import { storage } from '../../helpers';
+
 import wallet from '../../assets/img/wallet.png';
 import gamehub from '../../assets/img/gamehub.png';
 import live from '../../assets/img/live.png';
@@ -7,7 +8,10 @@ import walletbg from '../../assets/img/walletbg.jpg';
 import gamehubbg from '../../assets/img/gamehubbg.jpg';
 import livebg from '../../assets/img/livebg.jpg';
 
+import { useLang } from '../../context/LanguageLayer';
+
 export default function Services() {
+  const [{ language, ServicesPageLanguage }] = useLang();
   const refresh = storage.getRefresh();
 
   return (
@@ -25,21 +29,21 @@ export default function Services() {
               <img src={walletbg} alt='' />
               <div className='logo'>
                 <img src={wallet} alt='' />
-                <p className='des'>Safe, highly secure, fast and user-friendly crypto wallet platform</p>
+                <p className='des'>{ServicesPageLanguage[language].desc_wallet}</p>
               </div>
             </div>
             <div className='service img img-3-1'>
               <img src={livebg} alt='' />
               <div className='logo'>
                 <img src={live} alt='' />
-                <p className='des'>Comming Soon</p>
+                <p className='des'>{ServicesPageLanguage[language].desc_live}</p>
               </div>
             </div>
             <div className='service img img-3-1'>
               <img src={gamehubbg} alt='' />
               <div className='logo'>
                 <img src={gamehub} alt='' />
-                <p className='des'>Comming Soon</p>
+                <p className='des'>{ServicesPageLanguage[language].desc_gamehub}</p>
               </div>
             </div>
           </div>
