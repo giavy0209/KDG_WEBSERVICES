@@ -418,6 +418,10 @@ body {
 
 .form-block .right form .form-group.type-checkbox > input {
   cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
   width: 15px;
   height: 15px;
   border-radius: 1px;
@@ -426,14 +430,15 @@ body {
 }
 
 .form-block .right form .form-group.type-checkbox > label {
-  font-size: 14px;
-  color: #8a8c8e;
-  margin-bottom: 0;
   cursor: pointer;
   -webkit-user-select: none;
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
+  width: calc(100% - 15px);
+  font-size: 14px;
+  color: #8a8c8e;
+  margin-bottom: 0;
 }
 
 .form-block .right form .form-group.type-checkbox > label a {

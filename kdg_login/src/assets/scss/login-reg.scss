@@ -203,7 +203,7 @@ body {
         }
       }
 
-      .xxx {
+      .wrapper {
         display: flex;
         justify-content: space-between;
         flex-wrap: wrap;
@@ -322,6 +322,7 @@ body {
 
           > input {
             cursor: pointer;
+            user-select: none;
             width: 15px;
             height: 15px;
             border-radius: 1px;
@@ -330,11 +331,12 @@ body {
           }
 
           > label {
+            cursor: pointer;
+            user-select: none;
+            width: calc(100% - 15px);
             font-size: 14px;
             color: #8a8c8e;
             margin-bottom: 0;
-            cursor: pointer;
-            user-select: none;
 
             a {
               display: inline;

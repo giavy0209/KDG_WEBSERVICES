@@ -64,6 +64,7 @@ export default function Reg() {
         dispatch(actChangeLoading(false));
 
         if (res.status === 1) {
+          setCountDownSendMail(120);
           message.success(RegPageLanguage[language].sent_email);
         }
         if (res.status === 101) {
@@ -152,7 +153,7 @@ export default function Reg() {
               <p className='validate-error'></p>
             </div>
 
-            <div className='xxx'>
+            <div className='wrapper'>
               <div className='form-group type-password half'>
                 <label htmlFor='password'>{RegPageLanguage[language].password}</label>
                 <input
@@ -214,7 +215,7 @@ export default function Reg() {
               </div>
             </div>
 
-            <div className='xxx'>
+            <div className='wrapper'>
               <div className='form-group half'>
                 <label htmlFor='email_code'>{RegPageLanguage[language].register_code}</label>
                 <input

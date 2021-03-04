@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { message } from 'antd';
 import { validateForm } from '../../helpers';
@@ -28,9 +28,9 @@ export default function Forgot() {
     new_password: false,
   });
 
-  const loginURL = useSelector(state => {
-    return state.settings && state.settings.login_button.url;
-  });
+  // const loginURL = useSelector(state => {
+  //   return state.settings && state.settings.login_button.url;
+  // });
 
   useEffect(() => {
     document.title = ForgotPageLanguage[language].title;
@@ -60,6 +60,7 @@ export default function Forgot() {
       try {
         const res = await callapi.post('/create_code?type=2', { email });
         dispatch(actChangeLoading(false));
+
         if (res.status === 1) {
           setCountDownSendMail(120);
           message.success(ForgotPageLanguage[language].sent_email);
@@ -99,7 +100,8 @@ export default function Forgot() {
         if (res.status === 1) {
           message.success(ForgotPageLanguage[language].reset_password_success);
           setTimeout(() => {
-            history.push(`${loginURL}/${submitData.email}`);
+            // history.push(`${loginURL}/${submitData.email}`);
+            history.push(`/login/${submitData.email}`);
           }, 1000);
         }
         if (res.status === 101) {
@@ -110,7 +112,7 @@ export default function Forgot() {
         }
       } catch (error) {}
     },
-    [dispatch, history, loginURL, ForgotPageLanguage, language, ValidForm]
+    [dispatch, history, ForgotPageLanguage, language, ValidForm]
   );
 
   return (
@@ -151,7 +153,7 @@ export default function Forgot() {
               <span className='validate-error'></span>
             </div>
 
-            <div className='xxx'>
+            <div className='wrapper'>
               <div className='form-group half'>
                 <label htmlFor='forgot_password_code'>{ForgotPageLanguage[language].code_reset_password}</label>
                 <input
