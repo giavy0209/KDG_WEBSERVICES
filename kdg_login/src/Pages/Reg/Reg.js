@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 import { message } from 'antd';
@@ -7,19 +7,28 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { actChangeLoading } from '../../store/action';
 import callAPI from '../../axios';
+import ChooseLanguage from '../../components/ChooseLanguages';
 import { useLang } from '../../context/LanguageLayer';
 
-import ChooseLanguage from '../../components/ChooseLanguages';
-
-export default function App() {
+export default function Reg() {
+  const [{ language, RegPageLanguage }] = useLang();
   const { ref } = useParams();
-  const [CountDownSendMail, setCountDownSendMail] = useState(null);
-  const [CountDownSendMailTimeOut, setCountDownSendMailTimeOut] = useState(null);
-  const [ValidForm, setValidForm] = useState({ email: false, password: false, repassword: false, email_code: false });
-  const [Eye, setEye] = useState({ password: false, repassword: false });
   const history = useHistory();
   const dispatch = useDispatch();
-  const [{ language, RegPageLanguage }] = useLang();
+
+  const [check, setcheck] = useState(false);
+  const [CountDownSendMail, setCountDownSendMail] = useState(null);
+  const [CountDownSendMailTimeOut, setCountDownSendMailTimeOut] = useState(null);
+  const [ValidForm, setValidForm] = useState({
+    email: false,
+    password: false,
+    repassword: false,
+    email_code: false,
+  });
+  const [Eye, setEye] = useState({
+    password: false,
+    repassword: false,
+  });
 
   useEffect(() => {
     document.title = RegPageLanguage[language].title;
@@ -43,54 +52,68 @@ export default function App() {
     }
   }, [CountDownSendMail]);
 
-  const [check, setcheck] = useState(false);
+  const getCode = useCallback(
+    async email => {
+      // if (!/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+      //   return message.error(RegPageLanguage[language].not_valid_email);
+      // }
 
-  async function getCode(email) {
-    if (!/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
-      return message.error(RegPageLanguage[language].not_valid_email);
-    }
-    dispatch(actChangeLoading(true));
-    try {
-      const res = await callAPI.post('/create_code?type=1', { email });
-      if (res.status === 1) {
-        message.success(RegPageLanguage[language].sent_email);
-      }
-      if (res.status === 101) {
-        message.error(RegPageLanguage[language].existed_email);
-      }
-      if (res.status === 102) {
-        message.error(RegPageLanguage[language].wait_2_minutes);
-      }
-    } catch (error) {}
-    dispatch(actChangeLoading(false));
-  }
+      dispatch(actChangeLoading(true));
+      try {
+        const res = await callAPI.post('/create_code?type=1', { email });
+        dispatch(actChangeLoading(false));
 
-  const handleReg = async e => {
-    e.preventDefault();
-    const data = new FormData(e.target);
-    const submitData = {};
-    for (var pair of data.entries()) {
-      submitData[pair[0]] = pair[1];
-    }
-    if (!/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(submitData.email)) {
-      return message.error(RegPageLanguage[language].not_valid_email);
-    }
-    dispatch(actChangeLoading(true));
-    const res = await callAPI.post('/user', submitData);
-    dispatch(actChangeLoading(false));
-    if (res.status === 1) {
-      message.success(RegPageLanguage[language].register_success);
-      setTimeout(() => {
-        history.push(`${loginURL}/${submitData.email}`);
-      }, 1000);
-    }
-    if (res.status === 101) {
-      message.error(RegPageLanguage[language].existed_email);
-    }
-    if (res.status === 102) {
-      message.error(RegPageLanguage[language].wrong_code);
-    }
-  };
+        if (res.status === 1) {
+          message.success(RegPageLanguage[language].sent_email);
+        }
+        if (res.status === 101) {
+          message.error(RegPageLanguage[language].existed_email);
+        }
+        if (res.status === 102) {
+          message.error(RegPageLanguage[language].wait_2_minutes);
+        }
+      } catch (error) {}
+    },
+    [dispatch, RegPageLanguage, language]
+  );
+
+  const handleReg = useCallback(
+    async e => {
+      e.preventDefault();
+      if (!ValidForm.email || !ValidForm.password || !ValidForm.email_code || !ValidForm.repassword || !check) {
+        return;
+      }
+
+      const data = new FormData(e.target);
+      const submitData = {};
+      for (var pair of data.entries()) {
+        submitData[pair[0]] = pair[1];
+      }
+      // if (!/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(submitData.email)) {
+      //   return message.error(RegPageLanguage[language].not_valid_email);
+      // }
+
+      dispatch(actChangeLoading(true));
+      try {
+        const res = await callAPI.post('/user', submitData);
+        dispatch(actChangeLoading(false));
+
+        if (res.status === 1) {
+          message.success(RegPageLanguage[language].register_success);
+          setTimeout(() => {
+            history.push(`${loginURL}/${submitData.email}`);
+          }, 1000);
+        }
+        if (res.status === 101) {
+          message.error(RegPageLanguage[language].existed_email);
+        }
+        if (res.status === 102) {
+          message.error(RegPageLanguage[language].wrong_code);
+        }
+      } catch (error) {}
+    },
+    [dispatch, history, loginURL, RegPageLanguage, language, ValidForm, check]
+  );
 
   return (
     <>
@@ -102,13 +125,15 @@ export default function App() {
           <form onSubmit={handleReg}>
             <ChooseLanguage />
             <h3>{RegPageLanguage[language].title}</h3>
-            <span>
-              {RegPageLanguage[language].desc1}
-              <span onClick={() => history.push('/login')}>{RegPageLanguage[language].desc2}</span>
-            </span>
+            <p>
+              {RegPageLanguage[language].desc_1}
+              <span onClick={() => history.push('/login')}>{RegPageLanguage[language].desc_2}</span>
+            </p>
             <div className='form-group'>
-              <p>Email</p>
+              <label htmlFor='email'>Email</label>
               <input
+                id='email'
+                name='email'
                 onChange={e => {
                   e.target.value = e.target.value.toLowerCase();
                   setCountDownSendMail(null);
@@ -123,57 +148,53 @@ export default function App() {
                     setValidForm({ ...ValidForm, email: true });
                   }
                 }}
-                name='email'
-                id='email'
               />
-              <span className='validate-error'></span>
+              <p className='validate-error'></p>
             </div>
-            <div className='form-group half va-t'>
-              <p>{RegPageLanguage[language].password}</p>
-              <div className='input-password'>
-                <FontAwesomeIcon
-                  onClick={e => setEye({ ...Eye, password: !Eye.password })}
-                  size='1x'
-                  color='#000'
-                  className='eye'
-                  icon={Eye.password ? faEye : faEyeSlash}
-                />
+
+            <div className='xxx'>
+              <div className='form-group type-password half'>
+                <label htmlFor='password'>{RegPageLanguage[language].password}</label>
                 <input
-                  type={Eye.password ? '' : 'password'}
+                  id='password'
+                  name='password'
+                  type={Eye.password ? 'text' : 'password'}
                   onChange={e => {
+                    let repassword = document.querySelector('#repassword');
                     if (!e.target.value.match(validateForm.password)) {
                       e.target.nextElementSibling.classList.add('show');
                       e.target.nextElementSibling.innerText = RegPageLanguage[language].error_password;
                       setValidForm({ ...ValidForm, password: false });
-                    } else {
+                    } else if (e.target.value !== repassword.value) {
+                      repassword.nextElementSibling.classList.add('show');
+                      repassword.nextElementSibling.innerText = RegPageLanguage[language].password_not_match;
+                      setValidForm({ ...ValidForm, repassword: false });
                       e.target.nextElementSibling.classList.remove('show');
                       e.target.nextElementSibling.innerText = '';
                       setValidForm({ ...ValidForm, password: true });
+                    } else {
+                      repassword.nextElementSibling.classList.remove('show');
+                      repassword.nextElementSibling.innerText = '';
+                      setValidForm({ ...ValidForm, repassword: true });
                     }
                   }}
-                  name='password'
                 />
                 <span className='validate-error'></span>
-              </div>
-            </div>
-            <div className='form-group half va-t'>
-              <p>{RegPageLanguage[language].confirm_password}</p>
-              <div className='input-password'>
                 <FontAwesomeIcon
-                  onClick={() => setEye({ ...Eye, repassword: !Eye.repassword })}
-                  size='1x'
-                  color='#000'
                   className='eye'
-                  icon={Eye.repassword ? faEye : faEyeSlash}
+                  icon={Eye.password ? faEye : faEyeSlash}
+                  onClick={() => setEye({ ...Eye, password: !Eye.password })}
                 />
+              </div>
+              <div className='form-group type-password half'>
+                <label htmlFor='repassword'>{RegPageLanguage[language].confirm_password}</label>
                 <input
-                  type={Eye.repassword ? '' : 'password'}
+                  id='repassword'
+                  name='repassword'
+                  type={Eye.repassword ? 'text' : 'password'}
                   onChange={e => {
-                    if (!e.target.value.match(validateForm.password)) {
-                      e.target.nextElementSibling.classList.add('show');
-                      e.target.nextElementSibling.innerText = RegPageLanguage[language].error_password;
-                      setValidForm({ ...ValidForm, repassword: false });
-                    } else if (e.target.value !== document.querySelector('input[name="password"]').value) {
+                    let password = document.querySelector('#password');
+                    if (e.target.value !== password.value) {
                       e.target.nextElementSibling.classList.add('show');
                       e.target.nextElementSibling.innerText = RegPageLanguage[language].password_not_match;
                       setValidForm({ ...ValidForm, repassword: false });
@@ -183,77 +204,73 @@ export default function App() {
                       setValidForm({ ...ValidForm, repassword: true });
                     }
                   }}
-                  name='repassword'
+                />
+                <span className='validate-error'></span>
+                <FontAwesomeIcon
+                  className='eye'
+                  icon={Eye.repassword ? faEye : faEyeSlash}
+                  onClick={() => setEye({ ...Eye, repassword: !Eye.repassword })}
+                />
+              </div>
+            </div>
+
+            <div className='xxx'>
+              <div className='form-group half'>
+                <label htmlFor='email_code'>{RegPageLanguage[language].register_code}</label>
+                <input
+                  id='email_code'
+                  name='email_code'
+                  onChange={e => {
+                    if (!Number(e.target.value) || e.target.value.length !== 6) {
+                      e.target.nextElementSibling.classList.add('show');
+                      e.target.nextElementSibling.innerText = RegPageLanguage[language].not_valid_register_code;
+                      setValidForm({ ...ValidForm, email_code: false });
+                    } else {
+                      e.target.nextElementSibling.classList.remove('show');
+                      e.target.nextElementSibling.innerText = '';
+                      setValidForm({ ...ValidForm, email_code: true });
+                    }
+                  }}
                 />
                 <span className='validate-error'></span>
               </div>
+              <div className='form-group type-button half'>
+                <label>Button</label>
+                <span
+                  onClick={() => getCode(document.getElementById('email').value)}
+                  className={`button ${CountDownSendMail === null && ValidForm.email ? 'valid' : 'not-valid'}`}
+                >
+                  {RegPageLanguage[language].get_code}
+                  <span className='count-down'>{CountDownSendMail !== null && CountDownSendMail}</span>
+                </span>
+                <span></span>
+              </div>
             </div>
-            <div className='form-group half'>
-              <p>{RegPageLanguage[language].register_code}</p>
-              <input
-                onChange={e => {
-                  if (!Number(e.target.value) || e.target.value.length !== 6) {
-                    e.target.nextElementSibling.classList.add('show');
-                    e.target.nextElementSibling.innerText = RegPageLanguage[language].not_valid_register_code;
-                    setValidForm({ ...ValidForm, email_code: false });
-                  } else {
-                    e.target.nextElementSibling.classList.remove('show');
-                    e.target.nextElementSibling.innerText = '';
-                    setValidForm({ ...ValidForm, email_code: true });
-                  }
-                }}
-                name='email_code'
-              />
-              <span className='validate-error'></span>
-            </div>
-            <div className='form-group half va-b'>
-              <span
-                style={
-                  CountDownSendMail === null && ValidForm.email
-                    ? {
-                        opacity: 1,
-                        pointerEvents: 'all',
-                      }
-                    : {
-                        opacity: 0.5,
-                        pointerEvents: 'none',
-                      }
-                }
-                onClick={() => getCode(document.getElementById('email').value)}
-                className='button'
-              >
-                {RegPageLanguage[language].get_code}
-                <span className='count-down'>{CountDownSendMail !== null && CountDownSendMail}</span>
-              </span>
-            </div>
+
             <div className='form-group'>
-              <p>{RegPageLanguage[language].referral_code}</p>
-              <input defaultValue={ref ? ref : ''} name='parent_ref_code' />
+              <label htmlFor='parent_ref_code'>{RegPageLanguage[language].referral_code}</label>
+              <input id='parent_ref_code' name='parent_ref_code' defaultValue={ref ? ref : ''} />
             </div>
-            <div className='form-group checkbox'>
-              <input
-                onChange={e => setcheck(e.target.checked)}
-                id='confirm'
-                type='checkbox'
-                className='checkbox'
-                name='confirm'
-              />
-              <label htmlFor='confirm' className='checkbox-label'>
-                <span className='checkbox-box'></span>
-                <span className='agreement' dangerouslySetInnerHTML={{ __html: RegPageLanguage[language].agreement }}></span>
-              </label>
+
+            <div className='form-group type-checkbox'>
+              <input id='confirm' name='confirm' type='checkbox' onChange={e => setcheck(e.target.checked)} />
+              <label
+                htmlFor='confirm'
+                dangerouslySetInnerHTML={{ __html: RegPageLanguage[language].agreement }}
+              ></label>
             </div>
+
             <div className='form-group half'>
               <button
-                style={
+                className={`button ${
                   ValidForm.email && ValidForm.password && ValidForm.email_code && ValidForm.repassword && check
-                    ? { opacity: 1, pointerEvents: 'all' }
-                    : { opacity: 0.6, pointerEvents: 'none' }
-                }
-                className='button'
+                    ? 'valid'
+                    : 'not-valid'
+                }`}
               >
                 {RegPageLanguage[language].title}
               </button>
+              <span></span>
             </div>
           </form>
         </div>
