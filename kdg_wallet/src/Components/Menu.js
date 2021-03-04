@@ -11,10 +11,10 @@ import { CHANGE_LANGUAGE } from '../context/reducer';
 import { useLang } from '../context/LanguageLayer';
 
 export default function Menu() {
+  const [{ language, listLanguage }, disp] = useLang();
   const [currentUrl, setCurrentUrl] = useState('/');
   const location = useLocation();
   const history = useHistory();
-  const [{ language, listLanguage }, disp] = useLang();
 
   useEffect(() => {
     setCurrentUrl(location.pathname);
@@ -71,6 +71,7 @@ export default function Menu() {
     if (username) {
       return (
         <li
+          className='account-menu'
           onClick={e => {
             if (window.innerWidth > 992) {
               var dropdown = e.currentTarget.querySelector('.drop-down-account');
@@ -80,7 +81,6 @@ export default function Menu() {
               handleClick('/account', e);
             }
           }}
-          className='account-menu'
         >
           <FontAwesomeIcon size='2x' color='#fac800' icon={faUserCircle} />
           <div className='drop-down-account'>
@@ -96,12 +96,7 @@ export default function Menu() {
                 <p>{username?.email && username?.email}</p>
               </div>
             </div>
-            <div
-              onClick={e => {
-                handleClick('/account', e);
-              }}
-              className='bottom-dropdown'
-            >
+            <div onClick={e => handleClick('/account', e)} className='bottom-dropdown'>
               <FontAwesomeIcon icon={faUserEdit} color='#283349' />
               <span> {checkLanguage({ vi: 'Tài khoản', en: 'Account' }, language)} </span>
             </div>
@@ -211,14 +206,14 @@ export default function Menu() {
               </a>
               {routes.map(router => (
                 <li
-                  className={`${currentUrl === router.path && 'active'} hover`}
+                  key={router.path}
+                  className={`${currentUrl === router.path ? 'active' : ''} hover`}
                   onClick={e => {
                     handleClick(router.path, e, router.isURL, {
                       path: router.path,
                       pathEN: router.pathEN,
                     });
                   }}
-                  key={router.path}
                 >
                   <span>{router.name[language]}</span>
                 </li>

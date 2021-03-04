@@ -1,24 +1,24 @@
 const ROUTES = [
-    {
-        path : '/',
-        name : {
-            vi : 'Trang chủ',
-            en : 'Home'
-        }
+  {
+    path: '/',
+    name: {
+      vi: 'Trang chủ',
+      en: 'Home',
     },
-    {
-        path : '/wallet',
-        name : {
-            vi : 'Ví',
-            en : 'Wallet'
-        }
+  },
+  {
+    path: '/wallet',
+    name: {
+      vi: 'Ví',
+      en: 'Wallet',
     },
-    {
-        path : '/staking',
-        name : {
-            vi : 'Staking',
-            en : 'Staking'
-        }
+  },
+  {
+    path: '/staking',
+    name: {
+      vi: 'Staking',
+      en: 'Staking',
     },
-]
-export default ROUTES
+  },
+];
+export default ROUTES;
