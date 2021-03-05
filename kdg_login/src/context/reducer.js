@@ -6,22 +6,22 @@ const listLanguage = {
 const LoginPageLanguage = {
     vi: {
         title: 'Đăng nhập',
-        error101: 'Email đã tồn tại',
-        error102: 'Sai tên đăng nhập hoặc mật khẩu',
-        desc1: 'Bạn chưa có tài khoản?',
-        desc2: 'Đăng ký',
-        error_email: 'Email không đúng định dạng',
+        email_not_existed: 'Email không tồn tại',
+        wrong_email_or_password: 'Sai tên đăng nhập hoặc mật khẩu',
+        desc_1: 'Bạn chưa có tài khoản?',
+        desc_2: 'Đăng ký',
+        not_valid_email: 'Email không đúng định dạng',
         password: 'Mật khẩu',
         error_password: 'Mật khẩu phải ít nhất 8 ký tự cả chữ và số',
         forgot_password: 'Quên mật khẩu?',
     },
     en: {
         title: 'Login',
-        error101: 'Email existed',
-        error102: 'Incorrect email or password',
-        desc1: 'Have not account yet?',
-        desc2: 'Register now',
-        error_email: 'Email is not valid',
+        email_not_existed: 'Email is not existed',
+        wrong_email_or_password: 'Incorrect email or password',
+        desc_1: 'Have not account yet?',
+        desc_2: 'Register now',
+        not_valid_email: 'Email is not valid',
         password: 'Password',
         error_password: 'At least 8 digits, include word and number',
         forgot_password: 'Forgot password?',
@@ -37,8 +37,8 @@ const RegPageLanguage = {
         wait_2_minutes: 'Vui lòng chờ 2 phút',
         register_success: 'Đăng ký thành công',
         wrong_code: 'Mã xác minh email không đúng',
-        desc1: 'Đã có tài khoản?',
-        desc2: 'Đăng nhập',
+        desc_1: 'Đã có tài khoản?',
+        desc_2: 'Đăng nhập',
         password: 'Mật khẩu',
         error_password: 'Mật khẩu phải ít nhất 8 ký tự cả chữ và số',
         confirm_password: 'Xác nhận mật khẩu',
@@ -57,8 +57,8 @@ const RegPageLanguage = {
         wait_2_minutes: 'Please wait 2 minutes',
         register_success: 'Register success',
         wrong_code: 'Incorrect email verification code',
-        desc1: 'Already have an account?',
-        desc2: 'Log in',
+        desc_1: 'Already have an account?',
+        desc_2: 'Log in',
         password: 'Password',
         error_password: 'At least 8 digits, include word and number',
         confirm_password: 'Confirm password',
@@ -114,12 +114,26 @@ const ForgotPageLanguage = {
     },
 };
 
+const ServicesPageLanguage = {
+    vi: {
+        desc_wallet: 'Nền tảng ví tiền điện tử an toàn, bảo mật cao, nhanh chóng và thân thiện với người dùng',
+        desc_live: 'Sắp ra mắt',
+        desc_gamehub: 'Sắp ra mắt',
+    },
+    en: {
+        desc_wallet: 'Safe, highly secure, fast and user-friendly crypto wallet platform',
+        desc_live: 'Coming soon',
+        desc_gamehub: 'Coming soon',
+    },
+};
+
 export const initialState = {
-    language: 'vi',
+    language: 'en',
     listLanguage,
     LoginPageLanguage,
     RegPageLanguage,
     ForgotPageLanguage,
+    ServicesPageLanguage,
 };
 
 export const CHANGE_LANGUAGE = 'CHANGE_LANGUAGE';

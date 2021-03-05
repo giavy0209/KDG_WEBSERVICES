@@ -1,4 +1,4 @@
-const reducers = function (state = { lang: 'en' }, action) {
+const reducers = function (state, action) {
     return {
         ...state,
         ...action.payload,
