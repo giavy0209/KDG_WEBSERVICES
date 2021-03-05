@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
-import { Route, useHistory } from 'react-router-dom';
+import { Route, useHistory, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
 import Loading from './components/Loading';
@@ -11,14 +11,21 @@ import Services from './Pages/Services';
 import 'antd/dist/antd.css';
 import './assets/scss/login-reg.scss';
 import { asyncInitAuth } from './store/authAction';
+import { storage } from './helpers';
 
 export default function App() {
   const dispatch = useDispatch();
   const history = useHistory();
+  const location = useLocation()
   const isLoading = useSelector(state => state.loading);
 
   const initLogin = useCallback(async () => {
     const { status } = await dispatch(asyncInitAuth());
+    if(location.pathname.includes('logout')){
+      storage.clearToken()
+      storage.clearRefresh()
+      history.push('/');
+    }
     if (status === 1) history.push('/services');
   }, [dispatch, history]);
 
@@ -30,6 +37,9 @@ export default function App() {
     <>
       {isLoading && <Loading />}
       <Route exact={true} path={`/`}>
+        <Login />
+      </Route>
+      <Route exact={true} path={`/login/:email?`}>
         <Login />
       </Route>
       <Route exact={true} path={`/login/:email?`}>

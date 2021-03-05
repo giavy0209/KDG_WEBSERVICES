@@ -31,7 +31,7 @@ export default function App() {
     } else {
       const old_refresh = storage.getRefresh();
       if (!old_refresh) {
-        // window.open('http://localhost:3000', '_self')
+        window.open('https://login.kingdomgame.org', '_self')
       } else {
         dispatch(asyncInitAuth());
       }
