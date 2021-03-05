@@ -20,12 +20,13 @@ export default function App() {
   const isLoading = useSelector(state => state.loading);
 
   const initLogin = useCallback(async () => {
-    const { status } = await dispatch(asyncInitAuth());
     if(location.pathname.includes('logout')){
       storage.clearToken()
       storage.clearRefresh()
       history.push('/');
     }
+    const { status } = await dispatch(asyncInitAuth());
+
     if (status === 1) history.push('/services');
   }, [dispatch, history]);
 
