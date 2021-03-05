@@ -1,28 +1,23 @@
+import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useCallback } from 'react';
 import '../../assets/css/homewallet.scss';
-
-import { smoothscroll } from '../../helpers';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
-
+import appstore from '../../assets/img/appstore.png';
+import calender from '../../assets/img/calender.png';
+import chplay from '../../assets/img/chplay.png';
+import clock from '../../assets/img/clock.png';
+import hightlineFunction from '../../assets/img/highline-function.png';
+import hightlineFunction1 from '../../assets/img/highline-function1.png';
 import homewalleticon1 from '../../assets/img/homewalleticon1.png';
 import homewalleticon2 from '../../assets/img/homewalleticon2.png';
 import homewalleticon3 from '../../assets/img/homewalleticon3.png';
 import homewalleticon4 from '../../assets/img/homewalleticon4.png';
-
-import clock from '../../assets/img/clock.png';
+import hightlineFunctionImage from '../../assets/img/iconhomewallet.png';
+import phone from '../../assets/img/phone-wallet.png';
 import shield from '../../assets/img/shield.png';
 import wallet from '../../assets/img/wallet.png';
-import calender from '../../assets/img/calender.png';
-
-import appstore from '../../assets/img/appstore.png';
-import chplay from '../../assets/img/chplay.png';
-import phone from '../../assets/img/phone-wallet.png';
-import hightlineFunction from '../../assets/img/highline-function.png';
-import hightlineFunctionImage from '../../assets/img/iconhomewallet.png';
-import hightlineFunction1 from '../../assets/img/highline-function1.png';
-
 import { useLang } from '../../context/LanguageLayer';
+import { smoothscroll } from '../../helpers';
 
 export default function Home() {
   const [{ language, HomePageLanguage }] = useLang();

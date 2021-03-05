@@ -1,24 +1,23 @@
-import { Switch, Route } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-import { actChangeBalances, actChangeUser } from './store/authAction';
-import { asyncInitAuth } from './store/authAction';
-import { useLocation } from 'react-router-dom';
-
+import 'antd/dist/antd.css';
+import { useEffect, useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Route, Switch, useLocation } from 'react-router-dom';
+import Footer from './Components/Footer';
+import Loading from './Components/Loading';
+import Menu from './Components/Menu';
+import { useLang } from './context/LanguageLayer';
+import { CHANGE_LANGUAGE } from './context/reducer';
+import { storage } from './helpers';
+import Account from './Pages/Account';
 import Home from './Pages/Home';
-import Wallet from './Pages/Wallet';
 import Staking from './Pages/Staking';
 import StakingHistory from './Pages/StakingHistory';
-import Account from './Pages/Account';
-
-import Menu from './Components/Menu';
-import Footer from './Components/Footer';
+import Wallet from './Pages/Wallet';
 import socket from './socket';
-import { useEffect, useMemo } from 'react';
-import Loading from './Components/Loading';
-import { storage } from './helpers';
-import 'antd/dist/antd.css';
+import { actChangeBalances, actChangeUser, asyncInitAuth } from './store/authAction';
 
 export default function App() {
+  const [, disp] = useLang();
   const dispatch = useDispatch();
   const isLoading = useSelector(state => state.loading);
   const location = useLocation();
@@ -48,6 +47,11 @@ export default function App() {
     socket.on('balances', listenBalance);
     socket.on('user', listenUser);
   }, [dispatch]);
+
+  useEffect(() => {
+    let languageStorage = storage.getLanguage();
+    languageStorage && disp({ type: CHANGE_LANGUAGE, payload: languageStorage });
+  }, [disp]);
 
   return (
     <>

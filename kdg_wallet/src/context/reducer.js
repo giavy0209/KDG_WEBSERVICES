@@ -112,6 +112,8 @@ const WalletPageLanguage = {
     google_2FA: 'Mã Google 2FA',
     swap_with: 'Swap với',
     receive: 'Nhận được',
+    available: 'Khả dụng:',
+    locked: 'Đã khoá:',
   },
   en: {
     market: 'MARKET',
@@ -143,6 +145,8 @@ const WalletPageLanguage = {
     google_2FA: 'Google 2FA',
     swap_with: 'Swap with',
     receive: 'Receive',
+    available: 'Available:',
+    locked: 'Locked:',
   },
 };
 

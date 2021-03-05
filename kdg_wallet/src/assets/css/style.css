@@ -737,14 +737,13 @@ header .bottom-header .logo-menu .menu > li.account-menu .drop-down-account.acti
 header .bottom-header .logo-menu .menu > li.account-menu .drop-down-account::before {
   content: '';
   position: absolute;
-  top: 0;
-  right: 7px;
+  top: -5px;
+  right: 16px;
   border: transparent;
   border-top: 5px solid #fac800;
   border-right: 5px solid #fac800;
   border-left: 5px solid transparent;
   border-bottom: 5px solid transparent;
-  top: -5px;
   -webkit-transform: rotate(-45deg);
           transform: rotate(-45deg);
 }
@@ -1637,6 +1636,24 @@ footer .top-footer > * {
   vertical-align: top;
 }
 
+footer .top-footer .logo + div p:nth-child(1) {
+  font-size: 23px;
+  font-weight: 600;
+  margin-top: 30px;
+}
+
+footer .top-footer .logo + div p:nth-child(2),
+footer .top-footer .logo + div p:nth-child(3) {
+  font-size: 14px;
+  margin-top: 27px;
+}
+
+footer .top-footer .logo + div p:nth-child(2) svg,
+footer .top-footer .logo + div p:nth-child(3) svg {
+  width: 14px;
+  margin-right: 10px;
+}
+
 footer .top-footer .social {
   margin-top: 23px;
   display: -webkit-box;
@@ -1929,6 +1946,13 @@ footer .bottom-footer {
     display: -ms-flexbox;
     display: flex;
     margin-top: 28px;
+  }
+  header .bottom-header .logo-menu .menu .language li {
+    cursor: pointer;
+    -webkit-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
   }
   header .bottom-header .logo-menu .menu .language .active {
     color: #fac800;

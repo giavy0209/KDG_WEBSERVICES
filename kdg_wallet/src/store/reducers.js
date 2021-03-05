@@ -1,9 +1,5 @@
+const initialState = {};
 
-const reducers = function (state = {lang : 'en'}, action) {
-  return {
-    ...state,
-    ...action.payload,
-  }
-}
+const reducers = (state = initialState, action) => ({ ...state, ...action.payload });
 
-export default reducers
+export default reducers;

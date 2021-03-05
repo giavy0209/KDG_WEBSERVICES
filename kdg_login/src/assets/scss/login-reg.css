@@ -279,7 +279,7 @@ body {
   color: rgba(250, 200, 0, 0.8);
 }
 
-.form-block .right form .xxx {
+.form-block .right form .wrapper {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;

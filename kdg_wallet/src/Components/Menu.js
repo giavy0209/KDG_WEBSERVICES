@@ -1,14 +1,13 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { checkLanguage, storage } from '../helpers';
+import { faSignOutAlt, faUser, faUserCircle, faUserEdit } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faUserEdit, faSignOutAlt, faUserCircle } from '@fortawesome/free-solid-svg-icons';
-import routes from '../routes';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useHistory, useLocation } from 'react-router-dom';
 import logo from '../assets/img/logo.png';
-
-import { CHANGE_LANGUAGE } from '../context/reducer';
 import { useLang } from '../context/LanguageLayer';
+import { CHANGE_LANGUAGE } from '../context/reducer';
+import { checkLanguage, storage } from '../helpers';
+import routes from '../routes';
 
 export default function Menu() {
   const [{ language, listLanguage }, disp] = useLang();
@@ -66,9 +65,9 @@ export default function Menu() {
     }
   }, []);
 
-  const username = useSelector(state => state.user);
+  const user = useSelector(state => state.user);
   const lastMenu = useCallback(() => {
-    if (username) {
+    if (user) {
       return (
         <li
           className='account-menu'
@@ -88,12 +87,9 @@ export default function Menu() {
               <FontAwesomeIcon style={{ verticalAlign: 'middle' }} icon={faUser} size='2x' />
               <div>
                 <p>
-                  {(username?.kyc.first_name || username?.kyc.last_name) &&
-                    `${username?.kyc.first_name ? username?.kyc.first_name : ''} ${
-                      username?.kyc.last_name ? username?.kyc.last_name : ''
-                    }`}
+                  {(user.kyc?.first_name || user.kyc?.last_name) && `${user.kyc?.first_name} ${user.kyc?.last_name}`}
                 </p>
-                <p>{username?.email && username?.email}</p>
+                <p>{user.email}</p>
               </div>
             </div>
             <div onClick={e => handleClick('/account', e)} className='bottom-dropdown'>
@@ -114,7 +110,7 @@ export default function Menu() {
         </li>
       );
     }
-  }, [username, handleClick, language]);
+  }, [user, handleClick, language]);
 
   return (
     <>
@@ -123,23 +119,23 @@ export default function Menu() {
           <div class='top-header'>
             <div class='social'>
               <a target='_blank' rel='noopener noreferrer' href='https://www.facebook.com/KingdomGameGlobal'>
-                <img alt='' src='https://kdg-api.kingdomgame.co/upload/5f3be4aaf150a43976d10bc0.png' />
+                <img alt='' src='https://api.kingdomgame.org/upload/5f3be4aaf150a43976d10bc0.png' />
               </a>
               <a target='_blank' rel='noopener noreferrer' href='https://twitter.com/KingdomGame_KDG'>
-                <img alt='' src='https://kdg-api.kingdomgame.co//upload/5f3be4b1f150a43976d10bc2.png' />
+                <img alt='' src='https://api.kingdomgame.org//upload/5f3be4b1f150a43976d10bc2.png' />
               </a>
               <a target='_blank' rel='noopener noreferrer' href='https://t.me/kdg_en'>
-                <img alt='' src='https://kdg-api.kingdomgame.co//upload/5f3be4aef150a43976d10bc1.png' />
+                <img alt='' src='https://api.kingdomgame.org//upload/5f3be4aef150a43976d10bc1.png' />
               </a>
               <a
                 target='_blank'
                 rel='noopener noreferrer'
                 href='https://www.youtube.com/channel/UCl7ezf4kJUxjlPJwaoPtapA/featured'
               >
-                <img alt='' src='https://kdg-api.kingdomgame.co//upload/5f3be4b3f150a43976d10bc3.png' />
+                <img alt='' src='https://api.kingdomgame.org//upload/5f3be4b3f150a43976d10bc3.png' />
               </a>
               <a target='_blank' rel='noopener noreferrer' href='https://medium.com/kingdom-game-4-0'>
-                <img alt='' src='https://kdg-api.kingdomgame.co//upload/5f4204e51d5f8472ee487c3f.svg' />
+                <img alt='' src='https://api.kingdomgame.org//upload/5f4204e51d5f8472ee487c3f.svg' />
               </a>
             </div>
             <div>
@@ -181,8 +177,22 @@ export default function Menu() {
                 ></path>
               </svg>
               <ul class='dropdown'>
-                <li onClick={() => disp({ type: CHANGE_LANGUAGE, payload: 'en' })}>EN</li>
-                <li onClick={() => disp({ type: CHANGE_LANGUAGE, payload: 'vi' })}>VI</li>
+                <li
+                  onClick={() => {
+                    storage.setLanguage('en');
+                    disp({ type: CHANGE_LANGUAGE, payload: 'en' });
+                  }}
+                >
+                  EN
+                </li>
+                <li
+                  onClick={() => {
+                    storage.setLanguage('vi');
+                    disp({ type: CHANGE_LANGUAGE, payload: 'vi' });
+                  }}
+                >
+                  VI
+                </li>
               </ul>
             </div>
           </div>
@@ -222,13 +232,19 @@ export default function Menu() {
               <span className='language'>
                 <li
                   className={language === 'en' ? 'active' : ''}
-                  onClick={() => disp({ type: CHANGE_LANGUAGE, payload: 'en' })}
+                  onClick={() => {
+                    storage.setLanguage('en');
+                    disp({ type: CHANGE_LANGUAGE, payload: 'en' });
+                  }}
                 >
                   EN
                 </li>
                 <li
                   className={language === 'vi' ? 'active' : ''}
-                  onClick={() => disp({ type: CHANGE_LANGUAGE, payload: 'vi' })}
+                  onClick={() => {
+                    storage.setLanguage('vi');
+                    disp({ type: CHANGE_LANGUAGE, payload: 'vi' });
+                  }}
                 >
                   VI
                 </li>

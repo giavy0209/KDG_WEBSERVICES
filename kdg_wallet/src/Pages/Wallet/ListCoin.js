@@ -1,18 +1,17 @@
-import React, { useState, useCallback } from 'react';
-import swap from '../../assets/img/swap.png';
-import deposit from '../../assets/img/deposit.png';
-import withdraw from '../../assets/img/withdraw.png';
-import stake from '../../assets/img/stake.png';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCopy } from '@fortawesome/free-solid-svg-icons';
-import Form from '../../Components/Form';
-import QRCode from 'qrcode';
-import Modal from '../../Components/Modal';
-import { useSelector } from 'react-redux';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { message, Radio } from 'antd';
+import QRCode from 'qrcode';
+import React, { useCallback, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import deposit from '../../assets/img/deposit.png';
+import stake from '../../assets/img/stake.png';
+import swap from '../../assets/img/swap.png';
+import withdraw from '../../assets/img/withdraw.png';
 import callAPI from '../../axios';
-
+import Form from '../../Components/Form';
+import Modal from '../../Components/Modal';
 import { useLang } from '../../context/LanguageLayer';
 
 const listAct = [
@@ -39,15 +38,14 @@ const listAct = [
 ];
 
 export default function ListCoin() {
+  const [{ language, WalletPageLanguage }] = useLang();
   const history = useHistory();
   const [SwapTo, setSwapTo] = useState({});
   const [VisibleSwap, setVisibleSwap] = useState(false);
   const [VisibleDeposit, setVisibleDeposit] = useState(false);
   const [VisibleWithdraw, setVisibleWithdraw] = useState(false);
   const [Balance, setBalance] = useState({});
-
   const balances = useSelector(state => state.balances);
-  const [{ language, WalletPageLanguage }] = useLang();
 
   const handleCopy = useCallback(
     e => {
@@ -209,43 +207,40 @@ export default function ListCoin() {
         </Form>
       </Modal>
 
-      {balances &&
-        balances.map(balance => {
-          return (
-            <div key={balance._id} className='item'>
-              <div className='coin'>
-                <div className='top-info'>
-                  <div className='coin-image-name'>
-                    <img src={`https://kdg-api.kingdomgame.co${balance.coin.icon.path}`} alt='coin' />
-                    <span className='name'> {balance.coin.code} </span>
-                  </div>
-                  <div className='balance'>
-                    <p>
-                      <span>Available: </span>
-                      <span> {balance.balance} </span>
-                    </p>
-                    <p>
-                      <span>Locked: </span>
-                      <span>{balance.locked}</span>
-                    </p>
-                  </div>
-                </div>
-                <div className='button-group'>
-                  <div className='kdg-row kdg-column-4 list-button text-c va-m'>
-                    {balance.coin.actions.map(o => (
-                      <div key={o} className='item'>
-                        <div onClick={() => handleAct(o, balance)} className='button'>
-                          <img alt='' src={listAct[o - 1].icon} />
-                          <p>{listAct[o - 1][language]}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+      {balances?.map(balance => (
+        <div key={balance._id} className='item'>
+          <div className='coin'>
+            <div className='top-info'>
+              <div className='coin-image-name'>
+                <img src={`https://api.kingdomgame.org${balance.coin.icon.path}`} alt='coin' />
+                <span className='name'> {balance.coin.code} </span>
+              </div>
+              <div className='balance'>
+                <p>
+                  <span>{WalletPageLanguage[language].available}</span>
+                  <span> {balance.balance} </span>
+                </p>
+                <p>
+                  <span>{WalletPageLanguage[language].locked}</span>
+                  <span>{balance.locked}</span>
+                </p>
               </div>
             </div>
-          );
-        })}
+            <div className='button-group'>
+              <div className='kdg-row kdg-column-4 list-button text-c va-m'>
+                {balance.coin.actions.map(o => (
+                  <div key={o} className='item'>
+                    <div onClick={() => handleAct(o, balance)} className='button'>
+                      <img alt='' src={listAct[o - 1].icon} />
+                      <p>{listAct[o - 1][language]}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
     </>
   );
 }
