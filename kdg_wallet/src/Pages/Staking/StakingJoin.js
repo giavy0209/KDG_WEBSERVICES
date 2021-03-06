@@ -1,20 +1,18 @@
 import { faArrowLeft, faCheck, faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { useCallback, useState, useMemo } from 'react';
+import { message } from 'antd';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 import '../../assets/css/staking.scss';
-import { checkLanguage } from '../../helpers';
-import { message } from 'antd';
 import callAPI from '../../axios';
 import { STORAGE_DOMAIN } from '../../constant';
-
 import { useLang } from '../../context/LanguageLayer';
 
 const style = `
-body #root{
+  body #root{
     background-color: #f1f3f4;
-}
+  }
 `;
 
 export default function StakingJoin() {

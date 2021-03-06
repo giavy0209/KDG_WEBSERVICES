@@ -1,14 +1,13 @@
-import React, { useState, useMemo, useCallback } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleLeft, faAngleRight, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { InputNumber, message } from 'antd';
-import { useHistory, useLocation } from 'react-router-dom';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useHistory, useLocation } from 'react-router-dom';
 import callAPI from '../../axios';
-import { actChangeLoading } from '../../store/action';
-import renderDate from '../../helpers/renderDate';
-
 import { useLang } from '../../context/LanguageLayer';
+import renderDate from '../../helpers/renderDate';
+import { actChangeLoading } from '../../store/action';
 
 const ITEM_PER_PAGE = 10;
 

@@ -280,9 +280,10 @@ const AccountPageLanguage = {
     introduce_new_member: 'Giới thiệu thành viên mới',
     get_reward_points: 'Tích điểm thưởng',
     account_verification: 'Xác thực tài khoản',
+    kyc_notyet: 'chưa KYC',
     kyc_success: 'KYC Thành công',
     kyc_pending: 'KYC Đang duyệt',
-    kyc_rejected: 'KYC bị từ chối',
+    kyc_rejected: 'KYC Bị từ chối',
     update_info_success: 'Cập nhật thông tin thành công',
     surname: 'Họ',
     last_name: 'Tên',
@@ -345,6 +346,7 @@ const AccountPageLanguage = {
     introduce_new_member: 'Introduce new members',
     get_reward_points: 'Get reward points',
     account_verification: 'Account verification',
+    kyc_notyet: 'Not yet',
     kyc_success: 'Confirmed',
     kyc_pending: 'Pending',
     kyc_rejected: 'Rejected',
@@ -401,7 +403,7 @@ const AccountPageLanguage = {
   },
 };
 
-const Tab3 = {
+const Tab3PageLanguage = {
   vi: {
     ID: 'Chứng minh nhân dân/ Bằng lái xe',
     passport: 'Hộ chiếu',
@@ -469,7 +471,7 @@ export const initialState = {
   StakingJoinPageLanguage,
   StakingHistoryPageLanguage,
   AccountPageLanguage,
-  Tab3,
+  Tab3PageLanguage,
 };
 
 export const CHANGE_LANGUAGE = 'CHANGE_LANGUAGE';

@@ -1,30 +1,29 @@
+import { faCaretDown } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { message } from 'antd';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import idCard from '../../assets/img/idcard.png';
+import { useDispatch, useSelector } from 'react-redux';
+import backid from '../../assets/img/backid.png';
 import flag from '../../assets/img/flag.png';
 import frontid from '../../assets/img/frontid.png';
-import backid from '../../assets/img/backid.png';
+import idCard from '../../assets/img/idcard.png';
 import self from '../../assets/img/self.png';
 import selfleft from '../../assets/img/selfleft.png';
 import selfright from '../../assets/img/selfright.png';
 import selfup from '../../assets/img/selfup.png';
-import { asyncGetListContries, actChangeLoading } from '../../store/action';
-import { useDispatch, useSelector } from 'react-redux';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCaretDown } from '@fortawesome/free-solid-svg-icons';
-import { message } from 'antd';
 import callapi from '../../axios';
-
 import { useLang } from '../../context/LanguageLayer';
+import { actChangeLoading, asyncGetListContries } from '../../store/action';
 
 export default function Tab3() {
+  const [{ language, Tab3PageLanguage }] = useLang();
   const dispatch = useDispatch();
   const listContries = useSelector(state => state.contries);
-  const isKYC = useSelector(state => state && state.user && state.user.kyc);
+  const kyc_state = useSelector(state => state.user?.kyc);
   const [SelectedID, setSelectedID] = useState(0);
   const [SelectedContry, setSelectedContry] = useState('VN');
   const [ListContry, setListContry] = useState(null);
   const [ListContrySearch, setListContrySearch] = useState();
-  const [{ language, Tab3 }] = useLang();
 
   const [ValidateForm, setValidateForm] = useState({
     name: false,
@@ -48,14 +47,14 @@ export default function Tab3() {
     return [
       {
         value: 0,
-        name: Tab3[language].ID,
+        name: Tab3PageLanguage[language].ID,
       },
       {
         value: 1,
-        name: Tab3[language].passport,
+        name: Tab3PageLanguage[language].passport,
       },
     ];
-  }, [Tab3, language]);
+  }, [Tab3PageLanguage, language]);
 
   useEffect(() => {
     if (listContries) {
@@ -91,7 +90,7 @@ export default function Tab3() {
       input = input.target;
       if (input.files && input.files[0]) {
         if (input.files[0].size > 2000000) {
-          message.error(Tab3[language].file_size_exceeds_2MB);
+          message.error(Tab3PageLanguage[language].file_size_exceeds_2MB);
         } else {
           var reader = new FileReader();
           reader.onload = function (e) {
@@ -102,7 +101,7 @@ export default function Tab3() {
         }
       }
     },
-    [Tab3, language]
+    [Tab3PageLanguage, language]
   );
 
   const userId = useSelector(state => state && state.user && state.user._id);
@@ -158,10 +157,9 @@ export default function Tab3() {
         });
 
         if (!isUploadOK) {
-          message.error(Tab3[language].img_upload_error);
+          message.error(Tab3PageLanguage[language].img_upload_error);
           return;
-        }
-        if (isUploadOK === true) {
+        } else {
           var kycInfo = {
             kyc_country: SelectedContry,
             kyc_number: submitData.id,
@@ -173,27 +171,27 @@ export default function Tab3() {
           dispatch(actChangeLoading(false));
 
           if (resUpdate.status === 1) {
-            message.success(Tab3[language].resUpdate_success);
+            message.success(Tab3PageLanguage[language].resUpdate_success);
           } else if (resUpdate.status === 100) {
-            message.error(Tab3[language].resUpdate_error_100);
+            message.error(Tab3PageLanguage[language].resUpdate_error_100);
           } else {
-            message.error(Tab3[language].resUpdate_error);
+            message.error(Tab3PageLanguage[language].resUpdate_error);
           }
         }
       } catch (error) {
         dispatch(actChangeLoading(false));
-        message.error(Tab3[language].img_upload_error);
+        message.error(Tab3PageLanguage[language].img_upload_error);
         return;
       }
     },
-    [SelectedID, SelectedContry, userId, dispatch, Tab3, language]
+    [SelectedID, SelectedContry, userId, dispatch, Tab3PageLanguage, language]
   );
 
   return (
     <>
       <form onSubmit={handleSubmitForm}>
         <div className='input-group haft select'>
-          <p className='title'>{Tab3[language].document_type}</p>
+          <p className='title'>{Tab3PageLanguage[language].document_type}</p>
           <div className='select-block type'>
             <img alt='' src={idCard} />
             <div className='selected'>
@@ -215,7 +213,7 @@ export default function Tab3() {
           </div>
         </div>
         <div className='input-group haft select'>
-          <p className='title'>{Tab3[language].nation}</p>
+          <p className='title'>{Tab3PageLanguage[language].nation}</p>
           <div className='select-block'>
             <img style={{ width: 27 }} alt='' src={flag} />
             <div className='selected'>
@@ -269,7 +267,7 @@ export default function Tab3() {
           </div>
         </div>
         <div className='input-group'>
-          <span>{Tab3[language].name}</span>
+          <span>{Tab3PageLanguage[language].name}</span>
           <input
             onChange={e =>
               e.target.value !== ''
@@ -277,7 +275,7 @@ export default function Tab3() {
                 : setValidateForm({ ...ValidateForm, name: false })
             }
             name='name'
-            placeholder={Tab3[language].exactly_name}
+            placeholder={Tab3PageLanguage[language].exactly_name}
           />
         </div>
         <div className='input-group'>
@@ -289,7 +287,7 @@ export default function Tab3() {
                 : setValidateForm({ ...ValidateForm, id: false })
             }
             name='id'
-            placeholder={Tab3[language].so + findValueID()}
+            placeholder={Tab3PageLanguage[language].so + findValueID()}
           />
         </div>
         <div className='input-group'>
@@ -297,11 +295,13 @@ export default function Tab3() {
           <input disabled defaultValue={email} name='email' placeholder='Email' />
         </div>
         <ul>
-          <li>{Tab3[language].desc_1}</li>
-          <li>{Tab3[language].desc_2}</li>
+          <li>{Tab3PageLanguage[language].desc_1}</li>
+          <li>{Tab3PageLanguage[language].desc_2}</li>
         </ul>
         <div className='upload'>
-          <div className='text'>{SelectedID === 0 ? Tab3[language].front_ID : Tab3[language].passport_image}</div>
+          <div className='text'>
+            {SelectedID === 0 ? Tab3PageLanguage[language].front_ID : Tab3PageLanguage[language].passport_image}
+          </div>
           <input
             onChange={e => {
               readURL(e);
@@ -318,13 +318,13 @@ export default function Tab3() {
           <label htmlFor='font' className='upload-block'>
             <img alt='' src={frontid} />
             <img alt='' src='' className='placeholder' />
-            <p>{Tab3[language].click_upload_front}</p>
+            <p>{Tab3PageLanguage[language].click_upload_front}</p>
           </label>
         </div>
 
         {SelectedID === 0 && (
           <div className='upload'>
-            <div className='text'>{Tab3[language].back_ID}</div>
+            <div className='text'>{Tab3PageLanguage[language].back_ID}</div>
             <input
               onChange={e => {
                 readURL(e);
@@ -341,7 +341,7 @@ export default function Tab3() {
             <label htmlFor='back' className='upload-block'>
               <img alt='' src={backid} />
               <img alt='' src='' className='placeholder' />
-              <p>{Tab3[language].click_upload_back}</p>
+              <p>{Tab3PageLanguage[language].click_upload_back}</p>
             </label>
           </div>
         )}
@@ -349,7 +349,7 @@ export default function Tab3() {
         <div className='upload'>
           <div className='text'>
             {SelectedID === 0 ? '3' : '2'}
-            {Tab3[language].text_1}
+            {Tab3PageLanguage[language].text_1}
           </div>
           <input
             onChange={e => {
@@ -367,14 +367,14 @@ export default function Tab3() {
           <label htmlFor='self' className='upload-block'>
             <img alt='' src={self} />
             <img alt='' src='' className='placeholder' />
-            <p>{Tab3[language].click_upload}</p>
+            <p>{Tab3PageLanguage[language].click_upload}</p>
           </label>
         </div>
 
         <div className='upload'>
           <div className='text'>
             {SelectedID === 0 ? '4' : '3'}
-            {Tab3[language].text_2}
+            {Tab3PageLanguage[language].text_2}
           </div>
           <input
             onChange={e => {
@@ -392,14 +392,14 @@ export default function Tab3() {
           <label htmlFor='selfleft' className='upload-block'>
             <img alt='' src={selfleft} />
             <img alt='' src='' className='placeholder' />
-            <p>{Tab3[language].click_upload}</p>
+            <p>{Tab3PageLanguage[language].click_upload}</p>
           </label>
         </div>
 
         <div className='upload'>
           <div className='text'>
             {SelectedID === 0 ? '5' : '4'}
-            {Tab3[language].text_3}
+            {Tab3PageLanguage[language].text_3}
           </div>
           <input
             onChange={e => {
@@ -417,14 +417,14 @@ export default function Tab3() {
           <label htmlFor='selfright' className='upload-block'>
             <img alt='' src={selfright} />
             <img alt='' src='' className='placeholder' />
-            <p>{Tab3[language].click_upload}</p>
+            <p>{Tab3PageLanguage[language].click_upload}</p>
           </label>
         </div>
 
         <div className='upload'>
           <div className='text'>
             {SelectedID === 0 ? '6' : '5'}
-            {Tab3[language].text_4}
+            {Tab3PageLanguage[language].text_4}
           </div>
           <input
             onChange={e => {
@@ -442,7 +442,7 @@ export default function Tab3() {
           <label htmlFor='selfup' className='upload-block'>
             <img alt='' src={selfup} />
             <img alt='' src='' className='placeholder' />
-            <p>{Tab3[language].click_upload}</p>
+            <p>{Tab3PageLanguage[language].click_upload}</p>
           </label>
         </div>
 
@@ -455,14 +455,15 @@ export default function Tab3() {
             id='confirm'
           />
           <label className='checkbox-label' for='confirm'>
-            <span className='checkbox-box'></span> <span>{Tab3[language].confirm_upload}</span>
+            <span className='checkbox-box'></span> <span>{Tab3PageLanguage[language].confirm_upload}</span>
           </label>
         </div>
 
         <div className='input-group'>
           <button
+            type='submit'
             style={
-              isKYC !== '1' && isKYC !== '2'
+              kyc_state?.status !== 1 && kyc_state?.status !== 2
                 ? SelectedID === 0
                   ? (ValidateForm.check &&
                       ValidateForm.id &&
@@ -487,9 +488,8 @@ export default function Tab3() {
                   : { opacity: 0.6, pointerEvents: 'none' }
                 : { opacity: 0.6, pointerEvents: 'none' }
             }
-            type='submit'
           >
-            {Tab3[language].xac_nhan}
+            {Tab3PageLanguage[language].xac_nhan}
           </button>
         </div>
       </form>
