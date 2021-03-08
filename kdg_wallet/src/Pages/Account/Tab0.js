@@ -1,9 +1,9 @@
-import React, { useCallback, useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
 import { message } from 'antd';
-import callapi from '../../axios';
-
+import React, { useCallback, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import callAPI from '../../axios';
 import { useLang } from '../../context/LanguageLayer';
+import { actChangeLoading } from '../../store/action';
 
 function isValidDate(dateString) {
   var regEx = /^\d{1,2}\/\d{1,2}\/\d{4}$/;
@@ -17,8 +17,9 @@ function isValidDate(dateString) {
 
 export default function Tab0() {
   const [{ language, AccountPageLanguage }] = useLang();
+  const dispatch = useDispatch();
   const [gioi_tinh, setgioi_tinh] = useState(0);
-  const userID = useSelector(state => state.user && state.user._id);
+  const userID = useSelector(state => state.user?._id);
 
   const handleSubmitForm = useCallback(
     async e => {
@@ -28,22 +29,27 @@ export default function Tab0() {
       for (var pair of data.entries()) {
         submitData[pair[0]] = pair[1];
       }
+
       submitData.gioi_tinh_id = Number(submitData.gioi_tinh_id);
       submitData.id = userID;
 
       var [day, month, year] = submitData.birth_day.split('/');
-
       submitData.birth_day = `${month}/${day}/${year}`;
 
-      const res = (await callapi().put(`/api/user`, submitData)).data;
-      if (res) {
-      }
-      message.success(AccountPageLanguage[language].update_info_success);
+      try {
+        dispatch(actChangeLoading(true));
+        const res = await callAPI.put(`/api/user`, submitData);
+        dispatch(actChangeLoading(false));
+        console.log('res', res);
+        message.success(AccountPageLanguage[language].update_info_success);
+
+      } catch (error) {}
     },
     [userID, AccountPageLanguage, language]
   );
 
   const user = useSelector(state => state.user);
+  console.log(user);
   useEffect(() => {
     user && setgioi_tinh(user.gioi_tinh_id);
   }, [user]);
@@ -73,12 +79,12 @@ export default function Tab0() {
           <div className='radio-group'>
             <div className='group-label'>
               <input id='gender-m' checked={gioi_tinh === 0} value={0} type='radio' name='gioi_tinh_id' />
-              <label for='gender-m' onClick={() => setgioi_tinh(0)}></label>
+              <label htmlFor='gender-m' onClick={() => setgioi_tinh(0)}></label>
               <span>{AccountPageLanguage[language].male}</span>
             </div>
             <div className='group-label'>
               <input id='gender-f' checked={gioi_tinh === 1} value={1} type='radio' name='gioi_tinh_id' />
-              <label for='gender-f' onClick={() => setgioi_tinh(1)}></label>
+              <label htmlFor='gender-f' onClick={() => setgioi_tinh(1)}></label>
               <span>{AccountPageLanguage[language].female}</span>
             </div>
           </div>

@@ -31,8 +31,8 @@
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.7);
-  -webkit-transition: all .3s ease;
-  transition: all .3s ease;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
   opacity: 0;
   pointer-events: none;
 }
@@ -170,6 +170,8 @@
 
 .account .sidebar .top-sidebar .avata .avata-img img {
   width: 100%;
+  -o-object-fit: contain;
+     object-fit: contain;
 }
 
 .account .sidebar .top-sidebar h3 {
@@ -190,8 +192,8 @@
 
 .account .sidebar .bottom-sidebar .tab .item {
   padding: 15px 24px;
-  -webkit-transition: all .3s ease;
-  transition: all .3s ease;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
   cursor: pointer;
   font-size: 0;
 }
@@ -302,7 +304,7 @@
 }
 
 .account .main form ul li::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 50%;
   left: 0;
@@ -433,7 +435,7 @@
   font-size: 16px;
 }
 
-.account .main form .input-group.select .select-block .selected > span [class*="fa-"] {
+.account .main form .input-group.select .select-block .selected > span [class*='fa-'] {
   width: 30px;
   text-align: center;
   font-size: 16px;
@@ -448,8 +450,8 @@
   border-radius: 8px;
   overflow: hidden;
   width: 100%;
-  -webkit-transition: all .3s ease;
-  transition: all .3s ease;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
   max-height: 210px;
   overflow-y: scroll;
   z-index: 999;
@@ -496,10 +498,11 @@
 }
 
 .account .main form .input-group .radio-group .group-label input:checked ~ label::before {
-  content: "";
+  content: '';
   width: 10px;
   height: 10px;
-  background-color: #fac800;
+  border-radius: 50%;
+  background-color: #000;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -508,6 +511,7 @@
 }
 
 .account .main form .input-group .radio-group .group-label label {
+  cursor: pointer;
   border-radius: 50%;
   background-color: #8a8c8e;
   padding: 9px;
@@ -516,6 +520,13 @@
   height: 18px;
   display: inline-block;
   margin-right: 17px;
+}
+
+.account .main form .input-group .radio-group .group-label span {
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
 }
 
 .account .main form .input-group > span {
@@ -540,15 +551,16 @@
   width: 100%;
 }
 
-.account .main form .input-group input[type="radio"] {
+.account .main form .input-group input[type='radio'] {
   display: none;
 }
 
-.account .main form .input-group input[type="checkbox"] {
+.account .main form .input-group input[type='checkbox'] {
   display: none;
 }
 
 .account .main form .input-group button {
+  cursor: pointer;
   border-radius: 10px;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#e9c258), color-stop(#ecd98a), color-stop(#a57d04), to(#c39500));
   background-image: linear-gradient(to bottom, #e9c258, #ecd98a, #a57d04, #c39500);
@@ -585,7 +597,7 @@
   word-wrap: break-word;
 }
 
-.account .main .ref > div .link [class*="fa-"] {
+.account .main .ref > div .link [class*='fa-'] {
   color: #fff;
   cursor: pointer;
 }
@@ -596,7 +608,7 @@
   font-size: 16px;
 }
 
-.account .main .ref > div .code [class*="fa-"] {
+.account .main .ref > div .code [class*='fa-'] {
   color: #fff;
   cursor: pointer;
 }

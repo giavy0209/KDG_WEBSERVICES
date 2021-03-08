@@ -70,7 +70,7 @@ export default function App() {
         <Route exact={true} path={`/staking/history`}>
           <StakingHistory />
         </Route>
-        <Route exact={true} path={`/Account`}>
+        <Route exact={true} path={`/account`}>
           <Account />
         </Route>
       </Switch>

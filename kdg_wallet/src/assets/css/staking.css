@@ -89,7 +89,7 @@
 }
 
 .stake .banner::before {
-  content: "";
+  content: '';
   display: block;
   padding-top: 29.28%;
 }
@@ -295,7 +295,7 @@
 }
 
 .stake .block2 .list-block2 .item .block2-item .outside-block::before {
-  content: "";
+  content: '';
   padding-top: 100%;
 }
 
@@ -385,7 +385,7 @@
 }
 
 .stake .history table thead tr .head-title::before {
-  content: "";
+  content: '';
   position: absolute;
   bottom: 0;
   height: 1px;
@@ -534,6 +534,7 @@
 .stake-join .block1 .block-top-info .stake-info .percent {
   color: #fac800;
   font-size: 30px;
+  margin-left: 10px;
 }
 
 @media only screen and (max-width: 992px) {
@@ -638,7 +639,7 @@
 }
 
 .stake-join .block3 .item::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 14px;
   width: 100%;
@@ -685,7 +686,7 @@
 }
 
 .stake-join .block3 .item .dot::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 50%;
   left: 50%;
@@ -741,7 +742,8 @@
   .stake-join .block4 .kdg-col-4 .calc-group {
     margin-top: 5px;
   }
-  .stake-join .block4 .kdg-col-4 .calc-group .top, .stake-join .block4 .kdg-col-4 .calc-group .bottom {
+  .stake-join .block4 .kdg-col-4 .calc-group .top,
+  .stake-join .block4 .kdg-col-4 .calc-group .bottom {
     width: calc(50% - 4px);
     display: inline-block;
   }
@@ -858,18 +860,21 @@
   margin-top: 5px;
 }
 
-.stake-join .block4 .group-input-calc .calc-group .top, .stake-join .block4 .group-input-calc .calc-group .bottom {
+.stake-join .block4 .group-input-calc .calc-group .top,
+.stake-join .block4 .group-input-calc .calc-group .bottom {
   padding: 14px 0;
   text-align: center;
   background-color: #fff;
 }
 
-.stake-join .block4 .group-input-calc .calc-group .top .name, .stake-join .block4 .group-input-calc .calc-group .bottom .name {
+.stake-join .block4 .group-input-calc .calc-group .top .name,
+.stake-join .block4 .group-input-calc .calc-group .bottom .name {
   font-size: 16px;
   color: #555555;
 }
 
-.stake-join .block4 .group-input-calc .calc-group .top .data, .stake-join .block4 .group-input-calc .calc-group .bottom .data {
+.stake-join .block4 .group-input-calc .calc-group .top .data,
+.stake-join .block4 .group-input-calc .calc-group .bottom .data {
   font-size: 18px;
   color: #fac800;
   font-weight: 600;
@@ -1111,7 +1116,7 @@
 }
 
 .staking-history .history table thead tr .head-title::before {
-  content: "";
+  content: '';
   position: absolute;
   bottom: 0;
   height: 1px;
@@ -1336,14 +1341,17 @@
     padding: 15px;
     margin-top: 30px;
   }
-  .staking-share .block3 .block-url .kdg-col-5, .staking-share .block3 .block-url .kdg-col-4 {
+  .staking-share .block3 .block-url .kdg-col-5,
+  .staking-share .block3 .block-url .kdg-col-4 {
     width: 100%;
     text-align: center;
   }
-  .staking-share .block3 .block-url .kdg-col-5 .name, .staking-share .block3 .block-url .kdg-col-4 .name {
+  .staking-share .block3 .block-url .kdg-col-5 .name,
+  .staking-share .block3 .block-url .kdg-col-4 .name {
     text-align: left;
   }
-  .staking-share .block3 .block-url .kdg-pull-1, .staking-share .block3 .block-url .kdg-push-1 {
+  .staking-share .block3 .block-url .kdg-pull-1,
+  .staking-share .block3 .block-url .kdg-push-1 {
     margin: 0;
   }
   .staking-share .block3 .block-url .kdg-col-4 {
@@ -1531,8 +1539,8 @@
 .staking-share .block4 .pagination span {
   cursor: pointer;
   padding: 10px 13px;
-  -webkit-transition: all .3s ease;
-  transition: all .3s ease;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
   border: 1px solid transparent;
 }
 
@@ -1674,8 +1682,8 @@
   left: 0;
   opacity: 0;
   pointer-events: none;
-  -webkit-transition: all .3s ease;
-  transition: all .3s ease;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .staking-share .modal.show {
@@ -1757,8 +1765,8 @@
   left: 0;
   opacity: 0;
   pointer-events: none;
-  -webkit-transition: all .3s ease;
-  transition: all .3s ease;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
   z-index: 99999;
 }
 
@@ -1798,7 +1806,10 @@
   display: none;
 }
 
-.staking-share .modal-tree .modal-content .f0, .staking-share .modal-tree .modal-content .f1, .staking-share .modal-tree .modal-content .f2, .staking-share .modal-tree .modal-content .f3 {
+.staking-share .modal-tree .modal-content .f0,
+.staking-share .modal-tree .modal-content .f1,
+.staking-share .modal-tree .modal-content .f2,
+.staking-share .modal-tree .modal-content .f3 {
   color: #303030;
   background-color: #f1f3f4;
   font-size: 16px;
