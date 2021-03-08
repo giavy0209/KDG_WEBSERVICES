@@ -1,7 +1,7 @@
 import { faArrowLeft, faCheck, faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { message } from 'antd';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 import '../../assets/css/staking.scss';
@@ -16,14 +16,16 @@ const style = `
 `;
 
 export default function StakingJoin() {
+  const [{ language, StakingJoinPageLanguage }] = useLang();
   const coin = new URLSearchParams(useLocation().search).get('coin');
   const history = useHistory();
-  const [{ language, StakingJoinPageLanguage }] = useLang();
-
   const [Packages, setPackages] = useState([]);
   const [Choose, setChoose] = useState('');
   const [Value, setValue] = useState(0);
   const balance = useSelector(state => state.balances?.find(o => o._id === coin));
+
+  console.log('Packages', Packages);
+  console.log('Choose', Choose);
 
   const handleGetStakingPackage = useCallback(async coin => {
     const res = await callAPI.get(`/staking_package?coin=${coin}`);
@@ -31,11 +33,14 @@ export default function StakingJoin() {
     setChoose(res.data[0]);
   }, []);
 
+  useMemo(() => {
+    handleGetStakingPackage(coin);
+  }, [handleGetStakingPackage, coin]);
+
   const handleChangeValue = useCallback(
     e => {
       const value = Number(e.target.value);
       if (value !== 0 && !value) return setValue(0);
-
       if (value > balance.balance) return setValue(balance.balance);
       setValue(value);
     },
@@ -57,11 +62,7 @@ export default function StakingJoin() {
   const handleStaking = useCallback(async () => {
     const res = await callAPI.post('/staking', { value: Value, coin: balance.coin._id, package: Choose._id });
     if (res.status === 1) message.success(StakingJoinPageLanguage[language].success);
-  }, [Value, balance, Choose, language]);
-
-  useMemo(() => {
-    handleGetStakingPackage(coin);
-  }, [coin, handleGetStakingPackage]);
+  }, [Value, balance, Choose, StakingJoinPageLanguage, language]);
 
   return (
     <>
@@ -104,8 +105,7 @@ export default function StakingJoin() {
                       </div>
                     </span>
                     <span className='des'>
-                      {' '}
-                      {_stake.end_after - _stake.start_after} {StakingJoinPageLanguage[language].days}{' '}
+                      {_stake.end_after - _stake.start_after} {StakingJoinPageLanguage[language].days}
                     </span>
                   </div>
                 </div>
@@ -158,7 +158,7 @@ export default function StakingJoin() {
           <div className='block4'>
             <div className='title'>{StakingJoinPageLanguage[language].investment_amount}</div>
             <p className='sub-title'>{StakingJoinPageLanguage[language].enter_investment_amount}</p>
-            <div className='kdg-row group-input-calc'>
+            <div className='kdg-row va-t group-input-calc'>
               <div className='kdg-col-8'>
                 <div className='group-input-info'>
                   <div className='available'>

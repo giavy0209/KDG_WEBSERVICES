@@ -12,5 +12,3 @@ export default function Staking() {
     const coin = useQuery().get('coin');
     return <>{coin ? <StakingJoin /> : <StakingHome />}</>;
 }
-
-// const coin = new URLSearchParams(useLocation().search).get('coin');
