@@ -119,23 +119,23 @@ export default function Menu() {
           <div class='top-header'>
             <div class='social'>
               <a target='_blank' rel='noopener noreferrer' href='https://www.facebook.com/KingdomGameGlobal'>
-                <img alt='' src='https://api.kingdomgame.org/upload/5f3be4aaf150a43976d10bc0.png' />
+                <img alt='' src='https://storage.kingdomgame.org/upload/5f3be4aaf150a43976d10bc0.png' />
               </a>
               <a target='_blank' rel='noopener noreferrer' href='https://twitter.com/KingdomGame_KDG'>
-                <img alt='' src='https://api.kingdomgame.org//upload/5f3be4b1f150a43976d10bc2.png' />
+                <img alt='' src='https://storage.kingdomgame.org/upload/5f3be4b1f150a43976d10bc2.png' />
               </a>
               <a target='_blank' rel='noopener noreferrer' href='https://t.me/kdg_en'>
-                <img alt='' src='https://api.kingdomgame.org//upload/5f3be4aef150a43976d10bc1.png' />
+                <img alt='' src='https://storage.kingdomgame.org/upload/5f3be4aef150a43976d10bc1.png' />
               </a>
               <a
                 target='_blank'
                 rel='noopener noreferrer'
                 href='https://www.youtube.com/channel/UCl7ezf4kJUxjlPJwaoPtapA/featured'
               >
-                <img alt='' src='https://api.kingdomgame.org//upload/5f3be4b3f150a43976d10bc3.png' />
+                <img alt='' src='https://storage.kingdomgame.org/upload/5f3be4b3f150a43976d10bc3.png' />
               </a>
               <a target='_blank' rel='noopener noreferrer' href='https://medium.com/kingdom-game-4-0'>
-                <img alt='' src='https://api.kingdomgame.org//upload/5f4204e51d5f8472ee487c3f.svg' />
+                <img alt='' src='https://storage.kingdomgame.org/upload/5f4204e51d5f8472ee487c3f.svg' />
               </a>
             </div>
             <div>

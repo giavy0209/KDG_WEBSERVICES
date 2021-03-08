@@ -1,14 +1,13 @@
-import React, { useCallback, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { message } from 'antd';
-import { validateForm } from '../../helpers';
+import { faCopy, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye, faEyeSlash, faCopy } from '@fortawesome/free-solid-svg-icons';
-import Modal from '../../Components/Modal';
-import { actChangeLoading } from '../../store/action';
+import { message } from 'antd';
+import React, { useCallback, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import callAPI from '../../axios';
-
+import Modal from '../../Components/Modal';
 import { useLang } from '../../context/LanguageLayer';
+import { validateForm } from '../../helpers';
+import { actChangeLoading } from '../../store/action';
 
 export default function Tab1() {
   const [{ language, AccountPageLanguage }] = useLang();
