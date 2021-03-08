@@ -13,10 +13,10 @@ import { useLang } from '../../context/LanguageLayer';
 const ITEM_PER_PAGE = 10;
 
 export default function Wallet() {
+  const [{ language, WalletPageLanguage }] = useLang();
   const [Page, setPage] = useState(1);
   const [History, setHistory] = useState([]);
   const [Total, setTotal] = useState(0);
-  const [{ language, WalletPageLanguage }] = useLang();
   const user = useSelector(state => state.user);
 
   const handleGetHistory = useCallback(async page => {
@@ -50,18 +50,6 @@ export default function Wallet() {
 
           <section className='section-history'>
             <h2 className='title'>{WalletPageLanguage[language].history}</h2>
-            {/* <div className='list-tab'>
-              <div
-                onClick={() => {
-                  setType('2');
-                  setPage(1);
-                }}
-                className={`tab ${Type === '2' && 'active'}`}
-              >
-                <p> {checkLanguage({ vi: 'Tất cả', en: 'All' }, language)} </p>
-              </div>
-            </div> */}
-
             <div className='history'>
               <table>
                 <tbody>
@@ -118,27 +106,11 @@ export default function Wallet() {
               </table>
             </div>
             <div className='pagination'>
-              <span
-                onClick={() => {
-                  Page > 1 && setPage(Page - 1);
-                }}
-                className='arrow'
-              >
+              <span className='arrow' onClick={() => Page > 1 && setPage(Page - 1)}>
                 <FontAwesomeIcon icon={faAngleLeft} />
               </span>
-              <InputNumber
-                onPressEnter={e => {
-                  setPage(Number(e.target.value));
-                }}
-                value={Page}
-                style={{ width: 60 }}
-              />
-              <span
-                onClick={() => {
-                  Math.ceil(Total / ITEM_PER_PAGE) > Page && setPage(Page + 1);
-                }}
-                className='arrow'
-              >
+              <InputNumber onPressEnter={e => setPage(Number(e.target.value))} value={Page} style={{ width: 60 }} />
+              <span className='arrow' onClick={() => Math.ceil(Total / ITEM_PER_PAGE) > Page && setPage(Page + 1)}>
                 <FontAwesomeIcon icon={faAngleRight} />
               </span>
             </div>

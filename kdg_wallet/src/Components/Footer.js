@@ -8,11 +8,11 @@ export default function Footer() {
           <div className='kdg-row top-footer'>
             <div className='kdg-col-4 left'>
               <a className='logo' href='/'>
-                <img alt='KingDomGame' src='https://kdg-api.kingdomgame.co/upload/5f3c80e7f150a43976d10bc4.png' />
+                <img alt='KingDomGame' src='https://api.kingdomgame.org/upload/5f3c80e7f150a43976d10bc4.png' />
               </a>
               <div>
-                <p style={{ fontSize: '23px', fontWeight: 600, marginTop: '30px' }}>KINGDOM VENTURES.,LTD</p>
-                <p style={{ fontSize: '14px', marginTop: '27px' }}>
+                <p>KINGDOM VENTURES.,LTD</p>
+                <p>
                   <svg
                     width='0.75em'
                     aria-hidden='true'
@@ -32,7 +32,7 @@ export default function Footer() {
                   </svg>
                   141 Middle Road, GSM building #06-05 Singapore 188976
                 </p>
-                <p style={{ fontSize: '14px', marginTop: '14px' }}>
+                <p style={{ marginTop: '14px' }}>
                   <svg
                     width='1em'
                     aria-hidden='true'
@@ -60,7 +60,7 @@ export default function Footer() {
                   className='social-block'
                   href='https://www.facebook.com/KingdomGameGlobal'
                 >
-                  <img alt='' src='https://kdg-api.kingdomgame.co//upload/5f3c88dcf150a43976d10bcd.png' />
+                  <img alt='' src='https://api.kingdomgame.org//upload/5f3c88dcf150a43976d10bcd.png' />
                 </a>
                 <a
                   target='_blank'
@@ -68,10 +68,10 @@ export default function Footer() {
                   className='social-block'
                   href='https://twitter.com/KingdomGame_KDG'
                 >
-                  <img alt='' src='https://kdg-api.kingdomgame.co//upload/5f40945448ad3f09bbfdc2d1.png' />
+                  <img alt='' src='https://api.kingdomgame.org//upload/5f40945448ad3f09bbfdc2d1.png' />
                 </a>
                 <a target='_blank' rel='noopener noreferrer' className='social-block' href='https://t.me/kdg_ann'>
-                  <img alt='' src='https://kdg-api.kingdomgame.co//upload/5f40945448ad3f09bbfdc2d0.png' />
+                  <img alt='' src='https://api.kingdomgame.org//upload/5f40945448ad3f09bbfdc2d0.png' />
                 </a>
                 <a
                   target='_blank'
@@ -79,7 +79,7 @@ export default function Footer() {
                   className='social-block'
                   href='https://medium.com/kingdom-game-4-0'
                 >
-                  <img alt='' src='https://kdg-api.kingdomgame.co//upload/5f40953348ad3f09bbfdc2d3.svg' />
+                  <img alt='' src='https://api.kingdomgame.org//upload/5f40953348ad3f09bbfdc2d3.svg' />
                 </a>
                 <a
                   target='_blank'
@@ -87,7 +87,7 @@ export default function Footer() {
                   className='social-block'
                   href='https://www.youtube.com/channel/UCl7ezf4kJUxjlPJwaoPtapA/featured'
                 >
-                  <img alt='' src='https://kdg-api.kingdomgame.co//upload/5f40945448ad3f09bbfdc2d2.png' />
+                  <img alt='' src='https://api.kingdomgame.org//upload/5f40945448ad3f09bbfdc2d2.png' />
                 </a>
               </div>
             </div>

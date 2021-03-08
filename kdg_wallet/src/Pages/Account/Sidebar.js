@@ -14,10 +14,8 @@ import { useLang } from '../../context/LanguageLayer';
 
 export default function Sidebar({ Tab, setTab }) {
   const [{ language, AccountPageLanguage }] = useLang();
-  const username = useSelector(
-    state => state.user && { first_name: state.user.first_name, last_name: state.user.last_name }
-  );
-  const isKYC = useSelector(state => state && state.user && state.user.kyc);
+  const user_state = useSelector(state => state.user);
+  const kyc_state = useSelector(state => state.user?.kyc);
 
   return (
     <div className='kdg-col-3 va-t'>
@@ -29,28 +27,28 @@ export default function Sidebar({ Tab, setTab }) {
             </div>
           </div>
           <h3>
-            {username && username.first_name && username.last_name
-              ? `${username.first_name} ${username.last_name}`
-              : AccountPageLanguage[language].account}
+            {kyc_state?.first_name || kyc_state?.last_name
+              ? `${kyc_state?.first_name} ${kyc_state?.last_name}`
+              : user_state?.email}
           </h3>
         </div>
         <div className='bottom-sidebar'>
           <div className='tab'>
-            <div onClick={() => setTab(0)} className={`item ${Tab === 0 && 'active'}`}>
+            <div onClick={() => setTab(0)} className={`item ${Tab === 0 ? 'active' : ''}`}>
               <img alt='' src={Tab === 0 ? userActive : user} />
               <div className='text'>
                 <h4>{AccountPageLanguage[language].personal_info}</h4>
                 <p>{AccountPageLanguage[language].view_and_update_info}</p>
               </div>
             </div>
-            <div onClick={() => setTab(1)} className={`item ${Tab === 1 && 'active'}`}>
+            <div onClick={() => setTab(1)} className={`item ${Tab === 1 ? 'active' : ''}`}>
               <img alt='' src={Tab === 1 ? verifiedActive : verified} />
               <div className='text'>
                 <h4>{AccountPageLanguage[language].security_settings}</h4>
                 <p>{AccountPageLanguage[language].security_utilities}</p>
               </div>
             </div>
-            <div onClick={() => setTab(2)} className={`item ${Tab === 2 && 'active'}`}>
+            <div onClick={() => setTab(2)} className={`item ${Tab === 2 ? 'active' : ''}`}>
               <img alt='' src={Tab === 2 ? inviteActive : invite} />
               <div className='text'>
                 <h4>{AccountPageLanguage[language].referral}</h4>
@@ -60,29 +58,29 @@ export default function Sidebar({ Tab, setTab }) {
                 </p>
               </div>
             </div>
-            <div onClick={() => setTab(3)} className={`item ${Tab === 3 && 'active'}`}>
+            <div onClick={() => setTab(3)} className={`item ${Tab === 3 ? 'active' : ''}`}>
               <img alt='' src={Tab === 3 ? kycActive : kyc} />
               <div className='text'>
                 <h4>KYC</h4>
                 <p>{AccountPageLanguage[language].account_verification}</p>
                 <p
                   style={
-                    isKYC === '1'
+                    kyc_state?.status === 1
                       ? { color: '#00ff00' }
-                      : isKYC === '2'
+                      : kyc_state?.status === 2
                       ? { color: '#fac800' }
-                      : isKYC === '3'
+                      : kyc_state?.status === 3
                       ? { color: '#ff0000' }
-                      : {}
+                      : { color: 'yellow' }
                   }
                 >
-                  {isKYC === '1'
+                  {kyc_state?.status === 1
                     ? AccountPageLanguage[language].kyc_success
-                    : isKYC === '2'
+                    : kyc_state?.status === 2
                     ? AccountPageLanguage[language].kyc_pending
-                    : isKYC === '3'
+                    : kyc_state?.status === 3
                     ? AccountPageLanguage[language].kyc_rejected
-                    : ''}
+                    : AccountPageLanguage[language].kyc_notyet}
                 </p>
               </div>
             </div>

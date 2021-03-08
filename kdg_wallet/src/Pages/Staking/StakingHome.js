@@ -1,12 +1,10 @@
-import React, { useCallback, useState } from 'react';
-import block1Icon from '../../assets/img/stake/block1-icon.png';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import '../../assets/css/staking.scss';
-import { useEffect } from 'react';
-import { STORAGE_DOMAIN } from '../../constant';
+import block1Icon from '../../assets/img/stake/block1-icon.png';
 import callAPI from '../../axios';
-
+import { STORAGE_DOMAIN } from '../../constant';
 import { useLang } from '../../context/LanguageLayer';
 
 const handleBlock1Loaded = function () {
@@ -20,11 +18,9 @@ const handleBlock1Loaded = function () {
 
 export default function StakingHome() {
   const history = useHistory();
-  const [{ language, StakingHomePageLanguage }] = useLang();
-
   const [Info, setInfo] = useState({});
-
   const balances = useSelector(state => state.balances);
+  const [{ language, StakingHomePageLanguage }] = useLang();
 
   const getStakingInfo = useCallback(async () => {
     const res = await callAPI.get('/staking_dashboard');
@@ -75,7 +71,7 @@ export default function StakingHome() {
                 <div className='block2-item'>
                   <div className='outside-block'>
                     <div className='inside-block'>
-                      <div className='number'> {Info.stake} </div>
+                      <div className='number'>{Info.stake}</div>
                     </div>
                   </div>
                   <div className='block-name'>{StakingHomePageLanguage[language].total_stake}</div>
@@ -85,7 +81,7 @@ export default function StakingHome() {
                 <div className='block2-item'>
                   <div className='outside-block'>
                     <div className='inside-block'>
-                      <div className='number'> {Info.profit} </div>
+                      <div className='number'>{Info.profit}</div>
                     </div>
                   </div>
                   <div className='block-name'>{StakingHomePageLanguage[language].profit}</div>
@@ -112,10 +108,10 @@ export default function StakingHome() {
               </tr>
             </thead>
             <tbody>
-              {balances?.map(
-                o =>
-                  o.coin.actions.includes(4) && (
-                    <tr>
+              {balances?.map((o, i) => {
+                if (o.coin.actions.includes(4)) {
+                  return (
+                    <tr key={i}>
                       <td>
                         <img style={{ width: 50, marginRight: 10 }} alt='' src={STORAGE_DOMAIN + o.coin.icon.path} />
                         {o.coin.code}
@@ -130,8 +126,10 @@ export default function StakingHome() {
                         </button>
                       </td>
                     </tr>
-                  )
-              )}
+                  );
+                }
+                return null;
+              })}
             </tbody>
           </table>
         </div>
