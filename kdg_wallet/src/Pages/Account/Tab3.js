@@ -119,33 +119,33 @@ export default function Tab3() {
       const uploadFont = new FormData();
       uploadFont.append('file', submitData.font);
       uploadFont.append('userId', userId);
-      arrayUpload.push(callapi().post('/api/upload_kyc_image', uploadFont));
+      arrayUpload.push(callapi.post('/upload_kyc_image', uploadFont));
 
       const uploadSelf = new FormData();
       uploadSelf.append('file', submitData.self);
       uploadSelf.append('userId', userId);
-      arrayUpload.push(callapi().post('/api/upload_kyc_image', uploadSelf));
+      arrayUpload.push(callapi.post('/upload_kyc_image', uploadSelf));
 
       const uploadSelfLeft = new FormData();
       uploadSelfLeft.append('file', submitData.selfleft);
       uploadSelfLeft.append('userId', userId);
-      arrayUpload.push(callapi().post('/api/upload_kyc_image', uploadSelfLeft));
+      arrayUpload.push(callapi.post('/upload_kyc_image', uploadSelfLeft));
 
       const uploadSelfRight = new FormData();
       uploadSelfRight.append('file', submitData.selfright);
       uploadSelfRight.append('userId', userId);
-      arrayUpload.push(callapi().post('/api/upload_kyc_image', uploadSelfRight));
+      arrayUpload.push(callapi.post('/upload_kyc_image', uploadSelfRight));
 
       const uploadSelfUp = new FormData();
       uploadSelfUp.append('file', submitData.selfup);
       uploadSelfUp.append('userId', userId);
-      arrayUpload.push(callapi().post('/api/upload_kyc_image', uploadSelfUp));
+      arrayUpload.push(callapi.post('/upload_kyc_image', uploadSelfUp));
 
       if (SelectedID === 0) {
         const uploadBack = new FormData();
         uploadBack.append('file', submitData.back);
         uploadBack.append('userId', userId);
-        arrayUpload.push(callapi().post('/api/upload_kyc_image', uploadBack));
+        arrayUpload.push(callapi.post('/upload_kyc_image', uploadBack));
       }
 
       dispatch(actChangeLoading(true));
@@ -153,11 +153,12 @@ export default function Tab3() {
         var res = await Promise.all(arrayUpload);
         var isUploadOK = true;
         res.forEach(el => {
-          if (el.data.status !== 1) isUploadOK = false;
+          if (el.status !== 1) isUploadOK = false;
         });
 
         if (!isUploadOK) {
           message.error(Tab3PageLanguage[language].img_upload_error);
+          dispatch(actChangeLoading(false));
           return;
         } else {
           var kycInfo = {
@@ -167,7 +168,7 @@ export default function Tab3() {
             kyc: '2',
             id: userId,
           };
-          const resUpdate = (await callapi().put(`/api/user`, kycInfo)).data;
+          const resUpdate = await callapi.put(`/kyc`, kycInfo);
           dispatch(actChangeLoading(false));
 
           if (resUpdate.status === 1) {
