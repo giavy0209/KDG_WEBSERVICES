@@ -99,7 +99,7 @@ export default function Menu() {
             <div
               onClick={() => {
                 storage.clearToken();
-                window.open('/', '_self');
+                window.open('https://login.kingdomgame.org/logout', '_self');
               }}
               className='bottom-dropdown'
             >
