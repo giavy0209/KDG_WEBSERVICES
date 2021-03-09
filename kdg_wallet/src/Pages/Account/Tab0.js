@@ -38,14 +38,14 @@ export default function Tab0() {
 
       try {
         dispatch(actChangeLoading(true));
-        const res = await callAPI.put(`/api/user`, submitData);
+        const res = await callAPI.put(`/user`, submitData);
         dispatch(actChangeLoading(false));
         console.log('res', res);
         message.success(AccountPageLanguage[language].update_info_success);
 
       } catch (error) {}
     },
-    [userID, AccountPageLanguage, language]
+    [dispatch, userID, AccountPageLanguage, language]
   );
 
   const user = useSelector(state => state.user);

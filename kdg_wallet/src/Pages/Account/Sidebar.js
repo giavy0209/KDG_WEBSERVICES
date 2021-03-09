@@ -1,15 +1,14 @@
 import React from 'react';
-import defaultAccount from '../../assets/img/default-account.png';
-import user from '../../assets/img/user.png';
-import userActive from '../../assets/img/user-active.png';
-import verified from '../../assets/img/verified.png';
-import verifiedActive from '../../assets/img/verified-active.png';
-import invite from '../../assets/img/invite.png';
-import inviteActive from '../../assets/img/invite-active.png';
-import kyc from '../../assets/img/kyc.png';
-import kycActive from '../../assets/img/kyc-active.png';
 import { useSelector } from 'react-redux';
-
+import defaultAccount from '../../assets/img/default-account.png';
+import inviteActive from '../../assets/img/invite-active.png';
+import invite from '../../assets/img/invite.png';
+import kycActive from '../../assets/img/kyc-active.png';
+import kyc from '../../assets/img/kyc.png';
+import userActive from '../../assets/img/user-active.png';
+import user from '../../assets/img/user.png';
+import verifiedActive from '../../assets/img/verified-active.png';
+import verified from '../../assets/img/verified.png';
 import { useLang } from '../../context/LanguageLayer';
 
 export default function Sidebar({ Tab, setTab }) {
