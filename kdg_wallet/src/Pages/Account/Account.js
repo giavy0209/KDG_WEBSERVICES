@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from 'react';
-
+import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import '../../assets/css/account.scss';
 import Sidebar from './Sidebar';
 import Tab0 from './Tab0';
 import Tab1 from './Tab1';
 import Tab3 from './Tab3';
-
-import '../../assets/css/account.scss';
-import { useLocation } from 'react-router-dom';
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);

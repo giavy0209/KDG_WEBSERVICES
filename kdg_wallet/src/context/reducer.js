@@ -416,7 +416,7 @@ const Tab3PageLanguage = {
     nation: 'Quốc gia',
     name: 'Tên',
     exactly_name: 'Tên chính xác trên chứng minh / hộ chiếu',
-    so: 'Số',
+    so: 'Số ',
     desc_1: 'Vui lòng sử dụng định dạng JPG, JPEG, PNG. Kích thước tệp tối đa = 2MB',
     desc_2: 'Để đảm bảo quá trình xác minh được thuận tiện, vui lòng không che hoặc làm nhòe ảnh.',
     passport_image: '1. Ảnh chụp hộ chiếu',
