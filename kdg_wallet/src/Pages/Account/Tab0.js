@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import callAPI from '../../axios';
 import { useLang } from '../../context/LanguageLayer';
 import { actChangeLoading } from '../../store/action';
+import { asyncGetUser } from '../../store/authAction';
 
 function isValidDate(dateString) {
   var regEx = /^\d{1,2}\/\d{1,2}\/\d{4}$/;
@@ -19,7 +20,12 @@ export default function Tab0() {
   const [{ language, AccountPageLanguage }] = useLang();
   const dispatch = useDispatch();
   const [gioi_tinh, setgioi_tinh] = useState(0);
-  const userID = useSelector(state => state.user?._id);
+  const user = useSelector(state => state.user);
+
+  console.log(user);
+  useEffect(() => {
+    user && setgioi_tinh(user.gioi_tinh_id);
+  }, [user]);
 
   const handleSubmitForm = useCallback(
     async e => {
@@ -31,7 +37,7 @@ export default function Tab0() {
       }
 
       submitData.gioi_tinh_id = Number(submitData.gioi_tinh_id);
-      submitData.id = userID;
+      submitData.id = user?._id;
 
       var [day, month, year] = submitData.birth_day.split('/');
       submitData.birth_day = `${month}/${day}/${year}`;
@@ -40,18 +46,33 @@ export default function Tab0() {
         dispatch(actChangeLoading(true));
         const res = await callAPI.put(`/user`, submitData);
         dispatch(actChangeLoading(false));
-        console.log('res', res);
-        message.success(AccountPageLanguage[language].update_info_success);
 
+        if (res.status === 1) {
+          message.success(AccountPageLanguage[language].update_info_success);
+          dispatch(asyncGetUser());
+        }
       } catch (error) {}
     },
-    [dispatch, userID, AccountPageLanguage, language]
+    [dispatch, user, AccountPageLanguage, language]
   );
 
-  const user = useSelector(state => state.user);
-  console.log(user);
-  useEffect(() => {
-    user && setgioi_tinh(user.gioi_tinh_id);
+  const convertBirthDay = useCallback(() => {
+    if (user?.kyc?.birth_day && user.kyc.birth_day !== 'undefined//undefined') {
+      let ngay = new Date(user.kyc.birth_day).getDate() + '';
+      let thang = new Date(user.kyc.birth_day).getMonth() + 1 + '';
+      let nam = new Date(user.kyc.birth_day).getFullYear() + '';
+
+      if (ngay.length === 1) {
+        ngay = '0' + ngay;
+      }
+      if (thang.length === 1) {
+        thang = '0' + thang;
+      }
+
+      return `${ngay}/${thang}/${nam}`;
+    }
+
+    return '';
   }, [user]);
 
   return (
@@ -60,19 +81,24 @@ export default function Tab0() {
       <form onSubmit={handleSubmitForm}>
         <div className='input-group haft'>
           <span>{AccountPageLanguage[language].surname}</span>
-          <input defaultValue={user && user.first_name ? user.first_name : ''} name='first_name' />
+          <input defaultValue={user?.kyc?.first_name || ''} name='first_name' />
         </div>
         <div className='input-group haft'>
           <span>{AccountPageLanguage[language].last_name}</span>
-          <input defaultValue={user && user.last_name ? user.last_name : ''} name='last_name' />
+          <input defaultValue={user?.kyc?.last_name || ''} name='last_name' />
         </div>
         <div className='input-group'>
           <span>Email</span>
-          <input defaultValue={user && user.email ? user.email : ''} name='email' />
+          <input
+            disabled
+            name='email'
+            defaultValue={user?.email || ''}
+            onChange={e => (e.target.value = user?.email || '')}
+          />
         </div>
         <div className='input-group'>
           <span>{AccountPageLanguage[language].phone_number}</span>
-          <input defaultValue={user && user.phone ? user.phone : ''} name='phone' />
+          <input defaultValue={user?.kyc?.phone || ''} name='phone' />
         </div>
         <div className='input-group'>
           <span>{AccountPageLanguage[language].gender}</span>
@@ -93,6 +119,9 @@ export default function Tab0() {
           <span>{AccountPageLanguage[language].date_of_birth}</span>
           <div className='input-password'>
             <input
+              name='birth_day'
+              placeholder='DD/MM/YYYY'
+              defaultValue={convertBirthDay()}
               onChange={e => {
                 var value = e.target.value;
                 if (!isValidDate(value)) {
@@ -103,22 +132,13 @@ export default function Tab0() {
                   e.target.nextElementSibling.innerText = '';
                 }
               }}
-              placeholder='DD/MM/YYYY'
-              defaultValue={
-                user && user.birth_day
-                  ? `${new Date(user.birth_day).getDate()}/${new Date(user.birth_day).getMonth() + 1}/${new Date(
-                      user.birth_day
-                    ).getFullYear()}`
-                  : ''
-              }
-              name='birth_day'
             />
             <span className='validate-error'></span>
           </div>
         </div>
         <div className='input-group'>
           <span>{AccountPageLanguage[language].address}</span>
-          <input defaultValue={user && user.address ? user.address : ''} name='address' />
+          <input defaultValue={user?.kyc?.address || ''} name='address' />
         </div>
         <div className='input-group'>
           <button type='submit'>{AccountPageLanguage[language].update}</button>

@@ -208,17 +208,19 @@ main .title {
 }
 
 .section-history .list-tab::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.3);
   -webkit-box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.3);
   border-radius: 10px;
 }
 
 .section-history .list-tab::-webkit-scrollbar-thumb {
   border-radius: 10px;
+  box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.3);
   -webkit-box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.5);
 }
 
 .section-history .list-tab::after {
-  content: "";
+  content: '';
   position: absolute;
   top: 100%;
   left: 0;
@@ -341,11 +343,11 @@ main .title {
 }
 
 .section-history .pagination .page-des {
-  opacity: .5;
+  opacity: 0.5;
 }
 
 .section-history .pagination .arrow {
-  opacity: .5;
+  opacity: 0.5;
   margin: 0 10px;
   cursor: pointer;
 }
@@ -384,8 +386,8 @@ main .title {
   background-color: rgba(0, 0, 0, 0.6);
   opacity: 0;
   pointer-events: none;
-  -webkit-transition: all .3s ease;
-  transition: all .3s ease;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .mask.show {
@@ -407,8 +409,8 @@ main .title {
   z-index: 9999;
   opacity: 0;
   pointer-events: none;
-  -webkit-transition: all .3s ease;
-  transition: all .3s ease;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .model.show {
@@ -502,6 +504,7 @@ main .title {
   position: relative;
   padding: 24px;
   margin-bottom: 20px;
+  margin-top: 20px;
 }
 
 .model-deposit .qr-code img {
@@ -509,7 +512,7 @@ main .title {
 }
 
 .model-deposit .qr-code span::before {
-  content: "";
+  content: '';
   position: absolute;
   width: 19px;
   height: 16px;
@@ -521,7 +524,7 @@ main .title {
 }
 
 .model-deposit .qr-code span::after {
-  content: "";
+  content: '';
   position: absolute;
   width: 19px;
   height: 16px;
@@ -533,7 +536,7 @@ main .title {
 }
 
 .model-deposit .qr-code::before {
-  content: "";
+  content: '';
   position: absolute;
   width: 19px;
   height: 16px;
@@ -545,7 +548,7 @@ main .title {
 }
 
 .model-deposit .qr-code::after {
-  content: "";
+  content: '';
   position: absolute;
   width: 19px;
   height: 16px;
@@ -557,7 +560,7 @@ main .title {
 }
 
 .model-deposit .deposit-address {
-  margin-top: 8px;
+  padding: 8px 0;
   cursor: pointer;
 }
 
@@ -565,7 +568,42 @@ main .title {
   text-decoration: underline;
   font-size: 16px;
   color: #58595b;
-  margin-right: 7px;
+}
+
+.model-deposit .verify {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.model-deposit .verify input {
+  width: 360px;
+  padding: 10px;
+}
+
+.model-deposit .verify button {
+  height: 41px;
+  padding: 0 20px;
+  width: auto;
+  border-radius: 5px;
+  margin-left: 10px;
+}
+
+.model-deposit .verify.disable-2fa {
+  width: 100%;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.model-deposit .verify.disable-2fa input {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.model-deposit .verify.disable-2fa button {
+  margin-left: 0;
 }
 
 .model-withdraw {

@@ -1,8 +1,8 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import defaultAccount from '../../assets/img/default-account.png';
-import inviteActive from '../../assets/img/invite-active.png';
-import invite from '../../assets/img/invite.png';
+// import inviteActive from '../../assets/img/invite-active.png';
+// import invite from '../../assets/img/invite.png';
 import kycActive from '../../assets/img/kyc-active.png';
 import kyc from '../../assets/img/kyc.png';
 import userActive from '../../assets/img/user-active.png';
@@ -47,7 +47,7 @@ export default function Sidebar({ Tab, setTab }) {
                 <p>{AccountPageLanguage[language].security_utilities}</p>
               </div>
             </div>
-            <div onClick={() => setTab(2)} className={`item ${Tab === 2 ? 'active' : ''}`}>
+            {/* <div onClick={() => setTab(2)} className={`item ${Tab === 2 ? 'active' : ''}`}>
               <img alt='' src={Tab === 2 ? inviteActive : invite} />
               <div className='text'>
                 <h4>{AccountPageLanguage[language].referral}</h4>
@@ -56,7 +56,7 @@ export default function Sidebar({ Tab, setTab }) {
                   {AccountPageLanguage[language].get_reward_points} <br />
                 </p>
               </div>
-            </div>
+            </div> */}
             <div onClick={() => setTab(3)} className={`item ${Tab === 3 ? 'active' : ''}`}>
               <img alt='' src={Tab === 3 ? kycActive : kyc} />
               <div className='text'>

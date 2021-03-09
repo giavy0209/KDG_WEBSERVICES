@@ -324,6 +324,16 @@
   font-size: 16px;
 }
 
+.account .main form .input-group input[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+
 .account .main form .input-group .input-password {
   position: relative;
 }
@@ -570,6 +580,32 @@
   text-transform: uppercase;
   font-weight: 500;
   border: none;
+}
+
+.account .main form .input-group button.valid {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.account .main form .input-group button.not-valid {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.account .main form .input-group button.not-valid + span.not-allowed {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  cursor: not-allowed;
+  -webkit-transform: none;
+          transform: none;
+  padding: 0;
+  background-color: transparent;
+  color: transparent;
+  font-size: 0;
+  z-index: 999;
 }
 
 .account .main .ref > div {

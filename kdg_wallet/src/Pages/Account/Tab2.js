@@ -1,14 +1,15 @@
-import React, { useCallback, useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCopy } from '@fortawesome/free-solid-svg-icons';
-import { useSelector } from 'react-redux';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { message } from 'antd';
-import callapi from '../../axios';
-
+import React, { useCallback, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import callAPI from '../../axios';
 import { useLang } from '../../context/LanguageLayer';
+import { actChangeLoading } from '../../store/action';
 
 export default function Tab2() {
   const [{ language, AccountPageLanguage }] = useLang();
+  const dispatch = useDispatch();
   const [ListReward, setListReward] = useState([]);
   const user = useSelector(state => state.user);
   const kdg_reward = useSelector(state => state && state.user && state.user.kdg_reward);
@@ -27,11 +28,16 @@ export default function Tab2() {
   );
 
   const handleGetHistory = useCallback(async () => {
-    const res = (await callapi().get(`/api/get_transaction?id=${user._id}&skip=0&take=9999999&type=kyc-success`)).data;
-    console.log(res);
-    setListReward([...res.data]);
-    document.querySelector('.maskreward').classList.add('show');
-  }, [user]);
+    try {
+      dispatch(actChangeLoading(true));
+      const res = await callAPI.get(`/get_transaction?id=${user._id}&skip=0&take=9999999&type=kyc-success`);
+      dispatch(actChangeLoading(false));
+      console.log(res);
+
+      setListReward([...res.data]);
+      document.querySelector('.maskreward').classList.add('show');
+    } catch (error) {}
+  }, [dispatch, user]);
 
   return (
     <>
@@ -94,8 +100,7 @@ export default function Tab2() {
       <div className='ref'>
         <h3>{AccountPageLanguage[language].referral}</h3>
         <p onClick={handleGetHistory} className='open-reward'>
-          {' '}
-          {AccountPageLanguage[language].rewarded}{' '}
+          {AccountPageLanguage[language].rewarded}
         </p>
       </div>
       <div className='ref'>
