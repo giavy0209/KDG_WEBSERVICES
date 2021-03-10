@@ -148,9 +148,11 @@ export default function Tab3() {
         arrayUpload.push(callapi.post('/upload_kyc_image', uploadBack));
       }
 
-      dispatch(actChangeLoading(true));
       try {
+        dispatch(actChangeLoading(true));
         var res = await Promise.all(arrayUpload);
+        dispatch(actChangeLoading(false));
+
         var isUploadOK = true;
         res.forEach(el => {
           if (el.status !== 1) isUploadOK = false;
@@ -158,7 +160,6 @@ export default function Tab3() {
 
         if (!isUploadOK) {
           message.error(Tab3PageLanguage[language].img_upload_error);
-          dispatch(actChangeLoading(false));
           return;
         } else {
           var kycInfo = {
@@ -168,21 +169,21 @@ export default function Tab3() {
             kyc: '2',
             id: userId,
           };
+          dispatch(actChangeLoading(true));
           const resUpdate = await callapi.put(`/kyc`, kycInfo);
           dispatch(actChangeLoading(false));
 
           if (resUpdate.status === 1) {
             message.success(Tab3PageLanguage[language].resUpdate_success);
-          } else if (resUpdate.status === 100) {
-            message.error(Tab3PageLanguage[language].resUpdate_error_100);
-          } else {
-            message.error(Tab3PageLanguage[language].resUpdate_error);
           }
+          if (resUpdate.status === 100) {
+            message.error(Tab3PageLanguage[language].resUpdate_error_100);
+          }
+          message.error(Tab3PageLanguage[language].resUpdate_error);
         }
       } catch (error) {
         dispatch(actChangeLoading(false));
         message.error(Tab3PageLanguage[language].img_upload_error);
-        return;
       }
     },
     [SelectedID, SelectedContry, userId, dispatch, Tab3PageLanguage, language]

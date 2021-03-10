@@ -1,3 +1,2 @@
-import Wallet from './Wallet'
-
-export default Wallet
+import Wallet from './Wallet';
+export default Wallet;

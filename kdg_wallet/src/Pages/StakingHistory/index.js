@@ -1,3 +1,2 @@
-import StakingHistory from './StakingHistory'
-
-export default StakingHistory
+import StakingHistory from './StakingHistory';
+export default StakingHistory;

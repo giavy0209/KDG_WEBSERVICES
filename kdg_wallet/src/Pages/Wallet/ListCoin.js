@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { message, Radio } from 'antd';
 import QRCode from 'qrcode';
 import React, { useCallback, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import deposit from '../../assets/img/deposit.png';
 import stake from '../../assets/img/stake.png';
@@ -13,6 +13,7 @@ import callAPI from '../../axios';
 import Form from '../../Components/Form';
 import Modal from '../../Components/Modal';
 import { useLang } from '../../context/LanguageLayer';
+import { actChangeLoading } from '../../store/action';
 
 const listAct = [
   {
@@ -40,6 +41,7 @@ const listAct = [
 export default function ListCoin() {
   const [{ language, WalletPageLanguage }] = useLang();
   const history = useHistory();
+  const dispatch = useDispatch();
   const [SwapTo, setSwapTo] = useState({});
   const [VisibleSwap, setVisibleSwap] = useState(false);
   const [VisibleDeposit, setVisibleDeposit] = useState(false);
@@ -62,54 +64,75 @@ export default function ListCoin() {
 
   const handleWithdraw = useCallback(
     async data => {
-      const res = await callAPI.post('/withdraw', data);
-      if (res.status === 100) {
-        message.error(WalletPageLanguage[language].withdraw_error_100);
-      }
-      if (res.status === 101) {
-        message.error(WalletPageLanguage[language].withdraw_error_101);
-      }
-      if (res.status === 102) {
-        message.error(WalletPageLanguage[language].withdraw_error_102);
-      }
-      if (res.status === 103) {
-        message.error(WalletPageLanguage[language].withdraw_error_103);
-      }
-      if (res.status === 104) {
-        message.error(WalletPageLanguage[language].withdraw_error_104);
-      }
-      if (res.status === 1) {
-        message.success(WalletPageLanguage[language].withdraw_success);
+      try {
+        dispatch(actChangeLoading(true));
+        const res = await callAPI.post('/withdraw', data);
+        dispatch(actChangeLoading(false));
+
+        if (res.status === 1) {
+          message.success(WalletPageLanguage[language].withdraw_success);
+        }
+        if (res.status === 100) {
+          message.error(WalletPageLanguage[language].withdraw_error_100);
+        }
+        if (res.status === 101) {
+          message.error(WalletPageLanguage[language].withdraw_error_101);
+        }
+        if (res.status === 102) {
+          message.error(WalletPageLanguage[language].withdraw_error_102);
+        }
+        if (res.status === 103) {
+          message.error(WalletPageLanguage[language].withdraw_error_103);
+        }
+        if (res.status === 104) {
+          message.error(WalletPageLanguage[language].withdraw_error_104);
+        }
+      } catch (error) {
+        dispatch(actChangeLoading(false));
       }
     },
-    [WalletPageLanguage, language]
+    [dispatch, WalletPageLanguage, language]
   );
 
   const handleSwap = useCallback(
     async data => {
-      const res = await callAPI.post('/swap', data);
-      if (res.status === 101) {
-        message.error(WalletPageLanguage[language].swap_error_101);
-      }
-      if (res.status === 102) {
-        message.error(WalletPageLanguage[language].swap_error_102);
-      }
-      if (res.status === 103) {
-        message.error(WalletPageLanguage[language].swap_error_103);
-      }
-      if (res.status === 1) {
-        message.success(WalletPageLanguage[language].swap_success);
+      try {
+        dispatch(actChangeLoading(true));
+        const res = await callAPI.post('/swap', data);
+        dispatch(actChangeLoading(false));
+
+        if (res.status === 101) {
+          message.error(WalletPageLanguage[language].swap_error_101);
+        }
+        if (res.status === 102) {
+          message.error(WalletPageLanguage[language].swap_error_102);
+        }
+        if (res.status === 103) {
+          message.error(WalletPageLanguage[language].swap_error_103);
+        }
+        if (res.status === 1) {
+          message.success(WalletPageLanguage[language].swap_success);
+        }
+      } catch (error) {
+        dispatch(actChangeLoading(false));
       }
     },
-    [WalletPageLanguage, language]
+    [dispatch, WalletPageLanguage, language]
   );
 
   const handleAct = useCallback(
     async (act, balance) => {
       if (act === 1) {
-        const qr = await QRCode.toDataURL(balance.wallet.address);
-        setBalance({ ...balance, qr });
-        setVisibleDeposit(true);
+        try {
+          dispatch(actChangeLoading(true));
+          const qr = await QRCode.toDataURL(balance.wallet.address);
+          dispatch(actChangeLoading(false));
+
+          setBalance({ ...balance, qr });
+          setVisibleDeposit(true);
+        } catch (error) {
+          dispatch(actChangeLoading(false));
+        }
         return;
       }
       if (act === 2) {
@@ -126,7 +149,7 @@ export default function ListCoin() {
         history.push('/staking');
       }
     },
-    [history]
+    [dispatch, history]
   );
 
   return (

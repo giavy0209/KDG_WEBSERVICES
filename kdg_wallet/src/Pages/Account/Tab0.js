@@ -22,7 +22,6 @@ export default function Tab0() {
   const [gioi_tinh, setgioi_tinh] = useState(0);
   const user = useSelector(state => state.user);
 
-  console.log(user);
   useEffect(() => {
     user && setgioi_tinh(user.gioi_tinh_id);
   }, [user]);
@@ -51,7 +50,9 @@ export default function Tab0() {
           message.success(AccountPageLanguage[language].update_info_success);
           dispatch(asyncGetUser());
         }
-      } catch (error) {}
+      } catch (error) {
+        dispatch(actChangeLoading(false));
+      }
     },
     [dispatch, user, AccountPageLanguage, language]
   );

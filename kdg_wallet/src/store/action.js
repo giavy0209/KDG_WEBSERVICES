@@ -1,13 +1,12 @@
-import callapi from '../axios';
-import Axios from 'axios';
+import callAPI from '../axios';
 
-export const CHANGE_LOADING = 'CHANGE_LOADING';
 export const CHANGE_NEWS = 'CHANGE_NEWS';
+export const CHANGE_ROUTER = 'CHANGE_ROUTER';
+export const CHANGE_LOADING = 'CHANGE_LOADING';
 export const CHANGE_LANGUAGE = 'CHANGE_LANGUAGE';
 export const CHANGE_SETTINGS = 'CHANGE_SETTINGS';
-export const CHANGE_LIST_CATEGORIES = 'CHANGE_LIST_CATEGORIES';
 export const CHANGE_CURRENT_URL = 'CHANGE_CURRENT_URL';
-export const CHANGE_ROUTER = 'CHANGE_ROUTER';
+export const CHANGE_LIST_CATEGORIES = 'CHANGE_LIST_CATEGORIES';
 
 export function actChangeLoading(loading) {
   return {
@@ -68,7 +67,7 @@ export function actChangeListContries(contries) {
 export function asyncGetNews(skip, take, search, language) {
   return async dispatch => {
     try {
-      var res = await callapi.get(`/news?skip=${skip}&take=${take}&search=${search}&language=${language}`);
+      var res = await callAPI.get(`/news?skip=${skip}&take=${take}&search=${search}&language=${language}`);
       dispatch(actChangeNews(res.data));
       return res;
     } catch (error) {
@@ -80,7 +79,7 @@ export function asyncGetNews(skip, take, search, language) {
 export function asyncGetNewsById(id, next, language) {
   return async dispatch => {
     try {
-      var res = await callapi.get(`/get_by_id_news/${id}?next=${next}&language=${language}`);
+      var res = await callAPI.get(`/get_by_id_news/${id}?next=${next}&language=${language}`);
       return res;
     } catch (error) {
       return error;
@@ -91,7 +90,7 @@ export function asyncGetNewsById(id, next, language) {
 export function asyncGetListContries() {
   return async dispatch => {
     dispatch(actChangeLoading(true));
-    const res = (await Axios.get('https://restcountries.eu/rest/v2/all?fields=name;alpha2Code;flag')).data;
+    const res = await callAPI.get('https://restcountries.eu/rest/v2/all?fields=name;alpha2Code;flag');
     dispatch(actChangeListContries(res));
     dispatch(actChangeLoading(false));
   };
@@ -101,7 +100,7 @@ export function asyncGetSettings(hasLoading = true) {
   return async dispatch => {
     try {
       hasLoading && dispatch(actChangeLoading(true));
-      var res = await callapi.get(`/setting`);
+      var res = await callAPI.get(`/setting`);
       const setting = {};
       res.forEach(el => {
         setting[el.key] = el.data;

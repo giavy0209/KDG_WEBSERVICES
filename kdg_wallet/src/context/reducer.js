@@ -424,13 +424,17 @@ const Tab3PageLanguage = {
     back_ID: '2. Mặt sau CMND/ Bằng lái xe',
     click_upload_front: 'Nhấn vào đây để tải lên ảnh mặt trước',
     click_upload_back: 'Nhấn vào đây để tải lên ảnh mặt sau',
-		click_upload: 'Nhấn vào đây để tải lên',
-    text_1: '. Ảnh có mặt bạn chụp chung với CMND/Bằng lái xe/Hộ chiếu và một tờ giấy ghi tay chữ "KINGDOM GAME 4.0", ngày tháng năm hiện tại và chữ ký của bạn.(Chính diện)',
-		text_2: '. Ảnh có mặt bạn chụp chung với CMND/Bằng lái xe/Hộ chiếu và một tờ giấy ghi tay chữ "KINGDOM GAME 4.0", ngày tháng năm hiện tại và chữ ký của bạn. (Mặt phía bên trái)',
-		text_3: '. Ảnh có mặt bạn chụp chung với CMND/Bằng lái xe/Hộ chiếu và một tờ giấy ghi tay chữ "KINGDOM GAME 4.0", ngày tháng năm hiện tại và chữ ký của bạn. (Mặt phía bên phải)',
-		text_4: '. Ảnh có mặt bạn chụp chung với CMND/Bằng lái xe/Hộ chiếu và một tờ giấy ghi tay chữ "KINGDOM GAME 4.0", ngày tháng năm hiện tại và chữ ký của bạn. (Mặt ngước lên)',
-		confirm_upload: 'Tôi xác nhận các thông tin trên là đúng sự thật',
-		xac_nhan: 'XÁC NHẬN',
+    click_upload: 'Nhấn vào đây để tải lên',
+    text_1:
+      '. Ảnh có mặt bạn chụp chung với CMND/Bằng lái xe/Hộ chiếu và một tờ giấy ghi tay chữ "KINGDOM GAME 4.0", ngày tháng năm hiện tại và chữ ký của bạn.(Chính diện)',
+    text_2:
+      '. Ảnh có mặt bạn chụp chung với CMND/Bằng lái xe/Hộ chiếu và một tờ giấy ghi tay chữ "KINGDOM GAME 4.0", ngày tháng năm hiện tại và chữ ký của bạn. (Mặt phía bên trái)',
+    text_3:
+      '. Ảnh có mặt bạn chụp chung với CMND/Bằng lái xe/Hộ chiếu và một tờ giấy ghi tay chữ "KINGDOM GAME 4.0", ngày tháng năm hiện tại và chữ ký của bạn. (Mặt phía bên phải)',
+    text_4:
+      '. Ảnh có mặt bạn chụp chung với CMND/Bằng lái xe/Hộ chiếu và một tờ giấy ghi tay chữ "KINGDOM GAME 4.0", ngày tháng năm hiện tại và chữ ký của bạn. (Mặt ngước lên)',
+    confirm_upload: 'Tôi xác nhận các thông tin trên là đúng sự thật',
+    xac_nhan: 'XÁC NHẬN',
   },
   en: {
     ID: "Identity Card / Driver's License",
@@ -452,13 +456,13 @@ const Tab3PageLanguage = {
     back_ID: "2. ID card / Driver's license back image",
     click_upload_front: 'Click here to upload front',
     click_upload_back: 'Click here to upload back',
-		click_upload: 'Click here to upload',
+    click_upload: 'Click here to upload',
     text_1: `. Image with your face taken with your ID / Driver's License / Passport and a piece of paper which there is a hand written sentence "KINGDOM GAME 4.0", current date and your signature in that.(Keep straight)`,
-		text_2: `. Image with your face taken with your ID / Driver's License / Passport and a piece of paper which there is a hand written sentence "KINGDOM GAME 4.0", current date and your signature in that.(Turn left)`,
-		text_3: `. Image with your face taken with your ID / Driver's License / Passport and a piece of paper which there is a hand written sentence "KINGDOM GAME 4.0", current date and your signature in that.(Turn right)`,
-		text_4: `. Image with your face taken with your ID / Driver's License / Passport and a piece of paper which there is a hand written sentence "KINGDOM GAME 4.0", current date and your signature in that.(Turn up)`,
-		confirm_upload: 'I certify that the above information is true',
-		xac_nhan: 'CONFIRM',
+    text_2: `. Image with your face taken with your ID / Driver's License / Passport and a piece of paper which there is a hand written sentence "KINGDOM GAME 4.0", current date and your signature in that.(Turn left)`,
+    text_3: `. Image with your face taken with your ID / Driver's License / Passport and a piece of paper which there is a hand written sentence "KINGDOM GAME 4.0", current date and your signature in that.(Turn right)`,
+    text_4: `. Image with your face taken with your ID / Driver's License / Passport and a piece of paper which there is a hand written sentence "KINGDOM GAME 4.0", current date and your signature in that.(Turn up)`,
+    confirm_upload: 'I certify that the above information is true',
+    xac_nhan: 'CONFIRM',
   },
 };
 

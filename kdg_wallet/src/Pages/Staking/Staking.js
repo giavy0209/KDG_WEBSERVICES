@@ -5,10 +5,10 @@ import StakingHome from './StakingHome';
 import StakingJoin from './StakingJoin';
 
 function useQuery() {
-    return new URLSearchParams(useLocation().search);
+  return new URLSearchParams(useLocation().search);
 }
 
 export default function Staking() {
-    const coin = useQuery().get('coin');
-    return <>{coin ? <StakingJoin /> : <StakingHome />}</>;
+  const coin = useQuery().get('coin');
+  return <>{coin ? <StakingJoin /> : <StakingHome />}</>;
 }

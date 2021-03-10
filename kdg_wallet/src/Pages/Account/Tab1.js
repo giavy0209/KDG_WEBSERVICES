@@ -64,7 +64,9 @@ export default function Tab1() {
         if (res.status === 100) {
           message.error(AccountPageLanguage[language].change_password_error_100);
         }
-      } catch (error) {}
+      } catch (error) {
+        dispatch(actChangeLoading(false));
+      }
     },
     [ValidForm, dispatch, AccountPageLanguage, language]
   );
@@ -74,7 +76,6 @@ export default function Tab1() {
       dispatch(actChangeLoading(true));
       var res = await callAPI.post('/verify_2fa', { token: Token });
       dispatch(actChangeLoading(false));
-      console.log(res);
 
       if (res.status === 1) {
         message.success(AccountPageLanguage[language].verify_2fa_success);
@@ -85,7 +86,9 @@ export default function Tab1() {
       if (res.status === 100) {
         message.error(AccountPageLanguage[language].verify_2fa_error_100);
       }
-    } catch (error) {}
+    } catch (error) {
+      dispatch(actChangeLoading(false));
+    }
   }, [Token, dispatch, AccountPageLanguage, language]);
 
   const handleDisable2FA = useCallback(async () => {
@@ -93,7 +96,6 @@ export default function Tab1() {
       dispatch(actChangeLoading(true));
       var res = await callAPI.post('/disable_2fa', { token: Token, password: Password });
       dispatch(actChangeLoading(false));
-      console.log(res);
 
       if (res.status === 1) {
         message.success(AccountPageLanguage[language].disable_2fa_success);
@@ -107,7 +109,9 @@ export default function Tab1() {
       if (res.status === 101) {
         message.error(AccountPageLanguage[language].disable_2fa_error_101);
       }
-    } catch (error) {}
+    } catch (error) {
+      dispatch(actChangeLoading(false));
+    }
   }, [dispatch, Token, Password, AccountPageLanguage, language]);
 
   return (

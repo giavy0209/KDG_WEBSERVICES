@@ -69,7 +69,6 @@ const callAPI = {
   },
   put: async (url, body, reget = true) => {
     var res = (await create().put(url, body)).data;
-
     if (res.status === 401) {
       if (reget) {
         return await refreshToken('put', url, body);
@@ -78,7 +77,6 @@ const callAPI = {
       storage.clearToken();
       return { status: 0 };
     }
-
     return res;
   },
 };

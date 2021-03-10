@@ -1,9 +1,12 @@
 import callAPI from '../axios';
 import { storage } from '../helpers';
 
+export const CHANGE_USER = 'CHANGE_USER';
+export const CHANGE_BALANCE = 'CHANGE_BALANCE';
+
 export function actChangeUser(user) {
   return {
-    type: 'CHANGE_USER',
+    type: CHANGE_USER,
     payload: { user },
   };
 }
@@ -18,7 +21,7 @@ export function asyncGetUser() {
 
 export function actChangeBalances(balances) {
   return {
-    type: 'CHANGE_BALANCE',
+    type: CHANGE_BALANCE,
     payload: { balances },
   };
 }

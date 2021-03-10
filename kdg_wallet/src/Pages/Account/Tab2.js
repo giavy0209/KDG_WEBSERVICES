@@ -32,11 +32,12 @@ export default function Tab2() {
       dispatch(actChangeLoading(true));
       const res = await callAPI.get(`/get_transaction?id=${user._id}&skip=0&take=9999999&type=kyc-success`);
       dispatch(actChangeLoading(false));
-      console.log(res);
 
       setListReward([...res.data]);
       document.querySelector('.maskreward').classList.add('show');
-    } catch (error) {}
+    } catch (error) {
+      dispatch(actChangeLoading(false));
+    }
   }, [dispatch, user]);
 
   return (

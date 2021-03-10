@@ -2,12 +2,13 @@ import { faArrowLeft, faCheck, faExclamationCircle } from '@fortawesome/free-sol
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { message } from 'antd';
 import React, { useCallback, useMemo, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 import '../../assets/css/staking.scss';
 import callAPI from '../../axios';
 import { STORAGE_DOMAIN } from '../../constant';
 import { useLang } from '../../context/LanguageLayer';
+import { actChangeLoading } from '../../store/action';
 
 const style = `
   body #root{
@@ -19,19 +20,27 @@ export default function StakingJoin() {
   const [{ language, StakingJoinPageLanguage }] = useLang();
   const coin = new URLSearchParams(useLocation().search).get('coin');
   const history = useHistory();
+  const dispatch = useDispatch();
   const [Packages, setPackages] = useState([]);
   const [Choose, setChoose] = useState('');
   const [Value, setValue] = useState(0);
   const balance = useSelector(state => state.balances?.find(o => o._id === coin));
 
-  console.log('Packages', Packages);
-  console.log('Choose', Choose);
+  const handleGetStakingPackage = useCallback(
+    async coin => {
+      try {
+        dispatch(actChangeLoading(true));
+        const res = await callAPI.get(`/staking_package?coin=${coin}`);
+        dispatch(actChangeLoading(true));
 
-  const handleGetStakingPackage = useCallback(async coin => {
-    const res = await callAPI.get(`/staking_package?coin=${coin}`);
-    setPackages(res.data);
-    setChoose(res.data[0]);
-  }, []);
+        setPackages(res.data);
+        setChoose(res.data[0]);
+      } catch (error) {
+        dispatch(actChangeLoading(true));
+      }
+    },
+    [dispatch]
+  );
 
   useMemo(() => {
     handleGetStakingPackage(coin);
@@ -60,9 +69,18 @@ export default function StakingJoin() {
   }, [Choose, Packages, Value]);
 
   const handleStaking = useCallback(async () => {
-    const res = await callAPI.post('/staking', { value: Value, coin: balance.coin._id, package: Choose._id });
-    if (res.status === 1) message.success(StakingJoinPageLanguage[language].success);
-  }, [Value, balance, Choose, StakingJoinPageLanguage, language]);
+    try {
+      dispatch(actChangeLoading(true));
+      const res = await callAPI.post('/staking', { value: Value, coin: balance.coin._id, package: Choose._id });
+      dispatch(actChangeLoading(false));
+
+      if (res.status === 1) {
+        message.success(StakingJoinPageLanguage[language].success);
+      }
+    } catch (error) {
+      dispatch(actChangeLoading(false));
+    }
+  }, [dispatch, Value, balance, Choose, StakingJoinPageLanguage, language]);
 
   return (
     <>

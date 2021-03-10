@@ -13,17 +13,23 @@ const ITEM_PER_PAGE = 10;
 
 const RenderStatus = function ({ id, status, language, StakingHistoryPageLanguage }) {
   const dispatch = useDispatch();
+
   const handleEndStaking = useCallback(
     async type => {
-      dispatch(actChangeLoading(true));
-      await callAPI.post('/end_staking', { type, trans_id: id });
-      dispatch(actChangeLoading(false));
+      try {
+        dispatch(actChangeLoading(true));
+        await callAPI.post('/end_staking', { type, trans_id: id });
+        dispatch(actChangeLoading(false));
 
-      type === 1 && message.success(StakingHistoryPageLanguage[language].renew_success);
-      type === 2 && message.success(StakingHistoryPageLanguage[language].end_success);
+        type === 1 && message.success(StakingHistoryPageLanguage[language].renew_success);
+        type === 2 && message.success(StakingHistoryPageLanguage[language].end_success);
+      } catch (error) {
+        dispatch(actChangeLoading(false));
+      }
     },
     [language, id, dispatch, StakingHistoryPageLanguage]
   );
+
   return (
     <>
       {status === 0 ? (
@@ -52,19 +58,30 @@ const RenderStatus = function ({ id, status, language, StakingHistoryPageLanguag
 export default function StakingHistory() {
   const coin = new URLSearchParams(useLocation().search).get('coin');
   const history = useHistory();
+  const dispatch = useDispatch();
   const [Page, setPage] = useState(1);
   const [Total, setTotal] = useState(0);
   const [History, setHistory] = useState([]);
   const balance = useSelector(state => state.balances?.find(o => o._id === coin));
   const [{ language, StakingHistoryPageLanguage }] = useLang();
 
-  const handleGetStakingHistory = useCallback(async (balance, Page) => {
-    const res = await callAPI.get(
-      `/transactions?type=4&coin=${balance.coin._id}&skip=${(Page - 1) * ITEM_PER_PAGE}&limit=${ITEM_PER_PAGE}`
-    );
-    setTotal(res.total);
-    setHistory(res.data);
-  }, []);
+  const handleGetStakingHistory = useCallback(
+    async (balance, Page) => {
+      try {
+        dispatch(actChangeLoading(true));
+        const res = await callAPI.get(
+          `/transactions?type=4&coin=${balance.coin._id}&skip=${(Page - 1) * ITEM_PER_PAGE}&limit=${ITEM_PER_PAGE}`
+        );
+        dispatch(actChangeLoading(false));
+
+        setTotal(res.total);
+        setHistory(res.data);
+      } catch (error) {
+        dispatch(actChangeLoading(false));
+      }
+    },
+    [dispatch]
+  );
 
   useMemo(() => {
     balance && handleGetStakingHistory(balance, Page);

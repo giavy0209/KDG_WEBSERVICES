@@ -1,3 +1,2 @@
-import Account from './Account'
-
-export default Account
+import Account from './Account';
+export default Account;

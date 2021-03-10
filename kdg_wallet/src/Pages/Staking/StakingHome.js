@@ -1,11 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import '../../assets/css/staking.scss';
 import block1Icon from '../../assets/img/stake/block1-icon.png';
 import callAPI from '../../axios';
 import { STORAGE_DOMAIN } from '../../constant';
 import { useLang } from '../../context/LanguageLayer';
+import { actChangeLoading } from '../../store/action';
 
 const handleBlock1Loaded = function () {
   var listBlock1 = document.querySelectorAll('.item-block1');
@@ -18,14 +19,22 @@ const handleBlock1Loaded = function () {
 
 export default function StakingHome() {
   const history = useHistory();
+  const dispatch = useDispatch();
   const [Info, setInfo] = useState({});
   const balances = useSelector(state => state.balances);
   const [{ language, StakingHomePageLanguage }] = useLang();
 
   const getStakingInfo = useCallback(async () => {
-    const res = await callAPI.get('/staking_dashboard');
-    setInfo({ ...res });
-  }, []);
+    try {
+      dispatch(actChangeLoading(true));
+      const res = await callAPI.get('/staking_dashboard');
+      dispatch(actChangeLoading(false));
+
+      setInfo({ ...res });
+    } catch (error) {
+      dispatch(actChangeLoading(false));
+    }
+  }, [dispatch]);
 
   useEffect(() => {
     getStakingInfo();

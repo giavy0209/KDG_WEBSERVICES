@@ -1,31 +1,43 @@
-import React, { useCallback, useMemo, useState } from 'react';
-import ListChart from './ListChart';
-import ListCoin from './ListCoin';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons';
-import { useSelector } from 'react-redux';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { InputNumber } from 'antd';
+import React, { useCallback, useMemo, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import '../../assets/css/wallet.scss';
 import nodata from '../../assets/img/nodata.png';
 import callAPI from '../../axios';
-
 import { useLang } from '../../context/LanguageLayer';
+import { actChangeLoading } from '../../store/action';
+import ListChart from './ListChart';
+import ListCoin from './ListCoin';
+
 const ITEM_PER_PAGE = 10;
 
 export default function Wallet() {
   const [{ language, WalletPageLanguage }] = useLang();
+  const dispatch = useDispatch();
   const [Page, setPage] = useState(1);
   const [History, setHistory] = useState([]);
   const [Total, setTotal] = useState(0);
   const user = useSelector(state => state.user);
 
-  const handleGetHistory = useCallback(async page => {
-    const res = await callAPI.get(
-      `/transactions?skip=${(page - 1) * ITEM_PER_PAGE}&limit=${ITEM_PER_PAGE}&type=1,2,3,4,5,6`
-    );
-    setHistory(res.data);
-    setTotal(res.total);
-  }, []);
+  const handleGetHistory = useCallback(
+    async page => {
+      try {
+        dispatch(actChangeLoading(true));
+        const res = await callAPI.get(
+          `/transactions?skip=${(page - 1) * ITEM_PER_PAGE}&limit=${ITEM_PER_PAGE}&type=1,2,3,4,5,6`
+        );
+        dispatch(actChangeLoading(false));
+
+        setHistory(res.data);
+        setTotal(res.total);
+      } catch (error) {
+        dispatch(actChangeLoading(false));
+      }
+    },
+    [dispatch]
+  );
 
   useMemo(() => {
     handleGetHistory(Page);
