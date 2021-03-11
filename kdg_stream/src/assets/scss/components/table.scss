@@ -1,0 +1,47 @@
+@import '../common.scss';
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+
+    @media (max-width: 768px) {
+        width: 1000px;
+    }
+
+    thead {
+        font-size: 20px;
+        line-height: 30px;
+        font-weight: 500;
+        border-bottom: 1px solid #bababa;
+    }
+
+    tbody {
+        color: #151515;
+        font-size: 20px;
+        line-height: 50px;
+
+        .table__dotIcon {
+            cursor: pointer;
+            user-select: none;
+            display: block;
+            margin-left: auto;
+            width: 30px;
+            height: 30px;
+            border-radius: 13px;
+
+            &:hover {
+                background-color: $background-color-hover;
+            }
+        }
+
+        .table__ava {
+            cursor: pointer;
+            user-select: none;
+            display: block;
+            width: 30px;
+            height: 30px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+    }
+}

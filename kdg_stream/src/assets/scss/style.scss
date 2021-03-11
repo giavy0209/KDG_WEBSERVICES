@@ -1,0 +1,111 @@
+@import './font.scss';
+@import './reset.scss';
+
+@for $i from 1 through 100 {
+    .mt-#{$i} {
+        margin-top: #{$i}px;
+    }
+
+    .mb-#{$i} {
+        margin-bottom: #{$i}px;
+    }
+
+    .ml-#{$i} {
+        margin-left: #{$i}px;
+    }
+
+    .mr-#{$i} {
+        margin-right: #{$i}px;
+    }
+
+    .pt-#{$i} {
+        padding-top: #{$i}px;
+    }
+
+    .pb-#{$i} {
+        padding-bottom: #{$i}px;
+    }
+
+    .pl-#{$i} {
+        padding-left: #{$i}px;
+    }
+
+    .pr-#{$i} {
+        padding-right: #{$i}px;
+    }
+}
+
+.layoutFlex {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+
+    .layoutFlex-item {
+        width: 100%;
+
+        &:not(:last-child) {
+            margin-bottom: calc(var(--gap-row));
+        }
+    }
+
+    &.layout-1 {
+        .layoutFlex-item {
+            width: 100%;
+
+            &:not(:last-child) {
+                margin-bottom: calc(var(--gap-row));
+            }
+        }
+    }
+
+    @for $i from 2 through 8 {
+        &.layout-#{$i} {
+            flex-wrap: wrap;
+            flex-direction: row;
+
+            .layoutFlex-item {
+                width: calc((100% - var(--gap-column) * (#{$i} - 1)) / #{$i});
+                margin-bottom: calc(var(--gap-row));
+
+                &:not(:nth-child(#{$i}n)) {
+                    margin-right: var(--gap-column);
+                }
+            }
+        }
+    }
+}
+
+.label-container {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 1;
+    display: flex;
+    pointer-events: none;
+
+    .label {
+        color: #fff;
+        font-size: 20px;
+        font-weight: 500;
+        border-radius: 20px;
+        text-transform: uppercase;
+        backdrop-filter: blur(30px) brightness(115%);
+        height: 50px;
+        padding: 0 20px;
+        min-width: 130px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &:not(:last-child) {
+            margin-right: 20px;
+        }
+
+        .icon {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+    }
+}
