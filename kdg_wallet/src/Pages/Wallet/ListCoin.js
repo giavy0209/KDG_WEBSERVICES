@@ -235,7 +235,7 @@ export default function ListCoin() {
           <div className='coin'>
             <div className='top-info'>
               <div className='coin-image-name'>
-                <img src={`https://api.kingdomgame.org${balance.coin.icon.path}`} alt='coin' />
+                <img src={`https://storage.kingdomgame.org${balance.coin.icon.path}`} alt='coin' />
                 <span className='name'> {balance.coin.code} </span>
               </div>
               <div className='balance'>
