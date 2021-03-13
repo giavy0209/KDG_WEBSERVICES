@@ -1,3 +1,4 @@
+import axios from 'axios';
 import callAPI from '../axios';
 
 export const CHANGE_NEWS = 'CHANGE_NEWS';
@@ -90,7 +91,7 @@ export function asyncGetNewsById(id, next, language) {
 export function asyncGetListContries() {
   return async dispatch => {
     dispatch(actChangeLoading(true));
-    const res = await callAPI.get('https://restcountries.eu/rest/v2/all?fields=name;alpha2Code;flag');
+    const res = await axios.get('https://restcountries.eu/rest/v2/all?fields=name;alpha2Code;flag', {headers : {}});
     dispatch(actChangeListContries(res));
     dispatch(actChangeLoading(false));
   };
