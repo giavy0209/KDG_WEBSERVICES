@@ -163,10 +163,9 @@ export default function Tab3() {
           return;
         } else {
           var kycInfo = {
-            kyc_country: SelectedContry,
-            kyc_number: submitData.id,
-            kyc_name: submitData.name,
-            kyc: '2',
+            country: SelectedContry,
+            id: submitData.id,
+            first_name: submitData.name,
             id: userId,
           };
           dispatch(actChangeLoading(true));
@@ -179,7 +178,6 @@ export default function Tab3() {
           if (resUpdate.status === 100) {
             message.error(Tab3PageLanguage[language].resUpdate_error_100);
           }
-          message.error(Tab3PageLanguage[language].resUpdate_error);
         }
       } catch (error) {
         dispatch(actChangeLoading(false));
