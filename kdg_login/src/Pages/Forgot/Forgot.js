@@ -100,7 +100,6 @@ export default function Forgot() {
         if (res.status === 1) {
           message.success(ForgotPageLanguage[language].reset_password_success);
           setTimeout(() => {
-            // history.push(`${loginURL}/${submitData.email}`);
             history.push(`/login/${submitData.email}`);
           }, 1000);
         }

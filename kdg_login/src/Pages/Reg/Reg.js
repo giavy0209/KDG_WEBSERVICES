@@ -34,10 +34,6 @@ export default function Reg() {
     document.title = RegPageLanguage[language].title;
   }, [RegPageLanguage, language]);
 
-  const loginURL = useSelector(state => {
-    return state.settings && state.settings.login_button.url;
-  });
-
   useEffect(() => {
     if (CountDownSendMail !== null) {
       if (CountDownSendMail <= 0) {
@@ -102,7 +98,7 @@ export default function Reg() {
         if (res.status === 1) {
           message.success(RegPageLanguage[language].register_success);
           setTimeout(() => {
-            history.push(`${loginURL}/${submitData.email}`);
+            history.push(`/login/${submitData.email}`);
           }, 1000);
         }
         if (res.status === 101) {
@@ -113,7 +109,7 @@ export default function Reg() {
         }
       } catch (error) {}
     },
-    [dispatch, history, loginURL, RegPageLanguage, language, ValidForm, check]
+    [dispatch, history, RegPageLanguage, language, ValidForm, check]
   );
 
   return (
