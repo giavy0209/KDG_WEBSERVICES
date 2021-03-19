@@ -86,7 +86,7 @@ const Header = () => {
                 <div className='header__left--right'>
                     {width > 1500 ? (
                         <>
-                            <button className='button-upload mr-20'>Upload</button>
+                            <button className='button-upload mr-20' onClick={() => handleNavigation('/upload')}>Upload</button>
                             <button
                                 className='button-livenow'
                                 onClick={() => handleNavigation('/setup')}
@@ -96,7 +96,7 @@ const Header = () => {
                         </>
                     ) : (
                         <>
-                            <RiIcon.RiVideoUploadLine className='header__iconHover mr-30' />
+                            <RiIcon.RiVideoUploadLine className='header__iconHover mr-30' onClick={() => handleNavigation('/upload')} />
                             <RiIcon.RiLiveLine
                                 className='header__iconHover'
                                 onClick={() => handleNavigation('/setup')}
