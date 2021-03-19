@@ -25,7 +25,8 @@ const Header = () => {
     const history = useHistory();
     const location = useLocation();
 
-    const user_id = useSelector(state => state.user?._id);
+    const user_id = useSelector(state => state.user);
+    console.log(user_id);
     const first_name = useSelector(state => state.user?.first_name);
     const last_name = useSelector(state => state.user?.last_name);
     const email = useSelector(state => state.user?.email);

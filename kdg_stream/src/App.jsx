@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { Redirect, Route, Switch, useLocation } from 'react-router-dom';
 import { Footer, Header } from './components';
 import { storage } from './helpers';
-import { Home, Live, Login, Profile, Setup, Upload } from './pages';
+import { Home, Live, Login, Profile, Setup, Upload, Video } from './pages';
 import { asyncInitAuth } from './store/authAction';
 
 const App = () => {
@@ -36,9 +36,9 @@ const App = () => {
         <Route path='/profile' exact>
           <Profile />
         </Route>
-        {/* <Route path='/setup' exact>
-          <Setup />
-        </Route> */}
+        <Route path='/watch' exact>
+          <Video />
+        </Route>
         <Route path='/upload' exact>
           <Upload />
         </Route>

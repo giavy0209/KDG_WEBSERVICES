@@ -1,4 +1,4 @@
-@import '../common.scss';
+@import "../common.scss";
 
 .dropdown {
   position: relative;
@@ -127,6 +127,33 @@
     display: none;
   }
 
+  &__progress-bar {
+    width: 100%;
+    border-radius: 50px;
+    height: 20px;
+    background-color: #fff;
+    position: relative;
+    overflow: hidden;
+    background-image: url("../images/setup/progressbar.png");
+    > span {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      transition: 0.3s;
+      width: var(--progress);
+      background-color: #e41a7f;
+      span {
+        top: 50%;
+        left: 50%;
+        color: #fff;
+        position: absolute;
+        border-radius: 50px;
+        transform: translate(-50%, -50%);
+      }
+    }
+  }
+
   &__left {
     width: calc(70% - 10px);
     height: calc(100% - 20px);
@@ -222,7 +249,7 @@
     position: relative;
 
     &::before {
-      content: '';
+      content: "";
       display: block;
       padding-top: 60%;
     }
@@ -577,7 +604,7 @@
             position: relative;
 
             &::before {
-              content: '';
+              content: "";
               position: absolute;
               top: 50%;
               left: 50%;
@@ -634,9 +661,9 @@
       flex-direction: column;
       text-align: center;
       overflow: hidden;
-      
+
       video {
-        position : absolute;
+        position: absolute;
         top: 0;
         left: 0;
         width: 100%;

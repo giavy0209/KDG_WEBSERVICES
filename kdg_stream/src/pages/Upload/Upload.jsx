@@ -1,59 +1,115 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import * as FaIcon from 'react-icons/fa';
 import * as GoIcon from 'react-icons/go';
 import * as RiIcon from 'react-icons/ri';
 import * as TiIcon from 'react-icons/ti';
+import { useHistory } from 'react-router';
 import '../../assets/css/upload.css';
 import callAPI from '../../axios';
-
+import socket from '../../socket'
 const Upload = () => {
-  const [isShowDropdown, setIsShowDropdown] = useState(false);
-  const [currentRadio, setCurrentRadio] = useState(0);
+  const history = useHistory()
+  const [Guid, setGuid] = useState(null);
+  const [ShortId, setShortId] = useState(null);
+  const [IsUploading, setIsUploading] = useState(false);
+  const [Status, setStatus] = useState(null);
+  const [StatusCode, setStatusCode] = useState(null);
   const [VideoSrc, setVideoSrc] = useState(null)
   const [VideoTitle, setVideoTitle] = useState('')
+  const [Progress, setProgress] = useState('0%')
   const readURL = useCallback((input) => {
     input.persist()
     input = input.target
-    console.log(input.files[0]);
     if (input.files && input.files[0]) {
       setVideoTitle(input.files[0].name)
       var reader = new FileReader();
       reader.onload = function (e) {
-        var label = input.nextElementSibling
-        setVideoSrc(e.target.result)
+        let buffer = e.target.result;
+        let videoBlob = new Blob([new Uint8Array(buffer)], { type: 'video/mp4' });
+        let url = window.URL.createObjectURL(videoBlob);
+        setVideoSrc(url)
       }
-      reader.readAsDataURL(input.files[0]);
+      reader.readAsArrayBuffer(input.files[0]);
     }
   }, [])
 
   const handleUpload = useCallback(async e => {
     e.preventDefault()
+    if(IsUploading) return
+    setIsUploading(true)
     const data = new FormData(e.target);
-    const submitData = {};
-    for (var pair of data.entries()) {
-      submitData[pair[0]] = pair[1];
-    }
-    console.log(submitData);
+
+    setStatus('Đang tải lên')
+    setStatusCode(null)
     const res = await callAPI.post('/upload_video', data, true, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
       onUploadProgress: e => {
-        console.log(e);
         if (e.lengthComputable) {
+          let percent = Math.round(e.loaded / e.total * 100)
+          if(percent > 90) percent = 90
+          setProgress( percent + '%')
           console.log(e.loaded + ' ' + e.total);
         }
       }
     })
-    console.log(res);
-  }, [])
+    if(res.status === 1) {
+      setStatus('Tải lên thành công, chờ xử lý video')
+      setGuid(res.guid)
+      setShortId(res.video.short_id)
+    }
+    if(res.status === 0) {
+      setStatus('Có lỗi trong quá trình xử lý video, vui lòng thử lại')
+    }
+  }, [IsUploading])
+
+  useEffect(() => {
+    const handleVideoStatus = ({status , guid}) => {
+      if(guid !== Guid) return
+      switch (status) {
+        case 1:
+          setStatus('Đang xử lý video')
+          setProgress('91%')
+          break
+        case 2 :
+          setStatus('Đang mã hóa video')
+          setProgress('95%')
+          break
+        case 4 : 
+          setStatus('Video có thể phát, xem ngay')
+          setProgress('99%')
+          setIsUploading(false)
+          setStatusCode(4)
+          break
+        case 3 :
+          setStatus('Đã xử lý xong video với chất lượng tốt nhất, xem ngay')
+          setProgress('100%')
+          break
+        case 5 : 
+          setStatus('Có lỗi trong quá trình xử lý video, vui lòng thử lại')
+          break
+      }
+    }
+    socket.on('video_status' ,handleVideoStatus)
+
+    return () => {
+      socket.removeListener('video_status' , handleVideoStatus)
+    }
+  },[Guid])
 
   return (
     <div className='setup'>
       <form onSubmit={handleUpload} className='setup__tabSetup'>
         <div className='setup__tabSetup-title'>Upload</div>
-        <div className='setup__tabSetup-inputBox'>
-          <input value={VideoTitle} onChange={e => setVideoTitle(e.target.value)} name="title" type='text' placeholder='Title' />
+        {
+          Status && <> 
+          <div style={{'--progress' : Progress}} className="setup__progress-bar"><span><span>{Progress}</span></span></div>
+          <div onClick={() => {StatusCode === 4 && history.push('/watch?v='+ShortId)}} className="status mt-5">{Status}</div>
+          </>
+        }
+        <div className='setup__tabSetup-inputBox mt-20'>
+          <input value={VideoTitle} onChange={e => setVideoTitle(e.target.value)} name="name" type='text' placeholder='Title' />
         </div>
         <div className='setup__tabSetup-textareaBox mt-20'>
           <textarea name="description" placeholder='Something about this livestream'></textarea>
@@ -124,7 +180,7 @@ const Upload = () => {
           {VideoSrc && <video autoPlay muted src={VideoSrc}></video>}
           <GoIcon.GoCloudUpload className='icon' />
         </label>
-        <button type="submit" className='button-upload mt-20' >Upload</button>
+        <button style={{pointerEvents : IsUploading ? 'none' : 'all'}} type="submit" className='button-upload mt-20' >Upload</button>
       </form>
     </div>
   );
