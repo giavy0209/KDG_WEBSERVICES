@@ -1,31 +1,57 @@
 const keyToken = 'jwt';
 const keyRefresh = 'refresh';
+const keyLanguage = 'language';
 
-const storage = {
+const Storage = {
   setToken(token) {
     localStorage.setItem(keyToken, JSON.stringify(token));
   },
+
   getToken() {
-    return JSON.parse(localStorage.getItem(keyToken));
+    const data = localStorage.getItem(keyToken);
+    if (data) return JSON.parse(data);
+    else return null;
+  },
+
+  clearToken() {
+    localStorage.clear(keyToken);
   },
 
   setRefresh(token) {
     localStorage.setItem(keyRefresh, JSON.stringify(token));
   },
+
   getRefresh() {
-    return JSON.parse(localStorage.getItem(keyRefresh));
+    const data = localStorage.getItem(keyRefresh);
+    if (data) return JSON.parse(data);
+    else return null;
+  },
+
+  clearRefresh() {
+    localStorage.clear(keyRefresh);
+  },
+
+  setLanguage(token) {
+    localStorage.setItem(keyLanguage, JSON.stringify(token));
+  },
+
+  getLanguage() {
+    const data = localStorage.getItem(keyLanguage);
+    if (data) return JSON.parse(data);
+    else return null;
+  },
+
+  clearLanguage() {
+    localStorage.clear(keyLanguage);
   },
 
   setItem(key, item) {
-    localStorage.setItem(key, JSON.parse(item));
+    localStorage.setItem(key, JSON.stringify(item));
   },
+
   getItem(key) {
     return JSON.parse(localStorage.getItem(key));
   },
-
-	clear() {
-		localStorage.clear();
-	}
 };
 
-export default storage;
+export default Storage;

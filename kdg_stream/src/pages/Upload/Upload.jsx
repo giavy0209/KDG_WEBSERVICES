@@ -1,25 +1,64 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import * as FaIcon from 'react-icons/fa';
 import * as GoIcon from 'react-icons/go';
 import * as RiIcon from 'react-icons/ri';
 import * as TiIcon from 'react-icons/ti';
-import '../../assets/css/setup.css';
+import '../../assets/css/upload.css';
+import callAPI from '../../axios';
 
 const Upload = () => {
   const [isShowDropdown, setIsShowDropdown] = useState(false);
   const [currentRadio, setCurrentRadio] = useState(0);
+  const [VideoSrc, setVideoSrc] = useState(null)
+  const [VideoTitle, setVideoTitle] = useState('')
+  const readURL = useCallback((input) => {
+    input.persist()
+    input = input.target
+    console.log(input.files[0]);
+    if (input.files && input.files[0]) {
+      setVideoTitle(input.files[0].name)
+      var reader = new FileReader();
+      reader.onload = function (e) {
+        var label = input.nextElementSibling
+        setVideoSrc(e.target.result)
+      }
+      reader.readAsDataURL(input.files[0]);
+    }
+  }, [])
+
+  const handleUpload = useCallback(async e => {
+    e.preventDefault()
+    const data = new FormData(e.target);
+    const submitData = {};
+    for (var pair of data.entries()) {
+      submitData[pair[0]] = pair[1];
+    }
+    console.log(submitData);
+    const res = await callAPI.post('/upload_video', data, true, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+      onUploadProgress: e => {
+        console.log(e);
+        if (e.lengthComputable) {
+          console.log(e.loaded + ' ' + e.total);
+        }
+      }
+    })
+    console.log(res);
+  }, [])
 
   return (
     <div className='setup'>
-      <div className='setup__tabSetup'>
-        <div className='setup__tabSetup-title'>Setup</div>
+      <form onSubmit={handleUpload} className='setup__tabSetup'>
+        <div className='setup__tabSetup-title'>Upload</div>
         <div className='setup__tabSetup-inputBox'>
-          <input type='text' placeholder='Title' />
+          <input value={VideoTitle} onChange={e => setVideoTitle(e.target.value)} name="title" type='text' placeholder='Title' />
         </div>
         <div className='setup__tabSetup-textareaBox mt-20'>
-          <textarea placeholder='Something about this livestream'></textarea>
+          <textarea name="description" placeholder='Something about this livestream'></textarea>
         </div>
-        <div className='setup__tabSetup-radioBox mt-20'>
+        {/* <div className='setup__tabSetup-radioBox mt-20'>
           <div
             className={`inputRadio mr-100 ${currentRadio === 0 ? 'active' : ''}`}
             onClick={() => setCurrentRadio(0)}
@@ -34,8 +73,8 @@ const Upload = () => {
             <div className='circle mr-10'></div>
             <div className='text'>Only me</div>
           </div>
-        </div>
-        <div className='setup__tabSetup-type mt-20'>
+        </div> */}
+        {/* <div className='setup__tabSetup-type mt-20'>
           <p className='mb-20'>Thể loại (Tối đa 3 thể loại)</p>
           <div className='dropdown'>
             <div className='dropdown__selected' onClick={() => setIsShowDropdown(!isShowDropdown)}>
@@ -71,7 +110,7 @@ const Upload = () => {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
         {/* <div className='setup__tabSetup-note mt-30'>
           <p>Lưu ý</p>
           <p>
@@ -80,13 +119,13 @@ const Upload = () => {
           </p>
           <p>- Không sử dụng hình ảnh nghệ sĩ nổi tiếng khi chưa có sự cho phép.</p>
         </div> */}
-        <div className='setup__tabSetup-thumbnailBox mt-20'>
-          <input type='file' />
+        <label htmlFor="inputfile" className='setup__tabSetup-thumbnailBox mt-20'>
+          <input name="video" onChange={readURL} id="inputfile" type='file' />
+          {VideoSrc && <video autoPlay muted src={VideoSrc}></video>}
           <GoIcon.GoCloudUpload className='icon' />
-          <p>Vui lòng sử dụng định dạng JPG, JPEG, PNG. Kích thước tệp tối đa = 2MB</p>
-          <p>Để đảm bảo hình ảnh thu hút người xem, vui lòng sử dụng hình ảnh sắc nét</p>
-        </div>
-      </div>
+        </label>
+        <button type="submit" className='button-upload mt-20' >Upload</button>
+      </form>
     </div>
   );
 };

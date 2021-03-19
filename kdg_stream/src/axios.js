@@ -1,58 +1,84 @@
 import axios from 'axios';
-import { BASE_URL } from './const';
 import { storage } from './helpers';
+import { API_DOMAIN } from './constant';
 
 function create() {
   const jwt = storage.getToken();
-  return axios.create({
-    baseURL: BASE_URL,
+  var Axios = axios.create({
+    baseURL: API_DOMAIN,
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${jwt}`,
     },
   });
+  return Axios;
 }
 
-const refreshToken = async (method, url, body) => {
+export const refreshToken = async (method, url, body) => {
   const refreshToken = storage.getRefresh();
-  if (!refreshToken) return window.open('/', '_self');
+  if (!refreshToken) {
+    return { status: 0 };
+  }
 
-  const res = await api.post('/refresh', { refresh_token: refreshToken });
-  if (res.status === 1) {
-    storage.setRefresh(res.refreshToken);
-    storage.setToken(res.jwt);
-    await api[method](url, body);
-  } else {
-    return window.open('/', '_self');
+  try {
+    const res = await callAPI.post('/refresh', { refresh_token: refreshToken });
+    if (res.status === 1) {
+      if (method && url) {
+        storage.setRefresh(res.refreshToken);
+        storage.setToken(res.jwt);
+        return await callAPI[method](url, body, false);
+      }
+
+      return { status: 1 };
+    }
+    if (res.status === 402) {
+      storage.clearRefresh();
+      storage.clearToken();
+      return { status: 0 };
+    }
+  } catch (error) {
+    console.log(error);
+    return { status: 0 };
   }
 };
 
-const api = {
-  get: async url => {
+const callAPI = {
+  get: async (url, body, reget = true) => {
     var res = (await create().get(url)).data;
     if (res.status === 401) {
-      return await refreshToken('get', url);
+      if (reget) {
+        return await refreshToken('get', url);
+      }
+      storage.clearRefresh();
+      storage.clearToken();
+      return { status: 0 };
     }
     return res;
   },
-
-  post: async (url, body) => {
-    var res = (await create().post(url, body)).data;
+  post: async (url, body, reget = true, config={}) => {
+    var res = (await create().post(url, body ,config)).data;
     if (res.status === 401) {
-      return await refreshToken('get', url);
+      if (reget) {
+        return await refreshToken('post', url, body);
+      }
+      storage.clearRefresh();
+      storage.clearToken();
+      return { status: 0 };
     }
     return res;
   },
-
-  put: async (url, body) => {
+  put: async (url, body, reget = true) => {
     var res = (await create().put(url, body)).data;
-
     if (res.status === 401) {
-      return await refreshToken('get', url);
+      if (reget) {
+        return await refreshToken('put', url, body);
+      }
+      storage.clearRefresh();
+      storage.clearToken();
+      return { status: 0 };
     }
-
     return res;
   },
 };
 
-export default api;
+export default callAPI;

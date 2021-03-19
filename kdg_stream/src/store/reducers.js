@@ -3,7 +3,6 @@ import { GET_USER, CLEAR_USER, GET_DONATE_PACKAGE } from './actionType';
 const initialState = {};
 
 const reducers = function (state = initialState, action) {
-    console.log(action);
 
     switch (action.type) {
         case GET_USER:

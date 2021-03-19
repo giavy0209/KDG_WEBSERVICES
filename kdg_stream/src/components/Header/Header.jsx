@@ -32,9 +32,9 @@ const Header = () => {
     const followNumber = useNumber(useSelector(state => state.user?.follow?.length));
     // const followNumber = useNumber(100000000);
 
-    useEffect(() => {
-        dispatch(actionGetUser());
-    }, [dispatch]);
+    // useEffect(() => {
+    //     dispatch(actionGetUser());
+    // }, [dispatch]);
 
     const handleNavigation = useCallback(
         pathname => {
@@ -87,20 +87,20 @@ const Header = () => {
                     {width > 1500 ? (
                         <>
                             <button className='button-upload mr-20' onClick={() => handleNavigation('/upload')}>Upload</button>
-                            <button
+                            {/* <button
                                 className='button-livenow'
                                 onClick={() => handleNavigation('/setup')}
                             >
                                 Setup
-                            </button>
+                            </button> */}
                         </>
                     ) : (
                         <>
                             <RiIcon.RiVideoUploadLine className='header__iconHover mr-30' onClick={() => handleNavigation('/upload')} />
-                            <RiIcon.RiLiveLine
+                            {/* <RiIcon.RiLiveLine
                                 className='header__iconHover'
                                 onClick={() => handleNavigation('/setup')}
-                            />
+                            /> */}
                         </>
                     )}
                 </div>
