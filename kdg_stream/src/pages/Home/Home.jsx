@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import '../../assets/css/home.css';
 
 import { TabPane, Tab, Card, Following, Cover, Video } from '../../components';
@@ -28,16 +28,31 @@ const Home = () => {
         setHomeRightHeight(homeLeftHeight);
     }, [height]);
 
+    const getRecommend = useCallback(async () => {
+        const ids= Videos.map(o => o._id)
+        const res = await callAPI.get(`/recommend?ids=${ids}`)
+        setVideos([...Videos , ...res.data])
+    },[Videos])
+
+    const handleScroll = useCallback(async (e) => {
+        const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
+        
+        if (bottom) {
+            await getRecommend()
+            e.target.scroll(0 ,e.target.scrollTop + 50)
+        }
+    })
+
     useMemo(() => {
         callAPI.get('/recommend')
         .then(res =>{
-            setVideos(res.data)
+            setVideos([...res.data])
         })
     },[])
 
     return (
         <div className='home'>
-            <div className='home__left mt-10'>
+            <div onScroll={handleScroll} className='home__left mt-10'>
                 {/* <div>
                     <div className='home__title'>
                         <p>{home[language].following}</p>

@@ -29,8 +29,7 @@ const Live = () => {
                     <div className='live__info-menu'>
                     </div>
                     <div className='live__info-title'>
-                        Live: Homeworld Mobile – Hậu Bản Di Động Của Thương Hiệu Game Chiến Thuật
-                        Khi Xưa
+                        {Video?.name}
                     </div>
                     <div className='live__info-tag'># Trò Chơi Trí Tuệ</div>
                     <div className='live__info-info'>
@@ -41,33 +40,11 @@ const Live = () => {
                             <div className='live__info-name'>Trà Long</div>
                             <div className='live__info-date'>Today, 29-08-2021</div>
                             <div className='live__info-view'>
-                                <span>{useNumber(11000)} view</span>
-                                <span>{useNumber(200)} follower</span>
+                                <span>{useNumber(Video?.views)} view</span>
+                                <span>{useNumber(0)} follower</span>
                             </div>
                             <div className={`live__info-desc ${isShowMore ? 'd-block' : ''}`}>
-                                Grab your ☕, ☀️ Grab your 🚰!, 🌇 Grab your 🍹, and join me every
-                                Friday morning to explore the beauty of digital risk-taking &
-                                learning to draw and sketchnote with Adobe Fres
-                                <br />
-                                <br />
-                                Grab your ☕, ☀️ Grab your 🚰!, 🌇 Grab your 🍹, and join me every
-                                Friday morning to explore the beauty of digital risk-taking &
-                                learning to draw and sketchnote with Adobe Fres
-                                <br />
-                                <br />
-                                Grab your ☕, ☀️ Grab your 🚰!, 🌇 Grab your 🍹, and join me every
-                                Friday morning to explore the beauty of digital risk-taking &
-                                learning to draw and sketchnote with Adobe Fres
-                                <br />
-                                <br />
-                                Grab your ☕, ☀️ Grab your 🚰!, 🌇 Grab your 🍹, and join me every
-                                Friday morning to explore the beauty of digital risk-taking &
-                                learning to draw and sketchnote with Adobe Fres
-                                <br />
-                                <br />
-                                Grab your ☕, ☀️ Grab your 🚰!, 🌇 Grab your 🍹, and join me every
-                                Friday morning to explore the beauty of digital risk-taking &
-                                learning to draw and sketchnote with Adobe Fres
+                                {Video?.description}
                             </div>
                             <div
                                 className='live__info-showMore mt-20'

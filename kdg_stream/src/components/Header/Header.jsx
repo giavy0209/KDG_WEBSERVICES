@@ -108,7 +108,7 @@ const Header = () => {
             </div>
 
             <div className='header__right'>
-                <div
+                {user_id && <><div
                     style={{ position: 'relative' }}
                     onClick={e => {
                         e.stopPropagation();
@@ -171,7 +171,7 @@ const Header = () => {
                             </div>
                         </div>
                     )}
-                </div>
+                </div></>}
 
                 {user_id ? (
                     <div
