@@ -31,12 +31,12 @@ export default function StakingJoin() {
       try {
         dispatch(actChangeLoading(true));
         const res = await callAPI.get(`/staking_package?coin=${coin}`);
-        dispatch(actChangeLoading(true));
+        dispatch(actChangeLoading(false));
 
         setPackages(res.data);
         setChoose(res.data[0]);
       } catch (error) {
-        dispatch(actChangeLoading(true));
+        dispatch(actChangeLoading(false));
       }
     },
     [dispatch]
