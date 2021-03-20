@@ -23,8 +23,10 @@ socket.on('disconnect', r => {
     setTimeout(async () => {
       await refreshToken();
       const token = await storage.getToken();
-      socket.auth.token = token;
-      socket.connect();
+      if(token){
+        socket.auth.token = token;
+        socket.connect();
+      }
     }, 1000);
   }
 });

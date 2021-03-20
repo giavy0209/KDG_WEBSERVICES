@@ -15,6 +15,7 @@ const Live = () => {
     useMemo(() => {
         callAPI.get('/video?sid='+id)
         .then(res => {
+            console.log(res);
             setVideo(res.data)
         })
     },[id])

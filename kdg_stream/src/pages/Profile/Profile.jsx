@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import '../../assets/css/profile.css';
 
 import { Card, Tab, TabPane, Table, Popper1 } from '../../components';
@@ -30,10 +30,14 @@ import package6 from '../../assets/images/profile/package6.png';
 import package7 from '../../assets/images/profile/package7.png';
 import package8 from '../../assets/images/profile/package8.png';
 import package9 from '../../assets/images/profile/package9.png';
+import { useSelector } from 'react-redux';
+import callAPI from '../../axios';
+import { STORAGE_DOMAIN } from '../../constant';
 
 const Profile = () => {
     const [{ language, profile }] = useLanguageLayerValue();
     const history = useHistory();
+    const user = useSelector(state => state.user)
     const [isShow, setIsShow] = useState(false);
     const [type, setType] = useState('changes');
     const [pack, setPack] = useState(null);
@@ -43,6 +47,30 @@ const Profile = () => {
     const [profileRightHeight, setProfileRightHeight] = useState(0);
 
     const [isShowHistory, setIsShowHistory] = useState(false);
+
+    const readURL = useCallback((input) => {
+        input.persist()
+        input = input.target
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = async function (e) {
+                let buffer = e.target.result;
+                let videoBlob = new Blob([new Uint8Array(buffer)]);
+                let url = window.URL.createObjectURL(videoBlob);
+                input.parentElement.nextElementSibling.querySelector('img').setAttribute('src', url)
+
+                const data = new FormData(input.parentElement);
+                
+                const res = await callAPI.post('/avatar' , data)
+                console.log(res);
+                if(res.status === 1) {
+                }
+
+            }
+            reader.readAsArrayBuffer(input.files[0]);
+        }
+    }, [])
+
 
     useEffect(() => {
         let profileLeft = document.querySelector('.profile__left');
@@ -154,26 +182,32 @@ const Profile = () => {
                     </div>
 
                     <div className='profile__cover-ctnInfo'>
-                        <div className='profile__cover-avatar'>
-                            <img src={avatar1} alt='' />
-                        </div>
+                        <form id="avatar" >
+                            <input onChange={readURL} style={{ display: 'none' }} type="file" name="file" id="avatar-input" />    
+                        </form>
+                        <label htmlFor="avatar-input" className='profile__cover-avatar'>
+                            <img src={STORAGE_DOMAIN + user?.kyc.avatar?.path} alt='' />
+                            {/* <div className="profile__cover-confirm">
+                                
+                            </div> */}
+                        </label>
 
-                        <p className='profile__cover-name'>Trà Long</p>
+                        <p className='profile__cover-name'>{user?.kyc.first_name} {user?.kyc.last_name}</p>
 
                         <div className='layoutFlex layout-3' style={{ '--gap-column': '10px' }}>
                             <div className='profile__cover-info layoutFlex-item'>
                                 <p>{profile[language].follower}</p>
-                                <p>{useNumber(1100)}</p>
+                                <p>{useNumber(0)}</p>
                             </div>
 
                             <div className='profile__cover-info layoutFlex-item'>
                                 <p>{profile[language].following}</p>
-                                <p>{useNumber(11100)}</p>
+                                <p>{useNumber(0)}</p>
                             </div>
 
                             <div className='profile__cover-info layoutFlex-item'>
                                 <p>{profile[language].balance}</p>
-                                <p>{useNumber(111100)}</p>
+                                <p>{useNumber(0)}</p>
                             </div>
                         </div>
                     </div>
@@ -286,15 +320,14 @@ const Profile = () => {
                                     Tra Long's recently streamed Categories
                                 </div>
                                 <div
-                                    className={`layoutFlex ${
-                                        width > 1330
+                                    className={`layoutFlex ${width > 1330
                                             ? 'layout-4'
                                             : width > 1030
-                                            ? 'layout-3'
-                                            : width > 570
-                                            ? 'layout-2'
-                                            : 'layout-1'
-                                    }`}
+                                                ? 'layout-3'
+                                                : width > 570
+                                                    ? 'layout-2'
+                                                    : 'layout-1'
+                                        }`}
                                     style={{
                                         '--gap-column': width > 992 ? '50px' : '25px',
                                         '--gap-row': '40px',
@@ -365,9 +398,8 @@ const Profile = () => {
 
                             <div className='profile__boxManage'>
                                 <div
-                                    className={`profile__boxManage-title profile__historyTitle ${
-                                        !isShowHistory ? 'mb-0' : ''
-                                    }`}
+                                    className={`profile__boxManage-title profile__historyTitle ${!isShowHistory ? 'mb-0' : ''
+                                        }`}
                                     onClick={() => setIsShowHistory(!isShowHistory)}
                                 >
                                     <span>History</span>
@@ -391,23 +423,22 @@ const Profile = () => {
                             <div className='profile__boxManage'>
                                 <div className='profile__boxManage-title'>Manage Donate</div>
                                 <div
-                                    className={`layoutFlex ${
-                                        width > 1700
+                                    className={`layoutFlex ${width > 1700
                                             ? 'layout-6'
                                             : width > 1520
-                                            ? 'layout-8'
-                                            : width > 1360
-                                            ? 'layout-7'
-                                            : width > 1200
-                                            ? 'layout-6'
-                                            : width > 1040
-                                            ? 'layout-5'
-                                            : width > 720
-                                            ? 'layout-4'
-                                            : width > 560
-                                            ? 'layout-3'
-                                            : 'layout-2'
-                                    }`}
+                                                ? 'layout-8'
+                                                : width > 1360
+                                                    ? 'layout-7'
+                                                    : width > 1200
+                                                        ? 'layout-6'
+                                                        : width > 1040
+                                                            ? 'layout-5'
+                                                            : width > 720
+                                                                ? 'layout-4'
+                                                                : width > 560
+                                                                    ? 'layout-3'
+                                                                    : 'layout-2'
+                                        }`}
                                     style={{ '--gap-column': '60px', '--gap-row': '30px' }}
                                 >
                                     {dataPackage.map((item, i) => (
