@@ -26,7 +26,7 @@ const Live = () => {
     },[id])
 
     const handleFollow = useCallback(async () => {
-        const res = await callAPI.post('follow?id='+Video.user._id)
+        const res = await callAPI.post('follow?id='+Video?.user._id)
         if(res.status === 1) {
             setIsFollowed(!IsFollowed)
         }
@@ -65,7 +65,7 @@ const Live = () => {
                                 {!isShowMore ? 'Show more...' : 'Hide...'}
                             </div>
                         </div>
-                        {(user && user._id !== Video.user._id) && <div>
+                        {(user && user._id !== Video?.user._id) && <div>
                             <div
                             onClick={handleFollow}
                             className={`live__info-btnFollow ${IsFollowed ? 'active' : ''}`}>
