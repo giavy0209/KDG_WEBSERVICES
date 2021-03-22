@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import '../../assets/css/profile.css';
 
 import { Card, Tab, TabPane, Table, Popper1 } from '../../components';
@@ -13,6 +13,7 @@ import * as FaIcon from 'react-icons/fa';
 import * as TiIcon from 'react-icons/ti';
 import * as HiIcon from 'react-icons/hi';
 
+import avatar0 from '../../assets/images/header/avatar0.png';
 import avatar1 from '../../assets/images/home/avatar1.png';
 import avatar2 from '../../assets/images/home/avatar2.png';
 import avatar3 from '../../assets/images/home/avatar3.png';
@@ -35,18 +36,20 @@ import callAPI from '../../axios';
 import { STORAGE_DOMAIN } from '../../constant';
 
 const Profile = () => {
+    const history = useHistory()
     const [{ language, profile }] = useLanguageLayerValue();
-    const history = useHistory();
     const user = useSelector(state => state.user)
     const [isShow, setIsShow] = useState(false);
     const [type, setType] = useState('changes');
     const [pack, setPack] = useState(null);
-
     const [width, height] = useWindowSize();
     const [isShowProfileRight, setIsShowProfileRight] = useState(false);
     const [profileRightHeight, setProfileRightHeight] = useState(0);
-
     const [isShowHistory, setIsShowHistory] = useState(false);
+
+    const [Videos, setVideos] = useState([])
+
+    const isLoadFirst = useRef(true)
 
     const readURL = useCallback((input) => {
         input.persist()
@@ -60,10 +63,10 @@ const Profile = () => {
                 input.parentElement.nextElementSibling.querySelector('img').setAttribute('src', url)
 
                 const data = new FormData(input.parentElement);
-                
-                const res = await callAPI.post('/avatar' , data)
+
+                const res = await callAPI.post('/avatar', data)
                 console.log(res);
-                if(res.status === 1) {
+                if (res.status === 1) {
                 }
 
             }
@@ -71,6 +74,26 @@ const Profile = () => {
         }
     }, [])
 
+    const getMyVideo = useCallback(async () => {
+        const res = await callAPI.get(`/videos?user=${user._id}&limit=${Videos.length + 10}` )
+        
+        setVideos([...res.data])
+    }, [Videos, user])
+
+    const handleScroll = useCallback(async e => {
+        const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
+        if (bottom) {
+            await getMyVideo();
+            e.target.scroll(0, e.target.scrollTop + 100);
+        }
+    }, [getMyVideo]);
+
+    useMemo(() => {
+        if(user && isLoadFirst.current) {
+            getMyVideo()
+            isLoadFirst.current = false
+        }
+    }, [user])
 
     useEffect(() => {
         let profileLeft = document.querySelector('.profile__left');
@@ -175,7 +198,7 @@ const Profile = () => {
     return (
         <div className='profile'>
             {isShow && <Popper1 type={type} pack={pack} />}
-            <div className='profile__left mt-10 pb-10'>
+            <div onScroll={handleScroll} className='profile__left mt-10 pb-10'>
                 <div className='profile__cover'>
                     <div className='profile__cover-img'>
                         <img src={cover1} alt='' />
@@ -183,10 +206,10 @@ const Profile = () => {
 
                     <div className='profile__cover-ctnInfo'>
                         <form id="avatar" >
-                            <input onChange={readURL} style={{ display: 'none' }} type="file" name="file" id="avatar-input" />    
+                            <input onChange={readURL} style={{ display: 'none' }} type="file" name="file" id="avatar-input" />
                         </form>
                         <label htmlFor="avatar-input" className='profile__cover-avatar'>
-                            <img src={STORAGE_DOMAIN + user?.kyc.avatar?.path} alt='' />
+                            <img src={user?.kyc.avatar ? STORAGE_DOMAIN + user?.kyc.avatar?.path : avatar0} alt='' />
                             {/* <div className="profile__cover-confirm">
                                 
                             </div> */}
@@ -197,12 +220,12 @@ const Profile = () => {
                         <div className='layoutFlex layout-3' style={{ '--gap-column': '10px' }}>
                             <div className='profile__cover-info layoutFlex-item'>
                                 <p>{profile[language].follower}</p>
-                                <p>{useNumber(0)}</p>
+                                <p>{useNumber(user?.total_follows)}</p>
                             </div>
 
                             <div className='profile__cover-info layoutFlex-item'>
                                 <p>{profile[language].following}</p>
-                                <p>{useNumber(0)}</p>
+                                <p>{useNumber(user?.total_followed)}</p>
                             </div>
 
                             <div className='profile__cover-info layoutFlex-item'>
@@ -223,7 +246,7 @@ const Profile = () => {
                 <div className='ctn-tabProfile'>
                     <Tab classHeader=''>
                         <TabPane name={profile[language].personal} key='1'>
-                            <div className='profile__boxPersonal'>
+                            {/* <div className='profile__boxPersonal'>
                                 <div className='profile__boxPersonal-title'>Live hot</div>
                                 <div
                                     className='layoutFlex layout-1'
@@ -256,66 +279,48 @@ const Profile = () => {
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> */}
 
                             <div className='profile__boxPersonal'>
                                 <div className='profile__boxPersonal-title'>Playlist</div>
                                 <div className='layoutFlex' style={{ '--gap-row': '20px' }}>
-                                    <div className='layoutFlex-item'>
+                                    {Videos.map(o => <div key={o._id} 
+                                    onClick={() => history.push('/watch?v=' + o.short_id)}
+                                    className='layoutFlex-item'>
                                         <div className='profile__video'>
                                             <div className='profile__video-thumbnail'>
-                                                <img src={video2} alt='' />
+                                                <img
+                                                onMouseOver={e => {
+                                                    var targat = e.target
+                                                    targat.setAttribute('src' , `https://vz-3f44931c-ed0.b-cdn.net/${o.guid}/preview.webp`)
+                                                }} 
+                                                onMouseOut={e => {
+                                                    var targat = e.target
+                                                    targat.setAttribute('src' , `https://vz-3f44931c-ed0.b-cdn.net/${o.guid}/thumbnail.jpg`)
+                                                }} 
+                                                src={o.thumbnail ? STORAGE_DOMAIN + o.thumbnail.path : `https://vz-3f44931c-ed0.b-cdn.net/${o.guid}/thumbnail.jpg`} alt='' />
                                             </div>
                                             <div className='profile__video-info'>
                                                 <p className='profile__video-info-title'>
-                                                    Thăm nhà Thầy Ba
+                                                    {o.name}
                                                 </p>
                                                 <div className='profile__video-info-view'>
-                                                    <span className='mr-50'>343.213 view</span>
-                                                    <span>2 hours ago</span>
+                                                    <span className='mr-50'>{o.views} view</span>
+                                                    <span>{o.create_date}</span>
                                                 </div>
-                                                <p className='profile__video-info-tag'>
-                                                    # Trò Chơi Trí Tuệ
-                                                </p>
+                                                {/* <p className='profile__video-info-tag'>
+                                                </p> */}
                                                 <p className='profile__video-info-desc'>
-                                                    Grab your ☕, ☀️ Grab your 🚰!, 🌇 Grab your 🍹,
-                                                    and join me every Friday morning to explore the
-                                                    beauty of digital risk-taking & learning to draw
-                                                    and sketchnote with Adobe Fres
+                                                    {o.description}
                                                 </p>
                                             </div>
                                         </div>
                                     </div>
-                                    <div className='layoutFlex-item'>
-                                        <div className='profile__video'>
-                                            <div className='profile__video-thumbnail'>
-                                                <img src={video3} alt='' />
-                                            </div>
-                                            <div className='profile__video-info'>
-                                                <p className='profile__video-info-title'>
-                                                    Độ Mixi:"Anh là thằng shipper nụ cười cho đời
-                                                    thôi chứ anh không bị khùng"
-                                                </p>
-                                                <div className='profile__video-info-view'>
-                                                    <span className='mr-50'>343.213 view</span>
-                                                    <span>1 hour ago</span>
-                                                </div>
-                                                <p className='profile__video-info-tag'>
-                                                    # Trò Chơi Trí Tuệ
-                                                </p>
-                                                <p className='profile__video-info-desc'>
-                                                    Grab your ☕, ☀️ Grab your 🚰!, 🌇 Grab your 🍹,
-                                                    and join me every Friday morning to explore the
-                                                    beauty of digital risk-taking & learning to draw
-                                                    and sketchnote with Adobe Fres
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    )}
                                 </div>
                             </div>
 
-                            <div className='profile__boxPersonal'>
+                            {/* <div className='profile__boxPersonal'>
                                 <div className='profile__boxPersonal-title'>
                                     Tra Long's recently streamed Categories
                                 </div>
@@ -346,7 +351,7 @@ const Profile = () => {
                                         </div>
                                     ))}
                                 </div>
-                            </div>
+                            </div> */}
                         </TabPane>
                         <TabPane name={profile[language].manage} key='2'>
                             <div className='profile__boxManage'>
@@ -424,20 +429,20 @@ const Profile = () => {
                                 <div className='profile__boxManage-title'>Manage Donate</div>
                                 <div
                                     className={`layoutFlex ${width > 1700
-                                            ? 'layout-6'
-                                            : width > 1520
-                                                ? 'layout-8'
-                                                : width > 1360
-                                                    ? 'layout-7'
-                                                    : width > 1200
-                                                        ? 'layout-6'
-                                                        : width > 1040
-                                                            ? 'layout-5'
-                                                            : width > 720
-                                                                ? 'layout-4'
-                                                                : width > 560
-                                                                    ? 'layout-3'
-                                                                    : 'layout-2'
+                                        ? 'layout-6'
+                                        : width > 1520
+                                            ? 'layout-8'
+                                            : width > 1360
+                                                ? 'layout-7'
+                                                : width > 1200
+                                                    ? 'layout-6'
+                                                    : width > 1040
+                                                        ? 'layout-5'
+                                                        : width > 720
+                                                            ? 'layout-4'
+                                                            : width > 560
+                                                                ? 'layout-3'
+                                                                : 'layout-2'
                                         }`}
                                     style={{ '--gap-column': '60px', '--gap-row': '30px' }}
                                 >

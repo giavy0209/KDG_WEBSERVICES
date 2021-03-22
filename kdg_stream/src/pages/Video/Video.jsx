@@ -1,24 +1,36 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import '../../assets/css/live.css';
 
+import avatar0 from '../../assets/images/header/avatar0.png';
 import avatar1 from '../../assets/images/live/avatar1.png';
 import useNumber from '../../hooks/useNumber';
 import { useLocation } from 'react-router';
 import callAPI from '../../axios';
+import { STORAGE_DOMAIN } from '../../constant';
+import { useSelector } from 'react-redux';
 
 
 const Live = () => {
     const location = useLocation();
     const id = new URLSearchParams(location.search).get('v');
+    const user = useSelector(state => state.user)
     const [isShowMore, setIsShowMore] = useState(false);
     const [Video, setVideo] = useState(null)
+    const [IsFollowed, setIsFollowed] = useState(false)
     useMemo(() => {
         callAPI.get('/video?sid='+id)
         .then(res => {
-            console.log(res);
             setVideo(res.data)
+            setIsFollowed(res.is_followed ? true : false)
         })
     },[id])
+
+    const handleFollow = useCallback(async () => {
+        const res = await callAPI.post('follow?id='+Video.user._id)
+        if(res.status === 1) {
+            setIsFollowed(!IsFollowed)
+        }
+    },[Video,IsFollowed])
     return (
         <div className={`live`}>
             <div className='live__left'>
@@ -32,17 +44,16 @@ const Live = () => {
                     <div className='live__info-title'>
                         {Video?.name}
                     </div>
-                    <div className='live__info-tag'># Trò Chơi Trí Tuệ</div>
                     <div className='live__info-info'>
                         <div className='live__info-avatar'>
-                            <img src={avatar1} alt='' />
+                            <img src={Video?.user.kyc.avatar ? STORAGE_DOMAIN + Video?.user?.kyc.avatar.path : avatar0} alt='' />
                         </div>
                         <div>
-                            <div className='live__info-name'>Trà Long</div>
-                            <div className='live__info-date'>Today, 29-08-2021</div>
+                            <div className='live__info-name'>{Video?.user.kyc.first_name} {Video?.user.kyc.last_name}</div>
+                            <div className='live__info-date'>{Video?.create_date}</div>
                             <div className='live__info-view'>
                                 <span>{useNumber(Video?.views)} view</span>
-                                <span>{useNumber(0)} follower</span>
+                                <span>{useNumber(Video?.user.total_follow)} follower</span>
                             </div>
                             <div className={`live__info-desc ${isShowMore ? 'd-block' : ''}`}>
                                 {Video?.description}
@@ -54,11 +65,13 @@ const Live = () => {
                                 {!isShowMore ? 'Show more...' : 'Hide...'}
                             </div>
                         </div>
-                        <div>
-                            <div className='live__info-btnFollow'>
-                                <span>Follow</span>
+                        {(user && user._id !== Video.user._id) && <div>
+                            <div
+                            onClick={handleFollow}
+                            className={`live__info-btnFollow ${IsFollowed ? 'active' : ''}`}>
+                                <span>{IsFollowed ? 'Unfollow' : 'Follow'}</span>
                             </div>
-                        </div>
+                        </div>}
                     </div>
                 </div>
 

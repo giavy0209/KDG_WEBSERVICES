@@ -6,6 +6,7 @@ import '../../assets/css/home.css';
 import avatar1 from '../../assets/images/home/avatar1.png';
 import callAPI from '../../axios';
 import { Video } from '../../components';
+import { STORAGE_DOMAIN } from '../../constant';
 import { useLanguageLayerValue } from '../../context/LanguageLayer';
 import useWindowSize from '../../hooks/useWindowSize';
 
@@ -51,14 +52,13 @@ const Home = () => {
 
   const handleScroll = useCallback(async e => {
     const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
-
     if (bottom && isLoadRef.current) {
       setIsLoading(true);
       await getRecommend();
       e.target.scroll(0, e.target.scrollTop + 100);
       setIsLoading(false);
     }
-  });
+  },[getRecommend]);
 
   useMemo(() => {
     callAPI.get('/recommend').then(res => {
@@ -106,7 +106,7 @@ const Home = () => {
               <div key={el._id} className='layoutFlex-item'>
                 <Video
                   onClick={() => history.push('/watch?v=' + el.short_id)}
-                  avatar={avatar1}
+                  avatar={el.user?.kyc.avatar?.path ? STORAGE_DOMAIN + el.user.kyc.avatar.path  : undefined}
                   title={el.name}
                   description={el.description}
                   video={el}

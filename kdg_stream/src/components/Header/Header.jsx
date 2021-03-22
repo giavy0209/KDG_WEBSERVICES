@@ -17,6 +17,7 @@ import { actionGetUser, actionClearUser } from '../../store/action';
 import { storage } from '../../helpers';
 import useNumber from '../../hooks/useNumber';
 import useWindowSize from '../../hooks/useWindowSize';
+import { STORAGE_DOMAIN } from '../../constant';
 
 const Header = () => {
     const [{ language, header }] = useLanguageLayerValue();
@@ -25,11 +26,11 @@ const Header = () => {
     const history = useHistory();
     const location = useLocation();
 
-    const user_id = useSelector(state => state.user);
-    console.log(user_id);
-    const first_name = useSelector(state => state.user?.first_name);
-    const last_name = useSelector(state => state.user?.last_name);
-    const email = useSelector(state => state.user?.email);
+    const user = useSelector(state => state.user);
+    
+    const first_name =user?.kyc.first_name
+    const last_name =user?.kyc.last_name
+    const email =user?.email
     const followNumber = useNumber(useSelector(state => state.user?.follow?.length));
     // const followNumber = useNumber(100000000);
 
@@ -85,7 +86,7 @@ const Header = () => {
                 </div>
 
                 <div className='header__left--right'>
-                    {width > 1500 ? (
+                    {user && (width > 1500 ? (
                         <>
                             <button className='button-upload mr-20' onClick={() => handleNavigation('/upload')}>Upload</button>
                             {/* <button
@@ -103,12 +104,12 @@ const Header = () => {
                                 onClick={() => handleNavigation('/setup')}
                             /> */}
                         </>
-                    )}
+                    ))}
                 </div>
             </div>
 
             <div className='header__right'>
-                {user_id && <><div
+                {user && <><div
                     style={{ position: 'relative' }}
                     onClick={e => {
                         e.stopPropagation();
@@ -173,7 +174,7 @@ const Header = () => {
                     )}
                 </div></>}
 
-                {user_id ? (
+                {user ? (
                     <div
                         className='header__userinfo'
                         onClick={e => {
@@ -181,12 +182,12 @@ const Header = () => {
                             setIsShowUserinfo(!isShowUserinfo);
                         }}
                     >
-                        <img src={true ? avatar1 : avatar0} alt='' className='header__avatar' />
+                        <img src={user ? STORAGE_DOMAIN + user?.kyc.avatar?.path : avatar0} alt='' className='header__avatar' />
                         {isShowUserinfo && (
                             <div className='popper-userinfo' onClick={e => e.stopPropagation()}>
                                 <div className='header__info bb'>
                                     <img
-                                        src={true ? avatar1 : avatar0}
+                                        src={user ? STORAGE_DOMAIN + user?.kyc.avatar?.path : avatar0}
                                         alt=''
                                         className='header__info-avatar'
                                     />
