@@ -40,17 +40,22 @@ $max-width-profileRight: 480px;
 $max-width-setupRight: 576px;
 
 @mixin hidden-text($line) {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    word-break: break-all;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: $line;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-all;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: $line;
 }
 
 %hidden-scrollbar {
-    overflow-y: auto;
-    &::-webkit-scrollbar {
-        display: none;
-    }
+  overflow-y: auto;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
+
+$footer-height: 30px;
+$sidebar-footer-height: 50px;
+
+$header-height: 56px;
