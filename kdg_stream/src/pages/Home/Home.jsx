@@ -32,6 +32,7 @@ const Home = () => {
   const classes = useStyles();
 
   const isLoadRef = useRef(true);
+  const leftRef = useRef();
 
   useEffect(() => {
     // let homeLeft = document.querySelector('.home__left');
@@ -50,15 +51,19 @@ const Home = () => {
     setVideos([...Videos, ...res.data]);
   }, [Videos]);
 
-  const handleScroll = useCallback(async e => {
-    const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
-    if (bottom && isLoadRef.current) {
-      setIsLoading(true);
-      await getRecommend();
-      e.target.scroll(0, e.target.scrollTop + 100);
-      setIsLoading(false);
-    }
-  },[getRecommend]);
+  // const handleScroll = useCallback(
+  //   async e => {
+  //     console.log('e');
+  //     const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
+  //     if (bottom && isLoadRef.current) {
+  //       setIsLoading(true);
+  //       await getRecommend();
+  //       e.target.scroll(0, e.target.scrollTop + 100);
+  //       setIsLoading(false);
+  //     }
+  //   },
+  //   [getRecommend]
+  // );
 
   useMemo(() => {
     callAPI.get('/recommend').then(res => {
@@ -66,9 +71,24 @@ const Home = () => {
     });
   }, []);
 
+  useEffect(() => {
+    document.body.onscroll = async () => {
+      const { bottom } = leftRef.current.getBoundingClientRect();
+      const isEnd = Math.floor(bottom) === window.innerHeight;
+      if (isEnd && isLoadRef.current) {
+        setIsLoading(true);
+        await getRecommend();
+        leftRef.current.scroll(0, leftRef.current.scrollTop + 100);
+        setIsLoading(false);
+      }
+    };
+
+    return () => (document.body.onscroll = null);
+  }, [getRecommend]);
+
   return (
     <div className='home'>
-      <div onScroll={handleScroll} className='home__left mt-10'>
+      <div ref={leftRef} className='home__left mt-10'>
         {/* <div>
           <div className='home__title'>
             <p>{home[language].following}</p>
@@ -106,7 +126,9 @@ const Home = () => {
               <div key={el._id} className='layoutFlex-item'>
                 <Video
                   onClick={() => history.push('/watch?v=' + el.short_id)}
-                  avatar={el.user?.kyc.avatar?.path ? STORAGE_DOMAIN + el.user.kyc.avatar.path  : undefined}
+                  avatar={
+                    el.user?.kyc.avatar?.path ? STORAGE_DOMAIN + el.user.kyc.avatar.path : undefined
+                  }
                   title={el.name}
                   description={el.description}
                   video={el}

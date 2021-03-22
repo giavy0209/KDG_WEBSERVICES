@@ -3,26 +3,29 @@
 .button-upload {
   cursor: pointer;
   user-select: none;
-  font-size: $size-2;
-  font-weight: 600;
-  height: 60px;
-  min-width: 150px;
-  border-radius: 20px;
-  border: 2px solid #e41a7f;
-  transition: 0.3s;
-  color: #e41a7f;
-  background-color: #fff;
 
+  font-size: $size-4;
+  font-weight: 600;
+  color: $main-color;
+  background-color: $background-white;
+
+  height: 40px;
+  padding: 0 20px;
+  border-radius: 20px;
+  border: 2px solid $main-color;
+
+  transition: 0.3s;
   &:hover {
-    color: #fff;
-    background-color: #e41a7f;
+    color: $background-white;
+    background-color: $main-color;
   }
 }
 
 .header {
-  height: 56px;
-  position: relative;
+  height: $header-height;
   z-index: $z-index-header;
+  position: sticky;
+  top: 0;
 
   display: flex;
   justify-content: space-between;
@@ -33,12 +36,15 @@
   &__searchBarCon {
     position: fixed;
     z-index: $z-index-searchBar;
-    top: 40px;
+    top: $footer-height;
     left: 0;
+
     width: 100%;
-    height: 80px;
-    background-color: $background-white;
+    height: $header-height;
     padding: 0 10px;
+
+    background-color: $background-white;
+
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -46,8 +52,8 @@
 
   &__searchBar {
     position: relative;
-    width: calc(100% - 40px - 15px);
-    height: 50px;
+    width: calc(100% - 55px);
+    height: $search-height;
 
     input {
       display: block;
@@ -60,7 +66,7 @@
       border-radius: 5px;
 
       color: #8a8c8e;
-      font-size: 24px;
+      font-size: 20px;
 
       &::placeholder {
         color: #8a8c8e;
@@ -70,8 +76,7 @@
 
   &__left {
     width: calc(75% - 10px);
-    padding-left: 25px;
-    padding-right: 15px;
+    padding: 0 25px;
 
     display: flex;
     align-items: center;
@@ -112,33 +117,37 @@
 
     > img {
       display: block;
-      height: 40px;
+
+      height: $logo-height;
+
       position: relative;
       z-index: 2;
     }
 
     &:hover {
       &::before {
-        z-index: 1;
         content: '';
         pointer-events: none;
-        background-color: #d9d9d9;
 
+        z-index: 1;
         position: absolute;
         top: -5px;
         left: -10px;
         right: -10px;
         bottom: -5px;
+
         border-radius: 5px;
+        background-color: $background-color-hover;
       }
     }
   }
 
   &__search {
     position: relative;
-    min-width: 300px;
+
     width: 500px;
-    height: 40px;
+    min-width: 300px;
+    height: $search-height;
     margin-left: 20px;
 
     input {
@@ -148,14 +157,14 @@
       padding-left: 80px;
       padding-right: 20px;
 
-      color: #8a8c8e;
-      font-size: 24px;
+      color: $sub-title-color;
+      font-size: $size-4;
 
       border-radius: 5px;
       background-color: rgba(217, 217, 217, 0.4);
 
       &::placeholder {
-        color: #8a8c8e;
+        color: $light-text-color;
       }
     }
   }
@@ -163,40 +172,27 @@
   &__searchIcon1 {
     cursor: pointer;
     user-select: none;
+
     position: absolute;
     top: 50%;
     left: 20px;
     transform: translateY(-50%);
-    font-size: 40px;
+
+    font-size: $icon-size;
   }
 
   &__iconHover {
     cursor: pointer;
     user-select: none;
-    border-radius: 5px;
-    color: #e41a7f;
-    font-size: 30px;
+
+    color: $main-color;
+    font-size: $icon-size;
+
     display: block;
+    border-radius: 5px;
 
     &:hover {
       background-color: $background-color-hover;
-    }
-  }
-
-  .button-livenow {
-    cursor: pointer;
-    user-select: none;
-    color: #fff;
-    font-size: $size-2;
-    font-weight: 600;
-    height: 60px;
-    min-width: 150px;
-    border-radius: 20px;
-    background-color: #e41a7f;
-    transition: 0.3s;
-
-    &:hover {
-      background-color: #a20051;
     }
   }
 
