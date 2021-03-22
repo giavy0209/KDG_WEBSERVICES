@@ -3,7 +3,7 @@ import '../../assets/css/profile.css';
 
 import { Card, Tab, TabPane, Table, Popper1 } from '../../components';
 import { useLanguageLayerValue } from '../../context/LanguageLayer';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import useWindowSize from '../../hooks/useWindowSize';
 import useNumber from '../../hooks/useNumber';
 
@@ -18,10 +18,6 @@ import avatar1 from '../../assets/images/home/avatar1.png';
 import avatar2 from '../../assets/images/home/avatar2.png';
 import avatar3 from '../../assets/images/home/avatar3.png';
 import cover1 from '../../assets/images/profile/cover1.png';
-import video1 from '../../assets/images/profile/video1.png';
-import video2 from '../../assets/images/profile/video2.png';
-import video3 from '../../assets/images/profile/video3.png';
-import video4 from '../../assets/images/profile/video4.png';
 import package1 from '../../assets/images/profile/package1.png';
 import package2 from '../../assets/images/profile/package2.png';
 import package3 from '../../assets/images/profile/package3.png';
@@ -35,10 +31,110 @@ import { useSelector } from 'react-redux';
 import callAPI from '../../axios';
 import { STORAGE_DOMAIN } from '../../constant';
 
+const dataHead1 = {
+    avatar: '',
+    name: 'Name',
+    date: 'Date',
+    amount: 'Amount',
+    setting: '',
+};
+
+const dataBody1 = [
+    {
+        avatar: () => <img src={avatar1} alt='' className='table__ava' />,
+        name: 'Jackie Phas',
+        date: '25-12-2020',
+        amount: '200 NB',
+        setting: () => <HiIcon.HiDotsVertical className='table__dotIcon' />,
+    },
+    {
+        avatar: () => <img src={avatar1} alt='' className='table__ava' />,
+        name: 'Trung Phim',
+        date: '05-10-2020',
+        amount: '175 NB',
+        setting: () => <HiIcon.HiDotsVertical className='table__dotIcon' />,
+    },
+    {
+        avatar: () => <img src={avatar1} alt='' className='table__ava' />,
+        name: 'Nguyen Viet',
+        date: '14-07-2020',
+        amount: '80 NB',
+        setting: () => <HiIcon.HiDotsVertical className='table__dotIcon' />,
+    },
+];
+
+const dataHead = {
+    status: 'Status',
+    date: 'Date',
+    amount: 'Amount',
+    note: 'Note',
+    setting: '',
+};
+
+const dataBody = [
+    {
+        status: 'Convert',
+        date: '01-12-2020',
+        amount: '200 NB',
+        note: 'from NB to KDG',
+        setting: () => <HiIcon.HiDotsVertical className='table__dotIcon' />,
+    },
+    {
+        status: 'Donate',
+        date: '02-09-2020',
+        amount: '500 NB',
+        note: 'to Ha Lan',
+        setting: () => <HiIcon.HiDotsVertical className='table__dotIcon' />,
+    },
+    {
+        status: 'Donate',
+        date: '13-01-2020',
+        amount: '135 NB',
+        note: 'to Thay Giao Ba',
+        setting: () => <HiIcon.HiDotsVertical className='table__dotIcon' />,
+    },
+];
+
+const dataPackage = [
+    package1,
+    package2,
+    package3,
+    package4,
+    package5,
+    package6,
+    package7,
+    package8,
+    package9,
+];
+
+const readURL = (input) => {
+    input.persist()
+    input = input.target
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = async function (e) {
+            let buffer = e.target.result;
+            let videoBlob = new Blob([new Uint8Array(buffer)]);
+            let url = window.URL.createObjectURL(videoBlob);
+            input.parentElement.nextElementSibling.querySelector('img').setAttribute('src', url)
+
+            const data = new FormData(input.parentElement);
+
+            const res = await callAPI.post('/avatar', data)
+            if (res.status === 1) {
+            }
+
+        }
+        reader.readAsArrayBuffer(input.files[0]);
+    }
+}
 const Profile = () => {
     const history = useHistory()
+
+    const uid = new URLSearchParams(useLocation().search).get('uid');
+    let user = useSelector(state => state.user)
+
     const [{ language, profile }] = useLanguageLayerValue();
-    const user = useSelector(state => state.user)
     const [isShow, setIsShow] = useState(false);
     const [type, setType] = useState('changes');
     const [pack, setPack] = useState(null);
@@ -46,54 +142,47 @@ const Profile = () => {
     const [isShowProfileRight, setIsShowProfileRight] = useState(false);
     const [profileRightHeight, setProfileRightHeight] = useState(0);
     const [isShowHistory, setIsShowHistory] = useState(false);
-
+    const [IsFollowed, setIsFollowed] = useState(false);
     const [Videos, setVideos] = useState([])
-
+    const [UserOwner, setUserOwner] = useState({})
     const isLoadFirst = useRef(true)
 
-    const readURL = useCallback((input) => {
-        input.persist()
-        input = input.target
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-            reader.onload = async function (e) {
-                let buffer = e.target.result;
-                let videoBlob = new Blob([new Uint8Array(buffer)]);
-                let url = window.URL.createObjectURL(videoBlob);
-                input.parentElement.nextElementSibling.querySelector('img').setAttribute('src', url)
-
-                const data = new FormData(input.parentElement);
-
-                const res = await callAPI.post('/avatar', data)
-                console.log(res);
-                if (res.status === 1) {
-                }
-
-            }
-            reader.readAsArrayBuffer(input.files[0]);
-        }
-    }, [])
-
-    const getMyVideo = useCallback(async () => {
-        const res = await callAPI.get(`/videos?user=${user._id}&limit=${Videos.length + 10}` )
-        
+    const getVideo = useCallback(async () => {
+        const res = await callAPI.get(`/videos?user=${uid ? uid : user._id}&limit=${Videos.length + 10}` )
         setVideos([...res.data])
-    }, [Videos, user])
+    }, [Videos, user,uid])
 
     const handleScroll = useCallback(async e => {
         const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
         if (bottom) {
-            await getMyVideo();
+            await getVideo();
             e.target.scroll(0, e.target.scrollTop + 100);
         }
-    }, [getMyVideo]);
+    }, [getVideo]);
 
     useMemo(() => {
-        if(user && isLoadFirst.current) {
-            getMyVideo()
+        if((user || uid) && isLoadFirst.current) {
+            getVideo()
             isLoadFirst.current = false
         }
-    }, [user])
+        if(uid) {
+            callAPI.get('/user?uid='+uid)
+            .then(res => {
+                setUserOwner(res.data)
+                setIsFollowed(res.data.isFollowed)
+            })
+
+        }
+    }, [user ,uid])
+
+    const handleFollow = useCallback(async () => {
+        if(uid){
+            const res = await callAPI.post('/follow?id='+uid)
+            if(res.status === 1) {
+                setIsFollowed(!IsFollowed)
+            }
+        }
+    },[uid,IsFollowed])
 
     useEffect(() => {
         let profileLeft = document.querySelector('.profile__left');
@@ -101,49 +190,6 @@ const Profile = () => {
         setProfileRightHeight(profileLeftHeight);
     }, [height]);
 
-    const dataHead = {
-        status: 'Status',
-        date: 'Date',
-        amount: 'Amount',
-        note: 'Note',
-        setting: '',
-    };
-
-    const dataBody = [
-        {
-            status: 'Convert',
-            date: '01-12-2020',
-            amount: '200 NB',
-            note: 'from NB to KDG',
-            setting: () => <HiIcon.HiDotsVertical className='table__dotIcon' />,
-        },
-        {
-            status: 'Donate',
-            date: '02-09-2020',
-            amount: '500 NB',
-            note: 'to Ha Lan',
-            setting: () => <HiIcon.HiDotsVertical className='table__dotIcon' />,
-        },
-        {
-            status: 'Donate',
-            date: '13-01-2020',
-            amount: '135 NB',
-            note: 'to Thay Giao Ba',
-            setting: () => <HiIcon.HiDotsVertical className='table__dotIcon' />,
-        },
-    ];
-
-    const dataPackage = [
-        package1,
-        package2,
-        package3,
-        package4,
-        package5,
-        package6,
-        package7,
-        package8,
-        package9,
-    ];
 
     useEffect(() => {
         function removePopper1ByClick() {
@@ -163,38 +209,6 @@ const Profile = () => {
         };
     }, []);
 
-    const dataHead1 = {
-        avatar: '',
-        name: 'Name',
-        date: 'Date',
-        amount: 'Amount',
-        setting: '',
-    };
-
-    const dataBody1 = [
-        {
-            avatar: () => <img src={avatar1} alt='' className='table__ava' />,
-            name: 'Jackie Phas',
-            date: '25-12-2020',
-            amount: '200 NB',
-            setting: () => <HiIcon.HiDotsVertical className='table__dotIcon' />,
-        },
-        {
-            avatar: () => <img src={avatar1} alt='' className='table__ava' />,
-            name: 'Trung Phim',
-            date: '05-10-2020',
-            amount: '175 NB',
-            setting: () => <HiIcon.HiDotsVertical className='table__dotIcon' />,
-        },
-        {
-            avatar: () => <img src={avatar1} alt='' className='table__ava' />,
-            name: 'Nguyen Viet',
-            date: '14-07-2020',
-            amount: '80 NB',
-            setting: () => <HiIcon.HiDotsVertical className='table__dotIcon' />,
-        },
-    ];
-
     return (
         <div className='profile'>
             {isShow && <Popper1 type={type} pack={pack} />}
@@ -209,23 +223,37 @@ const Profile = () => {
                             <input onChange={readURL} style={{ display: 'none' }} type="file" name="file" id="avatar-input" />
                         </form>
                         <label htmlFor="avatar-input" className='profile__cover-avatar'>
-                            <img src={user?.kyc.avatar ? STORAGE_DOMAIN + user?.kyc.avatar?.path : avatar0} alt='' />
+                            <img src={
+                                uid ?  
+                                UserOwner?.kyc?.avatar ? STORAGE_DOMAIN + UserOwner?.kyc?.avatar?.path : avatar0
+                                :
+                                user?.kyc?.avatar ? STORAGE_DOMAIN + user?.kyc?.avatar?.path : avatar0
+                            } alt='' />
                             {/* <div className="profile__cover-confirm">
                                 
                             </div> */}
                         </label>
 
-                        <p className='profile__cover-name'>{user?.kyc.first_name} {user?.kyc.last_name}</p>
+                        {
+                            uid ? 
+                            <p className='profile__cover-name'>
+                                {UserOwner?.kyc?.first_name} {UserOwner?.kyc?.last_name}
+                            </p>
+                            :
+                            <p className='profile__cover-name'>
+                                {user?.kyc?.first_name} {user?.kyc?.last_name}
+                            </p> 
+                        }
 
                         <div className='layoutFlex layout-3' style={{ '--gap-column': '10px' }}>
                             <div className='profile__cover-info layoutFlex-item'>
                                 <p>{profile[language].follower}</p>
-                                <p>{useNumber(user?.total_follows)}</p>
+                                <p>{useNumber(uid ? UserOwner.total_follows : user?.total_follows)}</p>
                             </div>
 
                             <div className='profile__cover-info layoutFlex-item'>
                                 <p>{profile[language].following}</p>
-                                <p>{useNumber(user?.total_followed)}</p>
+                                <p>{useNumber(uid ? UserOwner.total_followed : user?.total_followed)}</p>
                             </div>
 
                             <div className='profile__cover-info layoutFlex-item'>
@@ -235,52 +263,65 @@ const Profile = () => {
                         </div>
                     </div>
 
-                    <div className='profile__cover-ctnBtn'>
+                    {!uid && <div className='profile__cover-ctnBtn'>
                         <button className='buttonSetting'>
                             <FiIcon.FiSettings className='setting-icon' />
                             <span>{profile[language].setting}</span>
                         </button>
-                    </div>
+                    </div>}
+                    {uid && <div className='profile__cover-ctnBtn'>
+                        <button
+                        onClick={handleFollow}
+                        className={`buttonSetting ${IsFollowed ? 'active' : ''}`}>
+                            <span>{IsFollowed ? 'Unfollow' : 'Follow'}</span>
+                        </button>
+                    </div>}
                 </div>
 
                 <div className='ctn-tabProfile'>
-                    <Tab classHeader=''>
-                        <TabPane name={profile[language].personal} key='1'>
-                            {/* <div className='profile__boxPersonal'>
-                                <div className='profile__boxPersonal-title'>Live hot</div>
-                                <div
-                                    className='layoutFlex layout-1'
-                                    style={{ '--gap-row': '20px' }}
-                                >
-                                    <div
-                                        className='layoutFlex-item profile__video'
-                                        onClick={() => history.push('/live')}
-                                    >
-                                        <div className='profile__video-thumbnail'>
-                                            <img src={video1} alt='' />
-                                        </div>
-                                        <div className='profile__video-info'>
-                                            <p className='profile__video-info-title'>
-                                                Cấu hình PC chơi liên minh 10 năm không hỏng
-                                            </p>
-                                            <div className='profile__video-info-view'>
-                                                <span className='mr-50'>343.213 view</span>
-                                                <span>1 hour ago</span>
+                    {uid && 
+                        <TabPane name='' key='1'>
+                            <div className='profile__boxPersonal'>
+                                <div className='profile__boxPersonal-title'>Playlist</div>
+                                <div className='layoutFlex' style={{ '--gap-row': '20px' }}>
+                                    {Videos.map(o => <div key={o._id} 
+                                    onClick={() => history.push('/watch?v=' + o.short_id)}
+                                    className='layoutFlex-item'>
+                                        <div className='profile__video'>
+                                            <div className='profile__video-thumbnail'>
+                                                <img
+                                                onMouseOver={e => {
+                                                    var targat = e.target
+                                                    targat.setAttribute('src' , `https://vz-3f44931c-ed0.b-cdn.net/${o.guid}/preview.webp`)
+                                                }} 
+                                                onMouseOut={e => {
+                                                    var targat = e.target
+                                                    targat.setAttribute('src' , `https://vz-3f44931c-ed0.b-cdn.net/${o.guid}/thumbnail.jpg`)
+                                                }} 
+                                                src={o.thumbnail ? STORAGE_DOMAIN + o.thumbnail.path : `https://vz-3f44931c-ed0.b-cdn.net/${o.guid}/thumbnail.jpg`} alt='' />
                                             </div>
-                                            <p className='profile__video-info-tag'>
-                                                # Trò Chơi Trí Tuệ
-                                            </p>
-                                            <p className='profile__video-info-desc'>
-                                                Grab your ☕, ☀️ Grab your 🚰!, 🌇 Grab your 🍹, and
-                                                join me every Friday morning to explore the beauty
-                                                of digital risk-taking & learning to draw and
-                                                sketchnote with Adobe Fres
-                                            </p>
+                                            <div className='profile__video-info'>
+                                                <p className='profile__video-info-title'>
+                                                    {o.name}
+                                                </p>
+                                                <div className='profile__video-info-view'>
+                                                    <span className='mr-50'>{o.views} view</span>
+                                                    <span>{o.create_date}</span>
+                                                </div>
+                                                {/* <p className='profile__video-info-tag'>
+                                                </p> */}
+                                                <p className='profile__video-info-desc'>
+                                                    {o.description}
+                                                </p>
+                                            </div>
                                         </div>
                                     </div>
+                                    )}
                                 </div>
-                            </div> */}
-
+                            </div>
+                        </TabPane>}
+                    {!uid && <Tab classHeader=''>
+                        <TabPane name={profile[language].personal} key='1'>
                             <div className='profile__boxPersonal'>
                                 <div className='profile__boxPersonal-title'>Playlist</div>
                                 <div className='layoutFlex' style={{ '--gap-row': '20px' }}>
@@ -353,6 +394,7 @@ const Profile = () => {
                                 </div>
                             </div> */}
                         </TabPane>
+                        
                         <TabPane name={profile[language].manage} key='2'>
                             <div className='profile__boxManage'>
                                 <div className='profile__boxManage-title'>Convert</div>
@@ -482,15 +524,15 @@ const Profile = () => {
                             <div className='profile__boxManage'>
                                 <div className='profile__boxManage-title'>Donate</div>
                                 <div style={{ overflowX: 'auto' }}>
-                                    <Table dataHead={dataHead1} dataBody={dataBody1} />
+                                    {/* <Table dataHead={dataHead1} dataBody={dataBody1} /> */}
                                 </div>
                             </div>
                         </TabPane>
-                    </Tab>
+                    </Tab>}
                 </div>
             </div>
 
-            <div
+            {/* <div
                 className={`profile__right mt-10 ${isShowProfileRight ? 'show' : ''}`}
                 style={{ '--profileRight-height': `${profileRightHeight}px` }}
             >
@@ -510,16 +552,16 @@ const Profile = () => {
                     <Card index={8} numb={1000} />
                     <Card index={9} numb={1000} />
                 </div>
-            </div>
+            </div> */}
 
-            {width <= 1700 && (
+            {/* {width <= 1700 && (
                 <div
                     className={`profile__showRight ${isShowProfileRight ? 'show' : ''}`}
                     onClick={() => setIsShowProfileRight(!isShowProfileRight)}
                 >
                     <MdIcon.MdKeyboardArrowLeft className='icon' />
                 </div>
-            )}
+            )} */}
         </div>
     );
 };

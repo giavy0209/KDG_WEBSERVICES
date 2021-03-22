@@ -16,7 +16,8 @@ $width-cover-ctnInfo: 500px;
     @extend %hidden-scrollbar;
 
     &__left {
-        width: calc(75% - 10px);
+        width: 100%;
+        // width: calc(75% - 10px);
         height: calc(100% - 20px);
         box-shadow: $box-shadowLeft;
         background-color: #f7f7f7;
@@ -263,7 +264,7 @@ $width-cover-ctnInfo: 500px;
                 color: #e41a7f;
                 background-color: transparent;
                 border: 1px solid #e41a7f;
-                &:hover {
+                &:hover,&.active {
                     color: #fff;
                     background-color: #e41a7f;
                     border: 1px solid transparent;
@@ -271,13 +272,8 @@ $width-cover-ctnInfo: 500px;
 
                 @media (max-width: 1170px) {
                     padding: 0 10px;
-
                     .setting-icon {
                         margin-right: 0;
-                    }
-
-                    span {
-                        display: none;
                     }
                 }
             }

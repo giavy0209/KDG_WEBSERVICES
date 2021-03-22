@@ -32,11 +32,6 @@ const Header = () => {
   const last_name = user?.kyc.last_name;
   const email = user?.email;
   const followNumber = useNumber(useSelector(state => state.user?.follow?.length));
-  // const followNumber = useNumber(100000000);
-
-  // useEffect(() => {
-  //     dispatch(actionGetUser());
-  // }, [dispatch]);
 
   const handleNavigation = useCallback(
     pathname => {
@@ -69,7 +64,7 @@ const Header = () => {
 
       <div className='header__left'>
         <div className='header__left--left'>
-          <div className='header__logo' onClick={() => handleNavigation('/home')}>
+          <div className='header__logo' onClick={() => history.push('/home')}>
             <img src={logo} alt='logo' />
           </div>
 
@@ -88,10 +83,10 @@ const Header = () => {
 
         {!user && (
           <div className='header__left--right'>
-            <button className='button-upload mr-20' onClick={() => handleNavigation('/upload')}>
+            <button className='button-upload mr-20' onClick={() => history.push('/upload')}>
               Upload
             </button>
-            <button className='button-upload' onClick={() => handleNavigation('/setup')}>
+            <button className='button-upload' onClick={() => history.push('/setup')}>
               Setup
             </button>
           </div>
@@ -130,7 +125,7 @@ const Header = () => {
                     <p
                       className='header__NBdetail'
                       onClick={() => {
-                        handleNavigation('/profile');
+                        history.push('/profile');
                         setIsShowBuyNB(false);
                       }}
                     >
@@ -193,7 +188,7 @@ const Header = () => {
                     <div
                       className='header__manage'
                       onClick={() => {
-                        handleNavigation('/profile');
+                        history.push('/profile');
                         setIsShowUserinfo(false);
                       }}
                     >
@@ -202,7 +197,7 @@ const Header = () => {
                     <div
                       className='header__manage'
                       onClick={() => {
-                        handleNavigation('/profile');
+                        history.push('/profile');
                         setIsShowUserinfo(false);
                       }}
                     >
@@ -214,7 +209,7 @@ const Header = () => {
                     onClick={() => {
                       storage.clear();
                       dispatch(actionClearUser());
-                      handleNavigation('/login');
+                      history.push('/login');
                     }}
                   >
                     {header[language].logout}
