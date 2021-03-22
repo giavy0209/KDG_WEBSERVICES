@@ -17,11 +17,13 @@ const Live = () => {
     const [isShowMore, setIsShowMore] = useState(false);
     const [Video, setVideo] = useState(null)
     const [IsFollowed, setIsFollowed] = useState(false)
+    const [TotalFollow, setTotalFollow] = useState(0)
     useMemo(() => {
         callAPI.get('/video?sid='+id)
         .then(res => {
             setVideo(res.data)
             setIsFollowed(res.is_followed ? true : false)
+            setTotalFollow(res.total_follow)
         })
     },[id])
 
@@ -53,7 +55,7 @@ const Live = () => {
                             <div className='live__info-date'>{Video?.create_date}</div>
                             <div className='live__info-view'>
                                 <span>{useNumber(Video?.views)} view</span>
-                                <span>{useNumber(Video?.user.total_follow)} follower</span>
+                                <span>{useNumber(TotalFollow)} follower</span>
                             </div>
                             <div className={`live__info-desc ${isShowMore ? 'd-block' : ''}`}>
                                 {Video?.description}
