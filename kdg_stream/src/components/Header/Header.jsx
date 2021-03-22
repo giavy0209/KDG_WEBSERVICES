@@ -176,7 +176,7 @@ const Header = () => {
                 <div className='popper-userinfo' onClick={e => e.stopPropagation()}>
                   <div className='header__info bb'>
                     <img
-                      src={user ? STORAGE_DOMAIN + user?.kyc.avatar?.path : avatar0}
+                      src={user?.kyc.avatar ? STORAGE_DOMAIN + user?.kyc.avatar?.path : avatar0}
                       alt=''
                       className='header__info-avatar'
                     />
