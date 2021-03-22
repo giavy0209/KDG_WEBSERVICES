@@ -168,7 +168,7 @@ const Header = () => {
               }}
             >
               <img
-                src={user ? STORAGE_DOMAIN + user?.kyc.avatar?.path : avatar0}
+                src={user?.kyc.avatar ? STORAGE_DOMAIN + user?.kyc.avatar?.path : avatar0}
                 alt=''
                 className='header__avatar'
               />
