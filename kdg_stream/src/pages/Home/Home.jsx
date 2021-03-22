@@ -5,10 +5,11 @@ import { useHistory } from 'react-router-dom';
 import '../../assets/css/home.css';
 import avatar1 from '../../assets/images/home/avatar1.png';
 import callAPI from '../../axios';
-import { Video } from '../../components';
+import { Card, Tab, TabPane, Video } from '../../components';
 import { STORAGE_DOMAIN } from '../../constant';
 import { useLanguageLayerValue } from '../../context/LanguageLayer';
 import useWindowSize from '../../hooks/useWindowSize';
+import * as MdIcon from 'react-icons/md';
 
 const useStyles = makeStyles(theme => ({
   loading: {
@@ -24,9 +25,10 @@ const Home = () => {
   const [width, height] = useWindowSize();
   const history = useHistory();
 
-  // const [isShowHomeRight, setIsShowHomeRight] = useState(false);
-  // const [homeRightHeight, setHomeRightHeight] = useState(0);
+  const [isShowHomeRight, setIsShowHomeRight] = useState(false);
+  const [homeRightHeight, setHomeRightHeight] = useState(0);
   const [Videos, setVideos] = useState([]);
+  const [Ranking, setRanking] = useState({follows : [] , views : []});
 
   const [isLoading, setIsLoading] = useState(false);
   const classes = useStyles();
@@ -34,9 +36,9 @@ const Home = () => {
   const isLoadRef = useRef(true);
 
   useEffect(() => {
-    // let homeLeft = document.querySelector('.home__left');
-    // let homeLeftHeight = homeLeft.offsetHeight;
-    // setHomeRightHeight(homeLeftHeight);
+    let homeLeft = document.querySelector('.home__left');
+    let homeLeftHeight = homeLeft.offsetHeight;
+    setHomeRightHeight(homeLeftHeight);
   }, [height]);
 
   const getRecommend = useCallback(async () => {
@@ -64,6 +66,10 @@ const Home = () => {
     callAPI.get('/recommend').then(res => {
       setVideos([...res.data]);
     });
+    callAPI.get('/ranking').then(res => {
+      console.log(res.data);
+      setRanking(res.data)
+    }) 
   }, []);
 
   return (
@@ -122,7 +128,7 @@ const Home = () => {
         </div>
       </div>
 
-      {/* <div
+      <div
         className={`home__right mt-10 ${isShowHomeRight ? 'show' : ''}`}
         style={{ '--homeRight-height': `${homeRightHeight}px` }}
       >
@@ -133,7 +139,7 @@ const Home = () => {
         </div>
         <div className='ctn-tabHome'>
           <Tab>
-            <TabPane name={home[language].donate} key='1'>
+            {/* <TabPane name={home[language].donate} key='1'>
               {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(el => (
                 <Card
                   key={el}
@@ -145,45 +151,43 @@ const Home = () => {
                   onClick={() => history.push('/profile')}
                 />
               ))}
-            </TabPane>
+            </TabPane> */}
             <TabPane name={home[language].follow} key='2'>
-              {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(el => (
-                <Card
-                  key={el}
-                  index={el}
+              {Ranking.follows.map((o,index) => <Card
+                  key={o._id}
+                  index={index}
                   type='follow'
-                  numb={12345}
-                  name='Trà Long'
-                  avatar={avatar2}
-                  onClick={() => history.push('/profile')}
-                />
-              ))}
+                  numb={o.total}
+                  name={o.user.kyc ? o.user.kyc.first_name + o.user.kyc.last_name : ''}
+                  avatar={o.user.kyc.avatar?.path ? STORAGE_DOMAIN + o.user.kyc.avatar?.path : undefined}
+                  onClick={() => history.push('/profile?uid='+o.user._id)}
+                />)}
             </TabPane>
             <TabPane name={home[language].view} key='3'>
-              {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(el => (
+              {Ranking.views.map((o, index) => (
                 <Card
-                  key={el}
-                  index={el}
+                  key={o._id}
+                  index={index}
                   type='view'
-                  numb={12345}
-                  name='Trà Long'
-                  avatar={avatar3}
-                  onClick={() => history.push('/profile')}
+                  numb={o.total}
+                  name={o.user.kyc ? o.user.kyc.first_name + o.user.kyc.last_name : ''}
+                  avatar={o.user.kyc.avatar?.path ? STORAGE_DOMAIN + o.user.kyc.avatar?.path : undefined}
+                  onClick={() => history.push('/profile?uid='+o.user._id)}
                 />
               ))}
             </TabPane>
           </Tab>
         </div>
-      </div> */}
+      </div>
 
-      {/* {width <= 1700 && (
+      {width <= 1700 && (
         <div
           className={`home__showRight ${isShowHomeRight ? 'show' : ''}`}
           onClick={() => setIsShowHomeRight(!isShowHomeRight)}
         >
           <MdIcon.MdKeyboardArrowLeft className='icon' />
         </div>
-      )} */}
+      )}
     </div>
   );
 };
