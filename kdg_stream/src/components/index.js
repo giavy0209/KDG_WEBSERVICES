@@ -12,6 +12,7 @@ import Cover from './Cover';
 import Video from './Video';
 import Table from './Table';
 import Popper1 from './Popper1';
+import Crop from './Crop';
 
 export {
     Footer,
@@ -28,4 +29,5 @@ export {
     Video,
     Table,
     Popper1,
+    Crop,
 };

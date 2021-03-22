@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import '../../assets/css/profile.css';
 
-import { Card, Tab, TabPane, Table, Popper1 } from '../../components';
+import { Card, Tab, TabPane, Table, Popper1,Crop } from '../../components';
 import { useLanguageLayerValue } from '../../context/LanguageLayer';
 import { useHistory, useLocation } from 'react-router-dom';
 import useWindowSize from '../../hooks/useWindowSize';
 import useNumber from '../../hooks/useNumber';
-
+import socket from '../../socket'
 import * as MdIcon from 'react-icons/md';
 import * as FiIcon from 'react-icons/fi';
 import * as FaIcon from 'react-icons/fa';
@@ -107,27 +107,7 @@ const dataPackage = [
     package9,
 ];
 
-const readURL = (input) => {
-    input.persist()
-    input = input.target
-    if (input.files && input.files[0]) {
-        var reader = new FileReader();
-        reader.onload = async function (e) {
-            let buffer = e.target.result;
-            let videoBlob = new Blob([new Uint8Array(buffer)]);
-            let url = window.URL.createObjectURL(videoBlob);
-            input.parentElement.nextElementSibling.querySelector('img').setAttribute('src', url)
 
-            const data = new FormData(input.parentElement);
-
-            const res = await callAPI.post('/avatar', data)
-            if (res.status === 1) {
-            }
-
-        }
-        reader.readAsArrayBuffer(input.files[0]);
-    }
-}
 const Profile = () => {
     const history = useHistory()
 
@@ -145,7 +125,29 @@ const Profile = () => {
     const [IsFollowed, setIsFollowed] = useState(false);
     const [Videos, setVideos] = useState([])
     const [UserOwner, setUserOwner] = useState({})
+    const [IsShowCrop, setIsShowCrop] = useState(false)
+    const [Image, setImage] = useState('')
+    const [ImagePos, setImagePos] = useState({zoom : 1 , x : 0, y : 0})
     const isLoadFirst = useRef(true)
+
+    const readURL = (input) => {
+        input.persist()
+        input = input.target
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = async function (e) {
+                let buffer = e.target.result;
+                let videoBlob = new Blob([new Uint8Array(buffer)]);
+                let url = window.URL.createObjectURL(videoBlob);
+                input.parentElement.nextElementSibling.querySelector('img').setAttribute('src', url)
+                setImage(url)
+                setIsShowCrop(true)
+                
+    
+            }
+            reader.readAsArrayBuffer(input.files[0]);
+        }
+    }
 
     const getVideo = useCallback(async () => {
         const res = await callAPI.get(`/videos?user=${uid ? uid : user._id}&limit=${Videos.length + 10}` )
@@ -161,6 +163,10 @@ const Profile = () => {
     }, [getVideo]);
 
     useMemo(() => {
+        if(user) {
+            setImage(user?.kyc?.avatar ? STORAGE_DOMAIN + user?.kyc?.avatar?.path : avatar0)
+            setImagePos(user?.kyc?.avatar_pos ? user.kyc.avatar_pos : {x : 0, y : 0, zoom : 1})
+        }
         if((user || uid) && isLoadFirst.current) {
             getVideo()
             isLoadFirst.current = false
@@ -170,8 +176,9 @@ const Profile = () => {
             .then(res => {
                 setUserOwner(res.data)
                 setIsFollowed(res.data.isFollowed)
+                setImage(res.data.kyc.avatar?.path ? (STORAGE_DOMAIN + res.data.kyc.avatar?.path) : avatar0)
+                setImagePos(res.data?.kyc?.avatar_pos ? res.data.kyc.avatar_pos : {x : 0, y : 0, zoom : 1})
             })
-
         }
     }, [user ,uid])
 
@@ -212,23 +219,36 @@ const Profile = () => {
     return (
         <div className='profile'>
             {isShow && <Popper1 type={type} pack={pack} />}
+            {
+                IsShowCrop 
+                &&
+                <Crop 
+                currentImage={user?.kyc?.avatar ? STORAGE_DOMAIN + user?.kyc?.avatar?.path : avatar0} 
+                ImagePos={ImagePos} 
+                setImagePos={setImagePos} 
+                Image={Image} 
+                setIsShowCrop={setIsShowCrop}
+                setImage={setImage}/>
+            }
             <div onScroll={handleScroll} className='profile__left mt-10 pb-10'>
                 <div className='profile__cover'>
                     <div className='profile__cover-img'>
-                        <img src={cover1} alt='' />
+                        <img 
+                        src={cover1} alt='' />
                     </div>
 
                     <div className='profile__cover-ctnInfo'>
-                        <form id="avatar" >
+                        {!uid && <form id="avatar" >
                             <input onChange={readURL} style={{ display: 'none' }} type="file" name="file" id="avatar-input" />
-                        </form>
+                        </form>}
                         <label htmlFor="avatar-input" className='profile__cover-avatar'>
-                            <img src={
-                                uid ?  
-                                UserOwner?.kyc?.avatar ? STORAGE_DOMAIN + UserOwner?.kyc?.avatar?.path : avatar0
-                                :
-                                user?.kyc?.avatar ? STORAGE_DOMAIN + user?.kyc?.avatar?.path : avatar0
-                            } alt='' />
+                            <img 
+                            style={{
+                                '--x' : (ImagePos.x * -1) +'%',
+                                '--y' : (ImagePos.y * -1) + '%',
+                                '--zoom' : ImagePos.zoom + '%'
+                            }}
+                            src={Image} alt='' />
                             {/* <div className="profile__cover-confirm">
                                 
                             </div> */}

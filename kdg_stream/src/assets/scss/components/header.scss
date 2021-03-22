@@ -289,7 +289,6 @@
 
   &__userinfo {
     position: relative;
-
     > img {
       transition: 0.3s;
     }
@@ -302,13 +301,23 @@
   }
 
   &__avatar {
-    display: block;
-    cursor: pointer;
-    user-select: none;
+    position: relative;
     width: 50px;
     height: 50px;
-    object-fit: cover;
+    overflow: hidden;
     border-radius: 50%;
+    &-img{
+      display: block;
+      cursor: pointer;
+      user-select: none;
+      top: 0;
+      left: 0;
+      transform: translate(var(--x) , var(--y));
+      width:var(--zoom);
+      object-fit: cover;
+      border-radius: 50%;
+      position: absolute;
+    }
   }
 
   &__info {
@@ -318,12 +327,24 @@
     padding: 20px;
 
     &-avatar {
-      width: 90px;
-      height: 90px;
-      object-fit: cover;
+      position: relative;
+      width: 50px;
+      height: 50px;
+      overflow: hidden;
       border-radius: 50%;
+      &-img{
+        display: block;
+        cursor: pointer;
+        user-select: none;
+        top: 0;
+        left: 0;
+        transform: translate(var(--x) , var(--y));
+        width:var(--zoom);
+        object-fit: cover;
+        border-radius: 50%;
+        position: absolute;
+      }
     }
-
     > div:nth-child(2) {
       width: calc(100% - 90px - 15px);
     }

@@ -162,19 +162,33 @@ const Header = () => {
                 setIsShowUserinfo(x => !x);
               }}
             >
-              <img
-                src={user?.kyc.avatar ? STORAGE_DOMAIN + user?.kyc.avatar?.path : avatar0}
-                alt=''
-                className='header__avatar'
-              />
+              <div className="header__avatar">
+                <img
+                  src={user?.kyc.avatar ? STORAGE_DOMAIN + user?.kyc.avatar?.path : avatar0}
+                  style={{
+                    '--x' : user?.kyc.avatar_pos ? (user?.kyc.avatar_pos.x * -1) + '%' : 0,
+                    '--y' : user?.kyc.avatar_pos ? (user?.kyc.avatar_pos.y * -1) + '%' : 0,
+                    '--zoom' : user?.kyc.avatar_pos ? user?.kyc.avatar_pos.zoom + '%' : '100%',
+                  }}
+                  alt=''
+                  className='header__avatar-img'
+                />
+              </div>
               {isShowUserinfo && (
                 <div className='popper-userinfo' onClick={e => e.stopPropagation()}>
                   <div className='header__info bb'>
-                    <img
-                      src={user?.kyc.avatar ? STORAGE_DOMAIN + user?.kyc.avatar?.path : avatar0}
-                      alt=''
-                      className='header__info-avatar'
-                    />
+                    <div className="header__info-avatar">
+                      <img
+                        src={user?.kyc.avatar ? STORAGE_DOMAIN + user?.kyc.avatar?.path : avatar0}
+                        alt=''
+                        style={{
+                          '--x' : user?.kyc.avatar_pos ? (user?.kyc.avatar_pos.x * -1) + '%' : 0,
+                          '--y' : user?.kyc.avatar_pos ? (user?.kyc.avatar_pos.y * -1) + '%' : 0,
+                          '--zoom' : user?.kyc.avatar_pos ? user?.kyc.avatar_pos.zoom + '%' : '100%',
+                        }}
+                        className='header__info-avatar-img'
+                      />
+                    </div>
                     <div>
                       <p className='header__info-name'>
                         {first_name || last_name ? `${first_name} ${last_name}` : email}

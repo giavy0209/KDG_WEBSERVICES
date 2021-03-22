@@ -1,0 +1,66 @@
+.crop-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 999999;
+    background-color: rgba($color: #fff, $alpha: .8);
+    input {
+        position: absolute;
+        width: 50%;
+        left: 50%;
+        top: 100px;
+        transform: translate(-50%, 0);
+    }
+
+    .btn-group{
+        position: absolute;
+        bottom: 80px;
+        left: 50%;
+        transform: translate(-50% , 0);
+        width: 100%;
+        text-align: center;
+        button{
+            margin-right: 5px;
+            cursor: pointer;
+            user-select: none;
+            border-radius: 5px;
+            font-size: 20px;
+            height: 40px;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+            padding: 0 20px;
+            color: #e41a7f;
+            background-color: rgba($color: #fff, $alpha: .3);
+            border: 1px solid #e41a7f;
+            transition: .3s;
+            &:hover,&.active {
+                color: #fff;
+                background-color: #e41a7f;
+                border: 1px solid transparent;
+            }
+        }
+    }
+
+
+    .reactEasyCrop_CropArea {
+        border-radius: 50%;
+    }
+}
+
+.controls {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 50%;
+    transform: translateX(-50%);
+    height: 80px;
+    display: flex;
+    align-items: center;
+}
+
+.slider {
+    padding: 22px 0px;
+}
