@@ -9,7 +9,7 @@ import { actChangeBalances, actChangeUser, asyncInitAuth } from './store/authAct
 import socket from './socket'
 const App = () => {
   const location = useLocation();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const refresh = new URLSearchParams(location.search).get('refresh');
 
   useMemo(() => {
@@ -36,14 +36,14 @@ const App = () => {
   return (
     <>
       <Footer />
-      {location.pathname !== '/login' && <Header />}
+      <Header />
       <Switch>
         <Redirect from='/' to='/home' exact />
-        <Route path='/login' exact>
-          <Login />
-        </Route>
         <Route path='/home' exact>
           <Home />
+        </Route>
+        <Route path='/login' exact>
+          <Login />
         </Route>
         <Route path='/profile' exact>
           <Profile />

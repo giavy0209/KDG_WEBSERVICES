@@ -24,8 +24,8 @@ const Home = () => {
   const [width, height] = useWindowSize();
   const history = useHistory();
 
-  const [isShowHomeRight, setIsShowHomeRight] = useState(false);
-  const [homeRightHeight, setHomeRightHeight] = useState(0);
+  // const [isShowHomeRight, setIsShowHomeRight] = useState(false);
+  // const [homeRightHeight, setHomeRightHeight] = useState(0);
   const [Videos, setVideos] = useState([]);
 
   const [isLoading, setIsLoading] = useState(false);
@@ -34,9 +34,9 @@ const Home = () => {
   const isLoadRef = useRef(true);
 
   useEffect(() => {
-    let homeLeft = document.querySelector('.home__left');
-    let homeLeftHeight = homeLeft.offsetHeight;
-    setHomeRightHeight(homeLeftHeight);
+    // let homeLeft = document.querySelector('.home__left');
+    // let homeLeftHeight = homeLeft.offsetHeight;
+    // setHomeRightHeight(homeLeftHeight);
   }, [height]);
 
   const getRecommend = useCallback(async () => {
@@ -70,18 +70,18 @@ const Home = () => {
     <div className='home'>
       <div onScroll={handleScroll} className='home__left mt-10'>
         {/* <div>
-                    <div className='home__title'>
-                        <p>{home[language].following}</p>
-                    </div>
-                    <Following />
-                </div> */}
+          <div className='home__title'>
+            <p>{home[language].following}</p>
+          </div>
+          <Following />
+        </div> */}
 
         {/* <div>
-                    <div className='home__title'>
-                        <p>{home[language].watchLive}</p>
-                    </div>
-                    <Cover />
-                </div> */}
+          <div className='home__title'>
+            <p>{home[language].watchLive}</p>
+          </div>
+          <Cover />
+        </div> */}
 
         <div>
           <div className='home__title'>
@@ -123,67 +123,67 @@ const Home = () => {
       </div>
 
       {/* <div
-                className={`home__right mt-10 ${isShowHomeRight ? 'show' : ''}`}
-                style={{ '--homeRight-height': `${homeRightHeight}px` }}
-            >
-                <div className='pr-25 pl-25'>
-                    <div className='home__title m-0'>
-                        <p>{home[language].ranking}</p>
-                    </div>
-                </div>
-                <div className='ctn-tabHome'>
-                    <Tab>
-                        <TabPane name={home[language].donate} key='1'>
-                            {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(el => (
-                                <Card
-                                    key={el}
-                                    index={el}
-                                    type='donate'
-                                    numb={12345}
-                                    name='Trà Long'
-                                    avatar={avatar1}
-                                    onClick={() => history.push('/profile')}
-                                />
-                            ))}
-                        </TabPane>
-                        <TabPane name={home[language].follow} key='2'>
-                            {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(el => (
-                                <Card
-                                    key={el}
-                                    index={el}
-                                    type='follow'
-                                    numb={12345}
-                                    name='Trà Long'
-                                    avatar={avatar2}
-                                    onClick={() => history.push('/profile')}
-                                />
-                            ))}
-                        </TabPane>
-                        <TabPane name={home[language].view} key='3'>
-                            {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(el => (
-                                <Card
-                                    key={el}
-                                    index={el}
-                                    type='view'
-                                    numb={12345}
-                                    name='Trà Long'
-                                    avatar={avatar3}
-                                    onClick={() => history.push('/profile')}
-                                />
-                            ))}
-                        </TabPane>
-                    </Tab>
-                </div>
-            </div> */}
+        className={`home__right mt-10 ${isShowHomeRight ? 'show' : ''}`}
+        style={{ '--homeRight-height': `${homeRightHeight}px` }}
+      >
+        <div className='pr-25 pl-25'>
+          <div className='home__title m-0'>
+            <p>{home[language].ranking}</p>
+          </div>
+        </div>
+        <div className='ctn-tabHome'>
+          <Tab>
+            <TabPane name={home[language].donate} key='1'>
+              {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(el => (
+                <Card
+                  key={el}
+                  index={el}
+                  type='donate'
+                  numb={12345}
+                  name='Trà Long'
+                  avatar={avatar1}
+                  onClick={() => history.push('/profile')}
+                />
+              ))}
+            </TabPane>
+            <TabPane name={home[language].follow} key='2'>
+              {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(el => (
+                <Card
+                  key={el}
+                  index={el}
+                  type='follow'
+                  numb={12345}
+                  name='Trà Long'
+                  avatar={avatar2}
+                  onClick={() => history.push('/profile')}
+                />
+              ))}
+            </TabPane>
+            <TabPane name={home[language].view} key='3'>
+              {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(el => (
+                <Card
+                  key={el}
+                  index={el}
+                  type='view'
+                  numb={12345}
+                  name='Trà Long'
+                  avatar={avatar3}
+                  onClick={() => history.push('/profile')}
+                />
+              ))}
+            </TabPane>
+          </Tab>
+        </div>
+      </div> */}
 
       {/* {width <= 1700 && (
-                <div
-                    className={`home__showRight ${isShowHomeRight ? 'show' : ''}`}
-                    onClick={() => setIsShowHomeRight(!isShowHomeRight)}
-                >
-                    <MdIcon.MdKeyboardArrowLeft className='icon' />
-                </div>
-            )} */}
+        <div
+          className={`home__showRight ${isShowHomeRight ? 'show' : ''}`}
+          onClick={() => setIsShowHomeRight(!isShowHomeRight)}
+        >
+          <MdIcon.MdKeyboardArrowLeft className='icon' />
+        </div>
+      )} */}
     </div>
   );
 };
