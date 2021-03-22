@@ -28,9 +28,9 @@ const Header = () => {
 
   const user = useSelector(state => state.user);
 
-  const first_name = user?.kyc.first_name
-  const last_name = user?.kyc.last_name
-  const email = user?.email
+  const first_name = user?.kyc.first_name;
+  const last_name = user?.kyc.last_name;
+  const email = user?.email;
   const followNumber = useNumber(useSelector(state => state.user?.follow?.length));
   // const followNumber = useNumber(100000000);
 
@@ -86,36 +86,21 @@ const Header = () => {
           )}
         </div>
 
-        <div className='header__left--right'>
-          {width > 1500 ? (
-            <>
-              <button className='button-upload mr-20' onClick={() => handleNavigation('/upload')}>
-                Upload
-              </button>
-              {/* <button className='button-livenow' onClick={() => handleNavigation('/setup')}>
-                Setup
-              </button> */}
-            </>
-          ) : (
-            <>
-              <RiIcon.RiVideoUploadLine
-                className='header__iconHover mr-30'
-                onClick={() => handleNavigation('/upload')}
-              />
-              {/* <RiIcon.RiLiveLine
-                className='header__iconHover'
-                onClick={() => handleNavigation('/setup')}
-              /> */}
-            </>
-          )}
-        </div>
+        {!user && (
+          <div className='header__left--right'>
+            <button className='button-upload mr-20' onClick={() => handleNavigation('/upload')}>
+              Upload
+            </button>
+            <button className='button-upload' onClick={() => handleNavigation('/setup')}>
+              Setup
+            </button>
+          </div>
+        )}
       </div>
-
 
       <div className='header__right'>
         {user && (
           <>
-            
             <div
               style={{ position: 'relative' }}
               onClick={e => {
@@ -155,132 +140,99 @@ const Header = () => {
                 </div>
               )}
             </div>
-            
+
+            <div className='header__notification' onClick={() => setIsShowNoti(x => !x)}>
+              {isHaveNoti ? (
+                <VscIcon.VscBellDot className='header__iconHover' />
+              ) : (
+                <VscIcon.VscBell className='header__iconHover' />
+              )}
+              {isShowNoti && (
+                <div className='popper-notification' onClick={e => e.stopPropagation()}>
+                  <div className='header__title'>
+                    <p>{header[language].notification}</p>
+                  </div>
+                  <div className='header__emptyNotification'>
+                    <p>{header[language].notihere}</p>
+                    <p>{header[language].notidesc1}</p>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div
+              className='header__userinfo'
+              onClick={e => {
+                e.stopPropagation();
+                setIsShowUserinfo(x => !x);
+              }}
+            >
+              <img
+                src={user ? STORAGE_DOMAIN + user?.kyc.avatar?.path : avatar0}
+                alt=''
+                className='header__avatar'
+              />
+              {isShowUserinfo && (
+                <div className='popper-userinfo' onClick={e => e.stopPropagation()}>
+                  <div className='header__info bb'>
+                    <img
+                      src={user ? STORAGE_DOMAIN + user?.kyc.avatar?.path : avatar0}
+                      alt=''
+                      className='header__info-avatar'
+                    />
+                    <div>
+                      <p className='header__info-name'>
+                        {first_name || last_name ? `${first_name} ${last_name}` : email}
+                      </p>
+                      <p className='header__info-follow'>
+                        {followNumber} {header[language].followers}
+                      </p>
+                    </div>
+                  </div>
+                  <div className='bb pt-20 pb-20'>
+                    <div
+                      className='header__manage'
+                      onClick={() => {
+                        handleNavigation('/profile');
+                        setIsShowUserinfo(false);
+                      }}
+                    >
+                      {header[language].personalinfo}
+                    </div>
+                    <div
+                      className='header__manage'
+                      onClick={() => {
+                        handleNavigation('/profile');
+                        setIsShowUserinfo(false);
+                      }}
+                    >
+                      {header[language].assetmanagement}
+                    </div>
+                  </div>
+                  <div
+                    className='header__manage'
+                    onClick={() => {
+                      storage.clear();
+                      dispatch(actionClearUser());
+                      handleNavigation('/login');
+                    }}
+                  >
+                    {header[language].logout}
+                  </div>
+                </div>
+              )}
+            </div>
           </>
         )}
-      </div>
 
-      <div className='header__right'>
-        {user && <>
-          <div
-            style={{ position: 'relative' }}
-            onClick={e => {
-              e.stopPropagation();
-              setIsShowBuyNB(!isShowBuyNB);
-            }}
-          >
-            {header[language].personalinfo}
-          </div>
-
-          <div
-            className='header__manage'
-            onClick={() => {
-              handleNavigation('/profile');
-              setIsShowUserinfo(false);
-            }}
-          >
-            {header[language].assetmanagement}
-          </div>
-          <div
-            className='header__manage'
-            onClick={() => {
-              console.log('logout');
-            }}
-          >
-            {isHaveNoti ? (
-              <VscIcon.VscBellDot className='header__iconHover' />
-            ) : (
-              <VscIcon.VscBell className='header__iconHover' />
-            )}
-            {isShowNoti && (
-              <div className='popper-notification' onClick={e => e.stopPropagation()}>
-                <div className='header__title'>
-                  <p>{header[language].notification}</p>
-                </div>
-                <div className='header__emptyNotification'>
-                  <p>{header[language].notihere}</p>
-                  <p>{header[language].notidesc1}</p>
-                </div>
-              </div>
-            )}
-          </div>
-
-        </>}
-
-        {user ? (
-          <div
-            className='header__userinfo'
-            onClick={e => {
-              e.stopPropagation();
-              setIsShowUserinfo(!isShowUserinfo);
-            }}
-          >
-            <img src={user ? STORAGE_DOMAIN + user?.kyc.avatar?.path : avatar0} alt='' className='header__avatar' />
-            {isShowUserinfo && (
-              <div className='popper-userinfo' onClick={e => e.stopPropagation()}>
-                <div className='header__info bb'>
-                  <img
-                    src={user ? STORAGE_DOMAIN + user?.kyc.avatar?.path : avatar0}
-                    alt=''
-                    className='header__info-avatar'
-                  />
-                  <div>
-                    <p className='header__info-name'>
-                      {first_name && last_name
-                        ? `${first_name} ${last_name}`
-                        : email}
-                    </p>
-                    <p className='header__info-follow'>
-                      {followNumber} {header[language].followers}
-                    </p>
-                  </div>
-                </div>
-                <div className='bb pt-20 pb-20'>
-                  <div
-                    className='header__manage'
-                    onClick={() => {
-                      handleNavigation('/profile');
-                      setIsShowUserinfo(false);
-                    }}
-                  >
-                    {header[language].personalinfo}
-                  </div>
-                  <div
-                    className='header__manage'
-                    onClick={() => {
-                      handleNavigation('/profile');
-                      setIsShowUserinfo(false);
-                    }}
-                  >
-                    {header[language].assetmanagement}
-                  </div>
-                </div>
-                <div
-                  className='header__manage'
-                  onClick={() => {
-                    storage.clear();
-                    dispatch(actionClearUser());
-                    handleNavigation('/login');
-                  }}
-                >
-                  {header[language].logout}
-                </div>
-              </div>
-            )}
-          </div>
-        ) : width > 1500 ? (
+        {!user && (
           <div className='header__login' onClick={() => handleNavigation('/login')}>
             {header[language].login}
           </div>
-        ) : (
-          <RiIcon.RiLoginBoxLine
-            className='header__iconHover'
-            onClick={() => handleNavigation('/login')}
-          />
         )}
       </div>
-      </div>
-    );
+    </div>
+  );
 };
 
 export default Header;
