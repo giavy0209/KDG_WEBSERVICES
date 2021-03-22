@@ -5,26 +5,18 @@
   align-items: flex-start;
   justify-content: space-between;
   background-color: #f7f7f7;
-  // height: calc(100vh - 40px - 80px);
-
-  @extend %hidden-scrollbar;
 
   &__left {
     width: calc(75% - 10px);
-    // height: calc(100% - 20px);
-    padding-left: 25px;
-    padding-right: 15px;
+    padding: 0 25px;
 
     box-shadow: $box-shadowLeft;
     background-color: $background-white;
-    // border-top-right-radius: 10px;
-    // border-bottom-right-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
     transition: 0.3s;
 
-    // @extend %hidden-scrollbar;
-
-    @media (max-width: 1700px) {
-      padding-right: 25px;
+    @media (max-width: 1430px) {
       width: 100%;
       border-top-right-radius: 0;
       border-bottom-right-radius: 0;
@@ -38,24 +30,26 @@
 
   &__right {
     width: 25%;
-    min-width: $min-width-homeRight;
-    max-width: $max-width-homeRight;
-    height: calc(100% - 20px);
+    height: calc(100vh - 10px - #{$header-height});
+
     box-shadow: $box-shadowRight;
     background-color: $background-white;
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
     transition: 0.3s;
 
-    @extend %hidden-scrollbar;
+    z-index: $z-index-homeRight;
+    position: sticky;
+    top: calc(10px + #{$header-height});
+    right: 0;
 
-    @media (max-width: 1700px) {
-      z-index: $z-index-homeRight;
-      position: fixed;
+    @media (max-width: 1430px) {
+      width: 400px;
       margin: 0;
-      top: 130px;
-      right: 0;
-      height: var(--homeRight-height);
+
+      position: fixed;
+      top: 96px;
+
       border-top-left-radius: 0;
 
       transform: translateX(100%);
@@ -65,51 +59,55 @@
     }
   }
 
-  &__showRight {
+  &__arrow {
     z-index: $z-index-homeRight;
-    position: fixed;
-    top: 130px;
-    right: 0;
+    position: absolute;
+    top: 0;
+    right: 100%;
+
     width: 48px;
     height: 60px;
-    border: 1px solid #d1d1d1;
+
     background-color: #eaeaea;
-    border-top-left-radius: 16px;
-    border-bottom-left-radius: 16px;
     transition: 0.3s;
 
-    .icon {
+    border: $border-bottom;
+    border-top-left-radius: 16px;
+    border-bottom-left-radius: 16px;
+
+    > .icon {
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
+
       color: rgba(169, 171, 179, 0.5);
-      font-size: 40px;
+      font-size: $icon-size;
       transition: 0.3s;
     }
 
     &.show {
-      transform: translateX(-$min-width-homeRight);
-
       .icon {
         transform: translate(-50%, -50%) rotate(180deg);
       }
     }
 
     &:hover {
-      .icon {
-        color: rgba(169, 171, 179, 1);
+      > .icon {
+        color: rgb(169, 171, 179);
       }
     }
   }
 
   &__title {
     padding: 10px 0;
+    margin-bottom: 15px;
+
     color: $title-color;
     font-size: $size-2;
     font-weight: 600;
+
     border-bottom: $border-bottom;
-    margin-bottom: 15px;
 
     &.m-0 {
       margin: 0;

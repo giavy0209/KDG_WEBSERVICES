@@ -81,7 +81,7 @@ const Header = () => {
           )}
         </div>
 
-        {!user && (
+        {user && (
           <div className='header__left--right'>
             <button className='button-upload mr-20' onClick={() => history.push('/upload')}>
               Upload

@@ -28,7 +28,7 @@ const Home = () => {
   const [isShowHomeRight, setIsShowHomeRight] = useState(false);
   const [homeRightHeight, setHomeRightHeight] = useState(0);
   const [Videos, setVideos] = useState([]);
-  const [Ranking, setRanking] = useState({follows : [] , views : []});
+  const [Ranking, setRanking] = useState({ follows: [], views: [] });
 
   const [isLoading, setIsLoading] = useState(false);
   const classes = useStyles();
@@ -36,11 +36,11 @@ const Home = () => {
   const isLoadRef = useRef(true);
   const leftRef = useRef();
 
-  useEffect(() => {
-    let homeLeft = document.querySelector('.home__left');
-    let homeLeftHeight = homeLeft.offsetHeight;
-    setHomeRightHeight(homeLeftHeight);
-  }, [height]);
+  // useEffect(() => {
+  //   let homeLeft = document.querySelector('.home__left');
+  //   let homeLeftHeight = homeLeft.offsetHeight;
+  //   setHomeRightHeight(homeLeftHeight);
+  // }, [height]);
 
   const getRecommend = useCallback(async () => {
     const ids = Videos.map(o => o._id);
@@ -72,19 +72,18 @@ const Home = () => {
       setVideos([...res.data]);
     });
     callAPI.get('/ranking').then(res => {
-      console.log(res.data);
-      setRanking(res.data)
-    }) 
+      setRanking(res.data);
+    });
   }, []);
 
   useEffect(() => {
     document.body.onscroll = async () => {
       const { bottom } = leftRef.current.getBoundingClientRect();
-      const isEnd = Math.floor(bottom) === window.innerHeight;
+      const isEnd = bottom <= window.innerHeight + 50;
+
       if (isEnd && isLoadRef.current) {
         setIsLoading(true);
         await getRecommend();
-        leftRef.current.scroll(0, leftRef.current.scrollTop + 100);
         setIsLoading(false);
       }
     };
@@ -152,8 +151,17 @@ const Home = () => {
 
       <div
         className={`home__right mt-10 ${isShowHomeRight ? 'show' : ''}`}
-        style={{ '--homeRight-height': `${homeRightHeight}px` }}
+        // style={{ '--homeRight-height': `${homeRightHeight}px` }}
       >
+        {width <= 1430 && (
+          <div
+            className={`home__arrow ${isShowHomeRight ? 'show' : ''}`}
+            onClick={() => setIsShowHomeRight(x => !x)}
+          >
+            <MdIcon.MdKeyboardArrowLeft className='icon' />
+          </div>
+        )}
+
         <div className='pr-25 pl-25'>
           <div className='home__title m-0'>
             <p>{home[language].ranking}</p>
@@ -175,15 +183,19 @@ const Home = () => {
               ))}
             </TabPane> */}
             <TabPane name={home[language].follow} key='2'>
-              {Ranking.follows.map((o,index) => <Card
+              {Ranking.follows.map((o, index) => (
+                <Card
                   key={o._id}
                   index={index}
                   type='follow'
                   numb={o.total}
-                  name={o.user.kyc ? o.user.kyc.first_name + o.user.kyc.last_name : ''}
-                  avatar={o.user.kyc.avatar?.path ? STORAGE_DOMAIN + o.user.kyc.avatar?.path : undefined}
-                  onClick={() => history.push('/profile?uid='+o.user._id)}
-                />)}
+                  name={o.user.kyc ? `${o.user.kyc.first_name} ${o.user.kyc.last_name}` : ''}
+                  avatar={
+                    o.user.kyc.avatar?.path ? STORAGE_DOMAIN + o.user.kyc.avatar?.path : undefined
+                  }
+                  onClick={() => history.push('/profile?uid=' + o.user._id)}
+                />
+              ))}
             </TabPane>
             <TabPane name={home[language].view} key='3'>
               {Ranking.views.map((o, index) => (
@@ -192,9 +204,11 @@ const Home = () => {
                   index={index}
                   type='view'
                   numb={o.total}
-                  name={o.user.kyc ? o.user.kyc.first_name + o.user.kyc.last_name : ''}
-                  avatar={o.user.kyc.avatar?.path ? STORAGE_DOMAIN + o.user.kyc.avatar?.path : undefined}
-                  onClick={() => history.push('/profile?uid='+o.user._id)}
+                  name={o.user.kyc ? `${o.user.kyc.first_name} ${o.user.kyc.last_name}` : ''}
+                  avatar={
+                    o.user.kyc.avatar?.path ? STORAGE_DOMAIN + o.user.kyc.avatar?.path : undefined
+                  }
+                  onClick={() => history.push('/profile?uid=' + o.user._id)}
                 />
               ))}
             </TabPane>
@@ -202,14 +216,14 @@ const Home = () => {
         </div>
       </div>
 
-      {width <= 1700 && (
+      {/* {width <= 1430 && (
         <div
           className={`home__showRight ${isShowHomeRight ? 'show' : ''}`}
-          onClick={() => setIsShowHomeRight(!isShowHomeRight)}
+          onClick={() => setIsShowHomeRight(x => !x)}
         >
           <MdIcon.MdKeyboardArrowLeft className='icon' />
         </div>
-      )}
+      )} */}
     </div>
   );
 };
