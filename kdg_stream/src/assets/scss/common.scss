@@ -1,3 +1,5 @@
+$break-point-large: 1430px;
+
 $size-1: 26px;
 $size-2: 24px;
 $size-3: 22px;
@@ -40,7 +42,7 @@ $max-width-setupRight: 576px;
 @mixin hidden-text($line) {
   overflow: hidden;
   text-overflow: ellipsis;
-  word-break: break-all;
+  word-break: break-word;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: $line;

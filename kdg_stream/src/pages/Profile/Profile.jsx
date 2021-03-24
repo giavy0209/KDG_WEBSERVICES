@@ -1,22 +1,13 @@
+import { Box, CircularProgress, makeStyles } from '@material-ui/core';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import '../../assets/css/profile.css';
-
-import { Card, Tab, TabPane, Table, Popper1, Crop } from '../../components';
-import { useLanguageLayerValue } from '../../context/LanguageLayer';
-import { useHistory, useLocation } from 'react-router-dom';
-import useWindowSize from '../../hooks/useWindowSize';
-import useNumber from '../../hooks/useNumber';
-import socket from '../../socket';
-import * as MdIcon from 'react-icons/md';
-import * as FiIcon from 'react-icons/fi';
 import * as FaIcon from 'react-icons/fa';
-import * as TiIcon from 'react-icons/ti';
+import * as FiIcon from 'react-icons/fi';
 import * as HiIcon from 'react-icons/hi';
-
+import * as TiIcon from 'react-icons/ti';
+import { useSelector } from 'react-redux';
+import { useHistory, useLocation } from 'react-router-dom';
+import '../../assets/css/profile.css';
 import avatar0 from '../../assets/images/header/avatar0.png';
-import avatar1 from '../../assets/images/home/avatar1.png';
-import avatar2 from '../../assets/images/home/avatar2.png';
-import avatar3 from '../../assets/images/home/avatar3.png';
 import cover1 from '../../assets/images/profile/cover1.png';
 import package1 from '../../assets/images/profile/package1.png';
 import package2 from '../../assets/images/profile/package2.png';
@@ -27,41 +18,53 @@ import package6 from '../../assets/images/profile/package6.png';
 import package7 from '../../assets/images/profile/package7.png';
 import package8 from '../../assets/images/profile/package8.png';
 import package9 from '../../assets/images/profile/package9.png';
-import { useSelector } from 'react-redux';
 import callAPI from '../../axios';
+import { Crop, Popper1, Tab, Table, TabPane } from '../../components';
 import { STORAGE_DOMAIN } from '../../constant';
+import { useLanguageLayerValue } from '../../context/LanguageLayer';
+import useNumber from '../../hooks/useNumber';
+import useWindowSize from '../../hooks/useWindowSize';
 
-const dataHead1 = {
-  avatar: '',
-  name: 'Name',
-  date: 'Date',
-  amount: 'Amount',
-  setting: '',
-};
+const useStyles = makeStyles(theme => ({
+  loading: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: '#e41a7f',
+  },
+}));
 
-const dataBody1 = [
-  {
-    avatar: () => <img src={avatar1} alt='' className='table__ava' />,
-    name: 'Jackie Phas',
-    date: '25-12-2020',
-    amount: '200 NB',
-    setting: () => <HiIcon.HiDotsVertical className='table__dotIcon' />,
-  },
-  {
-    avatar: () => <img src={avatar1} alt='' className='table__ava' />,
-    name: 'Trung Phim',
-    date: '05-10-2020',
-    amount: '175 NB',
-    setting: () => <HiIcon.HiDotsVertical className='table__dotIcon' />,
-  },
-  {
-    avatar: () => <img src={avatar1} alt='' className='table__ava' />,
-    name: 'Nguyen Viet',
-    date: '14-07-2020',
-    amount: '80 NB',
-    setting: () => <HiIcon.HiDotsVertical className='table__dotIcon' />,
-  },
-];
+// const dataHead1 = {
+//   avatar: '',
+//   name: 'Name',
+//   date: 'Date',
+//   amount: 'Amount',
+//   setting: '',
+// };
+
+// const dataBody1 = [
+//   {
+//     avatar: () => <img src={avatar1} alt='' className='table__ava' />,
+//     name: 'Jackie Phas',
+//     date: '25-12-2020',
+//     amount: '200 NB',
+//     setting: () => <HiIcon.HiDotsVertical className='table__dotIcon' />,
+//   },
+//   {
+//     avatar: () => <img src={avatar1} alt='' className='table__ava' />,
+//     name: 'Trung Phim',
+//     date: '05-10-2020',
+//     amount: '175 NB',
+//     setting: () => <HiIcon.HiDotsVertical className='table__dotIcon' />,
+//   },
+//   {
+//     avatar: () => <img src={avatar1} alt='' className='table__ava' />,
+//     name: 'Nguyen Viet',
+//     date: '14-07-2020',
+//     amount: '80 NB',
+//     setting: () => <HiIcon.HiDotsVertical className='table__dotIcon' />,
+//   },
+// ];
 
 const dataHead = {
   status: 'Status',
@@ -108,26 +111,38 @@ const dataPackage = [
 ];
 
 const Profile = () => {
-  const history = useHistory();
-
   const uid = new URLSearchParams(useLocation().search).get('uid');
   let user = useSelector(state => state.user);
+  // console.log(uid);
+  // console.log(user?._id);
+
+  const history = useHistory();
+
+  useEffect(() => {
+    if (uid && uid === user?._id) {
+      history.push('/profile');
+    }
+  }, [uid, user, history]);
 
   const [{ language, profile }] = useLanguageLayerValue();
   const [isShow, setIsShow] = useState(false);
   const [type, setType] = useState('changes');
   const [pack, setPack] = useState(null);
-  const [width, height] = useWindowSize();
-  const [isShowProfileRight, setIsShowProfileRight] = useState(false);
-  const [profileRightHeight, setProfileRightHeight] = useState(0);
+  const [width] = useWindowSize();
   const [isShowHistory, setIsShowHistory] = useState(false);
   const [IsFollowed, setIsFollowed] = useState(false);
-  const [Videos, setVideos] = useState([]);
   const [UserOwner, setUserOwner] = useState({});
   const [IsShowCrop, setIsShowCrop] = useState(false);
   const [Image, setImage] = useState('');
   const [ImagePos, setImagePos] = useState({ zoom: 1, x: 0, y: 0 });
+
   const isLoadFirst = useRef(true);
+  const isLoadRef = useRef(true);
+  const scrollRef = useRef();
+
+  const [Videos, setVideos] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const classes = useStyles();
 
   const readURL = input => {
     input.persist();
@@ -146,43 +161,6 @@ const Profile = () => {
     }
   };
 
-  const getVideo = useCallback(async () => {
-    const res = await callAPI.get(
-      `/videos?user=${uid ? uid : user._id}&limit=${Videos.length + 10}`
-    );
-    setVideos([...res.data]);
-  }, [Videos, user, uid]);
-
-  const handleScroll = useCallback(
-    async e => {
-      const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
-      if (bottom) {
-        await getVideo();
-        e.target.scroll(0, e.target.scrollTop + 100);
-      }
-    },
-    [getVideo]
-  );
-
-  useMemo(() => {
-    if (user) {
-      setImage(user?.kyc?.avatar ? STORAGE_DOMAIN + user?.kyc?.avatar?.path : avatar0);
-      setImagePos(user?.kyc?.avatar_pos ? user.kyc.avatar_pos : { x: 0, y: 0, zoom: 1 });
-    }
-    if ((user || uid) && isLoadFirst.current) {
-      getVideo();
-      isLoadFirst.current = false;
-    }
-    if (uid) {
-      callAPI.get('/user?uid=' + uid).then(res => {
-        setUserOwner(res.data);
-        setIsFollowed(res.data.isFollowed);
-        setImage(res.data.kyc.avatar?.path ? STORAGE_DOMAIN + res.data.kyc.avatar?.path : avatar0);
-        setImagePos(res.data?.kyc?.avatar_pos ? res.data.kyc.avatar_pos : { x: 0, y: 0, zoom: 1 });
-      });
-    }
-  }, [user, uid]);
-
   const handleFollow = useCallback(async () => {
     if (uid) {
       const res = await callAPI.post('/follow?id=' + uid);
@@ -191,12 +169,6 @@ const Profile = () => {
       }
     }
   }, [uid, IsFollowed]);
-
-  useEffect(() => {
-    let profileLeft = document.querySelector('.profile__left');
-    let profileLeftHeight = profileLeft.offsetHeight;
-    setProfileRightHeight(profileLeftHeight);
-  }, [height]);
 
   useEffect(() => {
     function removePopper1ByClick() {
@@ -216,20 +188,68 @@ const Profile = () => {
     };
   }, []);
 
+  const getVideo = useCallback(async () => {
+    const res = await callAPI.get(
+      `/videos?user=${uid ? uid : user?._id}&limit=30&last=${Videos[Videos.length - 1]?._id}`
+    );
+
+    if (res.data.length === 0) {
+      return (isLoadRef.current = false);
+    }
+
+    setVideos([...Videos, ...res.data]);
+  }, [Videos, user, uid]);
+
+  useEffect(() => {
+    document.body.onscroll = async () => {
+      const { bottom } = scrollRef.current?.getBoundingClientRect();
+      const isEnd = bottom <= window.innerHeight + 50;
+
+      if (isEnd && isLoadRef.current) {
+        setIsLoading(true);
+        await getVideo();
+        setIsLoading(false);
+      }
+    };
+
+    return () => (document.body.onscroll = null);
+  }, [getVideo]);
+
+  useMemo(() => {
+    if (user) {
+      setImage(user?.kyc?.avatar ? STORAGE_DOMAIN + user?.kyc?.avatar?.path : avatar0);
+      setImagePos(user?.kyc?.avatar_pos ? user.kyc.avatar_pos : { x: 0, y: 0, zoom: 1 });
+    }
+
+    if ((user || uid) && isLoadFirst.current) {
+      getVideo();
+      isLoadFirst.current = false;
+    }
+
+    if (uid) {
+      callAPI.get('/user?uid=' + uid).then(res => {
+        setUserOwner(res.data);
+        setIsFollowed(res.data.isFollowed);
+        setImage(res.data.kyc.avatar?.path ? STORAGE_DOMAIN + res.data.kyc.avatar?.path : avatar0);
+        setImagePos(res.data?.kyc?.avatar_pos ? res.data.kyc.avatar_pos : { x: 0, y: 0, zoom: 1 });
+      });
+    }
+  }, [user, uid, getVideo]);
+
   return (
     <div className='profile'>
       {isShow && <Popper1 type={type} pack={pack} />}
       {IsShowCrop && (
         <Crop
-          currentImage={user?.kyc?.avatar ? STORAGE_DOMAIN + user?.kyc?.avatar?.path : avatar0}
-          ImagePos={ImagePos}
-          setImagePos={setImagePos}
           Image={Image}
-          setIsShowCrop={setIsShowCrop}
+          ImagePos={ImagePos}
           setImage={setImage}
+          setImagePos={setImagePos}
+          setIsShowCrop={setIsShowCrop}
+          currentImage={user?.kyc?.avatar ? STORAGE_DOMAIN + user?.kyc?.avatar?.path : avatar0}
         />
       )}
-      <div onScroll={handleScroll} className='profile__left mt-10 pb-10'>
+      <div ref={scrollRef} className='profile__center mt-10'>
         <div className='profile__cover'>
           <div className='profile__cover-img'>
             <img src={cover1} alt='' />
@@ -257,9 +277,7 @@ const Profile = () => {
                 src={Image}
                 alt=''
               />
-              {/* <div className="profile__cover-confirm">
-                                
-                            </div> */}
+              {/* <div className="profile__cover-confirm"></div> */}
             </label>
 
             {uid ? (
@@ -305,78 +323,92 @@ const Profile = () => {
                 onClick={handleFollow}
                 className={`buttonSetting ${IsFollowed ? 'active' : ''}`}
               >
-                <span>{IsFollowed ? 'Unfollow' : 'Follow'}</span>
+                <span>{IsFollowed ? profile[language].unfollow : profile[language].follow}</span>
               </button>
             </div>
           )}
         </div>
 
-        <div className='ctn-tabProfile'>
-          {!uid && (
-            <TabPane name='' key='1'>
-              <div className='profile__boxPersonal'>
-                <div className='profile__boxPersonal-title'>Playlist</div>
-                <div className='layoutFlex' style={{ '--gap-row': '20px' }}>
-                  {Videos.map(o => (
-                    <div
-                      key={o._id}
-                      onClick={() => history.push('/watch?v=' + o.short_id)}
-                      className='layoutFlex-item'
-                    >
-                      <div className='profile__video'>
-                        <div className='profile__video-thumbnail'>
-                          <img
-                            onMouseOver={e => {
-                              var targat = e.target;
-                              targat.setAttribute(
-                                'src',
-                                `https://vz-3f44931c-ed0.b-cdn.net/${o.guid}/preview.webp`
-                              );
-                            }}
-                            onMouseOut={e => {
-                              var targat = e.target;
-                              targat.setAttribute(
-                                'src',
-                                `https://vz-3f44931c-ed0.b-cdn.net/${o.guid}/thumbnail.jpg`
-                              );
-                            }}
-                            src={
-                              o.thumbnail
-                                ? STORAGE_DOMAIN + o.thumbnail.path
-                                : `https://vz-3f44931c-ed0.b-cdn.net/${o.guid}/thumbnail.jpg`
-                            }
-                            alt=''
-                          />
+        <div className='pl-90 pr-90'>
+          {uid && (
+            <div className='profile__boxPersonal'>
+              <div className='profile__boxPersonal-title'>{profile[language].playlist}</div>
+              <div
+                className='layoutFlex layout-2'
+                style={{
+                  '--gap-row': '20px',
+                  '--gap-column': '40px',
+                }}
+              >
+                {Videos.map(o => (
+                  <div
+                    key={o._id}
+                    className='layoutFlex-item'
+                    onClick={() => history.push('/watch?v=' + o.short_id)}
+                  >
+                    <div className='profile__video'>
+                      <div className='profile__video-thumbnail'>
+                        <img
+                          alt=''
+                          onMouseOver={e => {
+                            var targat = e.target;
+                            targat.setAttribute(
+                              'src',
+                              `https://vz-3f44931c-ed0.b-cdn.net/${o.guid}/preview.webp`
+                            );
+                          }}
+                          onMouseOut={e => {
+                            var targat = e.target;
+                            targat.setAttribute(
+                              'src',
+                              `https://vz-3f44931c-ed0.b-cdn.net/${o.guid}/thumbnail.jpg`
+                            );
+                          }}
+                          src={
+                            o.thumbnail
+                              ? STORAGE_DOMAIN + o.thumbnail.path
+                              : `https://vz-3f44931c-ed0.b-cdn.net/${o.guid}/thumbnail.jpg`
+                          }
+                        />
+                      </div>
+                      <div className='profile__video-info'>
+                        <p className='profile__video-info-title'>{o.name}</p>
+                        <div className='profile__video-info-view'>
+                          {o.views} {profile[language].view}
                         </div>
-                        <div className='profile__video-info'>
-                          <p className='profile__video-info-title'>{o.name}</p>
-                          <div className='profile__video-info-view'>
-                            <span className='mr-50'>{o.views} view</span>
-                            <span>{o.create_date}</span>
-                          </div>
-                          {/* <p className='profile__video-info-tag'>
-                                                </p> */}
-                          <p className='profile__video-info-desc'>{o.description}</p>
-                        </div>
+                        <div className='profile__video-info-date'>{o.create_date}</div>
+                        {/* <p className='profile__video-info-tag'></p> */}
+                        <p className='profile__video-info-desc'>{o.description}</p>
                       </div>
                     </div>
-                  ))}
-                </div>
+                  </div>
+                ))}
               </div>
-            </TabPane>
+              {isLoading && (
+                <Box className={classes.loading} p={3}>
+                  <CircularProgress color='inherit' />
+                </Box>
+              )}
+            </div>
           )}
 
-          {uid && (
-            <Tab classHeader=''>
+          {!uid && (
+            <Tab>
               <TabPane name={profile[language].personal} key='1'>
-                <div className='profile__boxPersonal'>
-                  <div className='profile__boxPersonal-title'>Playlist</div>
-                  <div className='layoutFlex' style={{ '--gap-row': '20px' }}>
+                <div className='profile__boxPersonal' ref={scrollRef}>
+                  <div className='profile__boxPersonal-title'>{profile[language].playlist}</div>
+                  <div
+                    className='layoutFlex'
+                    style={{
+                      '--gap-row': '20px',
+                      '--gap-column': '10px',
+                    }}
+                  >
                     {Videos.map(o => (
                       <div
                         key={o._id}
-                        onClick={() => history.push('/watch?v=' + o.short_id)}
                         className='layoutFlex-item'
+                        onClick={() => history.push('/watch?v=' + o.short_id)}
                       >
                         <div className='profile__video'>
                           <div className='profile__video-thumbnail'>
@@ -409,8 +441,7 @@ const Profile = () => {
                               <span className='mr-50'>{o.views} view</span>
                               <span>{o.create_date}</span>
                             </div>
-                            {/* <p className='profile__video-info-tag'>
-                                                </p> */}
+                            {/* <p className='profile__video-info-tag'></p> */}
                             <p className='profile__video-info-desc'>{o.description}</p>
                           </div>
                         </div>
@@ -587,37 +618,6 @@ const Profile = () => {
           )}
         </div>
       </div>
-
-      {/* <div
-        className={`profile__right mt-10 ${isShowProfileRight ? 'show' : ''}`}
-        style={{ '--profileRight-height': `${profileRightHeight}px` }}
-      >
-        <div className='profile__title'>
-          <p>{profile[language].topDonate}</p>
-        </div>
-
-        <div className='profile__cardCtn'>
-          <Card index={0} numb={100000} avatar={avatar1} name='Trà Long' />
-          <Card index={1} numb={10000} avatar={avatar2} name='Hà Lan' />
-          <Card index={2} numb={5000} avatar={avatar3} name='Thầy Giáo Ba' />
-          <Card index={3} numb={2000} />
-          <Card index={4} numb={1000} />
-          <Card index={5} numb={1000} />
-          <Card index={6} numb={1000} />
-          <Card index={7} numb={1000} />
-          <Card index={8} numb={1000} />
-          <Card index={9} numb={1000} />
-        </div>
-      </div>
-
-      {width <= 1700 && (
-        <div
-          className={`profile__showRight ${isShowProfileRight ? 'show' : ''}`}
-          onClick={() => setIsShowProfileRight(!isShowProfileRight)}
-        >
-          <MdIcon.MdKeyboardArrowLeft className='icon' />
-        </div>
-      )} */}
     </div>
   );
 };

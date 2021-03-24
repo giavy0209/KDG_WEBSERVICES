@@ -1,44 +1,28 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import '../../assets/css/header.css';
-
-import logo from '../../assets/images/header/logo.svg';
-import diamond0 from '../../assets/images/header/diamond0.svg';
-import diamond1 from '../../assets/images/header/diamond1.svg';
-import avatar0 from '../../assets/images/header/avatar0.png';
-import avatar1 from '../../assets/images/header/avatar1.png';
+import React, { useCallback, useState } from 'react';
 import * as IoIcon from 'react-icons/io';
-import * as RiIcon from 'react-icons/ri';
 import * as VscIcon from 'react-icons/vsc';
-
-import { useLanguageLayerValue } from '../../context/LanguageLayer';
+import { useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { actionGetUser, actionClearUser } from '../../store/action';
-import { storage } from '../../helpers';
+import '../../assets/css/header.css';
+import avatar0 from '../../assets/images/header/avatar0.png';
+import diamond0 from '../../assets/images/header/diamond0.svg';
+import logo from '../../assets/images/header/logo.svg';
+import { STORAGE_DOMAIN } from '../../constant';
+import { useLanguageLayerValue } from '../../context/LanguageLayer';
 import useNumber from '../../hooks/useNumber';
 import useWindowSize from '../../hooks/useWindowSize';
-import { STORAGE_DOMAIN } from '../../constant';
 
 const Header = () => {
   const [{ language, header }] = useLanguageLayerValue();
   const [width] = useWindowSize();
-  const dispatch = useDispatch();
   const history = useHistory();
   const location = useLocation();
 
   const user = useSelector(state => state.user);
-
   const first_name = user?.kyc.first_name;
   const last_name = user?.kyc.last_name;
   const email = user?.email;
-  const followNumber = useNumber(useSelector(state => state.user?.follow?.length));
-
-  const handleNavigation = useCallback(
-    pathname => {
-      location.pathname !== pathname && history.push(pathname);
-    },
-    [location, history]
-  );
+  const followNumber = useNumber(user?.follow?.length);
 
   const NBs = useNumber(10000);
   const [isShowBuyNB, setIsShowBuyNB] = useState(false);
@@ -46,6 +30,15 @@ const Header = () => {
   const [isShowUserinfo, setIsShowUserinfo] = useState(false);
   const [isShowSearchBar, setIsShowSearchBar] = useState(false);
   const [isHaveNoti] = useState(false);
+
+  const handleNavigation = useCallback(
+    pathname => {
+      if (location.pathname !== pathname) {
+        history.push(pathname);
+      }
+    },
+    [location, history]
+  );
 
   return (
     <div className='header'>
@@ -64,7 +57,7 @@ const Header = () => {
 
       <div className='header__left'>
         <div className='header__left--left'>
-          <div className='header__logo' onClick={() => history.push('/home')}>
+          <div className='header__logo' onClick={() => handleNavigation('/home')}>
             <img src={logo} alt='logo' />
           </div>
 
@@ -83,11 +76,11 @@ const Header = () => {
 
         {user && (
           <div className='header__left--right'>
-            <button className='button-upload mr-20' onClick={() => history.push('/upload')}>
-              Upload
+            <button className='button-upload mr-10' onClick={() => history.push('/upload')}>
+              {header[language].upload}
             </button>
             <button className='button-upload' onClick={() => history.push('/setup')}>
-              Setup
+              {header[language].setup}
             </button>
           </div>
         )}
@@ -100,35 +93,22 @@ const Header = () => {
               style={{ position: 'relative' }}
               onClick={e => {
                 e.stopPropagation();
-                setIsShowBuyNB(!isShowBuyNB);
+                setIsShowBuyNB(x => !x);
               }}
             >
-              {width > 1500 ? (
-                <button className={`button-buyNB ${isShowBuyNB ? 'show' : ''}`}>
-                  <img src={diamond0} alt='icon' className='mr-10' />
-                  <span>{header[language].buyNB}</span>
-                </button>
-              ) : (
-                <RiIcon.RiVipDiamondLine className='header__iconHover' />
-              )}
+              <button className={`button-buyNB ${isShowBuyNB ? 'show' : ''}`}>
+                <img src={diamond0} alt='icon' className='mr-10' />
+                <span>{header[language].buyNB}</span>
+              </button>
+
               {isShowBuyNB && (
                 <div className='popper-buyNB' onClick={e => e.stopPropagation()}>
                   <div className='header__buyNB bb'>
                     <p className='header__NBquantity'>
-                      <span>{header[language].youhave}</span>
-                      <img src={diamond1} alt='icon' className='ml-10 mr-10' />
-                      <span>
-                        {NBs} {header[language].NBs}
-                      </span>
+                      <span>{`${header[language].youhave} ${NBs} ${header[language].NBs}`}</span>
                     </p>
                     <p className='header__NBdesc'>{header[language].desc1}</p>
-                    <p
-                      className='header__NBdetail'
-                      onClick={() => {
-                        history.push('/profile');
-                        setIsShowBuyNB(false);
-                      }}
-                    >
+                    <p className='header__NBdetail' onClick={() => setIsShowBuyNB(false)}>
                       {header[language].detail}
                     </p>
                   </div>
@@ -162,13 +142,13 @@ const Header = () => {
                 setIsShowUserinfo(x => !x);
               }}
             >
-              <div className="header__avatar">
+              <div className='header__avatar'>
                 <img
                   src={user?.kyc.avatar ? STORAGE_DOMAIN + user?.kyc.avatar?.path : avatar0}
                   style={{
-                    '--x' : user?.kyc.avatar_pos ? (user?.kyc.avatar_pos.x * -1) + '%' : 0,
-                    '--y' : user?.kyc.avatar_pos ? (user?.kyc.avatar_pos.y * -1) + '%' : 0,
-                    '--zoom' : user?.kyc.avatar_pos ? user?.kyc.avatar_pos.zoom + '%' : '100%',
+                    '--x': user?.kyc.avatar_pos ? user?.kyc.avatar_pos.x * -1 + '%' : 0,
+                    '--y': user?.kyc.avatar_pos ? user?.kyc.avatar_pos.y * -1 + '%' : 0,
+                    '--zoom': user?.kyc.avatar_pos ? user?.kyc.avatar_pos.zoom + '%' : '100%',
                   }}
                   alt=''
                   className='header__avatar-img'
@@ -177,14 +157,14 @@ const Header = () => {
               {isShowUserinfo && (
                 <div className='popper-userinfo' onClick={e => e.stopPropagation()}>
                   <div className='header__info bb'>
-                    <div className="header__info-avatar">
+                    <div className='header__info-avatar'>
                       <img
                         src={user?.kyc.avatar ? STORAGE_DOMAIN + user?.kyc.avatar?.path : avatar0}
                         alt=''
                         style={{
-                          '--x' : user?.kyc.avatar_pos ? (user?.kyc.avatar_pos.x * -1) + '%' : 0,
-                          '--y' : user?.kyc.avatar_pos ? (user?.kyc.avatar_pos.y * -1) + '%' : 0,
-                          '--zoom' : user?.kyc.avatar_pos ? user?.kyc.avatar_pos.zoom + '%' : '100%',
+                          '--x': user?.kyc.avatar_pos ? user?.kyc.avatar_pos.x * -1 + '%' : 0,
+                          '--y': user?.kyc.avatar_pos ? user?.kyc.avatar_pos.y * -1 + '%' : 0,
+                          '--zoom': user?.kyc.avatar_pos ? user?.kyc.avatar_pos.zoom + '%' : '100%',
                         }}
                         className='header__info-avatar-img'
                       />
@@ -202,7 +182,7 @@ const Header = () => {
                     <div
                       className='header__manage'
                       onClick={() => {
-                        history.push('/profile');
+                        handleNavigation('/profile');
                         setIsShowUserinfo(false);
                       }}
                     >
@@ -211,21 +191,14 @@ const Header = () => {
                     <div
                       className='header__manage'
                       onClick={() => {
-                        history.push('/profile');
+                        handleNavigation('/profile');
                         setIsShowUserinfo(false);
                       }}
                     >
                       {header[language].assetmanagement}
                     </div>
                   </div>
-                  <div
-                    className='header__manage'
-                    onClick={() => {
-                      storage.clear();
-                      dispatch(actionClearUser());
-                      history.push('/login');
-                    }}
-                  >
+                  <div className='header__manage' onClick={() => setIsShowUserinfo(false)}>
                     {header[language].logout}
                   </div>
                 </div>

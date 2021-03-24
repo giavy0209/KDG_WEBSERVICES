@@ -206,6 +206,8 @@ const header = {
     assetmanagement: 'Quản lí tài sản',
     logout: 'Đăng xuất',
     login: 'Đăng nhập',
+    upload: 'Tải lên',
+    setup: 'Thiết lập',
   },
   en: {
     search: 'Search',
@@ -221,8 +223,10 @@ const header = {
     followers: 'followers',
     personalinfo: 'Profile',
     assetmanagement: 'Asset management',
-    logout: 'Sign out',
+    logout: 'Log out',
     login: 'Sign in',
+    upload: 'Upload',
+    setup: 'Setup',
   },
 };
 
@@ -278,7 +282,7 @@ const home = {
     ranking: 'Ranking',
     donate: 'Donate',
     follow: 'Follow',
-    view: 'View',
+    view: 'Views',
   },
 };
 
@@ -288,18 +292,26 @@ const profile = {
     following: 'Đang theo dõi',
     balance: 'Số dư khả dụng',
     setting: 'Cài đặt',
+    follow: 'Theo dõi',
+    unfollow: 'Bỏ theo dõi',
     personal: 'Cá nhân',
     manage: 'Quản lí',
     topDonate: 'Đóng góp nhiều nhất',
+    view: 'lượt xem',
+    playlist: 'Danh sách phát',
   },
   en: {
     follower: 'Follower',
     following: 'Following',
     balance: 'Balance',
     setting: 'Setting',
+    follow: 'Follow',
+    unfollow: 'Unfollow',
     personal: 'Personal',
     manage: 'Manage',
     topDonate: 'Top Donate',
+    view: 'view',
+    playlist: 'Playlist',
   },
 };
 
