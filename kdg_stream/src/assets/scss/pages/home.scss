@@ -5,7 +5,7 @@
   align-items: flex-start;
   justify-content: space-between;
 
-  background-color: #f7f7f7;
+  background-color: $background-color-main;
 
   &__left {
     width: calc(75% - 10px);

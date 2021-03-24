@@ -5,12 +5,12 @@ const listLanguage = {
 
 const footer = {
   vi: {
-    copyright: 'Bản quyền © 2020 - kingdomgame.org. Đã đăng ký Bản quyền',
+    copyright: 'Bản quyền © 2021 - kingdomgame.org. Đã đăng ký Bản quyền',
     language: 'Ngôn ngữ',
     social: 'Mạng xã hội',
   },
   en: {
-    copyright: 'Copyright © 2020 - kingdomgame.org. All Rights Reserved',
+    copyright: 'Copyright © 2021 - kingdomgame.org. All Rights Reserved',
     language: 'Language',
     social: 'Social',
   },
