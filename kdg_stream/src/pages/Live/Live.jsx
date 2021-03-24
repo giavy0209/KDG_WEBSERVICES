@@ -125,7 +125,6 @@ const Live = () => {
     }, []);
 
     const handleMuteVideo = useCallback(() => {
-        console.log(videoRef.current.muted , isMute);
         if (isMute) {
             videoRef.current.muted = true
             setIsMute(!isMute);
@@ -284,7 +283,6 @@ const Live = () => {
             flvPlayer.current.attachMediaElement(videoElement);
             flvPlayer.current.load();
             flvPlayer.current.play()
-
         });
     }, []);
 
