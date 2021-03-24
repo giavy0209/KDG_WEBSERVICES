@@ -315,6 +315,33 @@ const profile = {
   },
 };
 
+const upload = {
+  vi: {
+    upload: 'Tải lên',
+    title: 'Tiêu đề Video',
+    desc: 'Mô tả về Video',
+    uploading: 'Đang tải lên...',
+    success: 'Tải lên thành công, chờ xử lý video...',
+    error: 'Có lỗi trong quá trình xử lý video, vui lòng thử lại!',
+    processing: 'Đang xử lý video...',
+    encoding: 'Đang mã hóa video...',
+    video99: 'Video có thể phát, xem ngay',
+    video100: 'Đã xử lý xong video với chất lượng tốt nhất, xem ngay',
+  },
+  en: {
+    upload: 'Upload',
+    title: 'Title for Video',
+    desc: 'Description about this Video',
+    uploading: 'Uploading Video...',
+    success: 'Upload successfully, wait for the video to be processed...',
+    error: 'There was an error processing the video, please try again!',
+    processing: 'Processing Video...',
+    encoding: 'Encoding Video...',
+    video99: 'Video can be played, watch now',
+    video100: 'Finished video processing with the best quality, watch now',
+  },
+};
+
 export const initialState = {
   language: 'vi',
   listLanguage,
@@ -329,6 +356,7 @@ export const initialState = {
   cover,
   home,
   profile,
+  upload,
 };
 
 export const CHANGE_LANGUAGE = 'CHANGE_LANGUAGE';

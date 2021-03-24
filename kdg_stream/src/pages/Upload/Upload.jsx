@@ -3,31 +3,41 @@ import * as GoIcon from 'react-icons/go';
 import { useHistory } from 'react-router';
 import '../../assets/css/upload.css';
 import callAPI from '../../axios';
+import { useLanguageLayerValue } from '../../context/LanguageLayer';
 import socket from '../../socket';
 
 const Upload = () => {
   const history = useHistory();
+  const [{ language, upload }] = useLanguageLayerValue();
+
   const [Guid, setGuid] = useState(null);
   const [ShortId, setShortId] = useState(null);
   const [IsUploading, setIsUploading] = useState(false);
   const [Status, setStatus] = useState(null);
   const [StatusCode, setStatusCode] = useState(null);
   const [VideoSrc, setVideoSrc] = useState(null);
-  const [VideoTitle, setVideoTitle] = useState('');
   const [Progress, setProgress] = useState('0%');
+
+  const [VideoTitle, setVideoTitle] = useState('');
+  const [VideoDesc, setVideoDesc] = useState('');
 
   const readURL = useCallback(input => {
     input.persist();
     input = input.target;
+
     if (input.files && input.files[0]) {
       setVideoTitle(input.files[0].name);
+      setVideoDesc(input.files[0].name);
+
       var reader = new FileReader();
+
       reader.onload = function (e) {
         let buffer = e.target.result;
         let videoBlob = new Blob([new Uint8Array(buffer)], { type: 'video/mp4' });
         let url = window.URL.createObjectURL(videoBlob);
         setVideoSrc(url);
       };
+
       reader.readAsArrayBuffer(input.files[0]);
     }
   }, []);
@@ -37,10 +47,12 @@ const Upload = () => {
       e.preventDefault();
       if (IsUploading) return;
       setIsUploading(true);
+
       const data = new FormData(e.target);
 
-      setStatus('Đang tải lên');
+      setStatus(upload[language].uploading);
       setStatusCode(null);
+
       const res = await callAPI.post('/upload_video', data, true, {
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -54,16 +66,18 @@ const Upload = () => {
           }
         },
       });
+
       if (res.status === 1) {
-        setStatus('Tải lên thành công, chờ xử lý video');
+        setStatus(upload[language].success);
         setGuid(res.guid);
         setShortId(res.video.short_id);
       }
+
       if (res.status === 0) {
-        setStatus('Có lỗi trong quá trình xử lý video, vui lòng thử lại');
+        setStatus(upload[language].error);
       }
     },
-    [IsUploading]
+    [IsUploading, upload, language]
   );
 
   useEffect(() => {
@@ -71,25 +85,25 @@ const Upload = () => {
       if (guid !== Guid) return;
       switch (status) {
         case 1:
-          setStatus('Đang xử lý video');
+          setStatus(upload[language].processing);
           setProgress('91%');
           break;
         case 2:
-          setStatus('Đang mã hóa video');
+          setStatus(upload[language].encoding);
           setProgress('95%');
           break;
         case 4:
-          setStatus('Video có thể phát, xem ngay');
+          setStatus(upload[language].video99);
           setProgress('99%');
           setIsUploading(false);
           setStatusCode(4);
           break;
         case 3:
-          setStatus('Đã xử lý xong video với chất lượng tốt nhất, xem ngay');
+          setStatus(upload[language].video100);
           setProgress('100%');
           break;
         case 5:
-          setStatus('Có lỗi trong quá trình xử lý video, vui lòng thử lại');
+          setStatus(upload[language].error);
           break;
         default:
           break;
@@ -100,12 +114,12 @@ const Upload = () => {
     return () => {
       socket.removeListener('video_status', handleVideoStatus);
     };
-  }, [Guid]);
+  }, [Guid, upload, language]);
 
   return (
     <div className='upload'>
       <form onSubmit={handleUpload} className='upload__form'>
-        <div className='upload__title'>Upload</div>
+        <div className='upload__title'>{upload[language].upload}</div>
 
         {Status && (
           <>
@@ -132,92 +146,35 @@ const Upload = () => {
 
         <div className='upload__form-inputBox mt-20'>
           <input
-            value={VideoTitle}
-            onChange={e => setVideoTitle(e.target.value)}
             name='name'
             type='text'
-            placeholder='Title'
+            placeholder={upload[language].title}
+            value={VideoTitle}
+            onChange={e => setVideoTitle(e.target.value)}
           />
         </div>
 
         <div className='upload__form-textareaBox mt-20'>
-          <textarea name='description' placeholder='Something about this livestream'></textarea>
+          <textarea
+            name='description'
+            placeholder={upload[language].desc}
+            value={VideoDesc}
+            onChange={e => setVideoDesc(e.target.value)}
+          ></textarea>
         </div>
-
-        {/* <div className='upload__form-radioBox mt-20'>
-          <div
-            className={`inputRadio mr-100 ${currentRadio === 0 ? 'active' : ''}`}
-            onClick={() => setCurrentRadio(0)}
-          >
-            <div className='circle mr-10'></div>
-            <div className='text'>Public</div>
-          </div>
-          <div
-            className={`inputRadio ${currentRadio === 1 ? 'active' : ''}`}
-            onClick={() => setCurrentRadio(1)}
-          >
-            <div className='circle mr-10'></div>
-            <div className='text'>Only me</div>
-          </div>
-        </div> */}
-        {/* <div className='upload__form-type mt-20'>
-          <p className='mb-20'>Thể loại (Tối đa 3 thể loại)</p>
-          <div className='dropdown'>
-            <div className='dropdown__selected' onClick={() => setIsShowDropdown(!isShowDropdown)}>
-              <TiIcon.TiArrowSortedDown
-                className={`dropdown__selected-arrowIcon ${isShowDropdown ? 'rotate' : ''}`}
-              />
-              <div className='dropdown__selected-item' onClick={e => e.stopPropagation()}>
-                <span>Trò chơi trí tuệ</span>
-                <RiIcon.RiCloseFill />
-              </div>
-              <div className='dropdown__selected-item' onClick={e => e.stopPropagation()}>
-                <span>Thể thao</span>
-                <RiIcon.RiCloseFill />
-              </div>
-              <div className='dropdown__selected-item' onClick={e => e.stopPropagation()}>
-                <span>Du lịch</span>
-                <RiIcon.RiCloseFill />
-              </div>
-            </div>
-
-            <div className={`dropdown__list ${isShowDropdown ? 'd-block' : ''}`}>
-              <div className='dropdown__list-item'>
-                <span>Trò chơi trí tuệ</span>
-                <FaIcon.FaCheck className='d-block' />
-              </div>
-              <div className='dropdown__list-item'>
-                <span>Thể thao</span>
-                <FaIcon.FaCheck className='d-block' />
-              </div>
-              <div className='dropdown__list-item'>
-                <span>Du lịch</span>
-                <FaIcon.FaCheck className='d-block' />
-              </div>
-            </div>
-          </div>
-        </div> */}
-        {/* <div className='upload__form-note mt-30'>
-          <p>Lưu ý</p>
-          <p>
-            - Đảm bảo trong quá trình livestream không có hành động, lời nói mang tính chất bạo
-            động, phản cách mạng.
-          </p>
-          <p>- Không sử dụng hình ảnh nghệ sĩ nổi tiếng khi chưa có sự cho phép.</p>
-        </div> */}
 
         <label htmlFor='inputfile' className='upload__form-thumbnailBox mt-20'>
           <input name='video' onChange={readURL} id='inputfile' type='file' />
-          {VideoSrc && <video autoPlay muted src={VideoSrc}></video>}
           <GoIcon.GoCloudUpload className='icon' />
+          {VideoSrc && <video autoPlay muted src={VideoSrc}></video>}
         </label>
 
         <button
           type='submit'
           className='button-upload mt-20'
-          style={{ pointerEvents: IsUploading ? 'none' : 'all' }}
+          style={{ width: '100%', pointerEvents: IsUploading ? 'none' : 'all' }}
         >
-          Upload
+          {upload[language].upload}
         </button>
       </form>
     </div>
