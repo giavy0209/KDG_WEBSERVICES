@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import '../../assets/css/live.css';
+import { useLocation } from 'react-router';
 
 import * as AiIcon from 'react-icons/ai';
 import * as HiIcon from 'react-icons/hi';
@@ -12,10 +13,14 @@ import * as ImIcon from 'react-icons/im';
 import video1 from '../../assets/images/live/video1.mp4';
 import avatar1 from '../../assets/images/live/avatar1.png';
 import useNumber from '../../hooks/useNumber';
+import callAPI from '../../axios';
+import { PLAY_STREAM } from '../../constant';
 
 let temp = 1;
 
 const Live = () => {
+    
+    
     const [isExpand, setIsExpand] = useState(false);
     const [isFullScreen, setIsFullScreen] = useState(false);
     const [isHideChat, setIsHideChat] = useState(false);
@@ -266,6 +271,23 @@ const Live = () => {
         };
         return () => (document.onfullscreenchange = null);
     }, []);
+
+    useEffect(() => {
+        const id = new URLSearchParams(window.location.search).get('s');
+        console.log(id);
+        callAPI.get('/streamming?id=' + id)
+        .then(res => {
+            console.log(res);
+            var videoElement = document.getElementById('videoElement');
+            var flvPlayer = window.flvjs.createPlayer({
+                type: 'flv',
+                url: `${PLAY_STREAM}${res.data.key}.flv`
+            });
+            flvPlayer.attachMediaElement(videoElement);
+            flvPlayer.load();
+            flvPlayer.play();
+        })
+    },[])
 
     useEffect(() => {
         const playVideoByKeyboard = e => {
@@ -807,7 +829,7 @@ const Live = () => {
                             </div>
                         </div>
                     )}
-                    <video ref={videoRef} src={video1}></video>
+                    <video ref={videoRef} muted autoPlay id="videoElement"></video>
                     <div ref={animationRef} className='live__videoCtn-animation'>
                         <div className='live__videoCtn-animation-iconCircle play-icon'>
                             <AiIcon.AiFillPlayCircle />
