@@ -1,4 +1,19 @@
+// -----------------------------HEIGHT------------------------ //
+
 $break-point-large: 1430px;
+
+$footer-height: 30px;
+$sidebar-footer-height: 50px;
+
+$header-height: 56px;
+$search-height: 40px;
+$logo-height: 40px;
+
+$icon-size: 30px;
+
+// ----------------------------------------------------------- //
+
+// --------------------------FONT SIZE------------------------ //
 
 $size-1: 26px;
 $size-2: 24px;
@@ -6,6 +21,10 @@ $size-3: 22px;
 $size-4: 20px;
 $size-5: 18px;
 $size-6: 16px;
+
+// ----------------------------------------------------------- //
+
+// --------------------------COLOR---------------------------- //
 
 $main-color: #e41a7f;
 $title-color: #000;
@@ -21,9 +40,13 @@ $background-color-hover: #d9d9d9;
 $box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
 $box-shadowLeft: 3px 3px 6px rgba(0, 0, 0, 0.2);
 $box-shadowRight: -3px 3px 6px rgba(0, 0, 0, 0.2);
-$box-shadowPopper: 0 5px 10px rgba(0, 0, 0, 0.3);
+$box-shadow-popper: 0 5px 10px rgba(0, 0, 0, 0.3);
 
 $border-bottom: 1px solid #d1d1d1;
+
+// ----------------------------------------------------------- //
+
+// --------------------------Z INDEX-------------------------- //
 
 $z-index-footer: 300;
 $z-index-header: 200;
@@ -31,7 +54,9 @@ $z-index-searchBar: 200;
 $z-index-homeRight: 100;
 $z-index-profileRight: 100;
 $z-index-setupRight: 100;
-$zIndex-popper: 99;
+$z-index-popper: 99;
+
+// ----------------------------------------------------------- //
 
 $min-width-profileRight: 430px;
 $min-width-setupRight: 430px;
@@ -54,12 +79,3 @@ $max-width-setupRight: 576px;
     display: none;
   }
 }
-
-$footer-height: 30px;
-$sidebar-footer-height: 50px;
-
-$header-height: 56px;
-$search-height: 40px;
-$logo-height: 40px;
-
-$icon-size: 30px;
