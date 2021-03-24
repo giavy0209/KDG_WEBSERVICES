@@ -1,15 +1,13 @@
 import { Box, CircularProgress, makeStyles } from '@material-ui/core';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { useRef } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import * as MdIcon from 'react-icons/md';
 import { useHistory } from 'react-router-dom';
 import '../../assets/css/home.css';
-import avatar1 from '../../assets/images/home/avatar1.png';
 import callAPI from '../../axios';
 import { Card, Tab, TabPane, Video } from '../../components';
-import { STORAGE_DOMAIN } from '../../constant';
+import { STORAGE_DOMAIN, BREAK_POINT_LARGE } from '../../constant';
 import { useLanguageLayerValue } from '../../context/LanguageLayer';
 import useWindowSize from '../../hooks/useWindowSize';
-import * as MdIcon from 'react-icons/md';
 
 const useStyles = makeStyles(theme => ({
   loading: {
@@ -22,11 +20,10 @@ const useStyles = makeStyles(theme => ({
 
 const Home = () => {
   const [{ language, home }] = useLanguageLayerValue();
-  const [width, height] = useWindowSize();
+  const [width] = useWindowSize();
   const history = useHistory();
 
   const [isShowHomeRight, setIsShowHomeRight] = useState(false);
-  const [homeRightHeight, setHomeRightHeight] = useState(0);
   const [Videos, setVideos] = useState([]);
   const [Ranking, setRanking] = useState({ follows: [], views: [] });
 
@@ -34,13 +31,18 @@ const Home = () => {
   const classes = useStyles();
 
   const isLoadRef = useRef(true);
-  const leftRef = useRef();
+  const scrollRef = useRef();
 
-  // useEffect(() => {
-  //   let homeLeft = document.querySelector('.home__left');
-  //   let homeLeftHeight = homeLeft.offsetHeight;
-  //   setHomeRightHeight(homeLeftHeight);
-  // }, [height]);
+  const homeRightRef = useRef();
+
+  useMemo(() => {
+    callAPI.get('/recommend').then(res => {
+      setVideos([...res.data]);
+    });
+    callAPI.get('/ranking').then(res => {
+      setRanking(res.data);
+    });
+  }, []);
 
   const getRecommend = useCallback(async () => {
     const ids = Videos.map(o => o._id);
@@ -53,33 +55,10 @@ const Home = () => {
     setVideos([...Videos, ...res.data]);
   }, [Videos]);
 
-  // const handleScroll = useCallback(
-  //   async e => {
-  //     console.log('e');
-  //     const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
-  //     if (bottom && isLoadRef.current) {
-  //       setIsLoading(true);
-  //       await getRecommend();
-  //       e.target.scroll(0, e.target.scrollTop + 100);
-  //       setIsLoading(false);
-  //     }
-  //   },
-  //   [getRecommend]
-  // );
-
-  useMemo(() => {
-    callAPI.get('/recommend').then(res => {
-      setVideos([...res.data]);
-    });
-    callAPI.get('/ranking').then(res => {
-      setRanking(res.data);
-    });
-  }, []);
-
   useEffect(() => {
-    document.body.onscroll = async () => {
-      const { bottom } = leftRef.current.getBoundingClientRect();
-      const isEnd = bottom <= window.innerHeight + 50;
+    const handleLoadVideo = async () => {
+      const { bottom } = scrollRef.current.getBoundingClientRect();
+      const isEnd = bottom <= window.innerHeight + 100;
 
       if (isEnd && isLoadRef.current) {
         setIsLoading(true);
@@ -88,12 +67,34 @@ const Home = () => {
       }
     };
 
-    return () => (document.body.onscroll = null);
-  }, [getRecommend]);
+    const handlePositionRanking = () => {
+      if (width > BREAK_POINT_LARGE) return;
+
+      const header = document.querySelector('.header');
+      const footer = document.querySelector('.footer');
+      const { top } = header.getBoundingClientRect();
+
+      console.log(top === footer.clientHeight);
+
+      if (top === footer.clientHeight) {
+        homeRightRef.current.style.top = footer.clientHeight + header.clientHeight + 10;
+      } else {
+        homeRightRef.current.style.top = header.clientHeight + 10;
+      }
+    };
+
+    document.body.addEventListener('scroll', handlePositionRanking);
+    document.body.addEventListener('scroll', handleLoadVideo);
+
+    return () => {
+      document.body.removeEventListener('scroll', handleLoadVideo);
+      document.body.removeEventListener('scroll', handlePositionRanking);
+    };
+  }, [getRecommend, width]);
 
   return (
     <div className='home'>
-      <div ref={leftRef} className='home__left mt-10'>
+      <div ref={scrollRef} className='home__left mt-10'>
         {/* <div>
           <div className='home__title'>
             <p>{home[language].following}</p>
@@ -150,10 +151,13 @@ const Home = () => {
       </div>
 
       <div
-        className={`home__right mt-10 ${isShowHomeRight ? 'show' : ''}`}
+        ref={homeRightRef}
+        className={`home__right ${width > BREAK_POINT_LARGE ? 'mt-10' : ''} ${
+          isShowHomeRight ? 'show' : ''
+        }`}
         // style={{ '--homeRight-height': `${homeRightHeight}px` }}
       >
-        {width <= 1430 && (
+        {width <= BREAK_POINT_LARGE && (
           <div
             className={`home__arrow ${isShowHomeRight ? 'show' : ''}`}
             onClick={() => setIsShowHomeRight(x => !x)}
@@ -215,15 +219,6 @@ const Home = () => {
           </Tab>
         </div>
       </div>
-
-      {/* {width <= 1430 && (
-        <div
-          className={`home__showRight ${isShowHomeRight ? 'show' : ''}`}
-          onClick={() => setIsShowHomeRight(x => !x)}
-        >
-          <MdIcon.MdKeyboardArrowLeft className='icon' />
-        </div>
-      )} */}
     </div>
   );
 };

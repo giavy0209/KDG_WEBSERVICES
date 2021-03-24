@@ -21,6 +21,32 @@
   }
 }
 
+.button-buyNB {
+  cursor: pointer;
+  user-select: none;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 150px;
+  height: 44px;
+  line-height: 44px;
+
+  color: #525252;
+  font-size: $size-4;
+  font-weight: 700;
+
+  border-radius: 5px;
+  background-color: #f0f0f0;
+  transition: 0.3s;
+
+  &:hover,
+  &.show {
+    background-color: $background-color-hover;
+  }
+}
+
 .header {
   height: $header-height;
   z-index: $z-index-header;
@@ -196,28 +222,6 @@
     }
   }
 
-  .button-buyNB {
-    cursor: pointer;
-    user-select: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 5px;
-    height: 44px;
-    line-height: 44px;
-    min-width: 150px;
-    color: #525252;
-    font-size: 22px;
-    font-weight: 700;
-    transition: 0.3s;
-    background-color: #f0f0f0;
-
-    &:hover,
-    &.show {
-      background-color: #d9d9d9;
-    }
-  }
-
   &__buyNB {
     height: 130px;
     padding: 0 25px;
@@ -244,14 +248,18 @@
   }
 
   &__NBdetail {
-    color: #e41a7f;
-    font-size: 18px;
-    font-style: italic;
-    font-weight: 300;
-    text-align: right;
-    text-decoration: underline;
     cursor: pointer;
     user-select: none;
+
+    padding-top: 10px;
+
+    color: $main-color;
+    font-size: $size-5;
+    font-style: italic;
+    font-weight: 300;
+
+    text-align: right;
+    text-decoration: underline;
   }
 
   &__notification {
@@ -306,14 +314,14 @@
     height: 50px;
     overflow: hidden;
     border-radius: 50%;
-    &-img{
+    &-img {
       display: block;
       cursor: pointer;
       user-select: none;
       top: 0;
       left: 0;
-      transform: translate(var(--x) , var(--y));
-      width:var(--zoom);
+      transform: translate(var(--x), var(--y));
+      width: var(--zoom);
       object-fit: cover;
       border-radius: 50%;
       position: absolute;
@@ -332,14 +340,14 @@
       height: 50px;
       overflow: hidden;
       border-radius: 50%;
-      &-img{
+      &-img {
         display: block;
         cursor: pointer;
         user-select: none;
         top: 0;
         left: 0;
-        transform: translate(var(--x) , var(--y));
-        width:var(--zoom);
+        transform: translate(var(--x), var(--y));
+        width: var(--zoom);
         object-fit: cover;
         border-radius: 50%;
         position: absolute;

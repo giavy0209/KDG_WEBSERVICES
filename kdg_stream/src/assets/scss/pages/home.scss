@@ -4,6 +4,7 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
+
   background-color: #f7f7f7;
 
   &__left {
@@ -16,7 +17,7 @@
     border-bottom-right-radius: 10px;
     transition: 0.3s;
 
-    @media (max-width: 1430px) {
+    @media (max-width: $break-point-large) {
       width: 100%;
       border-top-right-radius: 0;
       border-bottom-right-radius: 0;
@@ -43,12 +44,11 @@
     top: calc(10px + #{$header-height});
     right: 0;
 
-    @media (max-width: 1430px) {
+    @media (max-width: $break-point-large) {
       width: 400px;
       margin: 0;
 
       position: fixed;
-      top: 96px;
 
       border-top-left-radius: 0;
 

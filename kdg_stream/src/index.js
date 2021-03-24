@@ -1,25 +1,25 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import "./assets/css/style.css";
-import App from "./App.jsx";
-import reportWebVitals from "./reportWebVitals";
-import store from "./store";
-import { Provider } from "react-redux";
-import { BrowserRouter } from "react-router-dom";
-import { LanguageLayer } from "./context/LanguageLayer";
-import reducer, { initialState } from "./context/reducer";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
+import App from './App.jsx';
+import './assets/css/style.css';
+import { LanguageLayer } from './context/LanguageLayer';
+import reducer, { initialState } from './context/reducer';
+import reportWebVitals from './reportWebVitals';
+import store from './store';
 
 ReactDOM.render(
-    <React.StrictMode>
-        <Provider store={store}>
-            <LanguageLayer initialState={initialState} reducer={reducer}>
-                <BrowserRouter>
-                    <App />
-                </BrowserRouter>
-            </LanguageLayer>
-        </Provider>
-    </React.StrictMode>,
-    document.getElementById("root")
+  <React.StrictMode>
+    <Provider store={store}>
+      <LanguageLayer initialState={initialState} reducer={reducer}>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </LanguageLayer>
+    </Provider>
+  </React.StrictMode>,
+  document.getElementById('root')
 );
 
 // If you want to start measuring performance in your app, pass a function

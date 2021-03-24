@@ -4,9 +4,10 @@ import { useDispatch } from 'react-redux';
 import { Redirect, Route, Switch, useLocation } from 'react-router-dom';
 import { Footer, Header } from './components';
 import { storage } from './helpers';
-import { Home, Live, Login, Profile, Setup, Upload, Video } from './pages';
+import { Home, Live, Login, Profile, Upload, Video } from './pages';
+import socket from './socket';
 import { actChangeBalances, actChangeUser, asyncInitAuth } from './store/authAction';
-import socket from './socket'
+
 const App = () => {
   const location = useLocation();
   const dispatch = useDispatch();
@@ -17,7 +18,7 @@ const App = () => {
       storage.setRefresh(refresh);
       dispatch(asyncInitAuth());
     } else {
-      const old_refresh = storage.getRefresh();
+      storage.getRefresh();
       dispatch(asyncInitAuth());
     }
   }, [refresh, dispatch]);
@@ -27,12 +28,12 @@ const App = () => {
       dispatch(actChangeBalances(res.balances));
     };
     const listenUser = res => {
-      console.log(res);
       dispatch(actChangeUser(res.data));
     };
     socket.on('balances', listenBalance);
     socket.on('user', listenUser);
   }, [dispatch]);
+
   return (
     <>
       <Footer />
