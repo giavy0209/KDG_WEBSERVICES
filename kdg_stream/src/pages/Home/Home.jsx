@@ -4,7 +4,7 @@ import * as MdIcon from 'react-icons/md';
 import { useHistory } from 'react-router-dom';
 import '../../assets/css/home.css';
 import callAPI from '../../axios';
-import { Card, Tab, TabPane, Video } from '../../components';
+import { Card, Tab, TabPane, Video ,Stream} from '../../components';
 import { STORAGE_DOMAIN, BREAK_POINT_LARGE } from '../../constant';
 import { useLanguageLayerValue } from '../../context/LanguageLayer';
 import useWindowSize from '../../hooks/useWindowSize';
@@ -25,6 +25,7 @@ const Home = () => {
 
   const [isShowHomeRight, setIsShowHomeRight] = useState(false);
   const [Videos, setVideos] = useState([]);
+  const [Streammings, setStreammings] = useState([]);
   const [Ranking, setRanking] = useState({ follows: [], views: [] });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -41,6 +42,9 @@ const Home = () => {
     });
     callAPI.get('/ranking').then(res => {
       setRanking(res.data);
+    });
+    callAPI.get('/streammings').then(res => {
+      setStreammings(res.data);
     });
   }, []);
 
@@ -108,20 +112,58 @@ const Home = () => {
           <Cover />
         </div> */}
 
+<div>
+          <div className='home__title'>
+            <p>{home[language].watchLive}</p>
+          </div>
+          <div
+            className={`layoutFlex ${width > 1280
+              ? 'layout-4'
+              : width > 860
+                ? 'layout-3'
+                : width > 500
+                  ? 'layout-2'
+                  : 'layout-1'
+              }`}
+            style={{
+              '--gap-column': '40px',
+              '--gap-row': '40px',
+            }}
+          >
+            {Streammings.map(el => (
+              <div key={el._id} className='layoutFlex-item'>
+                <Stream
+                  avatar={
+                    el.user?.kyc.avatar?.path ? STORAGE_DOMAIN + el.user.kyc.avatar.path : undefined
+                  }
+                  video={el}
+                  title={el.name}
+                  description={el.description}
+                  onClick={() => history.push('/live?s=' + el._id)}
+                />
+              </div>
+            ))}
+          </div>
+          {isLoading && (
+            <Box className={classes.loading} p={3}>
+              <CircularProgress color='inherit' />
+            </Box>
+          )}
+        </div>
+
         <div>
           <div className='home__title'>
             <p>{home[language].recommend}</p>
           </div>
           <div
-            className={`layoutFlex ${
-              width > 1280
-                ? 'layout-4'
-                : width > 860
+            className={`layoutFlex ${width > 1280
+              ? 'layout-4'
+              : width > 860
                 ? 'layout-3'
                 : width > 500
-                ? 'layout-2'
-                : 'layout-1'
-            }`}
+                  ? 'layout-2'
+                  : 'layout-1'
+              }`}
             style={{
               '--gap-column': '40px',
               '--gap-row': '40px',
@@ -147,7 +189,10 @@ const Home = () => {
             </Box>
           )}
         </div>
+        
       </div>
+
+
 
       <div ref={homeRightRef} className={`home__right ${isShowHomeRight ? 'show' : ''}`}>
         {width <= BREAK_POINT_LARGE && (
