@@ -295,44 +295,37 @@
     }
   }
 
-  &__userinfo {
-    position: relative;
-    > img {
-      transition: 0.3s;
-    }
-
-    &:hover {
-      > img {
-        opacity: 0.5;
-      }
-    }
-  }
-
   &__avatar {
     position: relative;
+
     width: 50px;
     height: 50px;
     overflow: hidden;
     border-radius: 50%;
+
     &-img {
-      display: block;
       cursor: pointer;
       user-select: none;
+
+      display: block;
+      position: absolute;
       top: 0;
       left: 0;
       transform: translate(var(--x), var(--y));
+
       width: var(--zoom);
+
       object-fit: cover;
       border-radius: 50%;
-      position: absolute;
     }
   }
 
   &__info {
+    padding: 20px;
+
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    padding: 20px;
 
     &-avatar {
       position: relative;
@@ -340,45 +333,52 @@
       height: 50px;
       overflow: hidden;
       border-radius: 50%;
+
       &-img {
+        // cursor: pointer;
+        // user-select: none;
+
         display: block;
-        cursor: pointer;
-        user-select: none;
+        position: absolute;
         top: 0;
         left: 0;
         transform: translate(var(--x), var(--y));
+
         width: var(--zoom);
         object-fit: cover;
         border-radius: 50%;
-        position: absolute;
       }
     }
+
     > div:nth-child(2) {
-      width: calc(100% - 90px - 15px);
+      padding-left: 20px;
+      width: calc(100% - 50px);
     }
 
     &-name {
-      color: #151515;
-      font-size: 26px;
+      color: $sub-title-color;
+      font-size: $size-2;
       font-weight: 700;
       @include hidden-text(2);
     }
 
     &-follow {
-      color: #6e6e6e;
-      font-size: 22px;
+      color: $text-color;
+      font-size: $size-4;
       @include hidden-text(2);
     }
   }
 
   &__manage {
-    color: #6e6e6e;
-    font-size: 20px;
-    height: 50px;
-    line-height: 50px;
-    padding: 0 35px;
     cursor: pointer;
     user-select: none;
+
+    padding: 0 30px;
+    height: 50px;
+    line-height: 50px;
+
+    color: $text-color;
+    font-size: $size-4;
 
     &:hover {
       background-color: $background-color-hover;
@@ -388,8 +388,9 @@
   &__login {
     cursor: pointer;
     user-select: none;
-    color: #e41a7f;
-    font-size: 20px;
+
+    color: $main-color;
+    font-size: $size-4;
     font-weight: 500;
     @include hidden-text(1);
 
@@ -410,89 +411,31 @@
   }
 }
 
-.popper-buyNB,
-.popper-notification,
-.popper-userinfo {
+.popper {
   width: 450px;
   height: 600px;
+
   border-radius: 5px;
-  box-shadow: $box-shadowPopper;
+  box-shadow: $box-shadow-popper;
   background-color: $background-white;
 
   position: absolute;
-  top: calc(100% + 21px);
-  right: 0;
+  top: calc(100% + 10px + 20px);
+  right: 20px;
 
-  @media (max-width: 768px) {
-    position: fixed;
-    top: 121px;
-    right: 10px;
-  }
-}
-
-.popper-buyNB {
-  top: calc(100% + 19px);
-
-  @media (max-width: 1500px) {
-    top: calc(100% + 21px);
-  }
-
-  @media (max-width: 768px) {
-    top: 121px;
-  }
-}
-
-.popper-userinfo {
-  width: 400px;
-  height: auto;
-  top: calc(100% + 16px);
-
-  @media (max-width: 768px) {
-    top: 121px;
-  }
-}
-
-.popper {
-  z-index: $zIndex-popper;
-  cursor: initial;
-  user-select: initial;
-  position: absolute;
-
-  width: 450px;
-  border-radius: 5px;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
-  background-color: $background-white;
-  transform: translateY(20px);
-  visibility: hidden;
+  transition: 0.3s;
+  opacity: 0;
+  pointer-events: none;
 
   &.show {
-    transition: 0.3s;
-    transform: translateY(0);
-    visibility: visible;
-  }
-
-  &--getNB {
-    height: 600px;
     top: calc(100% + 10px);
-    right: 0;
+
+    opacity: 1;
+    pointer-events: all;
   }
 
-  &--notification {
-    height: 600px;
-    top: calc(100% + 10px);
-    right: 0;
-  }
-
-  &--avatar {
-    width: 350px;
-    top: calc(100% + 10px);
-    right: 0;
-  }
-
-  &--package {
-    width: 600px;
-    height: 600px;
-    top: 0;
-    left: calc(100% + 10px);
+  &--userinfo {
+    width: 400px;
+    height: auto;
   }
 }

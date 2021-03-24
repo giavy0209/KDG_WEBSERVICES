@@ -68,29 +68,28 @@ const Home = () => {
     };
 
     const handlePositionRanking = () => {
-      if (width > BREAK_POINT_LARGE) return;
+      // if (width > BREAK_POINT_LARGE) return;
 
       const header = document.querySelector('.header');
       const footer = document.querySelector('.footer');
       const { top } = header.getBoundingClientRect();
 
-      console.log(top === footer.clientHeight);
-
       if (top === footer.clientHeight) {
-        homeRightRef.current.style.top = footer.clientHeight + header.clientHeight + 10;
+        homeRightRef.current.style.top = footer.clientHeight + header.clientHeight + 10 + 'px';
       } else {
-        homeRightRef.current.style.top = header.clientHeight + 10;
+        homeRightRef.current.style.top = header.clientHeight + 10 + 'px';
       }
     };
 
-    document.body.addEventListener('scroll', handlePositionRanking);
-    document.body.addEventListener('scroll', handleLoadVideo);
+    document.body.onscroll = () => {
+      handleLoadVideo();
+      handlePositionRanking();
+    };
 
     return () => {
-      document.body.removeEventListener('scroll', handleLoadVideo);
-      document.body.removeEventListener('scroll', handlePositionRanking);
+      document.body.onscroll = null;
     };
-  }, [getRecommend, width]);
+  }, [getRecommend]);
 
   return (
     <div className='home'>
@@ -124,20 +123,20 @@ const Home = () => {
                 : 'layout-1'
             }`}
             style={{
-              '--gap-column': '20px',
+              '--gap-column': '40px',
               '--gap-row': '40px',
             }}
           >
             {Videos.map(el => (
               <div key={el._id} className='layoutFlex-item'>
                 <Video
-                  onClick={() => history.push('/watch?v=' + el.short_id)}
                   avatar={
                     el.user?.kyc.avatar?.path ? STORAGE_DOMAIN + el.user.kyc.avatar.path : undefined
                   }
+                  video={el}
                   title={el.name}
                   description={el.description}
-                  video={el}
+                  onClick={() => history.push('/watch?v=' + el.short_id)}
                 />
               </div>
             ))}
@@ -150,13 +149,7 @@ const Home = () => {
         </div>
       </div>
 
-      <div
-        ref={homeRightRef}
-        className={`home__right ${width > BREAK_POINT_LARGE ? 'mt-10' : ''} ${
-          isShowHomeRight ? 'show' : ''
-        }`}
-        // style={{ '--homeRight-height': `${homeRightHeight}px` }}
-      >
+      <div ref={homeRightRef} className={`home__right ${isShowHomeRight ? 'show' : ''}`}>
         {width <= BREAK_POINT_LARGE && (
           <div
             className={`home__arrow ${isShowHomeRight ? 'show' : ''}`}
