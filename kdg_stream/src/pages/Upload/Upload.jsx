@@ -103,12 +103,13 @@ const Upload = () => {
   }, [Guid]);
 
   return (
-    <div className='setup'>
-      <form onSubmit={handleUpload} className='setup__tabSetup'>
-        <div className='setup__tabSetup-title'>Upload</div>
+    <div className='upload'>
+      <form onSubmit={handleUpload} className='upload__form'>
+        <div className='upload__title'>Upload</div>
+
         {Status && (
           <>
-            <div style={{ '--progress': Progress }} className='setup__progress-bar'>
+            <div style={{ '--progress': Progress }} className='upload__progress-bar'>
               <span>
                 <span>{Progress}</span>
               </span>
@@ -117,13 +118,19 @@ const Upload = () => {
               onClick={() => {
                 StatusCode === 4 && history.push('/watch?v=' + ShortId);
               }}
-              className='status mt-5'
+              className='upload__status'
+              style={
+                Progress === '99%' || Progress === '100%'
+                  ? { cursor: 'pointer', textDecoration: 'underline' }
+                  : {}
+              }
             >
               {Status}
             </div>
           </>
         )}
-        <div className='setup__tabSetup-inputBox mt-20'>
+
+        <div className='upload__form-inputBox mt-20'>
           <input
             value={VideoTitle}
             onChange={e => setVideoTitle(e.target.value)}
@@ -132,10 +139,12 @@ const Upload = () => {
             placeholder='Title'
           />
         </div>
-        <div className='setup__tabSetup-textareaBox mt-20'>
+
+        <div className='upload__form-textareaBox mt-20'>
           <textarea name='description' placeholder='Something about this livestream'></textarea>
         </div>
-        {/* <div className='setup__tabSetup-radioBox mt-20'>
+
+        {/* <div className='upload__form-radioBox mt-20'>
           <div
             className={`inputRadio mr-100 ${currentRadio === 0 ? 'active' : ''}`}
             onClick={() => setCurrentRadio(0)}
@@ -151,7 +160,7 @@ const Upload = () => {
             <div className='text'>Only me</div>
           </div>
         </div> */}
-        {/* <div className='setup__tabSetup-type mt-20'>
+        {/* <div className='upload__form-type mt-20'>
           <p className='mb-20'>Thể loại (Tối đa 3 thể loại)</p>
           <div className='dropdown'>
             <div className='dropdown__selected' onClick={() => setIsShowDropdown(!isShowDropdown)}>
@@ -188,7 +197,7 @@ const Upload = () => {
             </div>
           </div>
         </div> */}
-        {/* <div className='setup__tabSetup-note mt-30'>
+        {/* <div className='upload__form-note mt-30'>
           <p>Lưu ý</p>
           <p>
             - Đảm bảo trong quá trình livestream không có hành động, lời nói mang tính chất bạo
@@ -196,15 +205,17 @@ const Upload = () => {
           </p>
           <p>- Không sử dụng hình ảnh nghệ sĩ nổi tiếng khi chưa có sự cho phép.</p>
         </div> */}
-        <label htmlFor='inputfile' className='setup__tabSetup-thumbnailBox mt-20'>
+
+        <label htmlFor='inputfile' className='upload__form-thumbnailBox mt-20'>
           <input name='video' onChange={readURL} id='inputfile' type='file' />
           {VideoSrc && <video autoPlay muted src={VideoSrc}></video>}
           <GoIcon.GoCloudUpload className='icon' />
         </label>
+
         <button
-          style={{ pointerEvents: IsUploading ? 'none' : 'all' }}
           type='submit'
           className='button-upload mt-20'
+          style={{ pointerEvents: IsUploading ? 'none' : 'all' }}
         >
           Upload
         </button>
