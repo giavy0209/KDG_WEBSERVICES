@@ -10,6 +10,7 @@ import Card from './Card';
 import Following from './Following';
 import Cover from './Cover';
 import Video from './Video';
+import Stream from './Stream';
 import Table from './Table';
 import Popper1 from './Popper1';
 import Crop from './Crop';
@@ -30,4 +31,5 @@ export {
     Table,
     Popper1,
     Crop,
+    Stream,
 };
