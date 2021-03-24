@@ -57,6 +57,9 @@ const App = () => {
         <Route path='/live' exact>
           <Live />
         </Route>
+        <Route path='/setup' exact>
+          <Setup />
+        </Route>
       </Switch>
     </>
   );
