@@ -28,22 +28,27 @@ const SetupRight = props => {
               <div>
                 <p>Server URL</p>
                 {Stream?.key && <p>{isHideStreamKey ? '*****' : RTMP_DOMAIN}</p>}
-                <div
-                  className='setup__tabConnect-info-button'
-                  onClick={() => CopyToClipboard(RTMP_DOMAIN)}
-                >
-                  <MdIcon.MdContentCopy className='icon' />
-                </div>
+                {Stream?.key && (
+                  <div
+                    className='setup__tabConnect-info-button'
+                    onClick={() => CopyToClipboard(RTMP_DOMAIN)}
+                  >
+                    <MdIcon.MdContentCopy className='icon' />
+                  </div>
+                )}
               </div>
+
               <div>
                 <p>Stream Key</p>
                 {Stream?.key && <p>{isHideStreamKey ? '*****' : Stream?.key}</p>}
-                <div
-                  className='setup__tabConnect-info-button'
-                  onClick={() => CopyToClipboard(Stream?.key)}
-                >
-                  <MdIcon.MdContentCopy className='icon' />
-                </div>
+                {Stream?.key && (
+                  <div
+                    className='setup__tabConnect-info-button'
+                    onClick={() => CopyToClipboard(Stream?.key)}
+                  >
+                    <MdIcon.MdContentCopy className='icon' />
+                  </div>
+                )}
               </div>
             </div>
 
@@ -62,7 +67,7 @@ const SetupRight = props => {
                 <RiIcon.RiErrorWarningLine className='icon' />
               </div>
               <div className='setup__tabConnect-warning-text'>
-                Bất kỳ ai có Stream Key này đều có thể phát trực tiếp trên nền tảng Livestream
+                Bất kỳ ai có Stream Key này đều có thể phát trực tiếp trên nền tảng livestream
                 Kingdomgame 4.0 của bạn. Đảm bảo rằng bạn giữ mã Key này an toàn.
               </div>
             </div>
@@ -72,11 +77,14 @@ const SetupRight = props => {
         <TabPane name='Setup' key='2'>
           <form onSubmit={handlePublicStream} className='setup__tabSetup'>
             <div className='setup__tabSetup-inputBox'>
-              <input type='text' name='name' placeholder='Title' />
+              <input type='text' name='name' placeholder='Title for this livestream' />
             </div>
 
             <div className='setup__tabSetup-textareaBox mt-20'>
-              <textarea name='description' placeholder='Something about this livestream'></textarea>
+              <textarea
+                name='description'
+                placeholder='Description about this livestream'
+              ></textarea>
             </div>
 
             {/* <div className='setup__tabSetup-radioBox mt-20'>
@@ -96,46 +104,6 @@ const SetupRight = props => {
               </div>
             </div> */}
 
-            {/* <div className='setup__tabSetup-type mt-20'>
-              <p className='mb-20'>Thể loại (Tối đa 3 thể loại)</p>
-              <div className='dropdown'>
-                <div
-                  className='dropdown__selected'
-                  onClick={() => setIsShowDropdown(!isShowDropdown)}
-                >
-                  <TiIcon.TiArrowSortedDown
-                    className={`dropdown__selected-arrowIcon ${isShowDropdown ? 'rotate' : ''}`}
-                  />
-                  <div className='dropdown__selected-item' onClick={e => e.stopPropagation()}>
-                    <span>Trò chơi trí tuệ</span>
-                    <RiIcon.RiCloseFill />
-                  </div>
-                  <div className='dropdown__selected-item' onClick={e => e.stopPropagation()}>
-                    <span>Thể thao</span>
-                    <RiIcon.RiCloseFill />
-                  </div>
-                  <div className='dropdown__selected-item' onClick={e => e.stopPropagation()}>
-                    <span>Du lịch</span>
-                    <RiIcon.RiCloseFill />
-                  </div>
-                </div>
-                <div className={`dropdown__list ${isShowDropdown ? 'd-block' : ''}`}>
-                  <div className='dropdown__list-item'>
-                    <span>Trò chơi trí tuệ</span>
-                    <FaIcon.FaCheck className='d-block' />
-                  </div>
-                  <div className='dropdown__list-item'>
-                    <span>Thể thao</span>
-                    <FaIcon.FaCheck className='d-block' />
-                  </div>
-                  <div className='dropdown__list-item'>
-                    <span>Du lịch</span>
-                    <FaIcon.FaCheck className='d-block' />
-                  </div>
-                </div>
-              </div>
-            </div> */}
-
             <div className='setup__tabSetup-note mt-30'>
               <p>Lưu ý</p>
               <p>
@@ -144,9 +112,10 @@ const SetupRight = props => {
               </p>
               <p>- Không sử dụng hình ảnh nghệ sĩ nổi tiếng khi chưa có sự cho phép.</p>
             </div>
+
             <div className='setup__tabSetup-thumbnailBox mt-20'>
               <input type='file' name='thumbnail' onChange={readURL} />
-              <img src='' alt='' style={{ display: 'none' }} />
+              <img src='' alt='' />
               <GoIcon.GoCloudUpload className='icon' />
               <p>Vui lòng sử dụng định dạng JPG, JPEG, PNG. Kích thước tệp tối đa = 2MB</p>
               <p>Để đảm bảo hình ảnh thu hút người xem, vui lòng sử dụng hình ảnh sắc nét</p>
@@ -162,11 +131,11 @@ const SetupRight = props => {
               </div>
             )}
 
-            <div style={{ display: 'flex' }} className='mt-20 mb-30'>
+            <div className='setup__tabSetup-action mt-20 mb-30'>
               <button type='submit' className='button-upload'>
                 Bắt đầu
               </button>
-              <button type='button' className='button-upload ml-20' onClick={handleStopStream}>
+              <button type='button' className='button-upload' onClick={handleStopStream}>
                 Kết thúc
               </button>
             </div>
