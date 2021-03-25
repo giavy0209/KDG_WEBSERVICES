@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { Redirect, Route, Switch, useLocation } from 'react-router-dom';
 import { Footer, Header } from './components';
 import { storage } from './helpers';
-import { Home, Live, Login, Profile, Upload, Video ,Setup} from './pages';
+import { Home, Live, Login, Profile, Upload, Video, Setup } from './pages';
 import socket from './socket';
 import { actChangeBalances, actChangeUser, asyncInitAuth } from './store/authAction';
 

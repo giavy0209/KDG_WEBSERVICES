@@ -1,8 +1,9 @@
 import { Box, CircularProgress, makeStyles } from '@material-ui/core';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import * as FaIcon from 'react-icons/fa';
-import * as FiIcon from 'react-icons/fi';
 import * as HiIcon from 'react-icons/hi';
+import * as IoIcon from 'react-icons/io';
+import * as RiIcon from 'react-icons/ri';
 import * as TiIcon from 'react-icons/ti';
 import { useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
@@ -239,6 +240,7 @@ const Profile = () => {
   return (
     <div className='profile'>
       {isShow && <Popper1 type={type} pack={pack} />}
+
       {IsShowCrop && (
         <Crop
           Image={Image}
@@ -249,6 +251,7 @@ const Profile = () => {
           currentImage={user?.kyc?.avatar ? STORAGE_DOMAIN + user?.kyc?.avatar?.path : avatar0}
         />
       )}
+
       <div ref={scrollRef} className='profile__center mt-10'>
         <div className='profile__cover'>
           <div className='profile__cover-img'>
@@ -267,6 +270,7 @@ const Profile = () => {
                 />
               </form>
             )}
+
             <label htmlFor='avatar-input' className='profile__cover-avatar'>
               <img
                 style={{
@@ -310,8 +314,8 @@ const Profile = () => {
 
           {!uid && (
             <div className='profile__cover-ctnBtn'>
-              <button className='buttonSetting'>
-                <FiIcon.FiSettings className='setting-icon' />
+              <button className='button-setting'>
+                <IoIcon.IoMdSettings className='icon' />
                 <span>{profile[language].setting}</span>
               </button>
             </div>
@@ -321,8 +325,13 @@ const Profile = () => {
             <div className='profile__cover-ctnBtn'>
               <button
                 onClick={handleFollow}
-                className={`buttonSetting ${IsFollowed ? 'active' : ''}`}
+                className={`button-setting ${IsFollowed ? 'active' : ''}`}
               >
+                {IsFollowed ? (
+                  <RiIcon.RiUserUnfollowLine className='icon' />
+                ) : (
+                  <RiIcon.RiUserFollowLine className='icon' />
+                )}
                 <span>{IsFollowed ? profile[language].unfollow : profile[language].follow}</span>
               </button>
             </div>

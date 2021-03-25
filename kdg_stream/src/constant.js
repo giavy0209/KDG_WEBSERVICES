@@ -7,3 +7,4 @@ export const PLAY_STREAM = 'https://play.kinglive.tv/live/';
 export const ITEM_PER_PAGE = 50;
 
 export const BREAK_POINT_LARGE = 1430;
+export const BREAK_POINT_MEDIUM = 1280;

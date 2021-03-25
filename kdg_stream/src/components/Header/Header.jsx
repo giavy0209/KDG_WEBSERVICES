@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import * as GoIcon from 'react-icons/go';
 import * as IoIcon from 'react-icons/io';
+import * as RiIcon from 'react-icons/ri';
 import * as VscIcon from 'react-icons/vsc';
 import { useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
@@ -7,7 +9,7 @@ import '../../assets/css/header.css';
 import avatar0 from '../../assets/images/header/avatar0.png';
 import diamond0 from '../../assets/images/header/diamond0.svg';
 import logo from '../../assets/images/header/logo.svg';
-import { STORAGE_DOMAIN } from '../../constant';
+import { BREAK_POINT_MEDIUM, STORAGE_DOMAIN } from '../../constant';
 import { useLanguageLayerValue } from '../../context/LanguageLayer';
 import useNumber from '../../hooks/useNumber';
 import useWindowSize from '../../hooks/useWindowSize';
@@ -77,7 +79,7 @@ const Header = () => {
       {isShowSearchBar && (
         <div className='header__searchBarCon'>
           <IoIcon.IoMdArrowBack
-            className='header__iconHover'
+            className='header__iconHover mr-20'
             onClick={() => setIsShowSearchBar(false)}
           />
           <div className='header__searchBar'>
@@ -182,10 +184,18 @@ const Header = () => {
         {user && (
           <div className='header__left--right'>
             <button className='button-upload mr-10' onClick={() => history.push('/upload')}>
-              {header[language].upload}
+              {width > BREAK_POINT_MEDIUM ? (
+                header[language].upload
+              ) : (
+                <GoIcon.GoCloudUpload className='icon' />
+              )}
             </button>
             <button className='button-upload' onClick={() => history.push('/setup')}>
-              {header[language].setup}
+              {width > BREAK_POINT_MEDIUM ? (
+                header[language].setup
+              ) : (
+                <IoIcon.IoMdSettings className='icon' />
+              )}
             </button>
           </div>
         )}
@@ -194,13 +204,20 @@ const Header = () => {
       <div className='header__right'>
         {user && (
           <>
-            <button
-              className={`button-buyNB ${isShowBuyNB ? 'show' : ''}`}
-              onClick={handleShowPopper(setIsShowBuyNB)}
-            >
-              <img src={diamond0} alt='icon' className='mr-10' />
-              <span>{header[language].buyNB}</span>
-            </button>
+            {width > BREAK_POINT_MEDIUM ? (
+              <button
+                className={`button-buyNB ${isShowBuyNB ? 'show' : ''}`}
+                onClick={handleShowPopper(setIsShowBuyNB)}
+              >
+                <img src={diamond0} alt='icon' className='mr-10' />
+                <span>{header[language].buyNB}</span>
+              </button>
+            ) : (
+              <RiIcon.RiVipDiamondLine
+                className='header__iconHover'
+                onClick={handleShowPopper(setIsShowBuyNB)}
+              />
+            )}
 
             <VscIcon.VscBell
               className='header__iconHover'
