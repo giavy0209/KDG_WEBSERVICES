@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import * as GoIcon from 'react-icons/go';
-import { useHistory } from 'react-router';
+import { useHistory } from 'react-router-dom';
 import '../../assets/css/upload.css';
 import callAPI from '../../axios';
 import { useLanguageLayerValue } from '../../context/LanguageLayer';

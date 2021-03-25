@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import * as GoIcon from 'react-icons/go';
 import * as MdIcon from 'react-icons/md';
 import * as RiIcon from 'react-icons/ri';
-import { useHistory } from 'react-router';
+import { useHistory } from 'react-router-dom';
 import { Tab, TabPane } from '../../components';
 import { RTMP_DOMAIN } from '../../constant';
 import { useLanguageLayerValue } from '../../context/LanguageLayer';

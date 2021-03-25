@@ -21,15 +21,17 @@ const Main = props => {
   const rightRef = useRef();
 
   useEffect(() => {
-    document.body.onscroll = () => {
+    const handlePositionRight = () => {
       const header = document.querySelector('.header');
       const { top } = header.getBoundingClientRect();
 
       rightRef.current.style.top = top + header.clientHeight + 10 + 'px';
     };
 
+    window.addEventListener('scroll', handlePositionRight);
+
     return () => {
-      document.body.onscroll = null;
+      window.removeEventListener('scroll', handlePositionRight);
     };
   }, []);
 
