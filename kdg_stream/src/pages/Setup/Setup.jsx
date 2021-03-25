@@ -3,6 +3,7 @@ import { NotificationContainer, NotificationManager } from 'react-notifications'
 import '../../assets/css/setup.css';
 import callAPI from '../../axios';
 import { PLAY_STREAM } from '../../constant';
+import { useLanguageLayerValue } from '../../context/LanguageLayer';
 import { Main } from '../../layout';
 import socket from '../../socket';
 import SetupLeft from './SetupLeft';
@@ -10,16 +11,20 @@ import SetupRight from './SetupRight';
 
 const Setup = () => {
   const [Stream, setStream] = useState({});
+  const [{ language, setup }] = useLanguageLayerValue();
 
-  const CopyToClipboard = useCallback(ref => {
-    var input = document.createElement('input');
-    document.querySelector('body').append(input);
-    input.value = ref;
-    input.select();
-    document.execCommand('copy');
-    input.remove();
-    NotificationManager.success('Đã copy', null, 1000);
-  }, []);
+  const CopyToClipboard = useCallback(
+    ref => {
+      var input = document.createElement('input');
+      document.querySelector('body').append(input);
+      input.value = ref;
+      input.select();
+      document.execCommand('copy');
+      input.remove();
+      NotificationManager.success(setup[language].copied, null, 1000);
+    },
+    [setup, language]
+  );
 
   const readURL = useCallback(input => {
     input.persist();

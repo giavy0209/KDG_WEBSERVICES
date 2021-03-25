@@ -283,6 +283,141 @@
     }
   }
 
+  &__tabConnect {
+    padding: 30px 20px;
+
+    &-title {
+      color: $sub-title-color;
+      font-size: $size-2;
+      font-weight: 700;
+
+      text-align: center;
+
+      margin-bottom: 10px;
+    }
+
+    &-desc {
+      color: $light-text-color;
+      font-size: $size-6;
+
+      text-align: center;
+    }
+
+    &-info {
+      > div {
+        padding-right: 50px;
+        min-height: 43px;
+
+        text-align: center;
+
+        background-color: $background-color-footer;
+
+        position: relative;
+
+        &:not(:last-child) {
+          margin-bottom: 10px;
+        }
+
+        > p:nth-child(1) {
+          color: $text-color;
+          font-size: $size-4;
+          font-weight: 500;
+
+          @include hidden-text(1);
+        }
+
+        > p:nth-child(2) {
+          color: $text-color;
+          font-size: $size-5;
+
+          @include hidden-text(1);
+        }
+      }
+
+      &-button {
+        cursor: pointer;
+        user-select: none;
+
+        width: 50px;
+
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+
+        color: #fff;
+        background-color: rgba(228, 26, 127, 0.6);
+        border-radius: 4px;
+
+        transition: 0.3s;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .icon {
+          font-size: 26px;
+        }
+
+        &:hover {
+          background-color: rgba(228, 26, 127, 1);
+        }
+      }
+    }
+
+    &-buttonBox {
+      display: flex;
+      justify-content: space-between;
+
+      &-button {
+        cursor: pointer;
+        user-select: none;
+
+        width: 100%;
+        height: 40px;
+
+        color: #555;
+        font-size: $size-4;
+        background-color: rgba(243, 170, 207, 0.6);
+        border-radius: 4px;
+
+        transition: 0.3s;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        &:hover {
+          background-color: rgba(243, 170, 207, 1);
+        }
+      }
+    }
+
+    &-warning {
+      display: flex;
+
+      color: $main-color;
+
+      &-iconBox {
+        width: 30px;
+
+        display: flex;
+        justify-content: flex-start;
+        align-items: flex-start;
+
+        .icon {
+          font-size: 20px;
+        }
+      }
+
+      &-text {
+        width: calc(100% - 30px);
+        color: $main-color;
+        font-size: $size-5;
+      }
+    }
+  }
+
   &__tabSetup {
     padding: 30px 20px;
     max-width: 900px;
@@ -472,143 +607,6 @@
 
       > button {
         width: calc(50% - 10px);
-      }
-    }
-  }
-
-  &__tabConnect {
-    padding: 30px 20px;
-
-    &-title {
-      color: $sub-title-color;
-      font-size: $size-2;
-      font-weight: 700;
-
-      text-align: center;
-
-      margin-bottom: 10px;
-    }
-
-    &-desc {
-      color: $light-text-color;
-      font-size: $size-6;
-
-      text-align: center;
-
-      margin-bottom: 20px;
-    }
-
-    &-info {
-      > div {
-        padding-right: 50px;
-        min-height: 43px;
-
-        text-align: center;
-
-        background-color: $background-color-footer;
-
-        position: relative;
-
-        &:not(:last-child) {
-          margin-bottom: 10px;
-        }
-
-        > p:nth-child(1) {
-          color: $text-color;
-          font-size: $size-4;
-          font-weight: 500;
-
-          @include hidden-text(1);
-        }
-
-        > p:nth-child(2) {
-          color: $text-color;
-          font-size: $size-5;
-
-          @include hidden-text(1);
-        }
-      }
-
-      &-button {
-        cursor: pointer;
-        user-select: none;
-
-        width: 50px;
-
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-
-        color: #fff;
-        background-color: rgba(228, 26, 127, 0.6);
-        border-radius: 4px;
-
-        transition: 0.3s;
-
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        .icon {
-          font-size: 26px;
-        }
-
-        &:hover {
-          background-color: rgba(228, 26, 127, 1);
-        }
-      }
-    }
-
-    &-buttonBox {
-      display: flex;
-      justify-content: space-between;
-
-      &-button {
-        cursor: pointer;
-        user-select: none;
-
-        width: calc(50% - 5px);
-        height: 40px;
-
-        color: #555;
-        font-size: $size-4;
-        background-color: rgba(243, 170, 207, 0.6);
-        border-radius: 4px;
-
-        transition: 0.3s;
-
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        &:hover {
-          background-color: rgba(243, 170, 207, 1);
-        }
-      }
-    }
-
-    &-warning {
-      display: flex;
-
-      color: $main-color;
-
-      &-iconBox {
-        width: 30px;
-
-        display: flex;
-        justify-content: flex-start;
-        align-items: flex-start;
-
-        .icon {
-          font-size: 20px;
-        }
-      }
-
-      &-text {
-        width: calc(100% - 30px);
-        color: $main-color;
-        font-size: $size-5;
       }
     }
   }

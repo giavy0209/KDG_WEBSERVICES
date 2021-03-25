@@ -6,23 +6,23 @@ import * as RiIcon from 'react-icons/ri';
 import { useHistory } from 'react-router';
 import { Tab, TabPane } from '../../components';
 import { RTMP_DOMAIN } from '../../constant';
+import { useLanguageLayerValue } from '../../context/LanguageLayer';
 
 const SetupRight = props => {
   const { Stream, readURL, handlePublicStream, handleStopStream, CopyToClipboard } = props;
 
   const history = useHistory();
+  const [{ language, setup }] = useLanguageLayerValue();
   const [isHideStreamKey, setIsHideStreamKey] = useState(false);
 
   return (
     <>
       <Tab>
-        <TabPane name='Connect' key='1'>
+        <TabPane name={setup[language].connect} key='1'>
           <div className='setup__tabConnect'>
-            <div className='setup__tabConnect-title'>Connect Your Live Streams To The Live API</div>
-            <div className='setup__tabConnect-desc'>User live streaming software or a hardware</div>
-            <div className='setup__tabConnect-desc'>
-              Enter the information below into your software's setting:
-            </div>
+            <div className='setup__tabConnect-title'>{setup[language].connect_title}</div>
+            <div className='setup__tabConnect-desc'>{setup[language].connect_desc1}</div>
+            <div className='setup__tabConnect-desc mb-20'>{setup[language].connect_desc2}</div>
 
             <div className='setup__tabConnect-info mb-40'>
               <div>
@@ -57,34 +57,27 @@ const SetupRight = props => {
                 className='setup__tabConnect-buttonBox-button'
                 onClick={() => setIsHideStreamKey(x => !x)}
               >
-                {isHideStreamKey ? 'Show' : 'Hide'}
+                {isHideStreamKey ? setup[language].show : setup[language].hide}
               </div>
-
-              <div className='setup__tabConnect-buttonBox-button'>Reset</div>
             </div>
+
             <div className='setup__tabConnect-warning'>
               <div className='setup__tabConnect-warning-iconBox'>
                 <RiIcon.RiErrorWarningLine className='icon' />
               </div>
-              <div className='setup__tabConnect-warning-text'>
-                Bất kỳ ai có Stream Key này đều có thể phát trực tiếp trên nền tảng livestream
-                Kingdomgame 4.0 của bạn. Đảm bảo rằng bạn giữ mã Key này an toàn.
-              </div>
+              <div className='setup__tabConnect-warning-text'>{setup[language].warning}</div>
             </div>
           </div>
         </TabPane>
 
-        <TabPane name='Setup' key='2'>
+        <TabPane name={setup[language].setup} key='2'>
           <form onSubmit={handlePublicStream} className='setup__tabSetup'>
             <div className='setup__tabSetup-inputBox'>
-              <input type='text' name='name' placeholder='Title for this livestream' />
+              <input type='text' name='name' placeholder={setup[language].setup_title} />
             </div>
 
             <div className='setup__tabSetup-textareaBox mt-20'>
-              <textarea
-                name='description'
-                placeholder='Description about this livestream'
-              ></textarea>
+              <textarea name='description' placeholder={setup[language].setup_desc}></textarea>
             </div>
 
             {/* <div className='setup__tabSetup-radioBox mt-20'>
@@ -105,91 +98,44 @@ const SetupRight = props => {
             </div> */}
 
             <div className='setup__tabSetup-note mt-30'>
-              <p>Lưu ý</p>
-              <p>
-                - Đảm bảo trong quá trình livestream không có hành động, lời nói mang tính chất bạo
-                động, phản cách mạng.
-              </p>
-              <p>- Không sử dụng hình ảnh nghệ sĩ nổi tiếng khi chưa có sự cho phép.</p>
+              <p>{setup[language].note}</p>
+              <p>{setup[language].note1}</p>
+              <p>{setup[language].note2}</p>
             </div>
 
             <div className='setup__tabSetup-thumbnailBox mt-20'>
               <input type='file' name='thumbnail' onChange={readURL} />
               <img src='' alt='' />
               <GoIcon.GoCloudUpload className='icon' />
-              <p>Vui lòng sử dụng định dạng JPG, JPEG, PNG. Kích thước tệp tối đa = 2MB</p>
-              <p>Để đảm bảo hình ảnh thu hút người xem, vui lòng sử dụng hình ảnh sắc nét</p>
+              <p>{setup[language].thumb1}</p>
+              <p>{setup[language].thumb2}</p>
             </div>
 
             {Stream.status === 1 && (
               <div
-                style={{ textAlign: 'center', cursor: 'pointer', textDecoration: 'underline' }}
+                style={{
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  textAlign: 'center',
+                  textDecoration: 'underline',
+                }}
                 className='mt-20'
                 onClick={() => history.push('/live?s=' + Stream._id)}
               >
-                Theo dõi stream của bạn tại đây
+                {setup[language].watch}
               </div>
             )}
 
             <div className='setup__tabSetup-action mt-20 mb-30'>
               <button type='submit' className='button-upload'>
-                Bắt đầu
+                {setup[language].start}
               </button>
               <button type='button' className='button-upload' onClick={handleStopStream}>
-                Kết thúc
+                {setup[language].end}
               </button>
             </div>
           </form>
         </TabPane>
-
-        {/* <TabPane name='Chat' key='3'>
-          <div className='setup__tabChat1'>
-            <div className='setup__tabChat1-chatCtn'>
-              <div className='setup__tabChat1-name'>Trà Long{':'}</div>
-              <div className='setup__tabChat1-text'>
-                Grab your ☕, ☀️ Grab your 🚰!, 🌇 Grab your 🍹, and join me every Friday morning to
-                explore the beauty of digital risk-taking & learning to draw and sketchnote with Adobe
-                Fres
-              </div>
-              <div className='setup__tabChat1-menu'>
-                <HiIcon.HiDotsVertical className='icon' />
-              </div>
-            </div>
-
-            <div className='setup__tabChat1-chatCtn'>
-              <div className='setup__tabChat1-name'>dinhgiavu@kingdomgame.co{':'}</div>
-              <div className='setup__tabChat1-text'>
-                Grab your ☕, ☀️ Grab your
-                🚰!aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-              </div>
-              <div className='setup__tabChat1-menu'>
-                <HiIcon.HiDotsVertical className='icon' />
-              </div>
-            </div>
-
-            <div className='setup__tabChat1-chatCtn'>
-              <div className='setup__tabChat1-name'>Trà Long{':'}</div>
-              <div className='setup__tabChat1-text'>
-                Grab your ☕, ☀️ Grab your 🚰!, 🌇 Grab your 🍹, and join me every Friday morning to
-                explore the beauty of digital risk-taking & learning to draw and sketchnote with Adobe
-                Fres
-              </div>
-              <div className='setup__tabChat1-menu'>
-                <HiIcon.HiDotsVertical className='icon' />
-              </div>
-            </div>
-          </div>
-          <div className='setup__tabChat2'>
-            <div className='setup__tabChat2-avatar'>
-              <img src={avatar1} alt='' />
-            </div>
-            <div className='setup__tabChat2-chatBox'>
-              <input type='text' placeholder='Say something' />
-              <RiIcon.RiSendPlaneFill className='icon icon-send' />
-              <RiIcon.RiEmotionLaughLine className='icon icon-emo' />
-            </div>
-          </div>
-        </TabPane> */}
       </Tab>
     </>
   );

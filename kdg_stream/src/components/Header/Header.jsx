@@ -183,14 +183,17 @@ const Header = () => {
 
         {user && (
           <div className='header__left--right'>
-            <button className='button-upload mr-10' onClick={() => history.push('/upload')}>
+            <button
+              className='button-upload header__button mr-10'
+              onClick={() => history.push('/upload')}
+            >
               {width > BREAK_POINT_MEDIUM ? (
                 header[language].upload
               ) : (
                 <GoIcon.GoCloudUpload className='icon' />
               )}
             </button>
-            <button className='button-upload' onClick={() => history.push('/setup')}>
+            <button className='button-upload header__button' onClick={() => history.push('/setup')}>
               {width > BREAK_POINT_MEDIUM ? (
                 header[language].setup
               ) : (

@@ -206,7 +206,8 @@ const Home = () => {
             <p>{home[language].ranking}</p>
           </div>
         </div>
-        <div className='ctn-tabHome'>
+
+        <div className='tab-home'>
           <Tab>
             {/* <TabPane name={home[language].donate} key='1'>
               {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(el => (

@@ -342,6 +342,59 @@ const upload = {
   },
 };
 
+const setup = {
+  vi: {
+    copied: 'Đã sao chép',
+    preview: 'Xem trước',
+    connect: 'Kết nối',
+    setup: 'Thiết lập',
+    connect_title: 'Kết nối các luồng trực tiếp của bạn với API trực tiếp',
+    connect_desc1: 'Phần mềm phát trực tiếp của người dùng hoặc phần cứng',
+    connect_desc2: 'Nhập thông tin bên dưới vào cài đặt phần mềm của bạn:',
+    show: 'Hiện mã',
+    hide: 'Ẩn mã',
+    reset: 'Tạo lại mã',
+    warning:
+      'Bất kỳ ai có Stream Key này đều có thể phát trực tiếp trên nền tảng livestream Kingdomgame 4.0 của bạn. Đảm bảo rằng bạn giữ mã Key này an toàn.',
+    setup_title: 'Tiêu đề cho livestream',
+    setup_desc: 'Mô tả về livestream',
+    note: 'Lưu ý',
+    note1:
+      '- Đảm bảo trong quá trình livestream không có hành động, lời nói mang tính chất bạo động, phản cách mạng.',
+    note2: '- Không sử dụng hình ảnh nghệ sĩ nổi tiếng khi chưa có sự cho phép.',
+    thumb1: 'Vui lòng sử dụng định dạng JPG, JPEG, PNG. Kích thước tệp tối đa = 2MB',
+    thumb2: 'Để đảm bảo hình ảnh thu hút người xem, vui lòng sử dụng hình ảnh sắc nét',
+    watch: 'Theo dõi livestream của bạn tại đây',
+    start: 'Bắt đầu livestream',
+    end: 'Kết thúc livestream',
+  },
+  en: {
+    copied: 'Copied',
+    preview: 'Preview',
+    connect: 'Connect',
+    setup: 'Setup',
+    connect_title: 'Connect Your Live Streams To The Live API',
+    connect_desc1: 'User live streaming software or a hardware',
+    connect_desc2: "Enter the information below into your software's setting:",
+    show: 'Show code',
+    hide: 'Hide code',
+    reset: 'Reset code',
+    warning:
+      'Anyone with this Stream Key can go live on your Kingdomgame 4.0 livestream platform. Make sure you keep this Key safe.',
+    setup_title: 'Title for this livestream',
+    setup_desc: 'Description about this livestream',
+    note: 'Note',
+    note1:
+      '- Ensure that there are no violent or counter-revolutionary actions and words during the livestream process.',
+    note2: "- Do not use famous artist's image without permission.",
+    thumb1: 'Please use the format JPG, JPEG, PNG. Maximum file size = 2MB',
+    thumb2: 'To make sure images engage viewers, please use sharp images',
+    watch: 'Watch your livestream here',
+    start: 'Start livestream',
+    end: 'End livestream',
+  },
+};
+
 export const initialState = {
   language: 'vi',
   listLanguage,
@@ -357,6 +410,7 @@ export const initialState = {
   home,
   profile,
   upload,
+  setup,
 };
 
 export const CHANGE_LANGUAGE = 'CHANGE_LANGUAGE';

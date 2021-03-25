@@ -41,7 +41,7 @@
   color: $main-color;
   background-color: $background-white;
 
-  height: 40px;
+  min-height: 40px;
   padding: 0 20px;
   border-radius: 20px;
   border: 2px solid $main-color;
@@ -58,6 +58,13 @@
 
   > .icon {
     font-size: $icon-size;
+  }
+
+  @media (max-width: $break-point-extra-small) {
+    &.header__button {
+      padding: 0 5px;
+      border-radius: 999px;
+    }
   }
 }
 
@@ -463,5 +470,11 @@
   &--userinfo {
     width: 400px;
     height: auto;
+  }
+
+  @media (max-width: $break-point-small) {
+    right: 0;
+
+    width: 375px;
   }
 }

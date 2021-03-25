@@ -4,6 +4,21 @@
   display: flex;
   justify-content: space-between;
 
+  &__title {
+    padding: 10px 0;
+    margin-bottom: 15px;
+
+    color: $title-color;
+    font-size: $size-2;
+    font-weight: 600;
+
+    border-bottom: $border-bottom;
+
+    &.m-0 {
+      margin: 0;
+    }
+  }
+
   &__left {
     width: calc(var(--width-left) - 10px);
     padding: 0 25px;
