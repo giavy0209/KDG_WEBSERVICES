@@ -4,7 +4,7 @@ import * as MdIcon from 'react-icons/md';
 import { useHistory } from 'react-router-dom';
 import '../../assets/css/home.css';
 import callAPI from '../../axios';
-import { Card, Tab, TabPane, Video ,Stream} from '../../components';
+import { Card, Tab, TabPane, Video, Stream } from '../../components';
 import { STORAGE_DOMAIN, BREAK_POINT_LARGE } from '../../constant';
 import { useLanguageLayerValue } from '../../context/LanguageLayer';
 import useWindowSize from '../../hooks/useWindowSize';
@@ -72,8 +72,6 @@ const Home = () => {
     };
 
     const handlePositionRanking = () => {
-      // if (width > BREAK_POINT_LARGE) return;
-
       const header = document.querySelector('.header');
       const footer = document.querySelector('.footer');
       const { top } = header.getBoundingClientRect();
@@ -112,19 +110,20 @@ const Home = () => {
           <Cover />
         </div> */}
 
-<div>
+        <div>
           <div className='home__title'>
             <p>{home[language].watchLive}</p>
           </div>
           <div
-            className={`layoutFlex ${width > 1280
-              ? 'layout-4'
-              : width > 860
+            className={`layoutFlex ${
+              width > 1280
+                ? 'layout-4'
+                : width > 860
                 ? 'layout-3'
                 : width > 500
-                  ? 'layout-2'
-                  : 'layout-1'
-              }`}
+                ? 'layout-2'
+                : 'layout-1'
+            }`}
             style={{
               '--gap-column': '40px',
               '--gap-row': '40px',
@@ -156,14 +155,15 @@ const Home = () => {
             <p>{home[language].recommend}</p>
           </div>
           <div
-            className={`layoutFlex ${width > 1280
-              ? 'layout-4'
-              : width > 860
+            className={`layoutFlex ${
+              width > 1280
+                ? 'layout-4'
+                : width > 860
                 ? 'layout-3'
                 : width > 500
-                  ? 'layout-2'
-                  : 'layout-1'
-              }`}
+                ? 'layout-2'
+                : 'layout-1'
+            }`}
             style={{
               '--gap-column': '40px',
               '--gap-row': '40px',
@@ -189,10 +189,7 @@ const Home = () => {
             </Box>
           )}
         </div>
-        
       </div>
-
-
 
       <div ref={homeRightRef} className={`home__right ${isShowHomeRight ? 'show' : ''}`}>
         {width <= BREAK_POINT_LARGE && (

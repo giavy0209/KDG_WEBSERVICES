@@ -1,6 +1,9 @@
 // -----------------------------HEIGHT------------------------ //
 
 $break-point-large: 1430px;
+$break-point-medium: 1280px;
+$break-point-small: 768px;
+$break-point-extra-small: 576px;
 
 $footer-height: 30px;
 $sidebar-footer-height: 50px;
@@ -53,18 +56,11 @@ $border-bottom: 1px solid #d1d1d1;
 $z-index-footer: 300;
 $z-index-header: 200;
 $z-index-searchBar: 200;
-$z-index-homeRight: 100;
-$z-index-profileRight: 100;
-$z-index-setupRight: 100;
-$z-index-popper: 99;
+$z-index-right: 100;
 
 // ----------------------------------------------------------- //
 
-$min-width-profileRight: 430px;
-$min-width-setupRight: 430px;
-
-$max-width-profileRight: 480px;
-$max-width-setupRight: 576px;
+// --------------------------MIXIN---------------------------- //
 
 @mixin hidden-text($line) {
   overflow: hidden;
@@ -81,3 +77,5 @@ $max-width-setupRight: 576px;
     display: none;
   }
 }
+
+// ----------------------------------------------------------- //

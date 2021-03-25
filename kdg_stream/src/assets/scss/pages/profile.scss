@@ -315,9 +315,10 @@ $width-cover-ctnInfo: 500px;
 
   &__boxPersonal {
     margin-top: 30px;
-    // &:last-child {
-    //   margin-bottom: 30px;
-    // }
+
+    &:last-child {
+      margin-bottom: 100px;
+    }
 
     &-title {
       padding-bottom: 15px;

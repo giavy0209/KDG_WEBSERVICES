@@ -6,4 +6,4 @@ import Live from './Live';
 import Upload from './Upload';
 import Video from './Video';
 
-export { Home, Profile, Setup, Login, Live, Upload ,Video};
+export { Home, Profile, Setup, Login, Live, Upload, Video };

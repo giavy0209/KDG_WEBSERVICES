@@ -114,8 +114,6 @@ const dataPackage = [
 const Profile = () => {
   const uid = new URLSearchParams(useLocation().search).get('uid');
   let user = useSelector(state => state.user);
-  // console.log(uid);
-  // console.log(user?._id);
 
   const history = useHistory();
 
@@ -191,10 +189,12 @@ const Profile = () => {
 
   const getVideo = useCallback(async () => {
     const res = await callAPI.get(
-      `/videos?user=${uid ? uid : user?._id}&limit=30&last=${Videos[Videos.length - 1]?._id}`
+      `/videos?user=${uid ? uid : user?._id}&limit=10&last=${Videos[Videos.length - 1]?._id}`
     );
 
-    if (res.data.length === 0) {
+    console.log(res);
+
+    if (res.data?.length === 0) {
       return (isLoadRef.current = false);
     }
 
@@ -407,10 +407,10 @@ const Profile = () => {
                 <div className='profile__boxPersonal' ref={scrollRef}>
                   <div className='profile__boxPersonal-title'>{profile[language].playlist}</div>
                   <div
-                    className='layoutFlex'
+                    className='layoutFlex layout-2 pl-10 pr-10'
                     style={{
                       '--gap-row': '20px',
-                      '--gap-column': '10px',
+                      '--gap-column': '40px',
                     }}
                   >
                     {Videos.map(o => (
