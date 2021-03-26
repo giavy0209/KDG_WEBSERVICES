@@ -603,7 +603,7 @@ const Live = () => {
                 {Chat.map(o => 
                   <div className='live__chatfullscreen-top-ctn'>
                     <div className='live__chatfullscreen-top-ctn-avatar'>
-                      <img src={user?.kyc.avatar?.path ? STORAGE_DOMAIN + user?.kyc.avatar?.path : avatar0} alt='' />
+                      <img src={o.user?.kyc.avatar?.path ? STORAGE_DOMAIN + o.user?.kyc.avatar?.path : avatar0} alt='' />
                     </div>
                     <div>
                       <div className='live__chatfullscreen-top-ctn-name'>{o.user?.kyc.first_name} {o.user?.kyc.last_name}{':'}</div>
@@ -801,7 +801,7 @@ const Live = () => {
                 {Chat.map(o => 
                   <div className='live__chatBox-top-ctn'>
                     <div className='live__chatBox-top-ctn-avatar'>
-                      <img src={user?.kyc.avatar?.path ? STORAGE_DOMAIN + user?.kyc.avatar?.path : avatar0} alt='' />
+                      <img src={o.user?.kyc.avatar?.path ? STORAGE_DOMAIN + o.user?.kyc.avatar?.path : avatar0} alt='' />
                     </div>
                     <div>
                       <div className='live__chatBox-top-ctn-name'>{o.user?.kyc.first_name} {o.user?.kyc.last_name}{':'}</div>
@@ -875,7 +875,7 @@ const Live = () => {
               {Chat.map(o => 
                 <div className='live__chatBox-top-ctn'>
                   <div className='live__chatBox-top-ctn-avatar'>
-                    <img src={user?.kyc.avatar?.path ? STORAGE_DOMAIN + user?.kyc.avatar?.path : avatar0} alt='' />
+                    <img src={o.user?.kyc.avatar?.path ? STORAGE_DOMAIN + o.user?.kyc.avatar?.path : avatar0} alt='' />
                   </div>
                   <div>
                     <div className='live__chatBox-top-ctn-name'>{o.user?.kyc.first_name} {o.user?.kyc.last_name}{':'}</div>
