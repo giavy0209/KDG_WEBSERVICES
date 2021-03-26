@@ -171,7 +171,7 @@ const Upload = () => {
 
         <button
           type='submit'
-          className='button-upload mt-20'
+          className='button mt-20'
           style={{ width: '100%', pointerEvents: IsUploading ? 'none' : 'all' }}
         >
           {upload[language].upload}

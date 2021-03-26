@@ -127,10 +127,10 @@ const SetupRight = props => {
             )}
 
             <div className='setup__tabSetup-action mt-20 mb-30'>
-              <button type='submit' className='button-upload'>
+              <button type='submit' className='button'>
                 {setup[language].start}
               </button>
-              <button type='button' className='button-upload' onClick={handleStopStream}>
+              <button type='button' className='button' onClick={handleStopStream}>
                 {setup[language].end}
               </button>
             </div>

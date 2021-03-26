@@ -141,7 +141,7 @@ const Header = () => {
           <div
             className='header__manage'
             onClick={() => {
-              handleNavigation('/profile');
+              history.push('/profile');
               setIsShowUserinfo(false);
             }}
           >
@@ -183,17 +183,14 @@ const Header = () => {
 
         {user && (
           <div className='header__left--right'>
-            <button
-              className='button-upload header__button mr-10'
-              onClick={() => history.push('/upload')}
-            >
+            <button className='button header__button mr-10' onClick={() => history.push('/upload')}>
               {width > BREAK_POINT_MEDIUM ? (
                 header[language].upload
               ) : (
                 <GoIcon.GoCloudUpload className='icon' />
               )}
             </button>
-            <button className='button-upload header__button' onClick={() => history.push('/setup')}>
+            <button className='button header__button' onClick={() => history.push('/setup')}>
               {width > BREAK_POINT_MEDIUM ? (
                 header[language].setup
               ) : (

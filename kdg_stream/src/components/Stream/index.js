@@ -1,3 +1,3 @@
-import Video from "./Video";
+import Stream from './Stream';
 
-export default Video;
+export default Stream;

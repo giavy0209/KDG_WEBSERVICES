@@ -42,6 +42,10 @@
     @media (max-width: $break-point-small) {
       padding: 0 10px;
     }
+
+    > div:last-child {
+      margin-bottom: 40px;
+    }
   }
 
   &__right {

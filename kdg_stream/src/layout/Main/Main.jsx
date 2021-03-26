@@ -22,6 +22,8 @@ const Main = props => {
 
   useEffect(() => {
     const handlePositionRight = () => {
+      if (!rightRef.current) return;
+
       const header = document.querySelector('.header');
       const { top } = header.getBoundingClientRect();
 

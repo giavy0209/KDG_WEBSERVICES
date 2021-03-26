@@ -1,6 +1,19 @@
 @import './font.scss';
 @import './reset.scss';
 
+.container {
+  max-width: 1320px;
+  margin: 0 auto;
+
+  @media (max-width: $break-point-large) {
+    padding: 0 25px;
+  }
+
+  @media (max-width: $break-point-small) {
+    padding: 0 10px;
+  }
+}
+
 @for $i from 1 through 100 {
   .mt-#{$i} {
     margin-top: #{$i}px;
@@ -111,5 +124,69 @@
       font-size: 24px;
       margin-right: 10px;
     }
+  }
+}
+
+.button {
+  cursor: pointer;
+  user-select: none;
+
+  font-size: $size-4;
+  font-weight: 600;
+  color: $main-color;
+  background-color: $background-white;
+
+  min-height: 40px;
+  padding: 0 20px;
+
+  border-radius: 20px;
+  border: 2px solid $main-color;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  transition: 0.3s;
+  &:hover,
+  &.active {
+    color: $background-white;
+    background-color: $main-color;
+  }
+
+  > .icon {
+    font-size: $icon-size;
+  }
+
+  @media (max-width: $break-point-extra-small) {
+    &.header__button {
+      padding: 0 5px;
+      border-radius: 999px;
+    }
+  }
+}
+
+.button-buyNB {
+  cursor: pointer;
+  user-select: none;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 150px;
+  height: 44px;
+  line-height: 44px;
+
+  color: #525252;
+  font-size: $size-4;
+  font-weight: 700;
+
+  border-radius: 5px;
+  background-color: #f0f0f0;
+  transition: 0.3s;
+
+  &:hover,
+  &.show {
+    background-color: $background-color-hover;
   }
 }

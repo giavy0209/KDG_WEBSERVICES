@@ -35,13 +35,14 @@ const Video = props => {
           alt=''
         />
       </div>
+
       <div className='video__info mt-20'>
         <div className='video__info-ava'>
           <img src={avatar} alt='' />
         </div>
         <div className='video__info-text'>
-          <p className='video__info-text1'>{title}</p>
-          <p className='video__info-text2'>{description}</p>
+          <p className='video__info-text-title'>{title}</p>
+          <p className='video__info-text-desc'>{description}</p>
         </div>
       </div>
     </div>

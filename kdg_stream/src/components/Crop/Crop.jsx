@@ -2,6 +2,7 @@ import React, { useCallback, useState } from 'react';
 import Cropper from 'react-easy-crop';
 import '../../assets/css/crop.css';
 import callAPI from '../../axios';
+import { useLanguageLayerValue } from '../../context/LanguageLayer';
 
 export default function Crop({
   Image,
@@ -11,6 +12,8 @@ export default function Crop({
   ImagePos,
   setImagePos,
 }) {
+  const [{ language, cropLang }] = useLanguageLayerValue();
+
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1000);
 
@@ -53,8 +56,8 @@ export default function Crop({
         id=''
       />
       <div className='btn-group'>
-        <button onClick={handleUploadAvatar} className='buttonSetting'>
-          <span>Đổng ý</span>
+        <button onClick={handleUploadAvatar} className='button'>
+          <span>{cropLang[language].confirm}</span>
         </button>
 
         <button
@@ -62,9 +65,9 @@ export default function Crop({
             setIsShowCrop(false);
             setImage(currentImage);
           }}
-          className='buttonSetting'
+          className='button'
         >
-          <span>Hủy</span>
+          <span>{cropLang[language].cancel}</span>
         </button>
       </div>
     </div>

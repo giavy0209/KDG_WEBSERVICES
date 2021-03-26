@@ -17,9 +17,11 @@ const Home = () => {
     callAPI.get('/recommend').then(res => {
       setVideos([...res.data]);
     });
+
     callAPI.get('/ranking').then(res => {
       setRanking(res.data);
     });
+
     callAPI.get('/streammings').then(res => {
       setStreammings(res.data);
     });

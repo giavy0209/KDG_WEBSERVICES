@@ -21,7 +21,7 @@ import package8 from '../../assets/images/profile/package8.png';
 import package9 from '../../assets/images/profile/package9.png';
 import callAPI from '../../axios';
 import { Crop, Popper1, Tab, Table, TabPane } from '../../components';
-import { STORAGE_DOMAIN } from '../../constant';
+import { BREAK_POINT_MEDIUM, STORAGE_DOMAIN } from '../../constant';
 import { useLanguageLayerValue } from '../../context/LanguageLayer';
 import useNumber from '../../hooks/useNumber';
 import useWindowSize from '../../hooks/useWindowSize';
@@ -123,11 +123,12 @@ const Profile = () => {
     }
   }, [uid, user, history]);
 
+  const [width] = useWindowSize();
   const [{ language, profile }] = useLanguageLayerValue();
+
   const [isShow, setIsShow] = useState(false);
   const [type, setType] = useState('changes');
   const [pack, setPack] = useState(null);
-  const [width] = useWindowSize();
   const [isShowHistory, setIsShowHistory] = useState(false);
   const [IsFollowed, setIsFollowed] = useState(false);
   const [UserOwner, setUserOwner] = useState({});
@@ -137,7 +138,6 @@ const Profile = () => {
 
   const isLoadFirst = useRef(true);
   const isLoadRef = useRef(true);
-  const scrollRef = useRef();
 
   const [Videos, setVideos] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -202,9 +202,11 @@ const Profile = () => {
   }, [Videos, user, uid]);
 
   useEffect(() => {
-    document.body.onscroll = async () => {
-      const { bottom } = scrollRef.current?.getBoundingClientRect();
-      const isEnd = bottom <= window.innerHeight + 50;
+    const handleLoad = async () => {
+      const totalHeight = document.getElementById('root').clientHeight;
+      const scrolledHeight = window.scrollY + window.innerHeight;
+      const restHeight = totalHeight - scrolledHeight;
+      const isEnd = restHeight <= 200;
 
       if (isEnd && isLoadRef.current) {
         setIsLoading(true);
@@ -213,7 +215,11 @@ const Profile = () => {
       }
     };
 
-    return () => (document.body.onscroll = null);
+    window.addEventListener('scroll', handleLoad);
+
+    return () => {
+      window.removeEventListener('scroll', handleLoad);
+    };
   }, [getVideo]);
 
   useMemo(() => {
@@ -252,7 +258,7 @@ const Profile = () => {
         />
       )}
 
-      <div ref={scrollRef} className='profile__center mt-10'>
+      <div className='profile__center mt-10'>
         <div className='profile__cover'>
           <div className='profile__cover-img'>
             <img src={cover1} alt='' />
@@ -314,7 +320,7 @@ const Profile = () => {
 
           {!uid && (
             <div className='profile__cover-ctnBtn'>
-              <button className='button-setting'>
+              <button className='button'>
                 <IoIcon.IoMdSettings className='icon' />
                 <span>{profile[language].setting}</span>
               </button>
@@ -323,10 +329,7 @@ const Profile = () => {
 
           {uid && (
             <div className='profile__cover-ctnBtn'>
-              <button
-                onClick={handleFollow}
-                className={`button-setting ${IsFollowed ? 'active' : ''}`}
-              >
+              <button onClick={handleFollow} className={`button ${IsFollowed ? 'active' : ''}`}>
                 {IsFollowed ? (
                   <RiIcon.RiUserUnfollowLine className='icon' />
                 ) : (
@@ -338,14 +341,17 @@ const Profile = () => {
           )}
         </div>
 
-        <div className='pl-90 pr-90'>
+        <div className='container'>
           {uid && (
             <div className='profile__boxPersonal'>
               <div className='profile__boxPersonal-title'>{profile[language].playlist}</div>
+
               <div
-                className='layoutFlex layout-2'
+                className={`layoutFlex pl-10 pr-10 ${
+                  width > BREAK_POINT_MEDIUM ? 'layout-2' : 'layout-1'
+                }`}
                 style={{
-                  '--gap-row': '20px',
+                  '--gap-row': '40px',
                   '--gap-column': '40px',
                 }}
               >
@@ -383,9 +389,11 @@ const Profile = () => {
                       <div className='profile__video-info'>
                         <p className='profile__video-info-title'>{o.name}</p>
                         <div className='profile__video-info-view'>
-                          {o.views} {profile[language].view}
+                          <span>
+                            {o.views} {profile[language].view}
+                          </span>
+                          <span>{o.create_date}</span>
                         </div>
-                        <div className='profile__video-info-date'>{o.create_date}</div>
                         {/* <p className='profile__video-info-tag'></p> */}
                         <p className='profile__video-info-desc'>{o.description}</p>
                       </div>
@@ -393,6 +401,7 @@ const Profile = () => {
                   </div>
                 ))}
               </div>
+
               {isLoading && (
                 <Box className={classes.loading} p={3}>
                   <CircularProgress color='inherit' />
@@ -404,12 +413,15 @@ const Profile = () => {
           {!uid && (
             <Tab>
               <TabPane name={profile[language].personal} key='1'>
-                <div className='profile__boxPersonal' ref={scrollRef}>
+                <div className='profile__boxPersonal'>
                   <div className='profile__boxPersonal-title'>{profile[language].playlist}</div>
+
                   <div
-                    className='layoutFlex layout-2 pl-10 pr-10'
+                    className={`layoutFlex pl-10 pr-10 ${
+                      width > BREAK_POINT_MEDIUM ? 'layout-2' : 'layout-1'
+                    }`}
                     style={{
-                      '--gap-row': '20px',
+                      '--gap-row': '40px',
                       '--gap-column': '40px',
                     }}
                   >
@@ -444,10 +456,13 @@ const Profile = () => {
                               alt=''
                             />
                           </div>
+
                           <div className='profile__video-info'>
                             <p className='profile__video-info-title'>{o.name}</p>
                             <div className='profile__video-info-view'>
-                              <span className='mr-50'>{o.views} view</span>
+                              <span>
+                                {o.views} {profile[language].view}
+                              </span>
                               <span>{o.create_date}</span>
                             </div>
                             {/* <p className='profile__video-info-tag'></p> */}
@@ -458,6 +473,12 @@ const Profile = () => {
                     ))}
                   </div>
                 </div>
+
+                {isLoading && (
+                  <Box className={classes.loading} p={3}>
+                    <CircularProgress color='inherit' />
+                  </Box>
+                )}
 
                 {/* <div className='profile__boxPersonal'>
                   <div className='profile__boxPersonal-title'>

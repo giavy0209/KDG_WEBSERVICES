@@ -62,9 +62,6 @@ const App = () => {
         <Route path='/setup' exact>
           <Setup />
         </Route>
-        <Route path='/main' exact>
-          <Main />
-        </Route>
       </Switch>
     </>
   );

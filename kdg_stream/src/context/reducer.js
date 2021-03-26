@@ -395,6 +395,17 @@ const setup = {
   },
 };
 
+const cropLang = {
+  vi: {
+    confirm: 'Xác nhận',
+    cancel: 'Hủy',
+  },
+  en: {
+    confirm: 'Confirm',
+    cancel: 'Cancel',
+  },
+};
+
 export const initialState = {
   language: 'vi',
   listLanguage,
@@ -411,6 +422,7 @@ export const initialState = {
   profile,
   upload,
   setup,
+  cropLang,
 };
 
 export const CHANGE_LANGUAGE = 'CHANGE_LANGUAGE';
