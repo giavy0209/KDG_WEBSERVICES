@@ -1,9 +1,9 @@
 import Home from './Home';
+import Live from './Live';
+import Login from './Login';
 import Profile from './Profile';
 import Setup from './Setup';
-import Login from './Login';
-import Live from './Live';
 import Upload from './Upload';
-import Video from './Video';
+import Watch from './Watch';
 
-export { Home, Profile, Setup, Login, Live, Upload, Video };
+export { Home, Profile, Setup, Login, Live, Upload, Watch };
