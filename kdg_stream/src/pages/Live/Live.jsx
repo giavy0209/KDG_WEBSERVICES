@@ -7,15 +7,22 @@ import * as HiIcon from 'react-icons/hi';
 import * as ImIcon from 'react-icons/im';
 import * as MdIcon from 'react-icons/md';
 import * as RiIcon from 'react-icons/ri';
+import { useSelector } from 'react-redux';
 import '../../assets/css/live.css';
-import avatar1 from '../../assets/images/live/avatar1.png';
+import avatar0 from '../../assets/images/header/avatar0.png';
 import callAPI from '../../axios';
-import { PLAY_STREAM } from '../../constant';
+import { PLAY_STREAM, STORAGE_DOMAIN } from '../../constant';
+import { convertDate } from '../../helpers';
 import useNumber from '../../hooks/useNumber';
-
+import socket from '../../socket'
 let temp = 1;
 
 const Live = () => {
+  const user = useSelector(state => state.user)
+  const [Stream, setStream] = useState({});
+  const [IsFollowed, setIsFollowed] = useState(false);
+  
+
   const [isExpand, setIsExpand] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [isHideChat, setIsHideChat] = useState(false);
@@ -271,6 +278,7 @@ const Live = () => {
   useEffect(() => {
     const id = new URLSearchParams(window.location.search).get('s');
     callAPI.get('/streamming?id=' + id).then(res => {
+      setStream(res.data)
       var videoElement = document.getElementById('videoElement');
       flvPlayer.current = window.flvjs.createPlayer({
         type: 'flv',
@@ -546,6 +554,21 @@ const Live = () => {
     handleToggleFullscreen,
   ]);
 
+  const handleFollow = useCallback(async () => {
+    const res = await callAPI.post('follow?id=' + Stream?.user._id);
+    if (res.status === 1) {
+      setIsFollowed(!IsFollowed);
+    }
+  }, [Stream, IsFollowed]);
+
+  const handleChat = useCallback((e) => {
+    e.preventDefault()
+    e.target.reset()
+    const data = new FormData(e.target)
+    console.log(data.getAll('chat'));
+    socket.emit('chat' , )
+  },[]) 
+
   return (
     <div className={`live ${isExpand ? 'expand' : ''}`}>
       <div className='live__left'>
@@ -561,152 +584,7 @@ const Live = () => {
               <div className='live__chatfullscreen-top'>
                 <div className='live__chatfullscreen-top-ctn'>
                   <div className='live__chatfullscreen-top-ctn-avatar'>
-                    <img src={avatar1} alt='' />
-                  </div>
-                  <div>
-                    <div className='live__chatfullscreen-top-ctn-name'>Trà Long{':'}</div>
-                    <div className='live__chatfullscreen-top-ctn-text'>reaction review xàm đi</div>
-                  </div>
-                </div>
-
-                <div className='live__chatfullscreen-top-ctn'>
-                  <div className='live__chatfullscreen-top-ctn-avatar'>
-                    <img src={avatar1} alt='' />
-                  </div>
-                  <div>
-                    <div className='live__chatfullscreen-top-ctn-name'>Jackie Phan{':'}</div>
-                    <div className='live__chatfullscreen-top-ctn-text'>
-                      SAO TUI K THẤY CÁI REVIEW THE CALL CỦA PHÊ PHIM =)))))))
-                    </div>
-                  </div>
-                </div>
-
-                <div className='live__chatfullscreen-top-ctn'>
-                  <div className='live__chatfullscreen-top-ctn-avatar'>
-                    <img src={avatar1} alt='' />
-                  </div>
-                  <div>
-                    <div className='live__chatfullscreen-top-ctn-name'>Hà Lan{':'}</div>
-                    <div className='live__chatfullscreen-top-ctn-text'>
-                      tụi FAPtv nói chung, blackbi nói riêng hay có mấy vụ cà khịa kiểu này lắm. Vụ
-                      của AnVy, vụ của Jack, kiểu nói mé mé ko tới đâu :))))
-                    </div>
-                  </div>
-                </div>
-
-                <div className='live__chatfullscreen-top-ctn'>
-                  <div className='live__chatfullscreen-top-ctn-avatar'>
-                    <img src={avatar1} alt='' />
-                  </div>
-                  <div>
-                    <div className='live__chatfullscreen-top-ctn-name'>Trà Long{':'}</div>
-                    <div className='live__chatfullscreen-top-ctn-text'>reaction review xàm đi</div>
-                  </div>
-                </div>
-
-                <div className='live__chatfullscreen-top-ctn'>
-                  <div className='live__chatfullscreen-top-ctn-avatar'>
-                    <img src={avatar1} alt='' />
-                  </div>
-                  <div>
-                    <div className='live__chatfullscreen-top-ctn-name'>Trà Long{':'}</div>
-                    <div className='live__chatfullscreen-top-ctn-text'>reaction review xàm đi</div>
-                  </div>
-                </div>
-
-                <div className='live__chatfullscreen-top-ctn'>
-                  <div className='live__chatfullscreen-top-ctn-avatar'>
-                    <img src={avatar1} alt='' />
-                  </div>
-                  <div>
-                    <div className='live__chatfullscreen-top-ctn-name'>Trà Long{':'}</div>
-                    <div className='live__chatfullscreen-top-ctn-text'>reaction review xàm đi</div>
-                  </div>
-                </div>
-
-                <div className='live__chatfullscreen-top-ctn'>
-                  <div className='live__chatfullscreen-top-ctn-avatar'>
-                    <img src={avatar1} alt='' />
-                  </div>
-                  <div>
-                    <div className='live__chatfullscreen-top-ctn-name'>Trà Long{':'}</div>
-                    <div className='live__chatfullscreen-top-ctn-text'>reaction review xàm đi</div>
-                  </div>
-                </div>
-
-                <div className='live__chatfullscreen-top-ctn'>
-                  <div className='live__chatfullscreen-top-ctn-avatar'>
-                    <img src={avatar1} alt='' />
-                  </div>
-                  <div>
-                    <div className='live__chatfullscreen-top-ctn-name'>Trà Long{':'}</div>
-                    <div className='live__chatfullscreen-top-ctn-text'>reaction review xàm đi</div>
-                  </div>
-                </div>
-
-                <div className='live__chatfullscreen-top-ctn'>
-                  <div className='live__chatfullscreen-top-ctn-avatar'>
-                    <img src={avatar1} alt='' />
-                  </div>
-                  <div>
-                    <div className='live__chatfullscreen-top-ctn-name'>Trà Long{':'}</div>
-                    <div className='live__chatfullscreen-top-ctn-text'>reaction review xàm đi</div>
-                  </div>
-                </div>
-
-                <div className='live__chatfullscreen-top-ctn'>
-                  <div className='live__chatfullscreen-top-ctn-avatar'>
-                    <img src={avatar1} alt='' />
-                  </div>
-                  <div>
-                    <div className='live__chatfullscreen-top-ctn-name'>Trà Long{':'}</div>
-                    <div className='live__chatfullscreen-top-ctn-text'>reaction review xàm đi</div>
-                  </div>
-                </div>
-
-                <div className='live__chatfullscreen-top-ctn'>
-                  <div className='live__chatfullscreen-top-ctn-avatar'>
-                    <img src={avatar1} alt='' />
-                  </div>
-                  <div>
-                    <div className='live__chatfullscreen-top-ctn-name'>Trà Long{':'}</div>
-                    <div className='live__chatfullscreen-top-ctn-text'>reaction review xàm đi</div>
-                  </div>
-                </div>
-
-                <div className='live__chatfullscreen-top-ctn'>
-                  <div className='live__chatfullscreen-top-ctn-avatar'>
-                    <img src={avatar1} alt='' />
-                  </div>
-                  <div>
-                    <div className='live__chatfullscreen-top-ctn-name'>Trà Long{':'}</div>
-                    <div className='live__chatfullscreen-top-ctn-text'>reaction review xàm đi</div>
-                  </div>
-                </div>
-
-                <div className='live__chatfullscreen-top-ctn'>
-                  <div className='live__chatfullscreen-top-ctn-avatar'>
-                    <img src={avatar1} alt='' />
-                  </div>
-                  <div>
-                    <div className='live__chatfullscreen-top-ctn-name'>Trà Long{':'}</div>
-                    <div className='live__chatfullscreen-top-ctn-text'>reaction review xàm đi</div>
-                  </div>
-                </div>
-
-                <div className='live__chatfullscreen-top-ctn'>
-                  <div className='live__chatfullscreen-top-ctn-avatar'>
-                    <img src={avatar1} alt='' />
-                  </div>
-                  <div>
-                    <div className='live__chatfullscreen-top-ctn-name'>Trà Long{':'}</div>
-                    <div className='live__chatfullscreen-top-ctn-text'>reaction review xàm đi</div>
-                  </div>
-                </div>
-
-                <div className='live__chatfullscreen-top-ctn'>
-                  <div className='live__chatfullscreen-top-ctn-avatar'>
-                    <img src={avatar1} alt='' />
+                    <img  alt='' />
                   </div>
                   <div>
                     <div className='live__chatfullscreen-top-ctn-name'>Trà Long{':'}</div>
@@ -716,20 +594,22 @@ const Live = () => {
               </div>
 
               <div className='live__chatfullscreen-bottom'>
-                <div className='live__chatfullscreen-bottom-btn'>
+                {/* <div className='live__chatfullscreen-bottom-btn'>
                   <div className='live__chatfullscreen-bottom-btn-gift'>
                     <FaIcon.FaGift className='icon' />
                     <span>Gift</span>
                   </div>
-                </div>
+                </div> */}
                 <div className='live__chatfullscreen-bottom-chat'>
                   <div className='live__chatfullscreen-bottom-chat-avatar'>
-                    <img src={avatar1} alt='' />
+                    <img src={user?.kyc.avatar?.path ? STORAGE_DOMAIN + user?.kyc.avatar?.path : avatar0} alt='' />
                   </div>
                   <div className='live__chatfullscreen-bottom-chat-inputBox'>
                     <input ref={chatFullscreenRef} type='text' placeholder='Say something' />
-                    <RiIcon.RiEmotionLaughLine className='icon icon-emo' />
-                    <RiIcon.RiSendPlaneFill className='icon icon-send' />
+                    <button type="submit">
+                      <RiIcon.RiEmotionLaughLine className='icon icon-emo' />
+                    </button>
+                    {/* <RiIcon.RiSendPlaneFill className='icon icon-send' /> */}
                   </div>
                 </div>
               </div>
@@ -861,55 +741,33 @@ const Live = () => {
             <HiIcon.HiDotsVertical className='icon' />
           </div>
           <div className='live__info-title'>
-            Live: Homeworld Mobile – Hậu Bản Di Động Của Thương Hiệu Game Chiến Thuật Khi Xưa
+            {Stream.name}
           </div>
-          <div className='live__info-tag'># Trò Chơi Trí Tuệ</div>
+          {/* <div className='live__info-tag'># Trò Chơi Trí Tuệ</div> */}
           <div className='live__info-info'>
             <div className='live__info-avatar'>
-              <img src={avatar1} alt='' />
+              <img src={Stream?.user?.kyc.avatar?.path ? STORAGE_DOMAIN + Stream.user.kyc.avatar.path : avatar0} alt='' />
             </div>
             <div>
-              <div className='live__info-name'>Trà Long</div>
-              <div className='live__info-date'>Today, 29-08-2021</div>
+              <div className='live__info-name'>{Stream?.user?.kyc.first_name} {Stream?.user?.kyc.last_name}</div>
+              <div className='live__info-date'>{convertDate(Stream.create_date)}</div>
               <div className='live__info-view'>
-                <span>{useNumber(11000)} view</span>
-                <span>{useNumber(200)} follower</span>
+                <span>{useNumber(Stream?.viewers)} view</span>
+                <span>{useNumber(Stream?.user?.followers)} follower</span>
               </div>
               <div className={`live__info-desc ${isShowMore ? 'd-block' : ''}`}>
-                Grab your ☕, ☀️ Grab your 🚰!, 🌇 Grab your 🍹, and join me every Friday morning to
-                explore the beauty of digital risk-taking & learning to draw and sketchnote with
-                Adobe Fres
-                <br />
-                <br />
-                Grab your ☕, ☀️ Grab your 🚰!, 🌇 Grab your 🍹, and join me every Friday morning to
-                explore the beauty of digital risk-taking & learning to draw and sketchnote with
-                Adobe Fres
-                <br />
-                <br />
-                Grab your ☕, ☀️ Grab your 🚰!, 🌇 Grab your 🍹, and join me every Friday morning to
-                explore the beauty of digital risk-taking & learning to draw and sketchnote with
-                Adobe Fres
-                <br />
-                <br />
-                Grab your ☕, ☀️ Grab your 🚰!, 🌇 Grab your 🍹, and join me every Friday morning to
-                explore the beauty of digital risk-taking & learning to draw and sketchnote with
-                Adobe Fres
-                <br />
-                <br />
-                Grab your ☕, ☀️ Grab your 🚰!, 🌇 Grab your 🍹, and join me every Friday morning to
-                explore the beauty of digital risk-taking & learning to draw and sketchnote with
-                Adobe Fres
+                {Stream?.description}
               </div>
               <div className='live__info-showMore mt-20' onClick={() => setIsShowMore(!isShowMore)}>
                 {!isShowMore ? 'Show more...' : 'Hide...'}
               </div>
             </div>
-            <div>
-              <div className='live__info-btnFollow'>
+            { Stream?.user?._id !== user?._id &&  <div>
+              <div onClick={handleFollow} className='live__info-btnFollow'>
                 <HiIcon.HiPlus className='icon' />
-                <span>Follow</span>
+                <span>{IsFollowed ? 'Unfollow' : 'Follow'}</span>
               </div>
-            </div>
+            </div>}
           </div>
         </div>
 
@@ -919,132 +777,7 @@ const Live = () => {
               <div className='live__chatBox-top'>
                 <div className='live__chatBox-top-ctn'>
                   <div className='live__chatBox-top-ctn-avatar'>
-                    <img src={avatar1} alt='' />
-                  </div>
-                  <div>
-                    <div className='live__chatBox-top-ctn-name'>Trà Long{':'}</div>
-                    <div className='live__chatBox-top-ctn-text'>reaction review xàm đi</div>
-                  </div>
-                </div>
-
-                <div className='live__chatBox-top-ctn'>
-                  <div className='live__chatBox-top-ctn-avatar'>
-                    <img src={avatar1} alt='' />
-                  </div>
-                  <div>
-                    <div className='live__chatBox-top-ctn-name'>Jackie Phan{':'}</div>
-                    <div className='live__chatBox-top-ctn-text'>
-                      SAO TUI K THẤY CÁI REVIEW THE CALL CỦA PHÊ PHIM =)))))))
-                    </div>
-                  </div>
-                </div>
-
-                <div className='live__chatBox-top-ctn'>
-                  <div className='live__chatBox-top-ctn-avatar'>
-                    <img src={avatar1} alt='' />
-                  </div>
-                  <div>
-                    <div className='live__chatBox-top-ctn-name'>Hà Lan{':'}</div>
-                    <div className='live__chatBox-top-ctn-text'>
-                      tụi FAPtv nói chung, blackbi nói riêng hay có mấy vụ cà khịa kiểu này lắm. Vụ
-                      của AnVy, vụ của Jack, kiểu nói mé mé ko tới đâu :))))
-                    </div>
-                  </div>
-                </div>
-
-                <div className='live__chatBox-top-ctn'>
-                  <div className='live__chatBox-top-ctn-avatar'>
-                    <img src={avatar1} alt='' />
-                  </div>
-                  <div>
-                    <div className='live__chatBox-top-ctn-name'>Trà Long{':'}</div>
-                    <div className='live__chatBox-top-ctn-text'>reaction review xàm đi</div>
-                  </div>
-                </div>
-
-                <div className='live__chatBox-top-ctn'>
-                  <div className='live__chatBox-top-ctn-avatar'>
-                    <img src={avatar1} alt='' />
-                  </div>
-                  <div>
-                    <div className='live__chatBox-top-ctn-name'>Trà Long{':'}</div>
-                    <div className='live__chatBox-top-ctn-text'>reaction review xàm đi</div>
-                  </div>
-                </div>
-
-                <div className='live__chatBox-top-ctn'>
-                  <div className='live__chatBox-top-ctn-avatar'>
-                    <img src={avatar1} alt='' />
-                  </div>
-                  <div>
-                    <div className='live__chatBox-top-ctn-name'>Trà Long{':'}</div>
-                    <div className='live__chatBox-top-ctn-text'>reaction review xàm đi</div>
-                  </div>
-                </div>
-
-                <div className='live__chatBox-top-ctn'>
-                  <div className='live__chatBox-top-ctn-avatar'>
-                    <img src={avatar1} alt='' />
-                  </div>
-                  <div>
-                    <div className='live__chatBox-top-ctn-name'>Trà Long{':'}</div>
-                    <div className='live__chatBox-top-ctn-text'>reaction review xàm đi</div>
-                  </div>
-                </div>
-
-                <div className='live__chatBox-top-ctn'>
-                  <div className='live__chatBox-top-ctn-avatar'>
-                    <img src={avatar1} alt='' />
-                  </div>
-                  <div>
-                    <div className='live__chatBox-top-ctn-name'>Trà Long{':'}</div>
-                    <div className='live__chatBox-top-ctn-text'>reaction review xàm đi</div>
-                  </div>
-                </div>
-
-                <div className='live__chatBox-top-ctn'>
-                  <div className='live__chatBox-top-ctn-avatar'>
-                    <img src={avatar1} alt='' />
-                  </div>
-                  <div>
-                    <div className='live__chatBox-top-ctn-name'>Trà Long{':'}</div>
-                    <div className='live__chatBox-top-ctn-text'>reaction review xàm đi</div>
-                  </div>
-                </div>
-
-                <div className='live__chatBox-top-ctn'>
-                  <div className='live__chatBox-top-ctn-avatar'>
-                    <img src={avatar1} alt='' />
-                  </div>
-                  <div>
-                    <div className='live__chatBox-top-ctn-name'>Trà Long{':'}</div>
-                    <div className='live__chatBox-top-ctn-text'>reaction review xàm đi</div>
-                  </div>
-                </div>
-
-                <div className='live__chatBox-top-ctn'>
-                  <div className='live__chatBox-top-ctn-avatar'>
-                    <img src={avatar1} alt='' />
-                  </div>
-                  <div>
-                    <div className='live__chatBox-top-ctn-name'>Trà Long{':'}</div>
-                    <div className='live__chatBox-top-ctn-text'>reaction review xàm đi</div>
-                  </div>
-                </div>
-
-                <div className='live__chatBox-top-ctn'>
-                  <div className='live__chatBox-top-ctn-avatar'>
-                    <img src={avatar1} alt='' />
-                  </div>
-                  <div>
-                    <div className='live__chatBox-top-ctn-name'>Trà Long{':'}</div>
-                    <div className='live__chatBox-top-ctn-text'>reaction review xàm đi</div>
-                  </div>
-                </div>
-
-                <div className='live__chatBox-top-ctn'>
-                  <div className='live__chatBox-top-ctn-avatar'>
-                    <img src={avatar1} alt='' />
+                    <img  alt='' />
                   </div>
                   <div>
                     <div className='live__chatBox-top-ctn-name'>Trà Long{':'}</div>
@@ -1054,15 +787,15 @@ const Live = () => {
               </div>
 
               <div className='live__chatBox-bottom'>
-                <div className='live__chatBox-bottom-btn'>
+                {/* <div className='live__chatBox-bottom-btn'>
                   <div className='live__chatBox-bottom-btn-gift'>
                     <FaIcon.FaGift className='icon' />
                     <span>Gift</span>
                   </div>
-                </div>
+                </div> */}
                 <div className='live__chatBox-bottom-chat'>
                   <div className='live__chatBox-bottom-chat-avatar'>
-                    <img src={avatar1} alt='' />
+                    <img src={user?.kyc.avatar?.path ? STORAGE_DOMAIN + user?.kyc.avatar?.path : avatar0} alt='' />
                   </div>
                   <div className='live__chatBox-bottom-chat-inputBox'>
                     <input ref={chatRef} type='text' placeholder='Say something' />
@@ -1082,7 +815,7 @@ const Live = () => {
 
             <div className='live__recommend-ctn'>
               <div className='live__recommend-ctn-avatar'>
-                <img src={avatar1} alt='' />
+                <img  alt='' />
               </div>
               <div>
                 <div className='live__recommend-ctn-name'>Trà Long</div>
@@ -1093,7 +826,7 @@ const Live = () => {
 
             <div className='live__recommend-ctn'>
               <div className='live__recommend-ctn-avatar'>
-                <img src={avatar1} alt='' />
+                <img  alt='' />
               </div>
               <div>
                 <div className='live__recommend-ctn-name'>Trà Long</div>
@@ -1111,134 +844,10 @@ const Live = () => {
         <div className='live__chat'>
           <div className={`live__chatBox ${isHideChat ? 'd-none' : ''}`}>
             <div className='live__chatBox-top'>
+              
               <div className='live__chatBox-top-ctn'>
                 <div className='live__chatBox-top-ctn-avatar'>
-                  <img src={avatar1} alt='' />
-                </div>
-                <div>
-                  <div className='live__chatBox-top-ctn-name'>Trà Long{':'}</div>
-                  <div className='live__chatBox-top-ctn-text'>reaction review xàm đi</div>
-                </div>
-              </div>
-
-              <div className='live__chatBox-top-ctn'>
-                <div className='live__chatBox-top-ctn-avatar'>
-                  <img src={avatar1} alt='' />
-                </div>
-                <div>
-                  <div className='live__chatBox-top-ctn-name'>Jackie Phan{':'}</div>
-                  <div className='live__chatBox-top-ctn-text'>
-                    SAO TUI K THẤY CÁI REVIEW THE CALL CỦA PHÊ PHIM =)))))))
-                  </div>
-                </div>
-              </div>
-
-              <div className='live__chatBox-top-ctn'>
-                <div className='live__chatBox-top-ctn-avatar'>
-                  <img src={avatar1} alt='' />
-                </div>
-                <div>
-                  <div className='live__chatBox-top-ctn-name'>Hà Lan{':'}</div>
-                  <div className='live__chatBox-top-ctn-text'>
-                    tụi FAPtv nói chung, blackbi nói riêng hay có mấy vụ cà khịa kiểu này lắm. Vụ
-                    của AnVy, vụ của Jack, kiểu nói mé mé ko tới đâu :))))
-                  </div>
-                </div>
-              </div>
-
-              <div className='live__chatBox-top-ctn'>
-                <div className='live__chatBox-top-ctn-avatar'>
-                  <img src={avatar1} alt='' />
-                </div>
-                <div>
-                  <div className='live__chatBox-top-ctn-name'>Trà Long{':'}</div>
-                  <div className='live__chatBox-top-ctn-text'>reaction review xàm đi</div>
-                </div>
-              </div>
-
-              <div className='live__chatBox-top-ctn'>
-                <div className='live__chatBox-top-ctn-avatar'>
-                  <img src={avatar1} alt='' />
-                </div>
-                <div>
-                  <div className='live__chatBox-top-ctn-name'>Trà Long{':'}</div>
-                  <div className='live__chatBox-top-ctn-text'>reaction review xàm đi</div>
-                </div>
-              </div>
-
-              <div className='live__chatBox-top-ctn'>
-                <div className='live__chatBox-top-ctn-avatar'>
-                  <img src={avatar1} alt='' />
-                </div>
-                <div>
-                  <div className='live__chatBox-top-ctn-name'>Trà Long{':'}</div>
-                  <div className='live__chatBox-top-ctn-text'>reaction review xàm đi</div>
-                </div>
-              </div>
-
-              <div className='live__chatBox-top-ctn'>
-                <div className='live__chatBox-top-ctn-avatar'>
-                  <img src={avatar1} alt='' />
-                </div>
-                <div>
-                  <div className='live__chatBox-top-ctn-name'>Trà Long{':'}</div>
-                  <div className='live__chatBox-top-ctn-text'>reaction review xàm đi</div>
-                </div>
-              </div>
-
-              <div className='live__chatBox-top-ctn'>
-                <div className='live__chatBox-top-ctn-avatar'>
-                  <img src={avatar1} alt='' />
-                </div>
-                <div>
-                  <div className='live__chatBox-top-ctn-name'>Trà Long{':'}</div>
-                  <div className='live__chatBox-top-ctn-text'>reaction review xàm đi</div>
-                </div>
-              </div>
-
-              <div className='live__chatBox-top-ctn'>
-                <div className='live__chatBox-top-ctn-avatar'>
-                  <img src={avatar1} alt='' />
-                </div>
-                <div>
-                  <div className='live__chatBox-top-ctn-name'>Trà Long{':'}</div>
-                  <div className='live__chatBox-top-ctn-text'>reaction review xàm đi</div>
-                </div>
-              </div>
-
-              <div className='live__chatBox-top-ctn'>
-                <div className='live__chatBox-top-ctn-avatar'>
-                  <img src={avatar1} alt='' />
-                </div>
-                <div>
-                  <div className='live__chatBox-top-ctn-name'>Trà Long{':'}</div>
-                  <div className='live__chatBox-top-ctn-text'>reaction review xàm đi</div>
-                </div>
-              </div>
-
-              <div className='live__chatBox-top-ctn'>
-                <div className='live__chatBox-top-ctn-avatar'>
-                  <img src={avatar1} alt='' />
-                </div>
-                <div>
-                  <div className='live__chatBox-top-ctn-name'>Trà Long{':'}</div>
-                  <div className='live__chatBox-top-ctn-text'>reaction review xàm đi</div>
-                </div>
-              </div>
-
-              <div className='live__chatBox-top-ctn'>
-                <div className='live__chatBox-top-ctn-avatar'>
-                  <img src={avatar1} alt='' />
-                </div>
-                <div>
-                  <div className='live__chatBox-top-ctn-name'>Trà Long{':'}</div>
-                  <div className='live__chatBox-top-ctn-text'>reaction review xàm đi</div>
-                </div>
-              </div>
-
-              <div className='live__chatBox-top-ctn'>
-                <div className='live__chatBox-top-ctn-avatar'>
-                  <img src={avatar1} alt='' />
+                  <img  alt='' />
                 </div>
                 <div>
                   <div className='live__chatBox-top-ctn-name'>Trà Long{':'}</div>
@@ -1248,21 +857,21 @@ const Live = () => {
             </div>
 
             <div className='live__chatBox-bottom'>
-              <div className='live__chatBox-bottom-btn'>
+              {/* <div className='live__chatBox-bottom-btn'>
                 <div className='live__chatBox-bottom-btn-gift'>
                   <FaIcon.FaGift className='icon' />
                   <span>Gift</span>
                 </div>
-              </div>
+              </div> */}
               <div className='live__chatBox-bottom-chat'>
                 <div className='live__chatBox-bottom-chat-avatar'>
-                  <img src={avatar1} alt='' />
+                  <img src={user?.kyc.avatar?.path ? STORAGE_DOMAIN + user?.kyc.avatar?.path : avatar0} alt='' />
                 </div>
-                <div className='live__chatBox-bottom-chat-inputBox'>
-                  <input ref={chatRef} type='text' placeholder='Say something' />
-                  <RiIcon.RiSendPlaneFill className='icon icon-send' />
-                  <RiIcon.RiEmotionLaughLine className='icon icon-emo' />
-                </div>
+                <form onSubmit={handleChat} className='live__chatBox-bottom-chat-inputBox'>
+                  <input ref={chatRef} name="chat" type='text' placeholder='Say something' />
+                  <button type="submit" className='icon icon-send'><RiIcon.RiSendPlaneFill/></button>
+                  {/* <RiIcon.RiEmotionLaughLine className='icon icon-emo' /> */}
+                </form>
               </div>
             </div>
           </div>
@@ -1276,7 +885,7 @@ const Live = () => {
 
           <div className='live__recommend-ctn'>
             <div className='live__recommend-ctn-avatar'>
-              <img src={avatar1} alt='' />
+              <img  alt='' />
             </div>
             <div>
               <div className='live__recommend-ctn-name'>Trà Long</div>
@@ -1287,7 +896,7 @@ const Live = () => {
 
           <div className='live__recommend-ctn'>
             <div className='live__recommend-ctn-avatar'>
-              <img src={avatar1} alt='' />
+              <img  alt='' />
             </div>
             <div>
               <div className='live__recommend-ctn-name'>Trà Long</div>
