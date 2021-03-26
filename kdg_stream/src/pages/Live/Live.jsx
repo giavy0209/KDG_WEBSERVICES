@@ -21,7 +21,7 @@ const Live = () => {
   const user = useSelector(state => state.user)
   const [Stream, setStream] = useState({});
   const [IsFollowed, setIsFollowed] = useState(false);
-  
+  const [Chat, setChat] = useState([])
 
   const [isExpand, setIsExpand] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);
@@ -278,6 +278,7 @@ const Live = () => {
   useEffect(() => {
     const id = new URLSearchParams(window.location.search).get('s');
     callAPI.get('/streamming?id=' + id).then(res => {
+      socket.emit('join_stream' , res.data._id)
       setStream(res.data)
       var videoElement = document.getElementById('videoElement');
       flvPlayer.current = window.flvjs.createPlayer({
@@ -288,7 +289,23 @@ const Live = () => {
       flvPlayer.current.load();
       flvPlayer.current.play();
     });
+
+    const handleReceiveChat = function(chatData) {
+      
+      setChat(_chat => [..._chat, chatData])
+    }
+    socket.on('chat' , handleReceiveChat)
+
+    return () => {
+      socket.removeEventListener('chat' , handleReceiveChat)
+    }
   }, []);
+
+  useEffect(() => {
+    document.querySelectorAll('.live__chatBox-top').forEach(el => {
+      el.scroll(0 , el.scrollHeight + 9999)
+    })
+  },[Chat])
 
   useEffect(() => {
     const playVideoByKeyboard = e => {
@@ -563,11 +580,12 @@ const Live = () => {
 
   const handleChat = useCallback((e) => {
     e.preventDefault()
-    e.target.reset()
     const data = new FormData(e.target)
-    console.log(data.getAll('chat'));
-    socket.emit('chat' , )
-  },[]) 
+    const chat = data.get('chat') 
+    if(!chat) return
+    socket.emit('chat', {room : Stream._id , chat : data.get('chat')} )
+    e.target.reset()
+  },[Stream]) 
 
   return (
     <div className={`live ${isExpand ? 'expand' : ''}`}>
@@ -582,15 +600,18 @@ const Live = () => {
                 <MdIcon.MdKeyboardArrowRight className='icon' />
               </div>
               <div className='live__chatfullscreen-top'>
-                <div className='live__chatfullscreen-top-ctn'>
-                  <div className='live__chatfullscreen-top-ctn-avatar'>
-                    <img  alt='' />
+                {Chat.map(o => 
+                  <div className='live__chatfullscreen-top-ctn'>
+                    <div className='live__chatfullscreen-top-ctn-avatar'>
+                      <img src={user?.kyc.avatar?.path ? STORAGE_DOMAIN + user?.kyc.avatar?.path : avatar0} alt='' />
+                    </div>
+                    <div>
+                      <div className='live__chatfullscreen-top-ctn-name'>{o.user?.kyc.first_name} {o.user?.kyc.last_name}{':'}</div>
+                      <div className='live__chatfullscreen-top-ctn-text'>{o.chat}</div>
+                    </div>
                   </div>
-                  <div>
-                    <div className='live__chatfullscreen-top-ctn-name'>Trà Long{':'}</div>
-                    <div className='live__chatfullscreen-top-ctn-text'>reaction review xàm đi</div>
-                  </div>
-                </div>
+                    
+                )}
               </div>
 
               <div className='live__chatfullscreen-bottom'>
@@ -604,13 +625,13 @@ const Live = () => {
                   <div className='live__chatfullscreen-bottom-chat-avatar'>
                     <img src={user?.kyc.avatar?.path ? STORAGE_DOMAIN + user?.kyc.avatar?.path : avatar0} alt='' />
                   </div>
-                  <div className='live__chatfullscreen-bottom-chat-inputBox'>
-                    <input ref={chatFullscreenRef} type='text' placeholder='Say something' />
-                    <button type="submit">
-                      <RiIcon.RiEmotionLaughLine className='icon icon-emo' />
+                  <form onSubmit={handleChat} className='live__chatfullscreen-bottom-chat-inputBox'>
+                    <input ref={chatFullscreenRef} name="chat" type='text' placeholder='Say something' />
+                    <button type="submit" className='icon icon-send'>
+                      {/* <RiIcon.RiEmotionLaughLine  /> */}
+                      <RiIcon.RiSendPlaneFill className='icon icon-send' />
                     </button>
-                    {/* <RiIcon.RiSendPlaneFill className='icon icon-send' /> */}
-                  </div>
+                  </form>
                 </div>
               </div>
             </div>
@@ -775,15 +796,21 @@ const Live = () => {
           <div className='live__chat'>
             <div className={`live__chatBox ${isHideChat ? 'd-none' : ''}`}>
               <div className='live__chatBox-top'>
-                <div className='live__chatBox-top-ctn'>
-                  <div className='live__chatBox-top-ctn-avatar'>
-                    <img  alt='' />
+
+              <div className='live__chatBox-top'>
+                {Chat.map(o => 
+                  <div className='live__chatBox-top-ctn'>
+                    <div className='live__chatBox-top-ctn-avatar'>
+                      <img src={user?.kyc.avatar?.path ? STORAGE_DOMAIN + user?.kyc.avatar?.path : avatar0} alt='' />
+                    </div>
+                    <div>
+                      <div className='live__chatBox-top-ctn-name'>{o.user?.kyc.first_name} {o.user?.kyc.last_name}{':'}</div>
+                      <div className='live__chatBox-top-ctn-text'>{o.chat}</div>
+                    </div>
                   </div>
-                  <div>
-                    <div className='live__chatBox-top-ctn-name'>Trà Long{':'}</div>
-                    <div className='live__chatBox-top-ctn-text'>reaction review xàm đi</div>
-                  </div>
-                </div>
+                )}
+              </div>
+
               </div>
 
               <div className='live__chatBox-bottom'>
@@ -797,11 +824,11 @@ const Live = () => {
                   <div className='live__chatBox-bottom-chat-avatar'>
                     <img src={user?.kyc.avatar?.path ? STORAGE_DOMAIN + user?.kyc.avatar?.path : avatar0} alt='' />
                   </div>
-                  <div className='live__chatBox-bottom-chat-inputBox'>
+                  <form className='live__chatBox-bottom-chat-inputBox'>
                     <input ref={chatRef} type='text' placeholder='Say something' />
-                    <RiIcon.RiSendPlaneFill className='icon icon-send' />
+                    <button type="submit" className='icon icon-send' ><RiIcon.RiSendPlaneFill /></button>
                     <RiIcon.RiEmotionLaughLine className='icon icon-emo' />
-                  </div>
+                  </form>
                 </div>
               </div>
             </div>
@@ -845,15 +872,17 @@ const Live = () => {
           <div className={`live__chatBox ${isHideChat ? 'd-none' : ''}`}>
             <div className='live__chatBox-top'>
               
-              <div className='live__chatBox-top-ctn'>
-                <div className='live__chatBox-top-ctn-avatar'>
-                  <img  alt='' />
+              {Chat.map(o => 
+                <div className='live__chatBox-top-ctn'>
+                  <div className='live__chatBox-top-ctn-avatar'>
+                    <img src={user?.kyc.avatar?.path ? STORAGE_DOMAIN + user?.kyc.avatar?.path : avatar0} alt='' />
+                  </div>
+                  <div>
+                    <div className='live__chatBox-top-ctn-name'>{o.user?.kyc.first_name} {o.user?.kyc.last_name}{':'}</div>
+                    <div className='live__chatBox-top-ctn-text'>{o.chat}</div>
+                  </div>
                 </div>
-                <div>
-                  <div className='live__chatBox-top-ctn-name'>Trà Long{':'}</div>
-                  <div className='live__chatBox-top-ctn-text'>reaction review xàm đi</div>
-                </div>
-              </div>
+              )}
             </div>
 
             <div className='live__chatBox-bottom'>

@@ -41,11 +41,11 @@ const HomeRight = props => {
                 index={index}
                 type='follow'
                 numb={o.total}
-                name={o.user.kyc ? `${o.user.kyc.first_name} ${o.user.kyc.last_name}` : ''}
+                name={o.kyc ? `${o.kyc.first_name} ${o.kyc.last_name}` : ''}
                 avatar={
-                  o.user.kyc.avatar?.path ? STORAGE_DOMAIN + o.user.kyc.avatar?.path : undefined
+                  o.kyc.avatar?.path ? STORAGE_DOMAIN + o.kyc.avatar?.path : undefined
                 }
-                onClick={() => history.push('/profile?uid=' + o.user._id)}
+                onClick={() => history.push('/profile?uid=' + o._id)}
               />
             ))}
           </TabPane>
@@ -57,11 +57,11 @@ const HomeRight = props => {
                 index={index}
                 type='view'
                 numb={o.total}
-                name={o.user.kyc ? `${o.user.kyc.first_name} ${o.user.kyc.last_name}` : ''}
+                name={o.kyc ? `${o.kyc.first_name} ${o.kyc.last_name}` : ''}
                 avatar={
-                  o.user.kyc.avatar?.path ? STORAGE_DOMAIN + o.user.kyc.avatar?.path : undefined
+                  o.kyc.avatar?.path ? STORAGE_DOMAIN + o.kyc.avatar?.path : undefined
                 }
-                onClick={() => history.push('/profile?uid=' + o.user._id)}
+                onClick={() => history.push('/profile?uid=' + o._id)}
               />
             ))}
           </TabPane>
