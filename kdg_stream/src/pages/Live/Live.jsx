@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import ReactHlsPlayer from 'react-hls-player';
 import * as AiIcon from 'react-icons/ai';
 import * as BsIcon from 'react-icons/bs';
 import * as CgIcon from 'react-icons/cg';
@@ -44,7 +45,6 @@ const Live = () => {
   const chatFullscreenRef = useRef();
   const prevExpandRef = useRef(false);
   const prevFullscreenRef = useRef(false);
-  const flvPlayer = useRef(null);
 
   const convertTime = useCallback(timeSecond => {
     let duration, second, minute, hour, temp, result;
@@ -278,34 +278,26 @@ const Live = () => {
   useEffect(() => {
     const id = new URLSearchParams(window.location.search).get('s');
     callAPI.get('/streamming?id=' + id).then(res => {
-      socket.emit('join_stream' , res.data._id)
+      socket.emit('join_stream', res.data._id)
       setStream(res.data)
-      var videoElement = document.getElementById('videoElement');
-      flvPlayer.current = window.flvjs.createPlayer({
-        type: 'flv',
-        url: `${PLAY_STREAM}${res.data.key}.flv`,
-      });
-      flvPlayer.current.attachMediaElement(videoElement);
-      flvPlayer.current.load();
-      flvPlayer.current.play();
     });
 
-    const handleReceiveChat = function(chatData) {
-      
+    const handleReceiveChat = function (chatData) {
+
       setChat(_chat => [..._chat, chatData])
     }
-    socket.on('chat' , handleReceiveChat)
+    socket.on('chat', handleReceiveChat)
 
     return () => {
-      socket.removeEventListener('chat' , handleReceiveChat)
+      socket.removeEventListener('chat', handleReceiveChat)
     }
   }, []);
 
   useEffect(() => {
     document.querySelectorAll('.live__chatBox-top').forEach(el => {
-      el.scroll(0 , el.scrollHeight + 9999)
+      el.scroll(0, el.scrollHeight + 9999)
     })
-  },[Chat])
+  }, [Chat])
 
   useEffect(() => {
     const playVideoByKeyboard = e => {
@@ -581,11 +573,11 @@ const Live = () => {
   const handleChat = useCallback((e) => {
     e.preventDefault()
     const data = new FormData(e.target)
-    const chat = data.get('chat') 
-    if(!chat) return
-    socket.emit('chat', {room : Stream._id , chat : data.get('chat')} )
+    const chat = data.get('chat')
+    if (!chat) return
+    socket.emit('chat', { room: Stream._id, chat: data.get('chat') })
     e.target.reset()
-  },[Stream]) 
+  }, [Stream])
 
   return (
     <div className={`live ${isExpand ? 'expand' : ''}`}>
@@ -600,7 +592,7 @@ const Live = () => {
                 <MdIcon.MdKeyboardArrowRight className='icon' />
               </div>
               <div className='live__chatfullscreen-top'>
-                {Chat.map(o => 
+                {Chat.map(o =>
                   <div className='live__chatfullscreen-top-ctn'>
                     <div className='live__chatfullscreen-top-ctn-avatar'>
                       <img src={o.user?.kyc.avatar?.path ? STORAGE_DOMAIN + o.user?.kyc.avatar?.path : avatar0} alt='' />
@@ -610,7 +602,7 @@ const Live = () => {
                       <div className='live__chatfullscreen-top-ctn-text'>{o.chat}</div>
                     </div>
                   </div>
-                    
+
                 )}
               </div>
 
@@ -637,7 +629,15 @@ const Live = () => {
             </div>
           )}
 
-          <video muted ref={videoRef} id='videoElement'></video>
+          <ReactHlsPlayer
+            src={`${PLAY_STREAM}${Stream.key}/index.m3u8`}
+            autoPlay={true}
+            controls={true}
+            muted
+            width="100%"
+            height="auto"
+            playerRef={videoRef}
+          />
 
           <div ref={animationRef} className='live__videoCtn-animation'>
             <div className='live__videoCtn-animation-iconCircle play-icon'>
@@ -678,16 +678,14 @@ const Live = () => {
           </div>
           <div
             ref={controlsRef}
-            className={`live__videoCtn-controls ${
-              isMouseDownVolume || isMouseDownPlayback ? 'show' : ''
-            }`}
+            className={`live__videoCtn-controls ${isMouseDownVolume || isMouseDownPlayback ? 'show' : ''
+              }`}
           >
             <div className='live__videoCtn-controls-top' onClick={() => setIsPlay(!isPlay)}></div>
             <div className='live__videoCtn-controls-bottom'>
               <div
-                className={`live__videoCtn-controls-bottom-playbackBar ${
-                  isMouseDownPlayback ? 'show' : ''
-                }`}
+                className={`live__videoCtn-controls-bottom-playbackBar ${isMouseDownPlayback ? 'show' : ''
+                  }`}
                 style={{ '--playback-percent': playbackPercent }}
                 onMouseDown={e => {
                   handleAdjustPlaybackMouseDown(e);
@@ -722,9 +720,8 @@ const Live = () => {
                   )}
                 </div>
                 <div
-                  className={`live__videoCtn-controls-bottom-volumeBar ${
-                    isMouseDownVolume ? 'show' : ''
-                  }`}
+                  className={`live__videoCtn-controls-bottom-volumeBar ${isMouseDownVolume ? 'show' : ''
+                    }`}
                   style={{ '--volume-percent': currentVolume }}
                   onMouseDown={e => {
                     handleAdjustVolume(e);
@@ -783,7 +780,7 @@ const Live = () => {
                 {!isShowMore ? 'Show more...' : 'Hide...'}
               </div>
             </div>
-            { Stream?.user?._id !== user?._id &&  <div>
+            {Stream?.user?._id !== user?._id && <div>
               <div onClick={handleFollow} className='live__info-btnFollow'>
                 <HiIcon.HiPlus className='icon' />
                 <span>{IsFollowed ? 'Unfollow' : 'Follow'}</span>
@@ -797,19 +794,19 @@ const Live = () => {
             <div className={`live__chatBox ${isHideChat ? 'd-none' : ''}`}>
               <div className='live__chatBox-top'>
 
-              <div className='live__chatBox-top'>
-                {Chat.map(o => 
-                  <div className='live__chatBox-top-ctn'>
-                    <div className='live__chatBox-top-ctn-avatar'>
-                      <img src={o.user?.kyc.avatar?.path ? STORAGE_DOMAIN + o.user?.kyc.avatar?.path : avatar0} alt='' />
+                <div className='live__chatBox-top'>
+                  {Chat.map(o =>
+                    <div className='live__chatBox-top-ctn'>
+                      <div className='live__chatBox-top-ctn-avatar'>
+                        <img src={o.user?.kyc.avatar?.path ? STORAGE_DOMAIN + o.user?.kyc.avatar?.path : avatar0} alt='' />
+                      </div>
+                      <div>
+                        <div className='live__chatBox-top-ctn-name'>{o.user?.kyc.first_name} {o.user?.kyc.last_name}{':'}</div>
+                        <div className='live__chatBox-top-ctn-text'>{o.chat}</div>
+                      </div>
                     </div>
-                    <div>
-                      <div className='live__chatBox-top-ctn-name'>{o.user?.kyc.first_name} {o.user?.kyc.last_name}{':'}</div>
-                      <div className='live__chatBox-top-ctn-text'>{o.chat}</div>
-                    </div>
-                  </div>
-                )}
-              </div>
+                  )}
+                </div>
 
               </div>
 
@@ -842,7 +839,7 @@ const Live = () => {
 
             <div className='live__recommend-ctn'>
               <div className='live__recommend-ctn-avatar'>
-                <img  alt='' />
+                <img alt='' />
               </div>
               <div>
                 <div className='live__recommend-ctn-name'>Trà Long</div>
@@ -853,7 +850,7 @@ const Live = () => {
 
             <div className='live__recommend-ctn'>
               <div className='live__recommend-ctn-avatar'>
-                <img  alt='' />
+                <img alt='' />
               </div>
               <div>
                 <div className='live__recommend-ctn-name'>Trà Long</div>
@@ -871,8 +868,8 @@ const Live = () => {
         <div className='live__chat'>
           <div className={`live__chatBox ${isHideChat ? 'd-none' : ''}`}>
             <div className='live__chatBox-top'>
-              
-              {Chat.map(o => 
+
+              {Chat.map(o =>
                 <div className='live__chatBox-top-ctn'>
                   <div className='live__chatBox-top-ctn-avatar'>
                     <img src={o.user?.kyc.avatar?.path ? STORAGE_DOMAIN + o.user?.kyc.avatar?.path : avatar0} alt='' />
@@ -898,7 +895,7 @@ const Live = () => {
                 </div>
                 <form onSubmit={handleChat} className='live__chatBox-bottom-chat-inputBox'>
                   <input ref={chatRef} name="chat" type='text' placeholder='Say something' />
-                  <button type="submit" className='icon icon-send'><RiIcon.RiSendPlaneFill/></button>
+                  <button type="submit" className='icon icon-send'><RiIcon.RiSendPlaneFill /></button>
                   {/* <RiIcon.RiEmotionLaughLine className='icon icon-emo' /> */}
                 </form>
               </div>
@@ -914,7 +911,7 @@ const Live = () => {
 
           <div className='live__recommend-ctn'>
             <div className='live__recommend-ctn-avatar'>
-              <img  alt='' />
+              <img alt='' />
             </div>
             <div>
               <div className='live__recommend-ctn-name'>Trà Long</div>
@@ -925,7 +922,7 @@ const Live = () => {
 
           <div className='live__recommend-ctn'>
             <div className='live__recommend-ctn-avatar'>
-              <img  alt='' />
+              <img alt='' />
             </div>
             <div>
               <div className='live__recommend-ctn-name'>Trà Long</div>
