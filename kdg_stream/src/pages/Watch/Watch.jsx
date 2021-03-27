@@ -8,9 +8,15 @@ import '../../assets/css/watch.css';
 import avatar0 from '../../assets/images/header/avatar0.png';
 import callAPI from '../../axios';
 import { Stream, Video as Videosss } from '../../components';
-import { STORAGE_DOMAIN } from '../../constant';
-import useNumber from '../../hooks/useNumber';
+import {
+  BREAK_POINT_EXTRA_SMALL,
+  BREAK_POINT_MEDIUM,
+  BREAK_POINT_SMALL,
+  STORAGE_DOMAIN,
+} from '../../constant';
 import { useLanguageLayerValue } from '../../context/LanguageLayer';
+import useNumber from '../../hooks/useNumber';
+import useWindowSize from '../../hooks/useWindowSize';
 
 const useStyles = makeStyles(theme => ({
   loading: {
@@ -26,6 +32,7 @@ const Watch = () => {
 
   const classes = useStyles();
 
+  const [width] = useWindowSize();
   const [{ language, watch }] = useLanguageLayerValue();
 
   const id = new URLSearchParams(useLocation().search).get('v');
@@ -176,7 +183,9 @@ const Watch = () => {
                   ) : (
                     <RiIcon.RiUserFollowLine className='icon' />
                   )}
-                  <span>{IsFollowed ? watch[language].unfollow : watch[language].follow}</span>
+                  {width > BREAK_POINT_SMALL && (
+                    <span>{IsFollowed ? watch[language].unfollow : watch[language].follow}</span>
+                  )}
                 </button>
               </div>
             )}
@@ -185,10 +194,12 @@ const Watch = () => {
       </div>
 
       <div className='watch__right'>
-        <div className='watch__title' onClick={() => setIsShowStreammings(x => !x)}>
-          <span>{watch[language].watchlive}</span>
-          <MdIcon.MdArrowDropDown className={isShowStreammings ? 'down' : 'up'} />
-        </div>
+        {Streammings.length > 0 && (
+          <div className='watch__title' onClick={() => setIsShowStreammings(x => !x)}>
+            <span>{watch[language].watchlive}</span>
+            <MdIcon.MdArrowDropDown className={isShowStreammings ? 'down' : 'up'} />
+          </div>
+        )}
 
         {isShowStreammings && (
           <div className='layoutFlex layout-1' style={{ '--gap-row': '40px' }}>
@@ -201,20 +212,38 @@ const Watch = () => {
                   video={el}
                   title={el.name}
                   description={el.description}
-                  onClick={() => history.push('/live?s=' + el._id)}
+                  onClick={() => {
+                    history.push('/live?s=' + el._id);
+                    window.scrollTo(0, 0);
+                  }}
                 />
               </div>
             ))}
           </div>
         )}
 
-        <div className='watch__title' onClick={() => setIsShowRecommend(x => !x)}>
-          <span>{watch[language].recommend}</span>
-          <MdIcon.MdArrowDropDown className={isShowRecommend ? 'down' : 'up'} />
-        </div>
+        {Videos.length > 0 && (
+          <div className='watch__title' onClick={() => setIsShowRecommend(x => !x)}>
+            <span>{watch[language].recommend}</span>
+            <MdIcon.MdArrowDropDown className={isShowRecommend ? 'down' : 'up'} />
+          </div>
+        )}
 
         {isShowRecommend && (
-          <div className='layoutFlex layout-1' style={{ '--gap-row': '40px' }}>
+          <div
+            className={`layoutFlex ${
+              width > BREAK_POINT_MEDIUM
+                ? 'layout-1'
+                : width > 1187
+                ? 'layout-4'
+                : width > 897
+                ? 'layout-3'
+                : width > 577
+                ? 'layout-2'
+                : 'layout-1'
+            }`}
+            style={{ '--gap-row': '40px', '--gap-column': '40px' }}
+          >
             {Videos.map(el => (
               <div key={el._id} className='layoutFlex-item'>
                 <Videosss
@@ -224,7 +253,10 @@ const Watch = () => {
                   video={el}
                   title={el.name}
                   description={el.description}
-                  onClick={() => history.push('/watch?v=' + el.short_id)}
+                  onClick={() => {
+                    history.push('/watch?v=' + el.short_id);
+                    window.scrollTo(0, 0);
+                  }}
                 />
               </div>
             ))}

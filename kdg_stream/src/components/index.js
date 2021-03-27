@@ -14,22 +14,24 @@ import Stream from './Stream';
 import Table from './Table';
 import Popper1 from './Popper1';
 import Crop from './Crop';
+import ScrollButton from './ScrollButton';
 
 export {
-    Footer,
-    Header,
-    Language,
-    FormLogin,
-    FormRegister,
-    FormForgot,
-    Tab,
-    TabPane,
-    Card,
-    Following,
-    Cover,
-    Video,
-    Table,
-    Popper1,
-    Crop,
-    Stream,
+  Footer,
+  Header,
+  Language,
+  FormLogin,
+  FormRegister,
+  FormForgot,
+  Tab,
+  TabPane,
+  Card,
+  Following,
+  Cover,
+  Video,
+  Table,
+  Popper1,
+  Crop,
+  Stream,
+  ScrollButton,
 };

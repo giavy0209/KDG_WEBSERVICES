@@ -2,6 +2,7 @@
 
 .watch {
   display: flex;
+
   align-items: flex-start;
 
   max-width: 1600px;
@@ -18,6 +19,24 @@
   &__right {
     width: $left-width;
     min-height: 150vh;
+  }
+
+  @media (max-width: $break-point-medium) {
+    flex-direction: column;
+
+    &__left {
+      width: 100%;
+      padding-right: 0;
+    }
+
+    &__right {
+      width: 100%;
+      min-height: unset;
+    }
+  }
+
+  @media (max-width: $break-point-small) {
+    padding: 25px 10px;
   }
 
   &__videoBox {
@@ -39,6 +58,7 @@
 
   &__info {
     margin-top: 20px;
+    margin-bottom: 50px;
 
     &-info {
       display: flex;
@@ -54,7 +74,7 @@
       }
 
       > div:nth-child(2) {
-        flex: 1 0 auto;
+        flex: 1 1 auto;
         padding: 0 25px;
       }
 
@@ -66,6 +86,23 @@
   &__action {
     > button:not(:last-child) {
       margin-bottom: 10px;
+    }
+
+    @media (max-width: $break-point-small) {
+      > button {
+        // padding: 0 20px;
+
+        > .icon {
+          margin-right: 0;
+        }
+      }
+    }
+
+    @media (max-width: $break-point-extra-small) {
+      > button {
+        padding: 0 5px;
+        border-radius: 999px;
+      }
     }
   }
 

@@ -163,6 +163,12 @@
     margin-right: 5px;
   }
 
+  &.header__button {
+    > .icon {
+      margin-right: 0;
+    }
+  }
+
   @media (max-width: $break-point-extra-small) {
     &.header__button {
       padding: 0 5px;

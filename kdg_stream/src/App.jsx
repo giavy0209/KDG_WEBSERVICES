@@ -2,7 +2,7 @@ import React, { useEffect, useMemo } from 'react';
 import 'react-notifications/lib/notifications.css';
 import { useDispatch } from 'react-redux';
 import { Redirect, Route, Switch, useLocation } from 'react-router-dom';
-import { Footer, Header } from './components';
+import { Footer, Header, ScrollButton } from './components';
 import { storage } from './helpers';
 import { Home, Live, Login, Profile, Setup, Upload, Watch } from './pages';
 import socket from './socket';
@@ -36,6 +36,7 @@ const App = () => {
 
   return (
     <>
+      <ScrollButton />
       <Footer />
       <Header />
       <Switch>
