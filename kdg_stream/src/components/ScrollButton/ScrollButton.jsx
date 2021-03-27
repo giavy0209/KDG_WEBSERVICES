@@ -1,14 +1,12 @@
 import React, { useEffect, useRef } from 'react';
-import '../../assets/css/scroll-button.css';
 import * as IoIcon from 'react-icons/io';
+import '../../assets/css/scroll-button.css';
 
 const ScrollButton = () => {
   const buttonRef = useRef();
 
   useEffect(() => {
     const handleScrollTop = () => {
-      console.log(window.scrollY);
-
       if (!buttonRef.current) return;
 
       if (window.scrollY === 0) {
