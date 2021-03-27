@@ -40,7 +40,7 @@ const HomeRight = props => {
                 key={o._id}
                 index={index}
                 type='follow'
-                numb={o.total}
+                numb={o.kinglive.total_follower}
                 name={o.kyc ? `${o.kyc.first_name} ${o.kyc.last_name}` : ''}
                 avatar={
                   o.kyc.avatar?.path ? STORAGE_DOMAIN + o.kyc.avatar?.path : undefined
@@ -56,7 +56,7 @@ const HomeRight = props => {
                 key={o._id}
                 index={index}
                 type='view'
-                numb={o.total}
+                numb={o.kinglive.total_view}
                 name={o.kyc ? `${o.kyc.first_name} ${o.kyc.last_name}` : ''}
                 avatar={
                   o.kyc.avatar?.path ? STORAGE_DOMAIN + o.kyc.avatar?.path : undefined
