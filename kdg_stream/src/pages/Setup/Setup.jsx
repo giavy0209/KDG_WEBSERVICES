@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { NotificationContainer, NotificationManager } from 'react-notifications';
+import videojs from '@videojs/http-streaming'
 import '../../assets/css/setup.css';
 import callAPI from '../../axios';
 import { PLAY_STREAM } from '../../constant';
@@ -45,32 +46,11 @@ const Setup = () => {
 
   useEffect(() => {
     callAPI.get('/stream').then(res => {
-      console.log(res);
       setStream(res.data);
-      if (res.data?.connect_status === 1) {
-        var videoElement = document.getElementById('videoElement');
-        var flvPlayer = window.flvjs.createPlayer({
-          type: 'flv',
-          url: `${PLAY_STREAM}${res.data.key}.flv`,
-        });
-        flvPlayer.attachMediaElement(videoElement);
-        flvPlayer.load();
-        flvPlayer.play();
-      }
     });
 
     const handleStream = function (data) {
       setStream(data);
-      if (data.connect_status === 1) {
-        var videoElement = document.getElementById('videoElement');
-        var flvPlayer = window.flvjs.createPlayer({
-          type: 'flv',
-          url: `${PLAY_STREAM}${data.key}.flv`,
-        });
-        flvPlayer.attachMediaElement(videoElement);
-        flvPlayer.load();
-        flvPlayer.play();
-      }
     };
     socket.on('stream', handleStream);
 
@@ -84,14 +64,12 @@ const Setup = () => {
       e.preventDefault();
       const data = new FormData(e.target);
       const res = await callAPI.post('/public_stream?sid=' + Stream._id, data);
-      console.log('handlePublicStream', res);
     },
     [Stream]
   );
 
   const handleStopStream = useCallback(async () => {
     const res = await callAPI.post('/stop_stream?sid=' + Stream._id);
-    console.log('handleStopStream', res);
   }, [Stream]);
 
   return (
