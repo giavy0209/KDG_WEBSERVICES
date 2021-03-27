@@ -36,8 +36,11 @@ const Live = () => {
   const [isMouseDownVolume, setIsMouseDownVolume] = useState(false);
   const [isMouseDownPlayback, setIsMouseDownPlayback] = useState(false);
   const [playbackPercent, setPlaybackPercent] = useState(0);
-  const [duration] = useState('0:00');
+
+  const [duration,setDuration] = useState('0:00');
   const [currentTime, setCurrentTime] = useState('0:00');
+  const isCanSetCurrentTime = useRef(true)
+
   const videoRef = useRef();
   const animationRef = useRef();
   const controlsRef = useRef();
@@ -207,21 +210,21 @@ const Live = () => {
     };
   }, [isMouseDownVolume, handleAdjustVolume, isMouseDownPlayback, handleAdjustPlaybackMouseMove]);
 
-  //   useEffect(() => {
-  //     const video = videoRef.current;
-  //     video.ondurationchange = () => {
-  //       setDuration(convertTime(video.duration));
-  //     };
-  //     const id = setInterval(() => {
-  //       let playback_percent = video.currentTime / video.duration;
-  //       if (playback_percent <= 0) playback_percent = 0;
-  //       if (playback_percent >= 1) playback_percent = 1;
-  //       if (playback_percent === 1) video.paused && setIsPlay(false);
-  //       setPlaybackPercent(playback_percent);
-  //       setCurrentTime(convertTime(video.currentTime));
-  //     }, 100);
-  //     return () => clearInterval(id);
-  //   }, [convertTime]);
+    useEffect(() => {
+      const video = videoRef.current;
+      video.ondurationchange = () => {
+        setDuration(convertTime(video.duration));
+      };
+      const id = setInterval(() => {
+        let playback_percent = video.currentTime / video.duration;
+        if (playback_percent <= 0) playback_percent = 0;
+        if (playback_percent >= 1) playback_percent = 1;
+        if (playback_percent === 1) video.paused && setIsPlay(false);
+        setPlaybackPercent(playback_percent);
+        setCurrentTime(convertTime(video.currentTime));
+      }, 100);
+      return () => clearInterval(id);
+    }, [convertTime]);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -280,6 +283,9 @@ const Live = () => {
     callAPI.get('/streamming?id=' + id).then(res => {
       socket.emit('join_stream', res.data._id)
       setStream(res.data)
+
+      
+      // video.currentTime = timeSecond;
     });
 
     const handleReceiveChat = function (chatData) {
@@ -579,6 +585,13 @@ const Live = () => {
     e.target.reset()
   }, [Stream])
 
+  const handleDurationChange = useCallback(() => {
+    const video = videoRef.current;
+    let timeSecond = video.duration ;
+    console.log(video.currentTime);
+    setDuration(convertTime(timeSecond));
+  },[])
+
   return (
     <div className={`live ${isExpand ? 'expand' : ''}`}>
       <div className='live__left'>
@@ -636,6 +649,7 @@ const Live = () => {
             muted
             width="100%"
             height="auto"
+            onDurationChange={handleDurationChange}
             playerRef={videoRef}
           />
 
