@@ -62,7 +62,7 @@
   .layoutFlex-item {
     width: 100%;
 
-    &:not(:last-child) {
+    & {
       margin-bottom: calc(var(--gap-row));
     }
   }
@@ -71,7 +71,7 @@
     .layoutFlex-item {
       width: 100%;
 
-      &:not(:last-child) {
+      & {
         margin-bottom: calc(var(--gap-row));
       }
     }
@@ -147,7 +147,11 @@
   align-items: center;
 
   transition: 0.3s;
-  &:hover,
+
+  &:hover {
+    transform: translateY(-3px);
+  }
+
   &.active {
     color: $background-white;
     background-color: $main-color;

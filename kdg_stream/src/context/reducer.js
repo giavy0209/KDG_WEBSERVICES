@@ -406,6 +406,29 @@ const cropLang = {
   },
 };
 
+const watch = {
+  vi: {
+    views: 'lượt xem',
+    followers: 'người theo dõi',
+    hide: 'ẨN BỚT',
+    showmore: 'HIỂN THỊ THÊM',
+    unfollow: 'BỎ THEO DÕI',
+    follow: 'THEO DÕI',
+    watchlive: 'Xem trực tiếp',
+    recommend: 'Được đề xuất',
+  },
+  en: {
+    views: 'views',
+    followers: 'followers',
+    hide: 'HIDE',
+    showmore: ' SHOW MORE',
+    unfollow: 'UNFOLLOW',
+    follow: 'FOLLOW',
+    watchlive: 'Watch live',
+    recommend: 'Recommend',
+  },
+};
+
 export const initialState = {
   language: 'vi',
   listLanguage,
@@ -423,6 +446,7 @@ export const initialState = {
   upload,
   setup,
   cropLang,
+  watch,
 };
 
 export const CHANGE_LANGUAGE = 'CHANGE_LANGUAGE';

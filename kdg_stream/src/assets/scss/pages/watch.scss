@@ -4,11 +4,11 @@
   display: flex;
   align-items: flex-start;
 
-  max-width: 1920px;
+  max-width: 1600px;
   margin: 0 auto;
   padding: 25px;
 
-  $left-width: 500px;
+  $left-width: 350px;
 
   &__left {
     width: calc(100% - #{$left-width});
@@ -17,6 +17,7 @@
 
   &__right {
     width: $left-width;
+    min-height: 150vh;
   }
 
   &__videoBox {
@@ -75,6 +76,9 @@
   }
 
   &__avatar {
+    cursor: pointer;
+    user-select: none;
+
     position: relative;
 
     &::before {
@@ -145,6 +149,9 @@
   }
 
   &__title {
+    cursor: pointer;
+    user-select: none;
+
     padding: 10px 25px;
     margin-bottom: 15px;
 
@@ -163,6 +170,14 @@
 
     &.mb-0 {
       margin-bottom: 0;
+    }
+
+    > svg {
+      transition: 0.3s;
+    }
+
+    > svg.up {
+      transform: rotate(180deg);
     }
   }
 }

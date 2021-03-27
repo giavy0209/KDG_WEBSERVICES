@@ -1,15 +1,33 @@
-import * as MdIcon from 'react-icons/md';
+import { Box, CircularProgress, makeStyles } from '@material-ui/core';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import * as MdIcon from 'react-icons/md';
 import * as RiIcon from 'react-icons/ri';
 import { useSelector } from 'react-redux';
-import { useLocation } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import '../../assets/css/watch.css';
 import avatar0 from '../../assets/images/header/avatar0.png';
 import callAPI from '../../axios';
+import { Stream, Video as Videosss } from '../../components';
 import { STORAGE_DOMAIN } from '../../constant';
 import useNumber from '../../hooks/useNumber';
+import { useLanguageLayerValue } from '../../context/LanguageLayer';
+
+const useStyles = makeStyles(theme => ({
+  loading: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: '#e41a7f',
+  },
+}));
 
 const Watch = () => {
+  const history = useHistory();
+
+  const classes = useStyles();
+
+  const [{ language, watch }] = useLanguageLayerValue();
+
   const id = new URLSearchParams(useLocation().search).get('v');
   const user = useSelector(state => state.user);
 
@@ -17,6 +35,57 @@ const Watch = () => {
   const [TotalFollow, setTotalFollow] = useState(0);
   const [IsFollowed, setIsFollowed] = useState(false);
   const [isShowMore, setIsShowMore] = useState(false);
+
+  const [Videos, setVideos] = useState([]);
+  const [Streammings, setStreammings] = useState([]);
+
+  const [isShowStreammings, setIsShowStreammings] = useState(true);
+  const [isShowRecommend, setIsShowRecommend] = useState(true);
+
+  useMemo(() => {
+    callAPI.get('/recommend').then(res => {
+      setVideos([...res.data]);
+    });
+
+    callAPI.get('/streammings').then(res => {
+      setStreammings(res.data);
+    });
+  }, []);
+
+  const isLoadRef = useRef(true);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const getRecommend = useCallback(async () => {
+    const ids = Videos.map(o => o._id);
+    const res = await callAPI.get(`/recommend?ids=${ids}`);
+
+    if (res.data.length === 0) {
+      return (isLoadRef.current = false);
+    }
+
+    setVideos([...Videos, ...res.data]);
+  }, [Videos]);
+
+  useEffect(() => {
+    const handleLoad = async () => {
+      const totalHeight = document.getElementById('root').clientHeight;
+      const scrolledHeight = window.scrollY + window.innerHeight;
+      const restHeight = totalHeight - scrolledHeight;
+      const isEnd = restHeight <= 300;
+
+      if (isEnd && isLoadRef.current) {
+        setIsLoading(true);
+        await getRecommend();
+        setIsLoading(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleLoad);
+
+    return () => {
+      window.removeEventListener('scroll', handleLoad);
+    };
+  }, [getRecommend]);
 
   useMemo(() => {
     callAPI.get('/video?sid=' + id).then(res => {
@@ -59,7 +128,10 @@ const Watch = () => {
           <div className='watch__titleVideo'>{Video?.name}</div>
 
           <div className='watch__info-info'>
-            <div className='watch__avatar'>
+            <div
+              className='watch__avatar'
+              onClick={() => history.push('/profile?uid=' + Video?.user._id)}
+            >
               <img
                 alt=''
                 src={
@@ -76,9 +148,13 @@ const Watch = () => {
               <div className='watch__date'>{Video?.create_date}</div>
 
               <div className='watch__view'>
-                <span>{useNumber(Video?.views)} view</span>
+                <span>
+                  {useNumber(Video?.views)} {watch[language].views}
+                </span>
                 <span> • </span>
-                <span>{useNumber(TotalFollow)} follower</span>
+                <span>
+                  {useNumber(TotalFollow)} {watch[language].followers}
+                </span>
               </div>
 
               <div ref={descRef} className={`watch__desc ${isShowMore ? 'd-block' : ''}`}>
@@ -87,7 +163,7 @@ const Watch = () => {
 
               {isDescLong && (
                 <div className='watch__showMore' onClick={() => setIsShowMore(!isShowMore)}>
-                  {isShowMore ? 'Hide' : 'Show more...'}
+                  {isShowMore ? watch[language].hide : watch[language].showmore}
                 </div>
               )}
             </div>
@@ -100,7 +176,7 @@ const Watch = () => {
                   ) : (
                     <RiIcon.RiUserFollowLine className='icon' />
                   )}
-                  <span>{IsFollowed ? 'Unfollow' : 'Follow'}</span>
+                  <span>{IsFollowed ? watch[language].unfollow : watch[language].follow}</span>
                 </button>
               </div>
             )}
@@ -108,11 +184,58 @@ const Watch = () => {
         </div>
       </div>
 
-      <div className='watch__right' style={{ height: '200vh' }}>
-        <div className='watch__title'>
-          <span>Watch Live</span>
-          <MdIcon.MdArrowDropDown />
+      <div className='watch__right'>
+        <div className='watch__title' onClick={() => setIsShowStreammings(x => !x)}>
+          <span>{watch[language].watchlive}</span>
+          <MdIcon.MdArrowDropDown className={isShowStreammings ? 'down' : 'up'} />
         </div>
+
+        {isShowStreammings && (
+          <div className='layoutFlex layout-1' style={{ '--gap-row': '40px' }}>
+            {Streammings.map(el => (
+              <div key={el._id} className='layoutFlex-item'>
+                <Stream
+                  avatar={
+                    el.user?.kyc.avatar?.path ? STORAGE_DOMAIN + el.user.kyc.avatar.path : undefined
+                  }
+                  video={el}
+                  title={el.name}
+                  description={el.description}
+                  onClick={() => history.push('/live?s=' + el._id)}
+                />
+              </div>
+            ))}
+          </div>
+        )}
+
+        <div className='watch__title' onClick={() => setIsShowRecommend(x => !x)}>
+          <span>{watch[language].recommend}</span>
+          <MdIcon.MdArrowDropDown className={isShowRecommend ? 'down' : 'up'} />
+        </div>
+
+        {isShowRecommend && (
+          <div className='layoutFlex layout-1' style={{ '--gap-row': '40px' }}>
+            {Videos.map(el => (
+              <div key={el._id} className='layoutFlex-item'>
+                <Videosss
+                  avatar={
+                    el.user?.kyc.avatar?.path ? STORAGE_DOMAIN + el.user.kyc.avatar.path : null
+                  }
+                  video={el}
+                  title={el.name}
+                  description={el.description}
+                  onClick={() => history.push('/watch?v=' + el.short_id)}
+                />
+              </div>
+            ))}
+          </div>
+        )}
+
+        {isLoading && (
+          <Box className={classes.loading} p={3}>
+            <CircularProgress color='inherit' />
+          </Box>
+        )}
       </div>
     </div>
   );
