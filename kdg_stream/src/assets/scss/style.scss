@@ -155,6 +155,8 @@
 
   > .icon {
     font-size: $icon-size;
+
+    margin-right: 5px;
   }
 
   @media (max-width: $break-point-extra-small) {
