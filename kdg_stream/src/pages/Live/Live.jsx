@@ -45,7 +45,7 @@ const Live = () => {
   const [isMouseDownPlayback, setIsMouseDownPlayback] = useState(false);
   const [playbackPercent, setPlaybackPercent] = useState(0);
 
-  const [duration, setDuration] = useState('0:00');
+  const [, setDuration] = useState('0:00');
   const [currentTime, setCurrentTime] = useState('0:00');
 
   const videoRef = useRef(null);
@@ -61,45 +61,39 @@ const Live = () => {
     setIsMouseDownPlayback(false);
   }, [isPlay]);
 
-  const handleAdjustPlaybackMouseMove = useCallback(
-    e => {
-      const video = videoRef.current;
-      !video.paused && video.pause();
+  const handleAdjustPlaybackMouseMove = useCallback(e => {
+    const video = videoRef.current;
+    !video.paused && video.pause();
 
-      const { width, left } = document
-        .querySelector('.live__videoCtn-controls-bottom-playbackBar')
-        .getBoundingClientRect();
-      let playback_percent = (e.clientX - left) / width;
-      if (playback_percent <= 0) playback_percent = 0;
-      if (playback_percent >= 1) playback_percent = 1;
-      setPlaybackPercent(playback_percent);
+    const { width, left } = document
+      .querySelector('.live__videoCtn-controls-bottom-playbackBar')
+      .getBoundingClientRect();
+    let playback_percent = (e.clientX - left) / width;
+    if (playback_percent <= 0) playback_percent = 0;
+    if (playback_percent >= 1) playback_percent = 1;
+    setPlaybackPercent(playback_percent);
 
-      let timeSecond = video.duration * playback_percent;
-      setCurrentTime(convertTime(timeSecond));
-      video.currentTime = timeSecond;
-    },
-    [convertTime]
-  );
+    let timeSecond = video.duration * playback_percent;
+    setCurrentTime(convertTime(timeSecond));
+    video.currentTime = timeSecond;
+  }, []);
 
-  const handleAdjustPlaybackMouseDown = useCallback(
-    e => {
-      const video = videoRef.current;
+  const handleAdjustPlaybackMouseDown = useCallback(e => {
+    const video = videoRef.current;
 
-      const { width, left } = document
-        .querySelector('.live__videoCtn-controls-bottom-playbackBar')
-        .getBoundingClientRect();
-      let playback_percent = (e.clientX - left) / width;
-      if (playback_percent <= 0) playback_percent = 0;
-      if (playback_percent >= 1) playback_percent = 1;
-      setPlaybackPercent(playback_percent);
+    const { width, left } = document
+      .querySelector('.live__videoCtn-controls-bottom-playbackBar')
+      .getBoundingClientRect();
+    let playback_percent = (e.clientX - left) / width;
+    if (playback_percent <= 0) playback_percent = 0;
+    if (playback_percent >= 1) playback_percent = 1;
+    setPlaybackPercent(playback_percent);
 
-      const duration = video.duration;
-      let time = duration * playback_percent;
-      setCurrentTime(convertTime(time));
-      video.currentTime = time;
-    },
-    [convertTime]
-  );
+    const duration = video.duration;
+    let time = duration * playback_percent;
+    setCurrentTime(convertTime(time));
+    video.currentTime = time;
+  }, []);
 
   const handleAdjustVolume = useCallback(e => {
     const { width, left } = document
@@ -205,7 +199,7 @@ const Live = () => {
       }
     }, 100);
     return () => clearInterval(id);
-  }, [convertTime]);
+  }, []);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -552,7 +546,7 @@ const Live = () => {
     let timeSecond = video.duration;
     console.log(video.currentTime);
     setDuration(convertTime(timeSecond));
-  }, [convertTime]);
+  }, []);
 
   const descRef = useRef();
   const [isDescLong, setIsDescLong] = useState(false);
