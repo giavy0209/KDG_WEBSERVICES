@@ -22,7 +22,7 @@ let temp = 1;
 const Live = () => {
   const user = useSelector(state => state.user)
   const [Stream, setStream] = useState({});
-  const [IsCanPlay, setIsCanPlay] = useState({});
+  const [IsCanPlay, setIsCanPlay] = useState(false);
 
   const [IsFollowed, setIsFollowed] = useState(false);
   const [Chat, setChat] = useState([])
@@ -44,7 +44,7 @@ const Live = () => {
   const [currentTime, setCurrentTime] = useState('0:00');
   const isCanSetCurrentTime = useRef(true)
 
-  const videoRef = useRef();
+  const videoRef = useRef(null);
   const animationRef = useRef();
   const controlsRef = useRef();
   const chatRef = useRef();
@@ -214,16 +214,18 @@ const Live = () => {
   }, [isMouseDownVolume, handleAdjustVolume, isMouseDownPlayback, handleAdjustPlaybackMouseMove]);
 
     useEffect(() => {
-      const video = videoRef.current;
       const id = setInterval(() => {
-        let playback_percent = video.currentTime / (video.duration - 4);
-        if (playback_percent <= 0) playback_percent = 0;
-        if (playback_percent >= 1) playback_percent = 1;
-        if (playback_percent === 1) video.paused && setIsPlay(false);
-        setPlaybackPercent(playback_percent);
-        setCurrentTime(convertTime(video.currentTime));
+        const video = videoRef.current;
+        if(video){
+          let playback_percent = video.currentTime / (video.duration);
+          if (playback_percent <= 0) playback_percent = 0;
+          if (playback_percent >= 1) playback_percent = 1;
+          if (playback_percent === 1) video.paused && setIsPlay(false);
+          setPlaybackPercent(playback_percent);
+          setCurrentTime(convertTime(video.currentTime));
+        }
       }, 100);
-      return () => clearInterval(id);
+        return () => clearInterval(id);
     }, [convertTime]);
 
   useEffect(() => {
@@ -245,7 +247,9 @@ const Live = () => {
 
   useEffect(() => {
     const video = videoRef.current;
-    video.volume = currentVolume;
+    if(video){
+      video.volume = currentVolume;
+    }
   }, [currentVolume]);
 
   useEffect(() => {
@@ -285,8 +289,9 @@ const Live = () => {
       setStream(res.data)
 
       const id = setInterval(() => {
-        Axios.get(`${PLAY_STREAM}${Stream.key}/index.m3u8`)
+        Axios.get(`${PLAY_STREAM}${res.data.key}/index.m3u8`)
         .then(res => {
+          console.log(res);
           clearInterval(id)
           setIsCanPlay(true)
         })
@@ -394,7 +399,7 @@ const Live = () => {
         // Forward 5s Video
         if (e.code === 'ArrowRight' && !isShowPlayButton && !e.ctrlKey && !e.altKey) {
           const video = videoRef.current;
-          if (video.currentTime / (video.duration - 4) >= 1) return;
+          if (video.currentTime / (video.duration) >= 1) return;
           video.currentTime = video.currentTime + 5;
           animationRef.current && animationRef.current.classList.add('forward5');
           setTimeout(() => {
@@ -650,15 +655,11 @@ const Live = () => {
             src={`${PLAY_STREAM}${Stream.key}/index.m3u8`}
             autoPlay={true}
             controls={true}
-            muted
+            muted={true}
             width="100%"
             height="auto"
             onDurationChange={handleDurationChange}
             playerRef={videoRef}
-            hlsConfig={{
-              maxLiveSyncPlaybackRate : 2,
-              liveDurationInfinity : true
-            }}
           />}
 
           <div ref={animationRef} className='live__videoCtn-animation'>
