@@ -146,6 +146,7 @@ const Profile = () => {
   const readURL = input => {
     input.persist();
     input = input.target;
+    console.log(input.files);
     if (input.files && input.files[0]) {
       var reader = new FileReader();
       reader.onload = async function (e) {
@@ -159,6 +160,10 @@ const Profile = () => {
       reader.readAsArrayBuffer(input.files[0]);
     }
   };
+
+  useEffect(() => {
+    console.log(IsShowCrop);
+  },[IsShowCrop])
 
   const handleFollow = useCallback(async () => {
     if (uid) {

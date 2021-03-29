@@ -7,7 +7,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import '../../assets/css/watch.css';
 import avatar0 from '../../assets/images/header/avatar0.png';
 import callAPI from '../../axios';
-import { Stream, Video as Videosss } from '../../components';
+import { Avatar, Stream, Video as Videosss } from '../../components';
 import { BREAK_POINT_MEDIUM, BREAK_POINT_SMALL, STORAGE_DOMAIN } from '../../constant';
 import { useLanguageLayerValue } from '../../context/LanguageLayer';
 import useNumber from '../../hooks/useNumber';
@@ -134,12 +134,8 @@ const Watch = () => {
               className='watch__avatar'
               onClick={() => history.push('/profile?uid=' + Video?.user._id)}
             >
-              <img
-                alt=''
-                src={
-                  Video?.user.kyc.avatar ? STORAGE_DOMAIN + Video?.user?.kyc.avatar.path : avatar0
-                }
-              />
+              <Avatar src={Video?.user.kyc.avatar ? STORAGE_DOMAIN + Video?.user?.kyc.avatar.path : avatar0} position={Video?.user.kyc.avatar_pos || null}/>
+              
             </div>
 
             <div>
