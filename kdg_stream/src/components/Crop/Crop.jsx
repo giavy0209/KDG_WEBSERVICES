@@ -28,9 +28,9 @@ export default function Crop({
   const handleUploadAvatar = useCallback(async () => {
     setIsShowCrop(false);
     const data = new FormData(document.getElementById('avatar'));
-
-    await callAPI.post('/avatar', data);
-    await callAPI.post('/avatar_pos', ImagePos);
+    callAPI.post('/avatar', data);
+    callAPI.post('/avatar_pos', ImagePos);
+    document.getElementById('avatar').reset()
   }, [ImagePos, setIsShowCrop]);
 
   return (
