@@ -45,6 +45,7 @@ const HomeRight = props => {
                 avatar={
                   o.kyc.avatar?.path ? STORAGE_DOMAIN + o.kyc.avatar?.path : undefined
                 }
+                avatarPos={o.kyc.avatar_pos}
                 onClick={() => history.push('/profile?uid=' + o._id)}
               />
             ))}
@@ -61,6 +62,7 @@ const HomeRight = props => {
                 avatar={
                   o.kyc.avatar?.path ? STORAGE_DOMAIN + o.kyc.avatar?.path : undefined
                 }
+                avatarPos={o.kyc.avatar_pos}
                 onClick={() => history.push('/profile?uid=' + o._id)}
               />
             ))}

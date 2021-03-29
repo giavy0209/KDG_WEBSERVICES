@@ -1,4 +1,5 @@
 import React from 'react';
+import { Avatar } from '..';
 import '../../assets/css/video.css';
 import avatar0 from '../../assets/images/header/avatar0.png';
 import { STORAGE_DOMAIN } from '../../constant';
@@ -10,6 +11,7 @@ const Stream = props => {
     description = 'Description',
     onClick = null,
     video,
+    avataPos,
   } = props;
 
   const handleClick = () => onClick && onClick();
@@ -22,7 +24,7 @@ const Stream = props => {
 
       <div className='video__info mt-20'>
         <div className='video__info-ava'>
-          <img src={avatar} alt='' />
+          <Avatar src={avatar} position={avataPos}/>
         </div>
 
         <div className='video__info-text'>

@@ -62,6 +62,7 @@ const HomeLeft = props => {
                 avatar={
                   el.user?.kyc.avatar?.path ? STORAGE_DOMAIN + el.user.kyc.avatar.path : undefined
                 }
+                avataPos={el.user?.kyc.avatar_pos}
                 video={el}
                 title={el.name}
                 description={el.description}
@@ -106,6 +107,7 @@ const HomeLeft = props => {
                 avatar={
                   el.user?.kyc.avatar?.path ? STORAGE_DOMAIN + el.user.kyc.avatar.path : undefined
                 }
+                avataPos={el.user?.kyc.avatar_pos}
                 video={el}
                 title={el.name}
                 description={el.description}

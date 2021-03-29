@@ -1,3 +1,4 @@
+import Axios from 'axios';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import ReactHlsPlayer from 'react-hls-player';
 import * as AiIcon from 'react-icons/ai';
@@ -27,6 +28,8 @@ const Live = () => {
   const [width] = useWindowSize();
 
   const [Stream, setStream] = useState({});
+  const [IsCanPlay, setIsCanPlay] = useState(false);
+
   const [IsFollowed, setIsFollowed] = useState(false);
   const [Chat, setChat] = useState([]);
 
@@ -45,7 +48,7 @@ const Live = () => {
   const [duration, setDuration] = useState('0:00');
   const [currentTime, setCurrentTime] = useState('0:00');
 
-  const videoRef = useRef();
+  const videoRef = useRef(null);
   const animationRef = useRef();
   const controlsRef = useRef();
   const chatRef = useRef();
@@ -190,17 +193,16 @@ const Live = () => {
   }, [isMouseDownVolume, handleAdjustVolume, isMouseDownPlayback, handleAdjustPlaybackMouseMove]);
 
   useEffect(() => {
-    const video = videoRef.current;
-    video.ondurationchange = () => {
-      setDuration(convertTime(video.duration));
-    };
     const id = setInterval(() => {
-      let playback_percent = video.currentTime / video.duration;
-      if (playback_percent <= 0) playback_percent = 0;
-      if (playback_percent >= 1) playback_percent = 1;
-      if (playback_percent === 1) video.paused && setIsPlay(false);
-      setPlaybackPercent(playback_percent);
-      setCurrentTime(convertTime(video.currentTime));
+      const video = videoRef.current;
+      if (video) {
+        let playback_percent = video.currentTime / video.duration;
+        if (playback_percent <= 0) playback_percent = 0;
+        if (playback_percent >= 1) playback_percent = 1;
+        if (playback_percent === 1) video.paused && setIsPlay(false);
+        setPlaybackPercent(playback_percent);
+        setCurrentTime(convertTime(video.currentTime));
+      }
     }, 100);
     return () => clearInterval(id);
   }, [convertTime]);
@@ -224,7 +226,9 @@ const Live = () => {
 
   useEffect(() => {
     const video = videoRef.current;
-    video.volume = currentVolume;
+    if (video) {
+      video.volume = currentVolume;
+    }
   }, [currentVolume]);
 
   useEffect(() => {
@@ -242,7 +246,13 @@ const Live = () => {
       socket.emit('join_stream', res.data._id);
       setStream(res.data);
 
-      // video.currentTime = timeSecond;
+      const id = setInterval(() => {
+        Axios.get(`${PLAY_STREAM}${res.data.key}/index.m3u8`).then(res => {
+          console.log(res);
+          clearInterval(id);
+          setIsCanPlay(true);
+        });
+      }, 1000);
     });
 
     const handleReceiveChat = function (chatData) {
@@ -339,7 +349,7 @@ const Live = () => {
         // Forward 5s Video
         if (e.code === 'ArrowRight' && !isShowPlayButton && !e.ctrlKey && !e.altKey) {
           const video = videoRef.current;
-          if (video.currentTime / video.duration === 1) return;
+          if (video.currentTime / video.duration >= 1) return;
           video.currentTime = video.currentTime + 5;
           animationRef.current && animationRef.current.classList.add('forward5');
           setTimeout(() => {
@@ -596,46 +606,52 @@ const Live = () => {
                     <span>Gift</span>
                   </div>
                 </div> */}
+                {user && (
+                  <div className='live__chatfullscreen-bottom-chat'>
+                    <div className='live__chatfullscreen-bottom-chat-avatar'>
+                      <img
+                        src={
+                          user?.kyc.avatar?.path ? STORAGE_DOMAIN + user?.kyc.avatar?.path : avatar0
+                        }
+                        alt=''
+                      />
+                    </div>
 
-                <div className='live__chatfullscreen-bottom-chat'>
-                  <div className='live__chatfullscreen-bottom-chat-avatar'>
-                    <img
-                      src={
-                        user?.kyc.avatar?.path ? STORAGE_DOMAIN + user?.kyc.avatar?.path : avatar0
-                      }
-                      alt=''
-                    />
-                  </div>
-
-                  <form onSubmit={handleChat} className='live__chatfullscreen-bottom-chat-inputBox'>
-                    <input
-                      ref={chatFullscreenRef}
-                      name='chat'
-                      type='text'
-                      placeholder='Chat here'
-                    />
-                    <button type='submit' className='icon icon-send'>
-                      <RiIcon.RiSendPlaneFill />
-                    </button>
-                    {/* <button type='button' className='icon icon-emo'>
+                    <form
+                      onSubmit={handleChat}
+                      className='live__chatfullscreen-bottom-chat-inputBox'
+                    >
+                      <input
+                        ref={chatFullscreenRef}
+                        name='chat'
+                        type='text'
+                        placeholder='Chat here'
+                      />
+                      <button type='submit' className='icon icon-send'>
+                        <RiIcon.RiSendPlaneFill />
+                      </button>
+                      {/* <button type='button' className='icon icon-emo'>
                       <RiIcon.RiEmotionLaughLine />
                     </button> */}
-                  </form>
-                </div>
+                    </form>
+                  </div>
+                )}
               </div>
             </div>
           )}
 
-          <ReactHlsPlayer
-            src={`${PLAY_STREAM}${Stream.key}/index.m3u8`}
-            autoPlay={true}
-            controls={false}
-            muted
-            width='100%'
-            height='auto'
-            onDurationChange={handleDurationChange}
-            playerRef={videoRef}
-          />
+          {Stream && IsCanPlay && (
+            <ReactHlsPlayer
+              src={`${PLAY_STREAM}${Stream.key}/index.m3u8`}
+              autoPlay={true}
+              controls={false}
+              muted
+              width='100%'
+              height='auto'
+              onDurationChange={handleDurationChange}
+              playerRef={videoRef}
+            />
+          )}
 
           <div ref={animationRef} className='live__videoCtn-animation'>
             <div className='live__videoCtn-animation-iconCircle play-icon'>
@@ -739,9 +755,7 @@ const Live = () => {
                   <div className='live__videoCtn-controls-bottom-volumeBar-3'></div>
                 </div>
 
-                <div className='live__videoCtn-controls-bottom-playbackTime'>
-                  {currentTime} / {duration}
-                </div>
+                <div className='live__videoCtn-controls-bottom-playbackTime'>{currentTime}</div>
               </div>
 
               <div>
@@ -850,24 +864,28 @@ const Live = () => {
                 </div>
               </div>
 
-              <div className='live__chatBox-bottom-chat'>
-                <div className='live__chatBox-bottom-chat-avatar'>
-                  <img
-                    src={user?.kyc.avatar?.path ? STORAGE_DOMAIN + user?.kyc.avatar?.path : avatar0}
-                    alt=''
-                  />
-                </div>
+              {user && (
+                <div className='live__chatBox-bottom-chat'>
+                  <div className='live__chatBox-bottom-chat-avatar'>
+                    <img
+                      src={
+                        user?.kyc.avatar?.path ? STORAGE_DOMAIN + user?.kyc.avatar?.path : avatar0
+                      }
+                      alt=''
+                    />
+                  </div>
 
-                <form onSubmit={handleChat} className='live__chatBox-bottom-chat-inputBox'>
-                  <input ref={chatRef} name='chat' type='text' placeholder='Chat here' />
-                  <button type='submit' className='icon icon-send'>
-                    <RiIcon.RiSendPlaneFill />
-                  </button>
-                  {/* <button type='button' className='icon icon-emo'>
+                  <form onSubmit={handleChat} className='live__chatBox-bottom-chat-inputBox'>
+                    <input ref={chatRef} name='chat' type='text' placeholder='Chat here' />
+                    <button type='submit' className='icon icon-send'>
+                      <RiIcon.RiSendPlaneFill />
+                    </button>
+                    {/* <button type='button' className='icon icon-emo'>
                     <RiIcon.RiEmotionLaughLine />
                   </button> */}
-                </form>
-              </div>
+                  </form>
+                </div>
+              )}
             </div>
           </div>
 
