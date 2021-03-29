@@ -2,29 +2,34 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import ReactHlsPlayer from 'react-hls-player';
 import * as AiIcon from 'react-icons/ai';
 import * as BsIcon from 'react-icons/bs';
-import * as CgIcon from 'react-icons/cg';
 import * as FaIcon from 'react-icons/fa';
 import * as HiIcon from 'react-icons/hi';
 import * as ImIcon from 'react-icons/im';
 import * as MdIcon from 'react-icons/md';
 import * as RiIcon from 'react-icons/ri';
 import { useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import '../../assets/css/live.css';
 import avatar0 from '../../assets/images/header/avatar0.png';
 import callAPI from '../../axios';
-import { PLAY_STREAM, STORAGE_DOMAIN } from '../../constant';
-import { convertDate } from '../../helpers';
+import { BREAK_POINT_SMALL, PLAY_STREAM, STORAGE_DOMAIN } from '../../constant';
+import { convertDate, convertTime } from '../../helpers';
 import useNumber from '../../hooks/useNumber';
-import socket from '../../socket'
+import useWindowSize from '../../hooks/useWindowSize';
+import socket from '../../socket';
 let temp = 1;
 
 const Live = () => {
-  const user = useSelector(state => state.user)
+  const history = useHistory();
+
+  const user = useSelector(state => state.user);
+
+  const [width] = useWindowSize();
+
   const [Stream, setStream] = useState({});
   const [IsFollowed, setIsFollowed] = useState(false);
-  const [Chat, setChat] = useState([])
+  const [Chat, setChat] = useState([]);
 
-  const [isExpand, setIsExpand] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [isHideChat, setIsHideChat] = useState(false);
   const [isHideFullscreenChat, setIsHideFullscreenChat] = useState(false);
@@ -37,40 +42,14 @@ const Live = () => {
   const [isMouseDownPlayback, setIsMouseDownPlayback] = useState(false);
   const [playbackPercent, setPlaybackPercent] = useState(0);
 
-  const [duration,setDuration] = useState('0:00');
+  const [duration, setDuration] = useState('0:00');
   const [currentTime, setCurrentTime] = useState('0:00');
-  const isCanSetCurrentTime = useRef(true)
 
   const videoRef = useRef();
   const animationRef = useRef();
   const controlsRef = useRef();
   const chatRef = useRef();
   const chatFullscreenRef = useRef();
-  const prevExpandRef = useRef(false);
-  const prevFullscreenRef = useRef(false);
-
-  const convertTime = useCallback(timeSecond => {
-    let duration, second, minute, hour, temp, result;
-
-    timeSecond = Number(timeSecond);
-    if (isNaN(timeSecond)) timeSecond = 0;
-    duration = Math.round(timeSecond);
-    second = duration % 60;
-    temp = (duration - second) / 60;
-    if (temp > 59) {
-      minute = temp % 60;
-      hour = (temp - minute) / 60;
-      minute = (minute + '').length === 1 ? '0' + minute : minute + '';
-      hour = hour + '';
-    } else {
-      minute = temp + '';
-    }
-    second = (second + '').length === 1 ? '0' + second : second + '';
-
-    if (hour) result = `${hour}:${minute}:${second}`;
-    else result = `${minute}:${second}`;
-    return result;
-  }, []);
 
   const handleAdjustPlaybackMouseUp = useCallback(() => {
     const video = videoRef.current;
@@ -210,21 +189,21 @@ const Live = () => {
     };
   }, [isMouseDownVolume, handleAdjustVolume, isMouseDownPlayback, handleAdjustPlaybackMouseMove]);
 
-    useEffect(() => {
-      const video = videoRef.current;
-      video.ondurationchange = () => {
-        setDuration(convertTime(video.duration));
-      };
-      const id = setInterval(() => {
-        let playback_percent = video.currentTime / video.duration;
-        if (playback_percent <= 0) playback_percent = 0;
-        if (playback_percent >= 1) playback_percent = 1;
-        if (playback_percent === 1) video.paused && setIsPlay(false);
-        setPlaybackPercent(playback_percent);
-        setCurrentTime(convertTime(video.currentTime));
-      }, 100);
-      return () => clearInterval(id);
-    }, [convertTime]);
+  useEffect(() => {
+    const video = videoRef.current;
+    video.ondurationchange = () => {
+      setDuration(convertTime(video.duration));
+    };
+    const id = setInterval(() => {
+      let playback_percent = video.currentTime / video.duration;
+      if (playback_percent <= 0) playback_percent = 0;
+      if (playback_percent >= 1) playback_percent = 1;
+      if (playback_percent === 1) video.paused && setIsPlay(false);
+      setPlaybackPercent(playback_percent);
+      setCurrentTime(convertTime(video.currentTime));
+    }, 100);
+    return () => clearInterval(id);
+  }, [convertTime]);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -249,27 +228,6 @@ const Live = () => {
   }, [currentVolume]);
 
   useEffect(() => {
-    if (!isFullScreen) prevFullscreenRef.current = false;
-    if (!isExpand) prevExpandRef.current = false;
-
-    if (isFullScreen && isExpand) {
-      if (prevFullscreenRef.current) {
-        setIsFullScreen(false);
-        toggleFullScreen();
-        prevFullscreenRef.current = false;
-      }
-
-      if (prevExpandRef.current) {
-        setIsExpand(false);
-        prevExpandRef.current = false;
-      }
-    }
-
-    if (isFullScreen) prevFullscreenRef.current = true;
-    if (isExpand) prevExpandRef.current = true;
-  }, [isExpand, isFullScreen, toggleFullScreen]);
-
-  useEffect(() => {
     document.onfullscreenchange = () => {
       if (!document.fullscreenElement) {
         setIsFullScreen(false);
@@ -281,29 +239,27 @@ const Live = () => {
   useEffect(() => {
     const id = new URLSearchParams(window.location.search).get('s');
     callAPI.get('/streamming?id=' + id).then(res => {
-      socket.emit('join_stream', res.data._id)
-      setStream(res.data)
+      socket.emit('join_stream', res.data._id);
+      setStream(res.data);
 
-      
       // video.currentTime = timeSecond;
     });
 
     const handleReceiveChat = function (chatData) {
-
-      setChat(_chat => [..._chat, chatData])
-    }
-    socket.on('chat', handleReceiveChat)
+      setChat(_chat => [..._chat, chatData]);
+    };
+    socket.on('chat', handleReceiveChat);
 
     return () => {
-      socket.removeEventListener('chat', handleReceiveChat)
-    }
+      socket.removeEventListener('chat', handleReceiveChat);
+    };
   }, []);
 
   useEffect(() => {
     document.querySelectorAll('.live__chatBox-top').forEach(el => {
-      el.scroll(0, el.scrollHeight + 9999)
-    })
-  }, [Chat])
+      el.scroll(0, el.scrollHeight + 9999);
+    });
+  }, [Chat]);
 
   useEffect(() => {
     const playVideoByKeyboard = e => {
@@ -379,12 +335,6 @@ const Live = () => {
           handleToggleFullscreen();
         }
         // Toggle Fullscreen Video
-
-        // Toggle Expand Video
-        if (e.code === 'KeyT' && !isShowPlayButton && !e.ctrlKey && !e.altKey) {
-          setIsExpand(!isExpand);
-        }
-        // Toggle Expand Video
 
         // Forward 5s Video
         if (e.code === 'ArrowRight' && !isShowPlayButton && !e.ctrlKey && !e.altKey) {
@@ -562,7 +512,6 @@ const Live = () => {
     isPlay,
     isShowPlayButton,
     isFullScreen,
-    isExpand,
     isHideChat,
     isHideFullscreenChat,
     handleMuteVideo,
@@ -576,24 +525,34 @@ const Live = () => {
     }
   }, [Stream, IsFollowed]);
 
-  const handleChat = useCallback((e) => {
-    e.preventDefault()
-    const data = new FormData(e.target)
-    const chat = data.get('chat')
-    if (!chat) return
-    socket.emit('chat', { room: Stream._id, chat: data.get('chat') })
-    e.target.reset()
-  }, [Stream])
+  const handleChat = useCallback(
+    e => {
+      e.preventDefault();
+      const data = new FormData(e.target);
+      const chat = data.get('chat');
+      if (!chat) return;
+      socket.emit('chat', { room: Stream._id, chat: data.get('chat') });
+      e.target.reset();
+    },
+    [Stream]
+  );
 
   const handleDurationChange = useCallback(() => {
     const video = videoRef.current;
-    let timeSecond = video.duration ;
+    let timeSecond = video.duration;
     console.log(video.currentTime);
     setDuration(convertTime(timeSecond));
-  },[])
+  }, [convertTime]);
+
+  const descRef = useRef();
+  const [isDescLong, setIsDescLong] = useState(false);
+
+  useEffect(() => {
+    descRef.current && descRef.current.clientHeight >= 80 && setIsDescLong(true);
+  }, []);
 
   return (
-    <div className={`live ${isExpand ? 'expand' : ''}`}>
+    <div className='live'>
       <div className='live__left'>
         <div className={`live__videoCtn ${isFullScreen ? 'fullscreen' : ''}`}>
           {isFullScreen && (
@@ -604,19 +563,30 @@ const Live = () => {
               >
                 <MdIcon.MdKeyboardArrowRight className='icon' />
               </div>
+
               <div className='live__chatfullscreen-top'>
-                {Chat.map(o =>
+                {Chat.map(o => (
                   <div className='live__chatfullscreen-top-ctn'>
                     <div className='live__chatfullscreen-top-ctn-avatar'>
-                      <img src={o.user?.kyc.avatar?.path ? STORAGE_DOMAIN + o.user?.kyc.avatar?.path : avatar0} alt='' />
+                      <img
+                        src={
+                          o.user?.kyc.avatar?.path
+                            ? STORAGE_DOMAIN + o.user?.kyc.avatar?.path
+                            : avatar0
+                        }
+                        alt=''
+                      />
                     </div>
+
                     <div>
-                      <div className='live__chatfullscreen-top-ctn-name'>{o.user?.kyc.first_name} {o.user?.kyc.last_name}{':'}</div>
+                      <div className='live__chatfullscreen-top-ctn-name'>
+                        {o.user?.kyc.first_name} {o.user?.kyc.last_name}
+                        {':'}
+                      </div>
                       <div className='live__chatfullscreen-top-ctn-text'>{o.chat}</div>
                     </div>
                   </div>
-
-                )}
+                ))}
               </div>
 
               <div className='live__chatfullscreen-bottom'>
@@ -626,16 +596,30 @@ const Live = () => {
                     <span>Gift</span>
                   </div>
                 </div> */}
+
                 <div className='live__chatfullscreen-bottom-chat'>
                   <div className='live__chatfullscreen-bottom-chat-avatar'>
-                    <img src={user?.kyc.avatar?.path ? STORAGE_DOMAIN + user?.kyc.avatar?.path : avatar0} alt='' />
+                    <img
+                      src={
+                        user?.kyc.avatar?.path ? STORAGE_DOMAIN + user?.kyc.avatar?.path : avatar0
+                      }
+                      alt=''
+                    />
                   </div>
+
                   <form onSubmit={handleChat} className='live__chatfullscreen-bottom-chat-inputBox'>
-                    <input ref={chatFullscreenRef} name="chat" type='text' placeholder='Say something' />
-                    <button type="submit" className='icon icon-send'>
-                      {/* <RiIcon.RiEmotionLaughLine  /> */}
-                      <RiIcon.RiSendPlaneFill className='icon icon-send' />
+                    <input
+                      ref={chatFullscreenRef}
+                      name='chat'
+                      type='text'
+                      placeholder='Chat here'
+                    />
+                    <button type='submit' className='icon icon-send'>
+                      <RiIcon.RiSendPlaneFill />
                     </button>
+                    {/* <button type='button' className='icon icon-emo'>
+                      <RiIcon.RiEmotionLaughLine />
+                    </button> */}
                   </form>
                 </div>
               </div>
@@ -645,10 +629,10 @@ const Live = () => {
           <ReactHlsPlayer
             src={`${PLAY_STREAM}${Stream.key}/index.m3u8`}
             autoPlay={true}
-            controls={true}
+            controls={false}
             muted
-            width="100%"
-            height="auto"
+            width='100%'
+            height='auto'
             onDurationChange={handleDurationChange}
             playerRef={videoRef}
           />
@@ -690,16 +674,20 @@ const Live = () => {
           >
             <ImIcon.ImPlay />
           </div>
+
           <div
             ref={controlsRef}
-            className={`live__videoCtn-controls ${isMouseDownVolume || isMouseDownPlayback ? 'show' : ''
-              }`}
+            className={`live__videoCtn-controls ${
+              isMouseDownVolume || isMouseDownPlayback ? 'show' : ''
+            }`}
           >
             <div className='live__videoCtn-controls-top' onClick={() => setIsPlay(!isPlay)}></div>
+
             <div className='live__videoCtn-controls-bottom'>
               <div
-                className={`live__videoCtn-controls-bottom-playbackBar ${isMouseDownPlayback ? 'show' : ''
-                  }`}
+                className={`live__videoCtn-controls-bottom-playbackBar ${
+                  isMouseDownPlayback ? 'show' : ''
+                }`}
                 style={{ '--playback-percent': playbackPercent }}
                 onMouseDown={e => {
                   handleAdjustPlaybackMouseDown(e);
@@ -708,6 +696,7 @@ const Live = () => {
               >
                 <div className='live__videoCtn-controls-bottom-playbackBar-1'></div>
               </div>
+
               <div>
                 <div
                   className='live__videoCtn-controls-bottom-icon play-icon'
@@ -721,6 +710,7 @@ const Live = () => {
                     <BsIcon.BsFillPauseFill />
                   )}
                 </div>
+
                 <div
                   className='live__videoCtn-controls-bottom-icon volume-icon'
                   onClick={handleMuteVideo}
@@ -733,9 +723,11 @@ const Live = () => {
                     <BsIcon.BsFillVolumeUpFill />
                   )}
                 </div>
+
                 <div
-                  className={`live__videoCtn-controls-bottom-volumeBar ${isMouseDownVolume ? 'show' : ''
-                    }`}
+                  className={`live__videoCtn-controls-bottom-volumeBar ${
+                    isMouseDownVolume ? 'show' : ''
+                  }`}
                   style={{ '--volume-percent': currentVolume }}
                   onMouseDown={e => {
                     handleAdjustVolume(e);
@@ -746,17 +738,13 @@ const Live = () => {
                   <div className='live__videoCtn-controls-bottom-volumeBar-2'></div>
                   <div className='live__videoCtn-controls-bottom-volumeBar-3'></div>
                 </div>
+
                 <div className='live__videoCtn-controls-bottom-playbackTime'>
                   {currentTime} / {duration}
                 </div>
               </div>
+
               <div>
-                <div
-                  className='live__videoCtn-controls-bottom-icon expand-icon'
-                  onClick={() => setIsExpand(!isExpand)}
-                >
-                  {!isExpand ? <CgIcon.CgArrowsShrinkH /> : <CgIcon.CgArrowsMergeAltH />}
-                </div>
                 <div
                   onClick={handleToggleFullscreen}
                   className='live__videoCtn-controls-bottom-icon fullscreen-icon'
@@ -769,111 +757,59 @@ const Live = () => {
         </div>
 
         <div className='live__info'>
-          <div className='live__info-menu'>
-            <HiIcon.HiDotsVertical className='icon' />
-          </div>
-          <div className='live__info-title'>
-            {Stream.name}
-          </div>
-          {/* <div className='live__info-tag'># Trò Chơi Trí Tuệ</div> */}
+          <div className='live__titleVideo'>{Stream?.name}</div>
+
           <div className='live__info-info'>
-            <div className='live__info-avatar'>
-              <img src={Stream?.user?.kyc.avatar?.path ? STORAGE_DOMAIN + Stream.user.kyc.avatar.path : avatar0} alt='' />
+            <div
+              className='live__avatar'
+              onClick={() => history.push('/profile?uid=' + Stream?.user._id)}
+            >
+              <img
+                alt=''
+                src={
+                  Stream?.user?.kyc.avatar?.path
+                    ? STORAGE_DOMAIN + Stream.user.kyc.avatar.path
+                    : avatar0
+                }
+              />
             </div>
+
             <div>
-              <div className='live__info-name'>{Stream?.user?.kyc.first_name} {Stream?.user?.kyc.last_name}</div>
-              <div className='live__info-date'>{convertDate(Stream.create_date)}</div>
-              <div className='live__info-view'>
+              <div className='live__name'>
+                {Stream?.user?.kyc.first_name} {Stream?.user?.kyc.last_name}
+              </div>
+
+              <div className='live__date'>{convertDate(Stream.create_date)}</div>
+
+              <div className='live__view'>
                 <span>{useNumber(Stream?.viewers)} view</span>
+                <span> • </span>
                 <span>{useNumber(Stream?.user?.followers)} follower</span>
               </div>
-              <div className={`live__info-desc ${isShowMore ? 'd-block' : ''}`}>
+
+              <div ref={descRef} className={`live__desc ${isShowMore ? 'd-block' : ''}`}>
                 {Stream?.description}
               </div>
-              <div className='live__info-showMore mt-20' onClick={() => setIsShowMore(!isShowMore)}>
-                {!isShowMore ? 'Show more...' : 'Hide...'}
-              </div>
+
+              {isDescLong && (
+                <div className='live__showMore' onClick={() => setIsShowMore(!isShowMore)}>
+                  {!isShowMore ? 'Show more...' : 'Hide...'}
+                </div>
+              )}
             </div>
-            {Stream?.user?._id !== user?._id && <div>
-              <div onClick={handleFollow} className='live__info-btnFollow'>
-                <HiIcon.HiPlus className='icon' />
-                <span>{IsFollowed ? 'Unfollow' : 'Follow'}</span>
-              </div>
-            </div>}
-          </div>
-        </div>
 
-        <div className='live__expand'>
-          <div className='live__chat'>
-            <div className={`live__chatBox ${isHideChat ? 'd-none' : ''}`}>
-              <div className='live__chatBox-top'>
-
-                <div className='live__chatBox-top'>
-                  {Chat.map(o =>
-                    <div className='live__chatBox-top-ctn'>
-                      <div className='live__chatBox-top-ctn-avatar'>
-                        <img src={o.user?.kyc.avatar?.path ? STORAGE_DOMAIN + o.user?.kyc.avatar?.path : avatar0} alt='' />
-                      </div>
-                      <div>
-                        <div className='live__chatBox-top-ctn-name'>{o.user?.kyc.first_name} {o.user?.kyc.last_name}{':'}</div>
-                        <div className='live__chatBox-top-ctn-text'>{o.chat}</div>
-                      </div>
-                    </div>
+            {Stream?.user?._id !== user?._id && (
+              <div className='live__action'>
+                <button onClick={handleFollow} className={`button ${IsFollowed ? 'active' : ''}`}>
+                  {IsFollowed ? (
+                    <RiIcon.RiUserUnfollowLine className='icon' />
+                  ) : (
+                    <RiIcon.RiUserFollowLine className='icon' />
                   )}
-                </div>
-
+                  {width > BREAK_POINT_SMALL && <span>{IsFollowed ? 'Unfollow' : 'Follow'}</span>}
+                </button>
               </div>
-
-              <div className='live__chatBox-bottom'>
-                {/* <div className='live__chatBox-bottom-btn'>
-                  <div className='live__chatBox-bottom-btn-gift'>
-                    <FaIcon.FaGift className='icon' />
-                    <span>Gift</span>
-                  </div>
-                </div> */}
-                <div className='live__chatBox-bottom-chat'>
-                  <div className='live__chatBox-bottom-chat-avatar'>
-                    <img src={user?.kyc.avatar?.path ? STORAGE_DOMAIN + user?.kyc.avatar?.path : avatar0} alt='' />
-                  </div>
-                  <form className='live__chatBox-bottom-chat-inputBox'>
-                    <input ref={chatRef} type='text' placeholder='Say something' />
-                    <button type="submit" className='icon icon-send' ><RiIcon.RiSendPlaneFill /></button>
-                    <RiIcon.RiEmotionLaughLine className='icon icon-emo' />
-                  </form>
-                </div>
-              </div>
-            </div>
-            <div className='live__chatBtn' onClick={() => setIsHideChat(!isHideChat)}>
-              {!isHideChat ? 'Hide Chat' : 'Show Chat'}
-            </div>
-          </div>
-
-          <div className='live__recommend'>
-            <div className='live__recommend-title'>Recommend</div>
-
-            <div className='live__recommend-ctn'>
-              <div className='live__recommend-ctn-avatar'>
-                <img alt='' />
-              </div>
-              <div>
-                <div className='live__recommend-ctn-name'>Trà Long</div>
-                <div className='live__recommend-ctn-title'>Live: Homeworld Mobile</div>
-              </div>
-              <div className='live__recommend-ctn-watching'>{useNumber(3000)} watching</div>
-            </div>
-
-            <div className='live__recommend-ctn'>
-              <div className='live__recommend-ctn-avatar'>
-                <img alt='' />
-              </div>
-              <div>
-                <div className='live__recommend-ctn-name'>Trà Long</div>
-                <div className='live__recommend-ctn-title'>
-                  Live: Homeworld Mobile – Hậu Bản Di Động Của Thương Hiệu Game Chiến Thuật Khi Xưa
-                </div>
-              </div>
-              <div className='live__recommend-ctn-watching'>{useNumber(30000000)} đang xem</div>
-            </div>
+            )}
           </div>
         </div>
       </div>
@@ -882,39 +818,59 @@ const Live = () => {
         <div className='live__chat'>
           <div className={`live__chatBox ${isHideChat ? 'd-none' : ''}`}>
             <div className='live__chatBox-top'>
-
-              {Chat.map(o =>
+              {Chat.map(o => (
                 <div className='live__chatBox-top-ctn'>
                   <div className='live__chatBox-top-ctn-avatar'>
-                    <img src={o.user?.kyc.avatar?.path ? STORAGE_DOMAIN + o.user?.kyc.avatar?.path : avatar0} alt='' />
+                    <img
+                      alt=''
+                      src={
+                        o.user?.kyc.avatar?.path
+                          ? STORAGE_DOMAIN + o.user?.kyc.avatar?.path
+                          : avatar0
+                      }
+                    />
                   </div>
+
                   <div>
-                    <div className='live__chatBox-top-ctn-name'>{o.user?.kyc.first_name} {o.user?.kyc.last_name}{':'}</div>
+                    <div className='live__chatBox-top-ctn-name'>
+                      {o.user?.kyc.first_name} {o.user?.kyc.last_name}
+                      {':'}
+                    </div>
                     <div className='live__chatBox-top-ctn-text'>{o.chat}</div>
                   </div>
                 </div>
-              )}
+              ))}
             </div>
 
             <div className='live__chatBox-bottom'>
-              {/* <div className='live__chatBox-bottom-btn'>
+              <div className='live__chatBox-bottom-btn'>
                 <div className='live__chatBox-bottom-btn-gift'>
                   <FaIcon.FaGift className='icon' />
                   <span>Gift</span>
                 </div>
-              </div> */}
+              </div>
+
               <div className='live__chatBox-bottom-chat'>
                 <div className='live__chatBox-bottom-chat-avatar'>
-                  <img src={user?.kyc.avatar?.path ? STORAGE_DOMAIN + user?.kyc.avatar?.path : avatar0} alt='' />
+                  <img
+                    src={user?.kyc.avatar?.path ? STORAGE_DOMAIN + user?.kyc.avatar?.path : avatar0}
+                    alt=''
+                  />
                 </div>
+
                 <form onSubmit={handleChat} className='live__chatBox-bottom-chat-inputBox'>
-                  <input ref={chatRef} name="chat" type='text' placeholder='Say something' />
-                  <button type="submit" className='icon icon-send'><RiIcon.RiSendPlaneFill /></button>
-                  {/* <RiIcon.RiEmotionLaughLine className='icon icon-emo' /> */}
+                  <input ref={chatRef} name='chat' type='text' placeholder='Chat here' />
+                  <button type='submit' className='icon icon-send'>
+                    <RiIcon.RiSendPlaneFill />
+                  </button>
+                  {/* <button type='button' className='icon icon-emo'>
+                    <RiIcon.RiEmotionLaughLine />
+                  </button> */}
                 </form>
               </div>
             </div>
           </div>
+
           <div className='live__chatBtn' onClick={() => setIsHideChat(!isHideChat)}>
             {!isHideChat ? 'Hide Chat' : 'Show Chat'}
           </div>

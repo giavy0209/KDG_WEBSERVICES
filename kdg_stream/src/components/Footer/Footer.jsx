@@ -51,48 +51,52 @@ const Footer = () => {
 
       <div className='footer__menu' onClick={showSidebar}>
         <CgIcon.CgMenuGridO size={26} className='footer__menuIcon' />
-        <div className={`footer__sidebarContainer ${isShowSidebar ? 'show' : ''}`}>
-          <div
-            className={`footer__sidebar ${isShowSidebar ? 'show' : ''}`}
-            onClick={e => e.stopPropagation()}
-          >
-            <div className='footer__sidebarClose' onClick={hideSidebar}>
-              <CgIcon.CgClose size={30} />
-            </div>
+      </div>
 
-            <div className='footer__sidebarBody'>
-              <p className='footer__sidebarTitle'>{footer[language].language}</p>
-              {Object.keys(listLanguage).map(key => (
-                <p
-                  key={key}
-                  className='footer__sidebarRow1'
-                  onClick={() => {
-                    dispatch({ type: CHANGE_LANGUAGE, payload: key });
-                    hideSidebar();
-                  }}
-                >
-                  {listLanguage[key]}
-                </p>
-              ))}
-
-              <p className='footer__sidebarTitle mt-10'>{footer[language].social}</p>
-              {socialList.map(social => (
-                <a
-                  key={social.href}
-                  className='footer__sidebarRow2'
-                  href={social.href}
-                  target='_blank'
-                  rel='noreferrer'
-                >
-                  {social.icon} {social.name}
-                </a>
-              ))}
-            </div>
-
-            <p className={`footer__sidebarCopyright ${isShowSidebar ? 'show' : ''}`}>
-              {footer[language].copyright}
-            </p>
+      <div
+        onClick={hideSidebar}
+        className={`footer__sidebarContainer ${isShowSidebar ? 'show' : ''}`}
+      >
+        <div
+          className={`footer__sidebar ${isShowSidebar ? 'show' : ''}`}
+          onClick={e => e.stopPropagation()}
+        >
+          <div className='footer__sidebarClose' onClick={hideSidebar}>
+            <CgIcon.CgClose size={30} />
           </div>
+
+          <div className='footer__sidebarBody'>
+            <p className='footer__sidebarTitle'>{footer[language].language}</p>
+            {Object.keys(listLanguage).map(key => (
+              <p
+                key={key}
+                className='footer__sidebarRow1'
+                onClick={() => {
+                  dispatch({ type: CHANGE_LANGUAGE, payload: key });
+                  hideSidebar();
+                }}
+              >
+                {listLanguage[key]}
+              </p>
+            ))}
+
+            <p className='footer__sidebarTitle mt-10'>{footer[language].social}</p>
+            {socialList.map(social => (
+              <a
+                key={social.href}
+                className='footer__sidebarRow2'
+                href={social.href}
+                target='_blank'
+                rel='noreferrer'
+              >
+                {social.icon} {social.name}
+              </a>
+            ))}
+          </div>
+
+          <p className={`footer__sidebarCopyright ${isShowSidebar ? 'show' : ''}`}>
+            {footer[language].copyright}
+          </p>
         </div>
       </div>
     </div>

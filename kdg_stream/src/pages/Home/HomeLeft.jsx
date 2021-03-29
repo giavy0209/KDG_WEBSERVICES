@@ -35,9 +35,11 @@ const HomeLeft = props => {
       </div> */}
 
       <div>
-        <div className='main__title'>
-          <p>{home[language].watchLive}</p>
-        </div>
+        {Streammings.length > 0 && (
+          <div className='main__title'>
+            <p>{home[language].watchLive}</p>
+          </div>
+        )}
 
         <div
           className={`layoutFlex ${
@@ -77,9 +79,11 @@ const HomeLeft = props => {
       </div>
 
       <div>
-        <div className='main__title'>
-          <p>{home[language].recommend}</p>
-        </div>
+        {Videos.length > 0 && (
+          <div className='main__title'>
+            <p>{home[language].recommend}</p>
+          </div>
+        )}
 
         <div
           className={`layoutFlex ${

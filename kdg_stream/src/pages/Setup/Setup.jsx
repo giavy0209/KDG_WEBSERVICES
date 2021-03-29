@@ -1,9 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { NotificationContainer, NotificationManager } from 'react-notifications';
-import videojs from '@videojs/http-streaming'
 import '../../assets/css/setup.css';
 import callAPI from '../../axios';
-import { PLAY_STREAM } from '../../constant';
 import { useLanguageLayerValue } from '../../context/LanguageLayer';
 import { Main } from '../../layout';
 import socket from '../../socket';
@@ -63,13 +61,13 @@ const Setup = () => {
     async e => {
       e.preventDefault();
       const data = new FormData(e.target);
-      const res = await callAPI.post('/public_stream?sid=' + Stream._id, data);
+      await callAPI.post('/public_stream?sid=' + Stream._id, data);
     },
     [Stream]
   );
 
   const handleStopStream = useCallback(async () => {
-    const res = await callAPI.post('/stop_stream?sid=' + Stream._id);
+    await callAPI.post('/stop_stream?sid=' + Stream._id);
   }, [Stream]);
 
   return (

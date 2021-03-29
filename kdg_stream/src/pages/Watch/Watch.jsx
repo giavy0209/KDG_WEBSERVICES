@@ -8,12 +8,7 @@ import '../../assets/css/watch.css';
 import avatar0 from '../../assets/images/header/avatar0.png';
 import callAPI from '../../axios';
 import { Stream, Video as Videosss } from '../../components';
-import {
-  BREAK_POINT_EXTRA_SMALL,
-  BREAK_POINT_MEDIUM,
-  BREAK_POINT_SMALL,
-  STORAGE_DOMAIN,
-} from '../../constant';
+import { BREAK_POINT_MEDIUM, BREAK_POINT_SMALL, STORAGE_DOMAIN } from '../../constant';
 import { useLanguageLayerValue } from '../../context/LanguageLayer';
 import useNumber from '../../hooks/useNumber';
 import useWindowSize from '../../hooks/useWindowSize';
