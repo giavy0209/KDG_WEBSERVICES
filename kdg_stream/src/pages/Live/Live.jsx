@@ -1,3 +1,4 @@
+import Axios from 'axios';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import ReactHlsPlayer from 'react-hls-player';
 import * as AiIcon from 'react-icons/ai';
@@ -21,6 +22,8 @@ let temp = 1;
 const Live = () => {
   const user = useSelector(state => state.user)
   const [Stream, setStream] = useState({});
+  const [IsCanPlay, setIsCanPlay] = useState({});
+
   const [IsFollowed, setIsFollowed] = useState(false);
   const [Chat, setChat] = useState([])
 
@@ -213,7 +216,7 @@ const Live = () => {
     useEffect(() => {
       const video = videoRef.current;
       const id = setInterval(() => {
-        let playback_percent = video.currentTime / (video.duration - 24);
+        let playback_percent = video.currentTime / (video.duration - 4);
         if (playback_percent <= 0) playback_percent = 0;
         if (playback_percent >= 1) playback_percent = 1;
         if (playback_percent === 1) video.paused && setIsPlay(false);
@@ -281,8 +284,13 @@ const Live = () => {
       socket.emit('join_stream', res.data._id)
       setStream(res.data)
 
-      
-      // video.currentTime = timeSecond;
+      const id = setInterval(() => {
+        Axios.get(`${PLAY_STREAM}${Stream.key}/index.m3u8`)
+        .then(res => {
+          clearInterval(id)
+          setIsCanPlay(true)
+        })
+      }, 1000);
     });
 
     const handleReceiveChat = function (chatData) {
@@ -386,7 +394,7 @@ const Live = () => {
         // Forward 5s Video
         if (e.code === 'ArrowRight' && !isShowPlayButton && !e.ctrlKey && !e.altKey) {
           const video = videoRef.current;
-          if (video.currentTime / (video.duration - 24) >= 1) return;
+          if (video.currentTime / (video.duration - 4) >= 1) return;
           video.currentTime = video.currentTime + 5;
           animationRef.current && animationRef.current.classList.add('forward5');
           setTimeout(() => {
@@ -638,7 +646,7 @@ const Live = () => {
             </div>
           )}
 
-          {Stream && <ReactHlsPlayer
+          {(Stream && IsCanPlay) && <ReactHlsPlayer
             src={`${PLAY_STREAM}${Stream.key}/index.m3u8`}
             autoPlay={true}
             controls={true}
@@ -647,6 +655,10 @@ const Live = () => {
             height="auto"
             onDurationChange={handleDurationChange}
             playerRef={videoRef}
+            hlsConfig={{
+              maxLiveSyncPlaybackRate : 2,
+              liveDurationInfinity : true
+            }}
           />}
 
           <div ref={animationRef} className='live__videoCtn-animation'>
