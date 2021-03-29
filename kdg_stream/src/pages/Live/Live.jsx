@@ -212,11 +212,8 @@ const Live = () => {
 
     useEffect(() => {
       const video = videoRef.current;
-      video.ondurationchange = () => {
-        setDuration(convertTime(video.duration));
-      };
       const id = setInterval(() => {
-        let playback_percent = video.currentTime / video.duration;
+        let playback_percent = video.currentTime / (video.duration - 24);
         if (playback_percent <= 0) playback_percent = 0;
         if (playback_percent >= 1) playback_percent = 1;
         if (playback_percent === 1) video.paused && setIsPlay(false);
@@ -389,7 +386,7 @@ const Live = () => {
         // Forward 5s Video
         if (e.code === 'ArrowRight' && !isShowPlayButton && !e.ctrlKey && !e.altKey) {
           const video = videoRef.current;
-          if (video.currentTime / video.duration === 1) return;
+          if (video.currentTime / (video.duration - 24) >= 1) return;
           video.currentTime = video.currentTime + 5;
           animationRef.current && animationRef.current.classList.add('forward5');
           setTimeout(() => {
@@ -588,8 +585,7 @@ const Live = () => {
   const handleDurationChange = useCallback(() => {
     const video = videoRef.current;
     let timeSecond = video.duration ;
-    console.log(video.currentTime);
-    setDuration(convertTime(timeSecond));
+    setDuration(convertTime(timeSecond - 16));
   },[])
 
   return (
@@ -626,7 +622,7 @@ const Live = () => {
                     <span>Gift</span>
                   </div>
                 </div> */}
-                <div className='live__chatfullscreen-bottom-chat'>
+                {user && <div className='live__chatfullscreen-bottom-chat'>
                   <div className='live__chatfullscreen-bottom-chat-avatar'>
                     <img src={user?.kyc.avatar?.path ? STORAGE_DOMAIN + user?.kyc.avatar?.path : avatar0} alt='' />
                   </div>
@@ -637,12 +633,12 @@ const Live = () => {
                       <RiIcon.RiSendPlaneFill className='icon icon-send' />
                     </button>
                   </form>
-                </div>
+                </div>}
               </div>
             </div>
           )}
 
-          <ReactHlsPlayer
+          {Stream && <ReactHlsPlayer
             src={`${PLAY_STREAM}${Stream.key}/index.m3u8`}
             autoPlay={true}
             controls={true}
@@ -651,7 +647,7 @@ const Live = () => {
             height="auto"
             onDurationChange={handleDurationChange}
             playerRef={videoRef}
-          />
+          />}
 
           <div ref={animationRef} className='live__videoCtn-animation'>
             <div className='live__videoCtn-animation-iconCircle play-icon'>
@@ -747,7 +743,7 @@ const Live = () => {
                   <div className='live__videoCtn-controls-bottom-volumeBar-3'></div>
                 </div>
                 <div className='live__videoCtn-controls-bottom-playbackTime'>
-                  {currentTime} / {duration}
+                  {currentTime}
                 </div>
               </div>
               <div>
@@ -831,7 +827,7 @@ const Live = () => {
                     <span>Gift</span>
                   </div>
                 </div> */}
-                <div className='live__chatBox-bottom-chat'>
+                {user && <div className='live__chatBox-bottom-chat'>
                   <div className='live__chatBox-bottom-chat-avatar'>
                     <img src={user?.kyc.avatar?.path ? STORAGE_DOMAIN + user?.kyc.avatar?.path : avatar0} alt='' />
                   </div>
@@ -840,7 +836,7 @@ const Live = () => {
                     <button type="submit" className='icon icon-send' ><RiIcon.RiSendPlaneFill /></button>
                     <RiIcon.RiEmotionLaughLine className='icon icon-emo' />
                   </form>
-                </div>
+                </div>}
               </div>
             </div>
             <div className='live__chatBtn' onClick={() => setIsHideChat(!isHideChat)}>
@@ -903,7 +899,7 @@ const Live = () => {
                   <span>Gift</span>
                 </div>
               </div> */}
-              <div className='live__chatBox-bottom-chat'>
+              {user && <div className='live__chatBox-bottom-chat'>
                 <div className='live__chatBox-bottom-chat-avatar'>
                   <img src={user?.kyc.avatar?.path ? STORAGE_DOMAIN + user?.kyc.avatar?.path : avatar0} alt='' />
                 </div>
@@ -912,7 +908,7 @@ const Live = () => {
                   <button type="submit" className='icon icon-send'><RiIcon.RiSendPlaneFill /></button>
                   {/* <RiIcon.RiEmotionLaughLine className='icon icon-emo' /> */}
                 </form>
-              </div>
+              </div>}
             </div>
           </div>
           <div className='live__chatBtn' onClick={() => setIsHideChat(!isHideChat)}>

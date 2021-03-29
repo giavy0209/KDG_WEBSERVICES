@@ -1,4 +1,5 @@
 import React from 'react';
+import { Avatar } from '..';
 import '../../assets/css/card.css';
 import rank1 from '../../assets/images/card/rank1.svg';
 import rank2 from '../../assets/images/card/rank2.svg';
@@ -16,9 +17,9 @@ const Card = props => {
     numb = 0,
     name = 'User',
     avatar = avatar0,
+    avatarPos,
     onClick = null,
   } = props;
-
   const [{ language, card }] = useLanguageLayerValue();
 
   const handleClick = () => onClick && onClick();
@@ -26,7 +27,7 @@ const Card = props => {
   return (
     <div onClick={handleClick} className={`card ${index === 0 ? 'mt-20' : ''}`}>
       <div className='card__avatar'>
-        <img src={avatar} alt='' />
+        <Avatar src={avatar} position={avatarPos}/>
       </div>
       <div className='card__info'>
         <p className='card__info-name'>{name}</p>

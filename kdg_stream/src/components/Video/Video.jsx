@@ -1,10 +1,12 @@
 import React from 'react';
+import { Avatar } from '..';
 import '../../assets/css/video.css';
 import avatar0 from '../../assets/images/header/avatar0.png';
 
 const Video = props => {
   const {
     avatar = avatar0,
+    avataPos,
     title = 'Title',
     description = 'Description',
     onClick = null,
@@ -38,7 +40,7 @@ const Video = props => {
 
       <div className='video__info mt-20'>
         <div className='video__info-ava'>
-          <img src={avatar} alt='' />
+          <Avatar src={avatar} position={avataPos}/>
         </div>
         <div className='video__info-text'>
           <p className='video__info-text-title'>{title}</p>
