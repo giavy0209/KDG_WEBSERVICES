@@ -3,9 +3,8 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import ReactHlsPlayer from 'react-hls-player';
 import * as AiIcon from 'react-icons/ai';
 import * as BsIcon from 'react-icons/bs';
-import * as FaIcon from 'react-icons/fa';
+// import * as FaIcon from 'react-icons/fa';
 import * as HiIcon from 'react-icons/hi';
-import * as ImIcon from 'react-icons/im';
 import * as MdIcon from 'react-icons/md';
 import * as RiIcon from 'react-icons/ri';
 import { useSelector } from 'react-redux';
@@ -27,6 +26,13 @@ const Live = () => {
 
   const [width] = useWindowSize();
 
+  const descRef = useRef();
+  const [isDescLong, setIsDescLong] = useState(false);
+
+  useEffect(() => {
+    descRef.current && descRef.current.clientHeight >= 80 && setIsDescLong(true);
+  }, []);
+
   const [Stream, setStream] = useState({});
   const [IsCanPlay, setIsCanPlay] = useState(false);
 
@@ -34,10 +40,10 @@ const Live = () => {
   const [Chat, setChat] = useState([]);
 
   const [isFullScreen, setIsFullScreen] = useState(false);
+
   const [isHideChat, setIsHideChat] = useState(false);
   const [isHideFullscreenChat, setIsHideFullscreenChat] = useState(false);
   const [isShowMore, setIsShowMore] = useState(false);
-  const [isShowPlayButton, setIsShowPlayButton] = useState(false);
   const [isPlay, setIsPlay] = useState(true);
   const [isMute, setIsMute] = useState(false);
   const [currentVolume, setCurrentVolume] = useState(temp);
@@ -150,36 +156,30 @@ const Live = () => {
   }, [isFullScreen, toggleFullScreen]);
 
   useEffect(() => {
-    async function playVideo() {
-      try {
-      } catch (error) {
-        console.error(error);
-        setIsShowPlayButton(true);
-        setIsPlay(false);
-      }
-    }
-    playVideo();
-  }, []);
-
-  useEffect(() => {
     window.onmouseup = () => {
       isMouseDownVolume && setIsMouseDownVolume(false);
       isMouseDownPlayback && handleAdjustPlaybackMouseUp();
     };
+
     return () => (window.onmouseup = null);
   }, [isMouseDownVolume, isMouseDownPlayback, handleAdjustPlaybackMouseUp]);
 
   useEffect(() => {
     let id;
+
     window.onmousemove = e => {
       isMouseDownVolume && handleAdjustVolume(e);
       isMouseDownPlayback && handleAdjustPlaybackMouseMove(e);
+
       if (id) clearTimeout(id);
+
       controlsRef.current && controlsRef.current.classList.remove('notshow');
+
       id = setTimeout(() => {
         controlsRef.current && controlsRef.current.classList.add('notshow');
       }, 3000);
     };
+
     return () => {
       if (id) clearTimeout(id);
       window.onmousemove = null;
@@ -198,19 +198,34 @@ const Live = () => {
         setCurrentTime(convertTime(video.currentTime));
       }
     }, 100);
+
     return () => clearInterval(id);
   }, []);
 
   useEffect(() => {
+    const htmlEle = document.querySelector('html');
+
+    if (isFullScreen) {
+      htmlEle.classList.add('hidden-scrollbar');
+    } else {
+      htmlEle.classList.remove('hidden-scrollbar');
+    }
+  }, [isFullScreen]);
+
+  useEffect(() => {
+    if (!videoRef.current) return;
     const video = videoRef.current;
+
     if (isPlay) {
-      //   video.play();
+      video.play();
+
       animationRef.current && animationRef.current.classList.add('play');
       setTimeout(() => {
         animationRef.current && animationRef.current.classList.remove('play');
       }, 600);
     } else {
       video.pause();
+
       animationRef.current && animationRef.current.classList.add('pause');
       setTimeout(() => {
         animationRef.current && animationRef.current.classList.remove('pause');
@@ -239,6 +254,7 @@ const Live = () => {
     callAPI.get('/streamming?id=' + id).then(res => {
       socket.emit('join_stream', res.data._id);
       setStream(res.data);
+      setIsFollowed(res.is_followed);
 
       const id = setInterval(() => {
         Axios.get(`${PLAY_STREAM}${res.data.key}/index.m3u8`).then(res => {
@@ -277,7 +293,7 @@ const Live = () => {
         // Blur When Not Focus Body
 
         // Blur When Focus Input Chat Fullscreen
-        if (e.code === 'KeyB' && !isShowPlayButton && e.ctrlKey && !e.altKey) {
+        if (e.code === 'KeyB' && e.ctrlKey && !e.altKey) {
           document.activeElement.blur();
         }
         // Blur When Focus Input Chat Fullscreen
@@ -285,7 +301,7 @@ const Live = () => {
 
       if (document.activeElement === document.body) {
         // Focus Input Chat When Fullscreen
-        if (e.code === 'KeyC' && !isShowPlayButton && isFullScreen && !e.ctrlKey && !e.altKey) {
+        if (e.code === 'KeyC' && isFullScreen && !e.ctrlKey && !e.altKey) {
           e.preventDefault();
           chatFullscreenRef.current.focus();
           isHideFullscreenChat && setIsHideFullscreenChat(false);
@@ -293,26 +309,26 @@ const Live = () => {
         // Focus Input Chat When Fullscreen
 
         // Focus Input Chat When Not Fullscreen
-        if (e.code === 'KeyC' && !isShowPlayButton && !isFullScreen && !e.ctrlKey && !e.altKey) {
+        if (e.code === 'KeyC' && !isFullScreen && !e.ctrlKey && !e.altKey) {
           e.preventDefault();
           chatRef.current.focus();
         }
         // Focus Input Chat When Not Fullscreen
 
         // Hide Chat When Fullscreen
-        if (e.code === 'KeyH' && !isShowPlayButton && isFullScreen && !e.ctrlKey && !e.altKey) {
+        if (e.code === 'KeyH' && isFullScreen && !e.ctrlKey && !e.altKey) {
           setIsHideFullscreenChat(!isHideFullscreenChat);
         }
         // Hide Chat When Fullscreen
 
         // Hide Chat When Not Fullscreen
-        if (e.code === 'KeyH' && !isShowPlayButton && !isFullScreen && !e.ctrlKey && !e.altKey) {
+        if (e.code === 'KeyH' && !isFullScreen && !e.ctrlKey && !e.altKey) {
           setIsHideChat(!isHideChat);
         }
         // Hide Chat When Not Fullscreen
 
         // Play/Pause Video
-        if (e.code === 'Space' && !isShowPlayButton && !e.ctrlKey && !e.altKey) {
+        if (e.code === 'Space' && !e.ctrlKey && !e.altKey) {
           e.preventDefault();
           setIsPlay(!isPlay);
           if (window.pageYOffset !== 0) {
@@ -320,7 +336,7 @@ const Live = () => {
           }
         }
 
-        if (e.code === 'KeyK' && !isShowPlayButton && !e.ctrlKey && !e.altKey) {
+        if (e.code === 'KeyK' && !e.ctrlKey && !e.altKey) {
           setIsPlay(!isPlay);
           if (window.pageYOffset !== 0) {
             window.scroll({ top: 0 });
@@ -329,19 +345,19 @@ const Live = () => {
         // Play/Pause Video
 
         // Toggle Mute Video
-        if (e.code === 'KeyM' && !isShowPlayButton && !e.ctrlKey && !e.altKey) {
+        if (e.code === 'KeyM' && !e.ctrlKey && !e.altKey) {
           handleMuteVideo();
         }
         // Toggle Mute Video
 
         // Toggle Fullscreen Video
-        if (e.code === 'KeyF' && !isShowPlayButton && !e.ctrlKey && !e.altKey) {
+        if (e.code === 'KeyF' && !e.ctrlKey && !e.altKey) {
           handleToggleFullscreen();
         }
         // Toggle Fullscreen Video
 
         // Forward 5s Video
-        if (e.code === 'ArrowRight' && !isShowPlayButton && !e.ctrlKey && !e.altKey) {
+        if (e.code === 'ArrowRight' && !e.ctrlKey && !e.altKey) {
           const video = videoRef.current;
           if (video.currentTime / video.duration >= 1) return;
           video.currentTime = video.currentTime + 5;
@@ -353,7 +369,7 @@ const Live = () => {
         // Forward 5s Video
 
         // Previous 5s Video
-        if (e.code === 'ArrowLeft' && !isShowPlayButton && !e.ctrlKey && !e.altKey) {
+        if (e.code === 'ArrowLeft' && !e.ctrlKey && !e.altKey) {
           const video = videoRef.current;
           if (video.currentTime / video.duration === 0) return;
           video.currentTime = video.currentTime - 5;
@@ -365,7 +381,7 @@ const Live = () => {
         // Previous 5s Video
 
         // Forward 10s Video
-        if (e.code === 'KeyL' && !isShowPlayButton && !e.ctrlKey && !e.altKey) {
+        if (e.code === 'KeyL' && !e.ctrlKey && !e.altKey) {
           const video = videoRef.current;
           if (video.currentTime / video.duration === 1) return;
           video.currentTime = video.currentTime + 10;
@@ -377,7 +393,7 @@ const Live = () => {
         // Forward 10s Video
 
         // Previous 10s Video
-        if (e.code === 'KeyJ' && !isShowPlayButton && !e.ctrlKey && !e.altKey) {
+        if (e.code === 'KeyJ' && !e.ctrlKey && !e.altKey) {
           const video = videoRef.current;
           if (video.currentTime / video.duration === 0) return;
           video.currentTime = video.currentTime - 10;
@@ -389,120 +405,70 @@ const Live = () => {
         // Previous 10s Video
 
         // Skip to 0% Video
-        if (
-          (e.code === 'Numpad0' || e.code === 'Digit0') &&
-          !isShowPlayButton &&
-          !e.ctrlKey &&
-          !e.altKey
-        ) {
+        if ((e.code === 'Numpad0' || e.code === 'Digit0') && !e.ctrlKey && !e.altKey) {
           const video = videoRef.current;
           video.currentTime = 0;
         }
         // Skip to 0% Video
 
         // Skip to 10% Video
-        if (
-          (e.code === 'Numpad1' || e.code === 'Digit1') &&
-          !isShowPlayButton &&
-          !e.ctrlKey &&
-          !e.altKey
-        ) {
+        if ((e.code === 'Numpad1' || e.code === 'Digit1') && !e.ctrlKey && !e.altKey) {
           const video = videoRef.current;
           video.currentTime = 0.1 * video.duration;
         }
         // Skip to 10% Video
 
         // Skip to 20% Video
-        if (
-          (e.code === 'Numpad2' || e.code === 'Digit2') &&
-          !isShowPlayButton &&
-          !e.ctrlKey &&
-          !e.altKey
-        ) {
+        if ((e.code === 'Numpad2' || e.code === 'Digit2') && !e.ctrlKey && !e.altKey) {
           const video = videoRef.current;
           video.currentTime = 0.2 * video.duration;
         }
         // Skip to 20% Video
 
         // Skip to 30% Video
-        if (
-          (e.code === 'Numpad3' || e.code === 'Digit3') &&
-          !isShowPlayButton &&
-          !e.ctrlKey &&
-          !e.altKey
-        ) {
+        if ((e.code === 'Numpad3' || e.code === 'Digit3') && !e.ctrlKey && !e.altKey) {
           const video = videoRef.current;
           video.currentTime = 0.3 * video.duration;
         }
         // Skip to 30% Video
 
         // Skip to 40% Video
-        if (
-          (e.code === 'Numpad4' || e.code === 'Digit4') &&
-          !isShowPlayButton &&
-          !e.ctrlKey &&
-          !e.altKey
-        ) {
+        if ((e.code === 'Numpad4' || e.code === 'Digit4') && !e.ctrlKey && !e.altKey) {
           const video = videoRef.current;
           video.currentTime = 0.4 * video.duration;
         }
         // Skip to 40% Video
 
         // Skip to 50% Video
-        if (
-          (e.code === 'Numpad5' || e.code === 'Digit5') &&
-          !isShowPlayButton &&
-          !e.ctrlKey &&
-          !e.altKey
-        ) {
+        if ((e.code === 'Numpad5' || e.code === 'Digit5') && !e.ctrlKey && !e.altKey) {
           const video = videoRef.current;
           video.currentTime = 0.5 * video.duration;
         }
         // Skip to 50% Video
 
         // Skip to 60% Video
-        if (
-          (e.code === 'Numpad6' || e.code === 'Digit6') &&
-          !isShowPlayButton &&
-          !e.ctrlKey &&
-          !e.altKey
-        ) {
+        if ((e.code === 'Numpad6' || e.code === 'Digit6') && !e.ctrlKey && !e.altKey) {
           const video = videoRef.current;
           video.currentTime = 0.6 * video.duration;
         }
         // Skip to 60% Video
 
         // Skip to 70% Video
-        if (
-          (e.code === 'Numpad7' || e.code === 'Digit7') &&
-          !isShowPlayButton &&
-          !e.ctrlKey &&
-          !e.altKey
-        ) {
+        if ((e.code === 'Numpad7' || e.code === 'Digit7') && !e.ctrlKey && !e.altKey) {
           const video = videoRef.current;
           video.currentTime = 0.7 * video.duration;
         }
         // Skip to 70% Video
 
         // Skip to 80% Video
-        if (
-          (e.code === 'Numpad8' || e.code === 'Digit8') &&
-          !isShowPlayButton &&
-          !e.ctrlKey &&
-          !e.altKey
-        ) {
+        if ((e.code === 'Numpad8' || e.code === 'Digit8') && !e.ctrlKey && !e.altKey) {
           const video = videoRef.current;
           video.currentTime = 0.8 * video.duration;
         }
         // Skip to 80% Video
 
         // Skip to 90% Video
-        if (
-          (e.code === 'Numpad9' || e.code === 'Digit9') &&
-          !isShowPlayButton &&
-          !e.ctrlKey &&
-          !e.altKey
-        ) {
+        if ((e.code === 'Numpad9' || e.code === 'Digit9') && !e.ctrlKey && !e.altKey) {
           const video = videoRef.current;
           video.currentTime = 0.9 * video.duration;
         }
@@ -514,7 +480,6 @@ const Live = () => {
     return () => window.removeEventListener('keydown', playVideoByKeyboard);
   }, [
     isPlay,
-    isShowPlayButton,
     isFullScreen,
     isHideChat,
     isHideFullscreenChat,
@@ -546,13 +511,6 @@ const Live = () => {
     let timeSecond = video.duration;
     console.log(video.currentTime);
     setDuration(convertTime(timeSecond));
-  }, []);
-
-  const descRef = useRef();
-  const [isDescLong, setIsDescLong] = useState(false);
-
-  useEffect(() => {
-    descRef.current && descRef.current.clientHeight >= 80 && setIsDescLong(true);
   }, []);
 
   return (
@@ -675,17 +633,6 @@ const Live = () => {
           </div>
 
           <div
-            className={`live__videoCtn-playButton ${isShowPlayButton ? 'd-flex' : ''}`}
-            onClick={() => {
-              videoRef.current.play();
-              setIsShowPlayButton(false);
-              setIsPlay(true);
-            }}
-          >
-            <ImIcon.ImPlay />
-          </div>
-
-          <div
             ref={controlsRef}
             className={`live__videoCtn-controls ${
               isMouseDownVolume || isMouseDownPlayback ? 'show' : ''
@@ -710,7 +657,7 @@ const Live = () => {
               <div>
                 <div
                   className='live__videoCtn-controls-bottom-icon play-icon'
-                  onClick={() => videoRef.current.play()}
+                  onClick={() => setIsPlay(!isPlay)}
                 >
                   {playbackPercent === 1 && !isPlay ? (
                     <MdIcon.MdReplay />
@@ -851,12 +798,12 @@ const Live = () => {
             </div>
 
             <div className='live__chatBox-bottom'>
-              <div className='live__chatBox-bottom-btn'>
+              {/* <div className='live__chatBox-bottom-btn'>
                 <div className='live__chatBox-bottom-btn-gift'>
                   <FaIcon.FaGift className='icon' />
                   <span>Gift</span>
                 </div>
-              </div>
+              </div> */}
 
               {user && (
                 <div className='live__chatBox-bottom-chat'>

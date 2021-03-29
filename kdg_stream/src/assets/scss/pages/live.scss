@@ -1,11 +1,9 @@
 @import '../common.scss';
 
 $width-volumeBar: 80px;
-$z-index-fullscreen: 500;
-$z-index-controls: 600;
-$z-index-live-chatfullscreen: 700;
-$z-index-animation: 800;
-$z-index-playButton: 900;
+$z-index-fullscreen: 20000;
+$z-index-controls: 20001;
+$z-index-live-chatfullscreen: 20002;
 
 .live {
   display: flex;
@@ -295,7 +293,6 @@ $z-index-playButton: 900;
     }
 
     &-animation {
-      z-index: $z-index-animation;
       position: absolute;
       top: 0;
       left: 0;
@@ -394,41 +391,6 @@ $z-index-playButton: 900;
         > svg {
           display: block;
         }
-      }
-    }
-
-    &-playButton {
-      cursor: pointer;
-      user-select: none;
-
-      background-color: rgba(0, 0, 0, 0.8);
-
-      z-index: $z-index-playButton;
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-
-      justify-content: center;
-      align-items: center;
-
-      font-size: 100px;
-
-      color: rgba(255, 0, 0, 0.8);
-
-      &:hover {
-        color: rgba(255, 0, 0, 1);
-      }
-
-      display: none;
-
-      &.d-flex {
-        display: flex;
-      }
-
-      > svg {
-        display: block;
       }
     }
 
