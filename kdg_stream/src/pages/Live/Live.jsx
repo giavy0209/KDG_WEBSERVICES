@@ -268,8 +268,10 @@ const Live = () => {
   const id = new URLSearchParams(window.location.search).get('s');
   useEffect(() => {
     let interval ;
+    let streamId;
     callAPI.get('/streamming?id=' + id).then(res => {
       socket.emit('join_stream', res.data._id);
+      streamId = res.data._id
       setStream(res.data);
       setIsFollowed(res.is_followed);
 
@@ -288,6 +290,8 @@ const Live = () => {
     socket.on('chat', handleReceiveChat);
 
     return () => {
+      socket.emit('leave_stream', streamId);
+      setChat([]);
       socket.removeEventListener('chat', handleReceiveChat);
       clearInterval(interval)
     };
