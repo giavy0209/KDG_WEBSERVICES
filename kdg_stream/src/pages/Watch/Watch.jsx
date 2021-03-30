@@ -134,8 +134,12 @@ const Watch = () => {
               className='watch__avatar'
               onClick={() => history.push('/profile?uid=' + Video?.user._id)}
             >
-              <Avatar src={Video?.user.kyc.avatar ? STORAGE_DOMAIN + Video?.user?.kyc.avatar.path : avatar0} position={Video?.user.kyc.avatar_pos || null}/>
-              
+              <Avatar
+                src={
+                  Video?.user.kyc.avatar ? STORAGE_DOMAIN + Video?.user?.kyc.avatar.path : avatar0
+                }
+                position={Video?.user.kyc.avatar_pos || null}
+              />
             </div>
 
             <div>
@@ -160,7 +164,7 @@ const Watch = () => {
               </div>
 
               {isDescLong && (
-                <div className='watch__showMore' onClick={() => setIsShowMore(!isShowMore)}>
+                <div className='watch__showMore' onClick={() => setIsShowMore(x => !x)}>
                   {isShowMore ? watch[language].hide : watch[language].showmore}
                 </div>
               )}
@@ -193,7 +197,20 @@ const Watch = () => {
         )}
 
         {isShowStreammings && (
-          <div className='layoutFlex layout-1' style={{ '--gap-row': '40px' }}>
+          <div
+            className={`layoutFlex ${
+              width > BREAK_POINT_MEDIUM
+                ? 'layout-1'
+                : width > 1187
+                ? 'layout-4'
+                : width > 897
+                ? 'layout-3'
+                : width > 577
+                ? 'layout-2'
+                : 'layout-1'
+            }`}
+            style={{ '--gap-row': '40px', '--gap-column': '40px' }}
+          >
             {Streammings.map(el => (
               <div key={el._id} className='layoutFlex-item'>
                 <Stream

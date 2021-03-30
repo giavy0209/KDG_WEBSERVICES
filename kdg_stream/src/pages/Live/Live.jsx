@@ -1,5 +1,6 @@
+import { Box, CircularProgress, makeStyles } from '@material-ui/core';
 import Axios from 'axios';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import ReactHlsPlayer from 'react-hls-player';
 import * as AiIcon from 'react-icons/ai';
 import * as BsIcon from 'react-icons/bs';
@@ -12,26 +13,27 @@ import { useHistory } from 'react-router-dom';
 import '../../assets/css/live.css';
 import avatar0 from '../../assets/images/header/avatar0.png';
 import callAPI from '../../axios';
-import { BREAK_POINT_SMALL, PLAY_STREAM, STORAGE_DOMAIN } from '../../constant';
+import { BREAK_POINT_SMALL, BREAK_POINT_MEDIUM, PLAY_STREAM, STORAGE_DOMAIN } from '../../constant';
 import { convertDate, convertTime } from '../../helpers';
 import useNumber from '../../hooks/useNumber';
 import useWindowSize from '../../hooks/useWindowSize';
 import socket from '../../socket';
-let temp = 1;
+import { Avatar, Stream as Streamsss, Video as Videosss } from '../../components';
+
+const useStyles = makeStyles(theme => ({
+  loading: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: '#e41a7f',
+  },
+}));
 
 const Live = () => {
+  const classes = useStyles();
   const history = useHistory();
-
   const user = useSelector(state => state.user);
-
   const [width] = useWindowSize();
-
-  const descRef = useRef();
-  const [isDescLong, setIsDescLong] = useState(false);
-
-  useEffect(() => {
-    descRef.current && descRef.current.clientHeight >= 80 && setIsDescLong(true);
-  }, []);
 
   const [Stream, setStream] = useState({});
   const [IsCanPlay, setIsCanPlay] = useState(false);
@@ -40,43 +42,54 @@ const Live = () => {
   const [Chat, setChat] = useState([]);
 
   const [isFullScreen, setIsFullScreen] = useState(false);
-
-  const [isHideChat, setIsHideChat] = useState(false);
   const [isHideFullscreenChat, setIsHideFullscreenChat] = useState(false);
+  const [isHideChat, setIsHideChat] = useState(false);
   const [isShowMore, setIsShowMore] = useState(false);
-  const [isPlay, setIsPlay] = useState(true);
-  const [isMute, setIsMute] = useState(false);
-  const [currentVolume, setCurrentVolume] = useState(temp);
+
   const [isMouseDownVolume, setIsMouseDownVolume] = useState(false);
   const [isMouseDownPlayback, setIsMouseDownPlayback] = useState(false);
+
+  const [isPlay, setIsPlay] = useState(true);
+
+  const [currentTime, setCurrentTime] = useState('0:00');
+  const [currentVolume, setCurrentVolume] = useState(0);
   const [playbackPercent, setPlaybackPercent] = useState(0);
 
-  const [, setDuration] = useState('0:00');
-  const [currentTime, setCurrentTime] = useState('0:00');
-
-  const videoRef = useRef(null);
-  const animationRef = useRef();
-  const controlsRef = useRef();
   const chatRef = useRef();
+  const controlsRef = useRef();
+  const animationRef = useRef();
+  const videoRef = useRef();
   const chatFullscreenRef = useRef();
+
+  const descRef = useRef();
+  const [isDescLong, setIsDescLong] = useState(false);
+
+  useEffect(() => {
+    descRef.current && descRef.current.clientHeight >= 80 && setIsDescLong(true);
+  }, []);
 
   const handleAdjustPlaybackMouseUp = useCallback(() => {
     const video = videoRef.current;
+
     video.paused && isPlay && video.play();
-    console.log(video.paused);
+
     setIsMouseDownPlayback(false);
   }, [isPlay]);
 
   const handleAdjustPlaybackMouseMove = useCallback(e => {
     const video = videoRef.current;
+
     !video.paused && video.pause();
 
     const { width, left } = document
       .querySelector('.live__videoCtn-controls-bottom-playbackBar')
       .getBoundingClientRect();
+
     let playback_percent = (e.clientX - left) / width;
+
     if (playback_percent <= 0) playback_percent = 0;
     if (playback_percent >= 1) playback_percent = 1;
+
     setPlaybackPercent(playback_percent);
 
     let timeSecond = video.duration * playback_percent;
@@ -90,51 +103,59 @@ const Live = () => {
     const { width, left } = document
       .querySelector('.live__videoCtn-controls-bottom-playbackBar')
       .getBoundingClientRect();
+
     let playback_percent = (e.clientX - left) / width;
+
     if (playback_percent <= 0) playback_percent = 0;
     if (playback_percent >= 1) playback_percent = 1;
+
     setPlaybackPercent(playback_percent);
 
-    const duration = video.duration;
-    let time = duration * playback_percent;
-    setCurrentTime(convertTime(time));
-    video.currentTime = time;
+    let timeSecond = video.duration * playback_percent;
+    setCurrentTime(convertTime(timeSecond));
+    video.currentTime = timeSecond;
   }, []);
 
   const handleAdjustVolume = useCallback(e => {
     const { width, left } = document
       .querySelector('.live__videoCtn-controls-bottom-volumeBar')
       .getBoundingClientRect();
+
     let volume = (e.clientX - left) / width;
+
     if (volume <= 0) volume = 0;
     if (volume >= 1) volume = 1;
-    if (volume === 0) setIsMute(true);
-    else setIsMute(false);
+
     setCurrentVolume(volume);
   }, []);
 
+  const currentVolumeRef = useRef(1);
+
   const handleMuteVideo = useCallback(() => {
-    if (isMute) {
-      videoRef.current.muted = true;
-      setIsMute(!isMute);
+    if (!videoRef.current) return;
+
+    if (videoRef.current.muted) {
+      videoRef.current.muted = false;
+      setCurrentVolume(currentVolumeRef.current);
+
       animationRef.current && animationRef.current.classList.add('volume');
       setTimeout(() => {
         animationRef.current && animationRef.current.classList.remove('volume');
       }, 600);
     } else {
-      temp = currentVolume;
-      videoRef.current.muted = false;
+      videoRef.current.muted = true;
+      currentVolumeRef.current = currentVolume;
+      setCurrentVolume(0);
 
-      setIsMute(!isMute);
       animationRef.current && animationRef.current.classList.add('mute');
       setTimeout(() => {
         animationRef.current && animationRef.current.classList.remove('mute');
       }, 600);
     }
-  }, [isMute, currentVolume]);
+  }, [currentVolume]);
 
-  const toggleFullScreen = useCallback(() => {
-    async function asyncToggleFullScreen() {
+  const handleToggleFullscreen = useCallback(() => {
+    (async function asyncToggleFullScreen() {
       if (!document.fullscreenElement) {
         try {
           await document.documentElement.requestFullscreen();
@@ -146,14 +167,10 @@ const Live = () => {
           document.exitFullscreen();
         }
       }
-    }
-    asyncToggleFullScreen();
-  }, []);
+    })();
 
-  const handleToggleFullscreen = useCallback(() => {
-    setIsFullScreen(!isFullScreen);
-    toggleFullScreen();
-  }, [isFullScreen, toggleFullScreen]);
+    setIsFullScreen(x => !x);
+  }, []);
 
   useEffect(() => {
     window.onmouseup = () => {
@@ -189,6 +206,7 @@ const Live = () => {
   useEffect(() => {
     const id = setInterval(() => {
       const video = videoRef.current;
+
       if (video) {
         let playback_percent = video.currentTime / video.duration;
         if (playback_percent <= 0) playback_percent = 0;
@@ -197,7 +215,7 @@ const Live = () => {
         setPlaybackPercent(playback_percent);
         setCurrentTime(convertTime(video.currentTime));
       }
-    }, 100);
+    }, 1000);
 
     return () => clearInterval(id);
   }, []);
@@ -214,17 +232,16 @@ const Live = () => {
 
   useEffect(() => {
     if (!videoRef.current) return;
-    const video = videoRef.current;
 
     if (isPlay) {
-      video.play();
+      videoRef.current.play();
 
       animationRef.current && animationRef.current.classList.add('play');
       setTimeout(() => {
         animationRef.current && animationRef.current.classList.remove('play');
       }, 600);
     } else {
-      video.pause();
+      videoRef.current.pause();
 
       animationRef.current && animationRef.current.classList.add('pause');
       setTimeout(() => {
@@ -234,10 +251,9 @@ const Live = () => {
   }, [isPlay]);
 
   useEffect(() => {
-    const video = videoRef.current;
-    if (video) {
-      video.volume = currentVolume;
-    }
+    if (!videoRef.current) return;
+
+    videoRef.current.volume = currentVolume;
   }, [currentVolume]);
 
   useEffect(() => {
@@ -251,6 +267,7 @@ const Live = () => {
 
   useEffect(() => {
     const id = new URLSearchParams(window.location.search).get('s');
+
     callAPI.get('/streamming?id=' + id).then(res => {
       socket.emit('join_stream', res.data._id);
       setStream(res.data);
@@ -279,7 +296,82 @@ const Live = () => {
     document.querySelectorAll('.live__chatBox-top').forEach(el => {
       el.scroll(0, el.scrollHeight + 9999);
     });
+
+    document.querySelectorAll('.live__chatfullscreen-top').forEach(el => {
+      el.scroll(0, el.scrollHeight + 9999);
+    });
   }, [Chat]);
+
+  const handleFollow = useCallback(async () => {
+    const res = await callAPI.post('follow?id=' + Stream?.user._id);
+    if (res.status === 1) {
+      setIsFollowed(!IsFollowed);
+    }
+  }, [Stream, IsFollowed]);
+
+  const handleChat = useCallback(
+    e => {
+      e.preventDefault();
+      const data = new FormData(e.target);
+      const chat = data.get('chat');
+      if (!chat) return;
+      socket.emit('chat', { room: Stream._id, chat });
+      e.target.reset();
+    },
+    [Stream]
+  );
+
+  const [Videos, setVideos] = useState([]);
+  const [Streammings, setStreammings] = useState([]);
+
+  const [isShowStreammings, setIsShowStreammings] = useState(true);
+  const [isShowRecommend, setIsShowRecommend] = useState(true);
+
+  useMemo(() => {
+    callAPI.get('/recommend').then(res => {
+      setVideos([...res.data]);
+    });
+
+    callAPI.get('/streammings').then(res => {
+      console.log(res.data);
+      setStreammings(res.data);
+    });
+  }, []);
+
+  const isLoadRef = useRef(true);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const getRecommend = useCallback(async () => {
+    const ids = Videos.map(o => o._id);
+    const res = await callAPI.get(`/recommend?ids=${ids}`);
+
+    if (res.data.length === 0) {
+      return (isLoadRef.current = false);
+    }
+
+    setVideos([...Videos, ...res.data]);
+  }, [Videos]);
+
+  useEffect(() => {
+    const handleLoad = async () => {
+      const totalHeight = document.getElementById('root').clientHeight;
+      const scrolledHeight = window.scrollY + window.innerHeight;
+      const restHeight = totalHeight - scrolledHeight;
+      const isEnd = restHeight <= 300;
+
+      if (isEnd && isLoadRef.current) {
+        setIsLoading(true);
+        await getRecommend();
+        setIsLoading(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleLoad);
+
+    return () => {
+      window.removeEventListener('scroll', handleLoad);
+    };
+  }, [getRecommend]);
 
   useEffect(() => {
     const playVideoByKeyboard = e => {
@@ -304,43 +396,42 @@ const Live = () => {
         if (e.code === 'KeyC' && isFullScreen && !e.ctrlKey && !e.altKey) {
           e.preventDefault();
           chatFullscreenRef.current.focus();
-          isHideFullscreenChat && setIsHideFullscreenChat(false);
+          setIsHideFullscreenChat(false);
         }
         // Focus Input Chat When Fullscreen
 
         // Focus Input Chat When Not Fullscreen
         if (e.code === 'KeyC' && !isFullScreen && !e.ctrlKey && !e.altKey) {
           e.preventDefault();
+          setIsHideChat(false);
           chatRef.current.focus();
+          window.scroll({ top: 0 });
         }
         // Focus Input Chat When Not Fullscreen
 
         // Hide Chat When Fullscreen
         if (e.code === 'KeyH' && isFullScreen && !e.ctrlKey && !e.altKey) {
-          setIsHideFullscreenChat(!isHideFullscreenChat);
+          setIsHideFullscreenChat(x => !x);
         }
         // Hide Chat When Fullscreen
 
         // Hide Chat When Not Fullscreen
         if (e.code === 'KeyH' && !isFullScreen && !e.ctrlKey && !e.altKey) {
-          setIsHideChat(!isHideChat);
+          setIsHideChat(x => !x);
         }
         // Hide Chat When Not Fullscreen
 
         // Play/Pause Video
         if (e.code === 'Space' && !e.ctrlKey && !e.altKey) {
           e.preventDefault();
-          setIsPlay(!isPlay);
-          if (window.pageYOffset !== 0) {
-            window.scroll({ top: 0 });
-          }
+
+          setIsPlay(x => !x);
+          window.scroll({ top: 0 });
         }
 
         if (e.code === 'KeyK' && !e.ctrlKey && !e.altKey) {
-          setIsPlay(!isPlay);
-          if (window.pageYOffset !== 0) {
-            window.scroll({ top: 0 });
-          }
+          setIsPlay(x => !x);
+          window.scroll({ top: 0 });
         }
         // Play/Pause Video
 
@@ -358,9 +449,12 @@ const Live = () => {
 
         // Forward 5s Video
         if (e.code === 'ArrowRight' && !e.ctrlKey && !e.altKey) {
+          if (!videoRef.current) return;
           const video = videoRef.current;
+
           if (video.currentTime / video.duration >= 1) return;
           video.currentTime = video.currentTime + 5;
+
           animationRef.current && animationRef.current.classList.add('forward5');
           setTimeout(() => {
             animationRef.current && animationRef.current.classList.remove('forward5');
@@ -370,9 +464,12 @@ const Live = () => {
 
         // Previous 5s Video
         if (e.code === 'ArrowLeft' && !e.ctrlKey && !e.altKey) {
+          if (!videoRef.current) return;
           const video = videoRef.current;
+
           if (video.currentTime / video.duration === 0) return;
           video.currentTime = video.currentTime - 5;
+
           animationRef.current && animationRef.current.classList.add('replay5');
           setTimeout(() => {
             animationRef.current && animationRef.current.classList.remove('replay5');
@@ -382,9 +479,12 @@ const Live = () => {
 
         // Forward 10s Video
         if (e.code === 'KeyL' && !e.ctrlKey && !e.altKey) {
+          if (!videoRef.current) return;
           const video = videoRef.current;
+
           if (video.currentTime / video.duration === 1) return;
           video.currentTime = video.currentTime + 10;
+
           animationRef.current && animationRef.current.classList.add('forward10');
           setTimeout(() => {
             animationRef.current && animationRef.current.classList.remove('forward10');
@@ -394,9 +494,12 @@ const Live = () => {
 
         // Previous 10s Video
         if (e.code === 'KeyJ' && !e.ctrlKey && !e.altKey) {
+          if (!videoRef.current) return;
           const video = videoRef.current;
+
           if (video.currentTime / video.duration === 0) return;
           video.currentTime = video.currentTime - 10;
+
           animationRef.current && animationRef.current.classList.add('replay10');
           setTimeout(() => {
             animationRef.current && animationRef.current.classList.remove('replay10');
@@ -487,32 +590,6 @@ const Live = () => {
     handleToggleFullscreen,
   ]);
 
-  const handleFollow = useCallback(async () => {
-    const res = await callAPI.post('follow?id=' + Stream?.user._id);
-    if (res.status === 1) {
-      setIsFollowed(!IsFollowed);
-    }
-  }, [Stream, IsFollowed]);
-
-  const handleChat = useCallback(
-    e => {
-      e.preventDefault();
-      const data = new FormData(e.target);
-      const chat = data.get('chat');
-      if (!chat) return;
-      socket.emit('chat', { room: Stream._id, chat: data.get('chat') });
-      e.target.reset();
-    },
-    [Stream]
-  );
-
-  const handleDurationChange = useCallback(() => {
-    const video = videoRef.current;
-    let timeSecond = video.duration;
-    console.log(video.currentTime);
-    setDuration(convertTime(timeSecond));
-  }, []);
-
   return (
     <div className='live'>
       <div className='live__left'>
@@ -521,14 +598,14 @@ const Live = () => {
             <div className={`live__chatfullscreen ${isHideFullscreenChat ? 'hide' : ''}`}>
               <div
                 className='live__chatfullscreen-arrowBtn'
-                onClick={() => setIsHideFullscreenChat(!isHideFullscreenChat)}
+                onClick={() => setIsHideFullscreenChat(x => !x)}
               >
                 <MdIcon.MdKeyboardArrowRight className='icon' />
               </div>
 
               <div className='live__chatfullscreen-top'>
-                {Chat.map(o => (
-                  <div className='live__chatfullscreen-top-ctn'>
+                {Chat.map((o, i) => (
+                  <div className='live__chatfullscreen-top-ctn' key={i}>
                     <div className='live__chatfullscreen-top-ctn-avatar'>
                       <img
                         src={
@@ -558,6 +635,7 @@ const Live = () => {
                     <span>Gift</span>
                   </div>
                 </div> */}
+
                 {user && (
                   <div className='live__chatfullscreen-bottom-chat'>
                     <div className='live__chatfullscreen-bottom-chat-avatar'>
@@ -583,8 +661,8 @@ const Live = () => {
                         <RiIcon.RiSendPlaneFill />
                       </button>
                       {/* <button type='button' className='icon icon-emo'>
-                      <RiIcon.RiEmotionLaughLine />
-                    </button> */}
+                        <RiIcon.RiEmotionLaughLine />
+                      </button> */}
                     </form>
                   </div>
                 )}
@@ -600,7 +678,6 @@ const Live = () => {
               muted
               width='100%'
               height='auto'
-              onDurationChange={handleDurationChange}
               playerRef={videoRef}
             />
           )}
@@ -638,7 +715,7 @@ const Live = () => {
               isMouseDownVolume || isMouseDownPlayback ? 'show' : ''
             }`}
           >
-            <div className='live__videoCtn-controls-top' onClick={() => setIsPlay(!isPlay)}></div>
+            <div className='live__videoCtn-controls-top' onClick={() => setIsPlay(x => !x)}></div>
 
             <div className='live__videoCtn-controls-bottom'>
               <div
@@ -657,15 +734,9 @@ const Live = () => {
               <div>
                 <div
                   className='live__videoCtn-controls-bottom-icon play-icon'
-                  onClick={() => setIsPlay(!isPlay)}
+                  onClick={() => setIsPlay(x => !x)}
                 >
-                  {playbackPercent === 1 && !isPlay ? (
-                    <MdIcon.MdReplay />
-                  ) : !isPlay ? (
-                    <BsIcon.BsFillPlayFill />
-                  ) : (
-                    <BsIcon.BsFillPauseFill />
-                  )}
+                  {isPlay ? <BsIcon.BsFillPauseFill /> : <BsIcon.BsFillPlayFill />}
                 </div>
 
                 <div
@@ -674,7 +745,7 @@ const Live = () => {
                 >
                   {currentVolume === 0 ? (
                     <BsIcon.BsFillVolumeMuteFill />
-                  ) : currentVolume < 0.5 ? (
+                  ) : currentVolume <= 0.5 ? (
                     <BsIcon.BsFillVolumeDownFill />
                   ) : (
                     <BsIcon.BsFillVolumeUpFill />
@@ -704,7 +775,7 @@ const Live = () => {
                   onClick={handleToggleFullscreen}
                   className='live__videoCtn-controls-bottom-icon fullscreen-icon'
                 >
-                  {!isFullScreen ? <RiIcon.RiFullscreenLine /> : <RiIcon.RiFullscreenExitLine />}
+                  {isFullScreen ? <RiIcon.RiFullscreenExitLine /> : <RiIcon.RiFullscreenLine />}
                 </div>
               </div>
             </div>
@@ -719,13 +790,13 @@ const Live = () => {
               className='live__avatar'
               onClick={() => history.push('/profile?uid=' + Stream?.user._id)}
             >
-              <img
-                alt=''
+              <Avatar
                 src={
                   Stream?.user?.kyc.avatar?.path
                     ? STORAGE_DOMAIN + Stream.user.kyc.avatar.path
                     : avatar0
                 }
+                position={Stream?.user?.kyc.avatar_pos || null}
               />
             </div>
 
@@ -747,8 +818,8 @@ const Live = () => {
               </div>
 
               {isDescLong && (
-                <div className='live__showMore' onClick={() => setIsShowMore(!isShowMore)}>
-                  {!isShowMore ? 'Show more...' : 'Hide...'}
+                <div className='live__showMore' onClick={() => setIsShowMore(x => !x)}>
+                  {isShowMore ? 'Hide' : 'Show more'}
                 </div>
               )}
             </div>
@@ -773,8 +844,8 @@ const Live = () => {
         <div className='live__chat'>
           <div className={`live__chatBox ${isHideChat ? 'd-none' : ''}`}>
             <div className='live__chatBox-top'>
-              {Chat.map(o => (
-                <div className='live__chatBox-top-ctn'>
+              {Chat.map((o, i) => (
+                <div className='live__chatBox-top-ctn' key={i}>
                   <div className='live__chatBox-top-ctn-avatar'>
                     <img
                       alt=''
@@ -822,8 +893,8 @@ const Live = () => {
                       <RiIcon.RiSendPlaneFill />
                     </button>
                     {/* <button type='button' className='icon icon-emo'>
-                    <RiIcon.RiEmotionLaughLine />
-                  </button> */}
+                      <RiIcon.RiEmotionLaughLine />
+                    </button> */}
                   </form>
                 </div>
               )}
@@ -835,33 +906,93 @@ const Live = () => {
           </div>
         </div>
 
-        <div className='live__recommend'>
-          <div className='live__recommend-title'>Recommend</div>
-
-          <div className='live__recommend-ctn'>
-            <div className='live__recommend-ctn-avatar'>
-              <img alt='' />
-            </div>
-            <div>
-              <div className='live__recommend-ctn-name'>Trà Long</div>
-              <div className='live__recommend-ctn-title'>Live: Homeworld Mobile</div>
-            </div>
-            <div className='live__recommend-ctn-watching'>{useNumber(3000)} watching</div>
+        {Streammings.length > 0 && (
+          <div className='live__title' onClick={() => setIsShowStreammings(x => !x)}>
+            <span>Watch Live</span>
+            <MdIcon.MdArrowDropDown className={isShowStreammings ? 'down' : 'up'} />
           </div>
+        )}
 
-          <div className='live__recommend-ctn'>
-            <div className='live__recommend-ctn-avatar'>
-              <img alt='' />
-            </div>
-            <div>
-              <div className='live__recommend-ctn-name'>Trà Long</div>
-              <div className='live__recommend-ctn-title'>
-                Live: Homeworld Mobile – Hậu Bản Di Động Của Thương Hiệu Game Chiến Thuật Khi Xưa
+        {isShowStreammings && (
+          <div
+            className={`layoutFlex ${
+              width > BREAK_POINT_MEDIUM
+                ? 'layout-1'
+                : width > 1187
+                ? 'layout-4'
+                : width > 897
+                ? 'layout-3'
+                : width > 577
+                ? 'layout-2'
+                : 'layout-1'
+            }`}
+            style={{ '--gap-row': '40px', '--gap-column': '40px' }}
+          >
+            {Streammings.map(el => (
+              <div key={el._id} className='layoutFlex-item'>
+                <Streamsss
+                  avatar={
+                    el.user?.kyc.avatar?.path ? STORAGE_DOMAIN + el.user.kyc.avatar.path : undefined
+                  }
+                  video={el}
+                  title={el.name}
+                  description={el.description}
+                  onClick={() => {
+                    history.push('/live?s=' + el._id);
+                    window.scrollTo(0, 0);
+                  }}
+                />
               </div>
-            </div>
-            <div className='live__recommend-ctn-watching'>{useNumber(30000000)} đang xem</div>
+            ))}
           </div>
-        </div>
+        )}
+
+        {Videos.length > 0 && (
+          <div className='live__title' onClick={() => setIsShowRecommend(x => !x)}>
+            <span>Recommend</span>
+            <MdIcon.MdArrowDropDown className={isShowRecommend ? 'down' : 'up'} />
+          </div>
+        )}
+
+        {isShowRecommend && (
+          <div
+            className={`layoutFlex ${
+              width > BREAK_POINT_MEDIUM
+                ? 'layout-1'
+                : width > 1187
+                ? 'layout-4'
+                : width > 897
+                ? 'layout-3'
+                : width > 577
+                ? 'layout-2'
+                : 'layout-1'
+            }`}
+            style={{ '--gap-row': '40px', '--gap-column': '40px' }}
+          >
+            {Videos.map(el => (
+              <div key={el._id} className='layoutFlex-item'>
+                <Videosss
+                  avatar={
+                    el.user?.kyc.avatar?.path ? STORAGE_DOMAIN + el.user.kyc.avatar.path : null
+                  }
+                  video={el}
+                  title={el.name}
+                  description={el.description}
+                  onClick={() => {
+                    history.push('/watch?v=' + el.short_id);
+                    window.scrollTo(0, 0);
+                  }}
+                />
+              </div>
+            ))}
+          </div>
+        )}
+
+        {isLoading && (
+          <Box className={classes.loading} p={3}>
+            <CircularProgress color='inherit' />
+          </Box>
+        )}
       </div>
     </div>
   );
