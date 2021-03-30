@@ -264,16 +264,16 @@ const Live = () => {
     };
     return () => (document.onfullscreenchange = null);
   }, []);
-
+  
+  const id = new URLSearchParams(window.location.search).get('s');
   useEffect(() => {
-    const id = new URLSearchParams(window.location.search).get('s');
-
+    let interval ;
     callAPI.get('/streamming?id=' + id).then(res => {
       socket.emit('join_stream', res.data._id);
       setStream(res.data);
       setIsFollowed(res.is_followed);
 
-      const id = setInterval(() => {
+      interval = setInterval(() => {
         Axios.get(`${PLAY_STREAM}${res.data.key}/index.m3u8`).then(res => {
           console.log(res);
           clearInterval(id);
@@ -289,8 +289,9 @@ const Live = () => {
 
     return () => {
       socket.removeEventListener('chat', handleReceiveChat);
+      clearInterval(interval)
     };
-  }, []);
+  }, [id]);
 
   useEffect(() => {
     document.querySelectorAll('.live__chatBox-top').forEach(el => {
