@@ -31,9 +31,10 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Live = () => {
+  const user = useSelector(state => state.user);
+
   const classes = useStyles();
   const history = useHistory();
-  const user = useSelector(state => state.user);
   const [width] = useWindowSize();
   const [{ language, live }] = useLanguageLayerValue();
 
