@@ -276,7 +276,7 @@ const Live = () => {
       interval = setInterval(() => {
         Axios.get(`${PLAY_STREAM}${res.data.key}/index.m3u8`).then(res => {
           console.log(res);
-          clearInterval(id);
+          clearInterval(interval);
           setIsCanPlay(true);
         });
       }, 1000);
