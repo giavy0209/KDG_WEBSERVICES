@@ -13,12 +13,13 @@ import { useHistory } from 'react-router-dom';
 import '../../assets/css/live.css';
 import avatar0 from '../../assets/images/header/avatar0.png';
 import callAPI from '../../axios';
-import { BREAK_POINT_SMALL, BREAK_POINT_MEDIUM, PLAY_STREAM, STORAGE_DOMAIN } from '../../constant';
+import { Avatar, Stream as Streamsss, Video as Videosss } from '../../components';
+import { BREAK_POINT_MEDIUM, BREAK_POINT_SMALL, PLAY_STREAM, STORAGE_DOMAIN } from '../../constant';
+import { useLanguageLayerValue } from '../../context/LanguageLayer';
 import { convertDate, convertTime } from '../../helpers';
 import useNumber from '../../hooks/useNumber';
 import useWindowSize from '../../hooks/useWindowSize';
 import socket from '../../socket';
-import { Avatar, Stream as Streamsss, Video as Videosss } from '../../components';
 
 const useStyles = makeStyles(theme => ({
   loading: {
@@ -34,6 +35,7 @@ const Live = () => {
   const history = useHistory();
   const user = useSelector(state => state.user);
   const [width] = useWindowSize();
+  const [{ language, live }] = useLanguageLayerValue();
 
   const [Stream, setStream] = useState({});
   const [IsCanPlay, setIsCanPlay] = useState(false);
@@ -653,7 +655,7 @@ const Live = () => {
                         ref={chatFullscreenRef}
                         name='chat'
                         type='text'
-                        placeholder='Chat here'
+                        placeholder={live[language].chathere}
                       />
                       <button type='submit' className='icon icon-send'>
                         <RiIcon.RiSendPlaneFill />
@@ -806,9 +808,13 @@ const Live = () => {
               <div className='live__date'>{convertDate(Stream.create_date)}</div>
 
               <div className='live__view'>
-                <span>{useNumber(Stream?.viewers)} view</span>
+                <span>
+                  {useNumber(Stream?.viewers)} {live[language].views}
+                </span>
                 <span> • </span>
-                <span>{useNumber(Stream?.user?.followers)} follower</span>
+                <span>
+                  {useNumber(Stream?.user?.followers)} {live[language].followers}
+                </span>
               </div>
 
               <div className={`live__desc ${isShowMore ? 'd-block' : ''}`}>
@@ -816,7 +822,7 @@ const Live = () => {
               </div>
 
               <div className='live__showMore' onClick={() => setIsShowMore(x => !x)}>
-                {isShowMore ? 'Hide' : 'Show more'}
+                {isShowMore ? live[language].hide : live[language].showmore}
               </div>
             </div>
 
@@ -828,7 +834,9 @@ const Live = () => {
                   ) : (
                     <RiIcon.RiUserFollowLine className='icon' />
                   )}
-                  {width > BREAK_POINT_SMALL && <span>{IsFollowed ? 'Unfollow' : 'Follow'}</span>}
+                  {width > BREAK_POINT_SMALL && (
+                    <span>{IsFollowed ? live[language].unfollow : live[language].follow}</span>
+                  )}
                 </button>
               </div>
             )}
@@ -904,7 +912,7 @@ const Live = () => {
 
         {Streammings.length > 0 && (
           <div className='live__title' onClick={() => setIsShowStreammings(x => !x)}>
-            <span>Watch Live</span>
+            <span>{live[language].watchlive}</span>
             <MdIcon.MdArrowDropDown className={isShowStreammings ? 'down' : 'up'} />
           </div>
         )}
@@ -945,7 +953,7 @@ const Live = () => {
 
         {Videos.length > 0 && (
           <div className='live__title' onClick={() => setIsShowRecommend(x => !x)}>
-            <span>Recommend</span>
+            <span>{live[language].recommend}</span>
             <MdIcon.MdArrowDropDown className={isShowRecommend ? 'down' : 'up'} />
           </div>
         )}

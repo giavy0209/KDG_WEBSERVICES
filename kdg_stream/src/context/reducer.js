@@ -429,6 +429,31 @@ const watch = {
   },
 };
 
+const live = {
+  vi: {
+    chathere: 'Nhập để trò chuyện',
+    views: 'lượt xem',
+    followers: 'người theo dõi',
+    hide: 'ẨN BỚT',
+    showmore: 'HIỂN THỊ THÊM',
+    unfollow: 'BỎ THEO DÕI',
+    follow: 'THEO DÕI',
+    watchlive: 'Xem trực tiếp',
+    recommend: 'Được đề xuất',
+  },
+  en: {
+    chathere: 'Chat here',
+    views: 'views',
+    followers: 'followers',
+    hide: 'HIDE',
+    showmore: ' SHOW MORE',
+    unfollow: 'UNFOLLOW',
+    follow: 'FOLLOW',
+    watchlive: 'Watch live',
+    recommend: 'Recommend',
+  },
+};
+
 export const initialState = {
   language: 'vi',
   listLanguage,
@@ -447,6 +472,7 @@ export const initialState = {
   setup,
   cropLang,
   watch,
+  live,
 };
 
 export const CHANGE_LANGUAGE = 'CHANGE_LANGUAGE';
