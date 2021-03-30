@@ -718,6 +718,8 @@ $z-index-live-chatfullscreen: 20002;
     font-size: $size-5;
     font-weight: 500;
 
+    white-space: pre-wrap;
+
     @include hidden-text(4);
 
     &.d-block {

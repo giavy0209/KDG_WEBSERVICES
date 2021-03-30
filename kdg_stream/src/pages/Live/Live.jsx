@@ -61,13 +61,6 @@ const Live = () => {
   const videoRef = useRef();
   const chatFullscreenRef = useRef();
 
-  const descRef = useRef();
-  const [isDescLong, setIsDescLong] = useState(false);
-
-  useEffect(() => {
-    descRef.current && descRef.current.clientHeight >= 80 && setIsDescLong(true);
-  }, []);
-
   const handleAdjustPlaybackMouseUp = useCallback(() => {
     const video = videoRef.current;
 
@@ -264,14 +257,14 @@ const Live = () => {
     };
     return () => (document.onfullscreenchange = null);
   }, []);
-  
+
   const id = new URLSearchParams(window.location.search).get('s');
   useEffect(() => {
-    let interval ;
+    let interval;
     let streamId;
     callAPI.get('/streamming?id=' + id).then(res => {
       socket.emit('join_stream', res.data._id);
-      streamId = res.data._id
+      streamId = res.data._id;
       setStream(res.data);
       setIsFollowed(res.is_followed);
 
@@ -293,7 +286,7 @@ const Live = () => {
       socket.emit('leave_stream', streamId);
       setChat([]);
       socket.removeEventListener('chat', handleReceiveChat);
-      clearInterval(interval)
+      clearInterval(interval);
     };
   }, [id]);
 
@@ -818,15 +811,13 @@ const Live = () => {
                 <span>{useNumber(Stream?.user?.followers)} follower</span>
               </div>
 
-              <div ref={descRef} className={`live__desc ${isShowMore ? 'd-block' : ''}`}>
+              <div className={`live__desc ${isShowMore ? 'd-block' : ''}`}>
                 {Stream?.description}
               </div>
 
-              {isDescLong && (
-                <div className='live__showMore' onClick={() => setIsShowMore(x => !x)}>
-                  {isShowMore ? 'Hide' : 'Show more'}
-                </div>
-              )}
+              <div className='live__showMore' onClick={() => setIsShowMore(x => !x)}>
+                {isShowMore ? 'Hide' : 'Show more'}
+              </div>
             </div>
 
             {Stream?.user?._id !== user?._id && (

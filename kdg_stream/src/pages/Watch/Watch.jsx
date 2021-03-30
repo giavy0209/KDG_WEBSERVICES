@@ -104,13 +104,6 @@ const Watch = () => {
     }
   }, [Video, IsFollowed]);
 
-  const descRef = useRef();
-  const [isDescLong, setIsDescLong] = useState(false);
-
-  useEffect(() => {
-    descRef.current && descRef.current.clientHeight >= 80 && setIsDescLong(true);
-  }, []);
-
   return (
     <div className='watch'>
       <div className='watch__left'>
@@ -159,15 +152,13 @@ const Watch = () => {
                 </span>
               </div>
 
-              <div ref={descRef} className={`watch__desc ${isShowMore ? 'd-block' : ''}`}>
+              <div className={`watch__desc ${isShowMore ? 'd-block' : ''}`}>
                 {Video?.description}
               </div>
 
-              {isDescLong && (
-                <div className='watch__showMore' onClick={() => setIsShowMore(x => !x)}>
-                  {isShowMore ? watch[language].hide : watch[language].showmore}
-                </div>
-              )}
+              <div className='watch__showMore' onClick={() => setIsShowMore(x => !x)}>
+                {isShowMore ? watch[language].hide : watch[language].showmore}
+              </div>
             </div>
 
             {user && user._id !== Video?.user._id && (
