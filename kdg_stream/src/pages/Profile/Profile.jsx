@@ -163,7 +163,7 @@ const Profile = () => {
 
   useEffect(() => {
     console.log(IsShowCrop);
-  },[IsShowCrop])
+  }, [IsShowCrop]);
 
   const handleFollow = useCallback(async () => {
     if (uid) {
@@ -480,9 +480,19 @@ const Profile = () => {
                 </div>
 
                 {isLoading && (
-                  <Box className={classes.loading} p={3}>
-                    <CircularProgress color='inherit' />
-                  </Box>
+                  // <Box className={classes.loading} p={3}>
+                  //   <CircularProgress color='inherit' />
+                  // </Box>
+                  <CircularProgress
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      width: '100%',
+                      margin: '20px',
+                      color: '#e41a7f',
+                    }}
+                    color='inherit'
+                  />
                 )}
 
                 {/* <div className='profile__boxPersonal'>
@@ -578,6 +588,7 @@ const Profile = () => {
                     <span>History</span>
                     <TiIcon.TiArrowSortedDown className={`icon ${isShowHistory ? 'rotate' : ''}`} />
                   </div>
+
                   <div className={`profile__history ${isShowHistory ? 'show' : ''}`}>
                     <div style={{ overflowX: 'auto' }}>
                       <Table dataHead={dataHead} dataBody={dataBody} />
@@ -594,23 +605,7 @@ const Profile = () => {
                 <div className='profile__boxManage'>
                   <div className='profile__boxManage-title'>Manage Donate</div>
                   <div
-                    className={`layoutFlex ${
-                      width > 1700
-                        ? 'layout-6'
-                        : width > 1520
-                        ? 'layout-8'
-                        : width > 1360
-                        ? 'layout-7'
-                        : width > 1200
-                        ? 'layout-6'
-                        : width > 1040
-                        ? 'layout-5'
-                        : width > 720
-                        ? 'layout-4'
-                        : width > 560
-                        ? 'layout-3'
-                        : 'layout-2'
-                    }`}
+                    className={`layoutFlex layout-8`}
                     style={{ '--gap-column': '60px', '--gap-row': '30px' }}
                   >
                     {dataPackage.map((item, i) => (
@@ -642,12 +637,12 @@ const Profile = () => {
                   </div>
                 </div>
 
-                <div className='profile__boxManage'>
+                {/* <div className='profile__boxManage'>
                   <div className='profile__boxManage-title'>Donate</div>
                   <div style={{ overflowX: 'auto' }}>
-                    {/* <Table dataHead={dataHead1} dataBody={dataBody1} /> */}
+                    <Table dataHead={dataHead1} dataBody={dataBody1} />
                   </div>
-                </div>
+                </div> */}
               </TabPane>
             </Tab>
           )}

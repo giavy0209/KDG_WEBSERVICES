@@ -582,14 +582,7 @@ const Live = () => {
 
     window.addEventListener('keydown', playVideoByKeyboard);
     return () => window.removeEventListener('keydown', playVideoByKeyboard);
-  }, [
-    isPlay,
-    isFullScreen,
-    isHideChat,
-    isHideFullscreenChat,
-    handleMuteVideo,
-    handleToggleFullscreen,
-  ]);
+  }, [isFullScreen, handleMuteVideo, handleToggleFullscreen]);
 
   return (
     <div className='live'>
