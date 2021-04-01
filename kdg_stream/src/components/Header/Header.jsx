@@ -141,7 +141,7 @@ const Header = () => {
           <div
             className='header__manage'
             onClick={() => {
-              history.push('/profile');
+              history.push('/profile?uid='+user?._id);
               setIsShowUserinfo(false);
             }}
           >
