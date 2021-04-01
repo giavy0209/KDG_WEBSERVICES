@@ -301,38 +301,38 @@ export default function MainContainer({ uid, user }) {
             )}
 
             {/* <div className='profile__boxPersonal'>
-                  <div className='profile__boxPersonal-title'>
-                    Tra Long's recently streamed Categories
-                  </div>
+              <div className='profile__boxPersonal-title'>
+                Tra Long's recently streamed Categories
+              </div>
+              <div
+                className={`layoutFlex ${
+                  width > 1330
+                    ? 'layout-4'
+                    : width > 1030
+                    ? 'layout-3'
+                    : width > 570
+                    ? 'layout-2'
+                    : 'layout-1'
+                }`}
+                style={{
+                  '--gap-column': width > 992 ? '50px' : '25px',
+                  '--gap-row': '40px',
+                }}
+              >
+                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(el => (
                   <div
-                    className={`layoutFlex ${
-                      width > 1330
-                        ? 'layout-4'
-                        : width > 1030
-                        ? 'layout-3'
-                        : width > 570
-                        ? 'layout-2'
-                        : 'layout-1'
-                    }`}
-                    style={{
-                      '--gap-column': width > 992 ? '50px' : '25px',
-                      '--gap-row': '40px',
-                    }}
+                    key={el}
+                    className='layoutFlex-item profile__video2'
+                    onClick={() => history.push('/live')}
                   >
-                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(el => (
-                      <div
-                        key={el}
-                        className='layoutFlex-item profile__video2'
-                        onClick={() => history.push('/live')}
-                      >
-                        <div className='profile__video2-thumbnail'>
-                          <img src={video4} alt='' />
-                        </div>
-                        <p className='profile__video2-title'>Play game</p>
-                      </div>
-                    ))}
+                    <div className='profile__video2-thumbnail'>
+                      <img src={video4} alt='' />
+                    </div>
+                    <p className='profile__video2-title'>Play game</p>
                   </div>
-                </div> */}
+                ))}
+              </div>
+            </div> */}
           </TabPane>
 
           <TabPane name={profile[language].manage} key='2'>
@@ -441,11 +441,11 @@ export default function MainContainer({ uid, user }) {
             </div>
 
             {/* <div className='profile__boxManage'>
-                  <div className='profile__boxManage-title'>Donate</div>
-                  <div style={{ overflowX: 'auto' }}>
-                    <Table dataHead={dataHead1} dataBody={dataBody1} />
-                  </div>
-                </div> */}
+              <div className='profile__boxManage-title'>Donate</div>
+              <div style={{ overflowX: 'auto' }}>
+                <Table dataHead={dataHead1} dataBody={dataBody1} />
+              </div>
+            </div> */}
           </TabPane>
         </Tab>
       )}
