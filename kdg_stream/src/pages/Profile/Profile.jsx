@@ -1,4 +1,4 @@
-import { Box, CircularProgress, makeStyles } from '@material-ui/core';
+import { CircularProgress } from '@material-ui/core';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import * as FaIcon from 'react-icons/fa';
 import * as HiIcon from 'react-icons/hi';
@@ -23,17 +23,9 @@ import callAPI from '../../axios';
 import { Crop, Popper1, Tab, Table, TabPane } from '../../components';
 import { BREAK_POINT_MEDIUM, STORAGE_DOMAIN } from '../../constant';
 import { useLanguageLayerValue } from '../../context/LanguageLayer';
+import { convertDate, convertDateAgo } from '../../helpers';
 import useNumber from '../../hooks/useNumber';
 import useWindowSize from '../../hooks/useWindowSize';
-
-const useStyles = makeStyles(theme => ({
-  loading: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    color: '#e41a7f',
-  },
-}));
 
 const dataHead = {
   status: 'Status',
@@ -94,6 +86,8 @@ const Profile = () => {
   const [width] = useWindowSize();
   const [{ language, profile }] = useLanguageLayerValue();
 
+  const [convert, setConvert] = useState(true);
+
   const [isShow, setIsShow] = useState(false);
   const [type, setType] = useState('changes');
   const [pack, setPack] = useState(null);
@@ -109,7 +103,6 @@ const Profile = () => {
 
   const [Videos, setVideos] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const classes = useStyles();
 
   const readURL = input => {
     input.persist();
@@ -281,7 +274,7 @@ const Profile = () => {
             </div>
           </div>
 
-          {uid === user?._id  && (
+          {uid === user?._id && (
             <div className='profile__cover-ctnBtn'>
               <button className='button'>
                 <IoIcon.IoMdSettings className='icon' />
@@ -290,7 +283,7 @@ const Profile = () => {
             </div>
           )}
 
-          {uid !== user?._id  && (
+          {uid !== user?._id && (
             <div className='profile__cover-ctnBtn'>
               <button onClick={handleFollow} className={`button ${IsFollowed ? 'active' : ''}`}>
                 {IsFollowed ? (
@@ -305,7 +298,7 @@ const Profile = () => {
         </div>
 
         <div className='container'>
-          {uid !== user?._id  && (
+          {uid !== user?._id && (
             <div className='profile__boxPersonal'>
               <div className='profile__boxPersonal-title'>{profile[language].playlist}</div>
 
@@ -353,7 +346,7 @@ const Profile = () => {
                         <p className='profile__video-info-title'>{o.name}</p>
                         <div className='profile__video-info-view'>
                           <span>
-                            {o.views} {profile[language].view}
+                            {o.views} {profile[language].views}
                           </span>
                           <span>{o.create_date}</span>
                         </div>
@@ -366,14 +359,21 @@ const Profile = () => {
               </div>
 
               {isLoading && (
-                <Box className={classes.loading} p={3}>
-                  <CircularProgress color='inherit' />
-                </Box>
+                <CircularProgress
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    width: '100%',
+                    margin: '20px',
+                    color: '#e41a7f',
+                  }}
+                  color='inherit'
+                />
               )}
             </div>
           )}
 
-          {uid === user?._id  && (
+          {uid === user?._id && (
             <Tab>
               <TabPane name={profile[language].personal} key='1'>
                 <div className='profile__boxPersonal'>
@@ -423,10 +423,16 @@ const Profile = () => {
                           <div className='profile__video-info'>
                             <p className='profile__video-info-title'>{o.name}</p>
                             <div className='profile__video-info-view'>
-                              <span>
-                                {o.views} {profile[language].view}
-                              </span>
-                              <span>{o.create_date}</span>
+                              {o.views} {profile[language].views}
+                            </div>
+                            <div
+                              className='profile__video-info-date'
+                              onClick={e => {
+                                e.stopPropagation();
+                                setConvert(x => !x);
+                              }}
+                            >
+                              {convert ? convertDateAgo(o.create_date) : convertDate(o.create_date)}
                             </div>
                             {/* <p className='profile__video-info-tag'></p> */}
                             <p className='profile__video-info-desc'>{o.description}</p>
@@ -438,9 +444,6 @@ const Profile = () => {
                 </div>
 
                 {isLoading && (
-                  // <Box className={classes.loading} p={3}>
-                  //   <CircularProgress color='inherit' />
-                  // </Box>
                   <CircularProgress
                     style={{
                       display: 'flex',

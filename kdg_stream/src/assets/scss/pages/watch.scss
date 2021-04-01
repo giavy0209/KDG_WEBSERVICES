@@ -145,11 +145,18 @@
   }
 
   &__date {
+    cursor: pointer;
+    user-select: none;
+
     color: $text-color;
     font-size: $size-6;
     font-weight: 600;
 
     margin-bottom: 10px;
+
+    &:hover {
+      text-decoration: underline;
+    }
   }
 
   &__view {

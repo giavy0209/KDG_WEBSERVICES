@@ -1,4 +1,4 @@
-import { Box, CircularProgress, makeStyles } from '@material-ui/core';
+import { CircularProgress } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -7,20 +7,10 @@ import { STORAGE_DOMAIN } from '../../constant';
 import { useLanguageLayerValue } from '../../context/LanguageLayer';
 import useWindowSize from '../../hooks/useWindowSize';
 
-const useStyles = makeStyles(theme => ({
-  loading: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    color: '#e41a7f',
-  },
-}));
-
 const HomeLeft = props => {
   const { Streammings, Videos, isLoading } = props;
 
   const history = useHistory();
-  const classes = useStyles();
 
   const [width] = useWindowSize();
   const [{ language, home }] = useLanguageLayerValue();
@@ -71,12 +61,6 @@ const HomeLeft = props => {
             </div>
           ))}
         </div>
-
-        {isLoading && (
-          <Box className={classes.loading} p={3}>
-            <CircularProgress color='inherit' />
-          </Box>
-        )}
       </div>
 
       <div>
@@ -118,9 +102,16 @@ const HomeLeft = props => {
         </div>
 
         {isLoading && (
-          <Box className={classes.loading} p={3}>
-            <CircularProgress color='inherit' />
-          </Box>
+          <CircularProgress
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              width: '100%',
+              margin: '20px',
+              color: '#e41a7f',
+            }}
+            color='inherit'
+          />
         )}
       </div>
     </>

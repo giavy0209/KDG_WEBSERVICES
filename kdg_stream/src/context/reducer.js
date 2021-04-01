@@ -297,7 +297,7 @@ const profile = {
     personal: 'Cá nhân',
     manage: 'Quản lí',
     topDonate: 'Đóng góp nhiều nhất',
-    view: 'lượt xem',
+    views: 'lượt xem',
     playlist: 'Danh sách phát',
   },
   en: {
@@ -310,7 +310,7 @@ const profile = {
     personal: 'Personal',
     manage: 'Manage',
     topDonate: 'Top Donate',
-    view: 'view',
+    views: 'views',
     playlist: 'Playlist',
   },
 };

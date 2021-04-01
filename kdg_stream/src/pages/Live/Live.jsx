@@ -1,4 +1,4 @@
-import { Box, CircularProgress, makeStyles } from '@material-ui/core';
+import { CircularProgress } from '@material-ui/core';
 import Axios from 'axios';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import ReactHlsPlayer from 'react-hls-player';
@@ -21,19 +21,9 @@ import useNumber from '../../hooks/useNumber';
 import useWindowSize from '../../hooks/useWindowSize';
 import socket from '../../socket';
 
-const useStyles = makeStyles(theme => ({
-  loading: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    color: '#e41a7f',
-  },
-}));
-
 const Live = () => {
   const user = useSelector(state => state.user);
 
-  const classes = useStyles();
   const history = useHistory();
   const [width] = useWindowSize();
   const [{ language, live }] = useLanguageLayerValue();
@@ -987,9 +977,16 @@ const Live = () => {
         )}
 
         {isLoading && (
-          <Box className={classes.loading} p={3}>
-            <CircularProgress color='inherit' />
-          </Box>
+          <CircularProgress
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              width: '100%',
+              margin: '20px',
+              color: '#e41a7f',
+            }}
+            color='inherit'
+          />
         )}
       </div>
     </div>
