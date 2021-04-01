@@ -35,38 +35,6 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-// const dataHead1 = {
-//   avatar: '',
-//   name: 'Name',
-//   date: 'Date',
-//   amount: 'Amount',
-//   setting: '',
-// };
-
-// const dataBody1 = [
-//   {
-//     avatar: () => <img src={avatar1} alt='' className='table__ava' />,
-//     name: 'Jackie Phas',
-//     date: '25-12-2020',
-//     amount: '200 NB',
-//     setting: () => <HiIcon.HiDotsVertical className='table__dotIcon' />,
-//   },
-//   {
-//     avatar: () => <img src={avatar1} alt='' className='table__ava' />,
-//     name: 'Trung Phim',
-//     date: '05-10-2020',
-//     amount: '175 NB',
-//     setting: () => <HiIcon.HiDotsVertical className='table__dotIcon' />,
-//   },
-//   {
-//     avatar: () => <img src={avatar1} alt='' className='table__ava' />,
-//     name: 'Nguyen Viet',
-//     date: '14-07-2020',
-//     amount: '80 NB',
-//     setting: () => <HiIcon.HiDotsVertical className='table__dotIcon' />,
-//   },
-// ];
-
 const dataHead = {
   status: 'Status',
   date: 'Date',
@@ -117,11 +85,11 @@ const Profile = () => {
 
   const history = useHistory();
 
-  useEffect(() => {
-    if (uid && uid === user?._id) {
-      history.push('/profile');
-    }
-  }, [uid, user, history]);
+  // useEffect(() => {
+  //   if (uid && uid === user?._id) {
+  //     history.push('/profile');
+  //   }
+  // }, [uid, user, history]);
 
   const [width] = useWindowSize();
   const [{ language, profile }] = useLanguageLayerValue();
@@ -160,10 +128,6 @@ const Profile = () => {
       reader.readAsArrayBuffer(input.files[0]);
     }
   };
-
-  useEffect(() => {
-    console.log(IsShowCrop);
-  }, [IsShowCrop]);
 
   const handleFollow = useCallback(async () => {
     if (uid) {
@@ -270,7 +234,7 @@ const Profile = () => {
           </div>
 
           <div className='profile__cover-ctnInfo'>
-            {!uid && (
+            {uid === user?._id && (
               <form id='avatar'>
                 <input
                   onChange={readURL}
@@ -295,25 +259,19 @@ const Profile = () => {
               {/* <div className="profile__cover-confirm"></div> */}
             </label>
 
-            {uid ? (
-              <p className='profile__cover-name'>
-                {UserOwner?.kyc?.first_name} {UserOwner?.kyc?.last_name}
-              </p>
-            ) : (
-              <p className='profile__cover-name'>
-                {user?.kyc?.first_name} {user?.kyc?.last_name}
-              </p>
-            )}
+            <p className='profile__cover-name'>
+              {UserOwner?.kyc?.first_name} {UserOwner?.kyc?.last_name}
+            </p>
 
             <div className='layoutFlex layout-3' style={{ '--gap-column': '10px' }}>
               <div className='profile__cover-info layoutFlex-item'>
                 <p>{profile[language].follower}</p>
-                <p>{useNumber(uid ? UserOwner.total_follows : user?.total_follows)}</p>
+                <p>{useNumber(UserOwner.total_follows)}</p>
               </div>
 
               <div className='profile__cover-info layoutFlex-item'>
                 <p>{profile[language].following}</p>
-                <p>{useNumber(uid ? UserOwner.total_followed : user?.total_followed)}</p>
+                <p>{useNumber(UserOwner.total_followed)}</p>
               </div>
 
               <div className='profile__cover-info layoutFlex-item'>
@@ -323,7 +281,7 @@ const Profile = () => {
             </div>
           </div>
 
-          {!uid && (
+          {uid === user?._id  && (
             <div className='profile__cover-ctnBtn'>
               <button className='button'>
                 <IoIcon.IoMdSettings className='icon' />
@@ -332,7 +290,7 @@ const Profile = () => {
             </div>
           )}
 
-          {uid && (
+          {uid !== user?._id  && (
             <div className='profile__cover-ctnBtn'>
               <button onClick={handleFollow} className={`button ${IsFollowed ? 'active' : ''}`}>
                 {IsFollowed ? (
@@ -347,7 +305,7 @@ const Profile = () => {
         </div>
 
         <div className='container'>
-          {uid && (
+          {uid !== user?._id  && (
             <div className='profile__boxPersonal'>
               <div className='profile__boxPersonal-title'>{profile[language].playlist}</div>
 
@@ -415,7 +373,7 @@ const Profile = () => {
             </div>
           )}
 
-          {!uid && (
+          {uid === user?._id  && (
             <Tab>
               <TabPane name={profile[language].personal} key='1'>
                 <div className='profile__boxPersonal'>

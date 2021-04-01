@@ -26,7 +26,7 @@ const Header = () => {
   const first_name = user?.kyc.first_name;
   const last_name = user?.kyc.last_name;
   const email = user?.email;
-  const followNumber = useNumber(user?.follow?.length);
+  const followNumber = useNumber(user?.kinglive?.total_follower);
 
   const NBs = useNumber(10000);
 

@@ -15,7 +15,6 @@ const Stream = props => {
   } = props;
 
   const handleClick = () => onClick && onClick();
-
   return (
     <div className='video' onClick={handleClick}>
       <div className='video__thumb'>

@@ -93,7 +93,7 @@ const Watch = () => {
     callAPI.get('/video?sid=' + id).then(res => {
       setVideo(res.data);
       setIsFollowed(res.is_followed);
-      setTotalFollow(res.total_follow);
+      setTotalFollow(res.data.user?.kinglive?.total_follower);
     });
   }, [id]);
 
@@ -208,6 +208,7 @@ const Watch = () => {
                   avatar={
                     el.user?.kyc.avatar?.path ? STORAGE_DOMAIN + el.user.kyc.avatar.path : undefined
                   }
+                  avataPos={el.user?.kyc?.avatar_pos}
                   video={el}
                   title={el.name}
                   description={el.description}
@@ -250,6 +251,7 @@ const Watch = () => {
                     el.user?.kyc.avatar?.path ? STORAGE_DOMAIN + el.user.kyc.avatar.path : null
                   }
                   video={el}
+                  avataPos={el.user?.kyc?.avatar_pos}
                   title={el.name}
                   description={el.description}
                   onClick={() => {
