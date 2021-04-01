@@ -1,4 +1,4 @@
-import { Box, CircularProgress, makeStyles } from '@material-ui/core';
+import { CircularProgress } from '@material-ui/core';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import * as MdIcon from 'react-icons/md';
 import * as RiIcon from 'react-icons/ri';
@@ -10,28 +10,20 @@ import callAPI from '../../axios';
 import { Avatar, Stream, Video as Videosss } from '../../components';
 import { BREAK_POINT_MEDIUM, BREAK_POINT_SMALL, STORAGE_DOMAIN } from '../../constant';
 import { useLanguageLayerValue } from '../../context/LanguageLayer';
+import { convertDate, convertDateAgo } from '../../helpers';
 import useNumber from '../../hooks/useNumber';
 import useWindowSize from '../../hooks/useWindowSize';
 
-const useStyles = makeStyles(theme => ({
-  loading: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    color: '#e41a7f',
-  },
-}));
-
 const Watch = () => {
   const history = useHistory();
-
-  const classes = useStyles();
 
   const [width] = useWindowSize();
   const [{ language, watch }] = useLanguageLayerValue();
 
   const id = new URLSearchParams(useLocation().search).get('v');
   const user = useSelector(state => state.user);
+
+  const [convert, setConvert] = useState(true);
 
   const [Video, setVideo] = useState(null);
   const [TotalFollow, setTotalFollow] = useState(0);
@@ -140,7 +132,9 @@ const Watch = () => {
                 {Video?.user.kyc.first_name} {Video?.user.kyc.last_name}
               </div>
 
-              <div className='watch__date'>{Video?.create_date}</div>
+              <div className='watch__date' onClick={() => setConvert(x => !x)}>
+                {convert ? convertDateAgo(Video?.create_date) : convertDate(Video?.create_date)}
+              </div>
 
               <div className='watch__view'>
                 <span>
@@ -265,9 +259,16 @@ const Watch = () => {
         )}
 
         {isLoading && (
-          <Box className={classes.loading} p={3}>
-            <CircularProgress color='inherit' />
-          </Box>
+          <CircularProgress
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              width: '100%',
+              margin: '20px',
+              color: '#e41a7f',
+            }}
+            color='inherit'
+          />
         )}
       </div>
     </div>

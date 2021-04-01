@@ -301,13 +301,17 @@ $width-cover-ctnInfo: 500px;
         @include hidden-text(2);
       }
 
-      &-view {
+      &-view,
+      &-date {
         font-size: $size-6;
         font-weight: 500;
+      }
+
+      &-date {
         margin-bottom: 10px;
 
-        > span:nth-child(1) {
-          margin-right: 50px;
+        &:hover {
+          text-decoration: underline;
         }
       }
 
