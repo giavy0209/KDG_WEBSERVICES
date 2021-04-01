@@ -27,6 +27,7 @@ import { convertDate, convertDateAgo } from '../../helpers';
 import useNumber from '../../hooks/useNumber';
 import useWindowSize from '../../hooks/useWindowSize';
 import Modal from './Modal';
+import ModalBody from './ModalBody';
 
 const dataHead = {
   status: 'Status',
@@ -230,6 +231,7 @@ const Profile = () => {
       visible={VisiblePickAvatar}
       onCancle={() =>setVisiblePickAvatar(false)}
       title={'Avatar'}
+      content={<ModalBody />}
       />
       {isShow && <Popper1 type={type} pack={pack} />}
 

@@ -64,11 +64,12 @@ input[type='number'] {
   width: 100%;
 }
 
+
 .kdg-row {
   font-size: 0;
   margin: 0 -19px;
   [class*='kdg-col-'],
-  [class*='kdg-column-'] .item {
+  &[class*='kdg-column-'] .item {
     font-size: $size-5;
     padding: 0 19px;
     display: inline-block;
@@ -181,6 +182,13 @@ input[type='number'] {
   content: '';
   display: block;
   padding-top: 56.25%;
+  background-color: transparent;
+}
+
+.img-1-1::before {
+  content: '';
+  display: block;
+  padding-top: 100%;
   background-color: transparent;
 }
 
