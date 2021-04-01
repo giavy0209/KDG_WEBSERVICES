@@ -25,6 +25,7 @@ import { BREAK_POINT_MEDIUM, STORAGE_DOMAIN } from '../../constant';
 import { useLanguageLayerValue } from '../../context/LanguageLayer';
 import useNumber from '../../hooks/useNumber';
 import useWindowSize from '../../hooks/useWindowSize';
+import Modal from './Modal';
 
 const useStyles = makeStyles(theme => ({
   loading: {
@@ -100,9 +101,17 @@ const Profile = () => {
   const [isShowHistory, setIsShowHistory] = useState(false);
   const [IsFollowed, setIsFollowed] = useState(false);
   const [UserOwner, setUserOwner] = useState({});
-  const [IsShowCrop, setIsShowCrop] = useState(false);
+  
+  const [VisiblePickAvatar, setVisiblePickAvatar] = useState(false);
+
+  const [IsShowCropAvatar, setIsShowCropAvatar] = useState(false);
+  const [IsShowCropCover, setIsShowCropCover] = useState(false);
+
   const [Image, setImage] = useState('');
   const [ImagePos, setImagePos] = useState({ zoom: 1, x: 0, y: 0 });
+
+  const [Cover, setCover] = useState('');
+  const [CoverPos, setCoverPos] = useState({ zoom: 1, x: 0, y: 0 });
 
   const isLoadFirst = useRef(true);
   const isLoadRef = useRef(true);
@@ -111,10 +120,26 @@ const Profile = () => {
   const [isLoading, setIsLoading] = useState(false);
   const classes = useStyles();
 
-  const readURL = input => {
+  const readURLAvatar = input => {
     input.persist();
     input = input.target;
-    console.log(input.files);
+    if (input.files && input.files[0]) {
+      var reader = new FileReader();
+      reader.onload = async function (e) {
+        let buffer = e.target.result;
+        let videoBlob = new Blob([new Uint8Array(buffer)]);
+        let url = window.URL.createObjectURL(videoBlob);
+        input.parentElement.nextElementSibling.querySelector('img').setAttribute('src', url);
+        setCover(url);
+        setIsShowCropAvatar(true);
+      };
+      reader.readAsArrayBuffer(input.files[0]);
+    }
+  };
+
+  const readURLCover = input => {
+    input.persist();
+    input = input.target;
     if (input.files && input.files[0]) {
       var reader = new FileReader();
       reader.onload = async function (e) {
@@ -123,7 +148,7 @@ const Profile = () => {
         let url = window.URL.createObjectURL(videoBlob);
         input.parentElement.nextElementSibling.querySelector('img').setAttribute('src', url);
         setImage(url);
-        setIsShowCrop(true);
+        setIsShowCropAvatar(true);
       };
       reader.readAsArrayBuffer(input.files[0]);
     }
@@ -158,17 +183,15 @@ const Profile = () => {
 
   const getVideo = useCallback(async () => {
     const res = await callAPI.get(
-      `/videos?user=${uid ? uid : user?._id}&limit=10&last=${Videos[Videos.length - 1]?._id}`
+      `/videos?user=${uid}&limit=10&last=${Videos[Videos.length - 1]?._id}`
     );
-
-    console.log(res);
 
     if (res.data?.length === 0) {
       return (isLoadRef.current = false);
     }
 
     setVideos([...Videos, ...res.data]);
-  }, [Videos, user, uid]);
+  }, [Videos, uid]);
 
   useEffect(() => {
     const handleLoad = async () => {
@@ -192,12 +215,7 @@ const Profile = () => {
   }, [getVideo]);
 
   useMemo(() => {
-    if (user) {
-      setImage(user?.kyc?.avatar ? STORAGE_DOMAIN + user?.kyc?.avatar?.path : avatar0);
-      setImagePos(user?.kyc?.avatar_pos ? user.kyc.avatar_pos : { x: 0, y: 0, zoom: 1 });
-    }
-
-    if ((user || uid) && isLoadFirst.current) {
+    if (uid && isLoadFirst.current) {
       getVideo();
       isLoadFirst.current = false;
     }
@@ -208,36 +226,66 @@ const Profile = () => {
         setIsFollowed(res.data.isFollowed);
         setImage(res.data.kyc.avatar?.path ? STORAGE_DOMAIN + res.data.kyc.avatar?.path : avatar0);
         setImagePos(res.data?.kyc?.avatar_pos ? res.data.kyc.avatar_pos : { x: 0, y: 0, zoom: 1 });
+        setCover(res.data.kyc.cover?.path ? STORAGE_DOMAIN + res.data.kyc.cover?.path : cover1);
+        setCoverPos(res.data?.kyc?.cover_pos ? res.data.kyc.cover_pos : { x: 0, y: 0, zoom: 1 });
       });
     }
-  }, [user, uid, getVideo]);
-
+  }, [uid, getVideo]);
   return (
     <div className='profile'>
+      <Modal 
+      visible={VisiblePickAvatar}
+      onCancle={() =>setVisiblePickAvatar(false)}
+      title={'Avatar'}
+      />
       {isShow && <Popper1 type={type} pack={pack} />}
 
-      {IsShowCrop && (
+      {IsShowCropAvatar && (
         <Crop
           Image={Image}
           ImagePos={ImagePos}
           setImage={setImage}
           setImagePos={setImagePos}
-          setIsShowCrop={setIsShowCrop}
+          setIsShowCrop={setIsShowCropAvatar}
           currentImage={user?.kyc?.avatar ? STORAGE_DOMAIN + user?.kyc?.avatar?.path : avatar0}
+        />
+      )}
+
+      {IsShowCropCover && (
+        <Crop
+          Image={Cover}
+          ImagePos={CoverPos}
+          setImage={setCover}
+          setImagePos={setCoverPos}
+          setIsShowCrop={setIsShowCropCover}
+          currentImage={user?.kyc?.avatar ? STORAGE_DOMAIN + user?.kyc?.cover?.path : cover1}
         />
       )}
 
       <div className='profile__center mt-10'>
         <div className='profile__cover'>
-          <div className='profile__cover-img'>
-            <img src={cover1} alt='' />
-          </div>
+          {uid === user?._id &&
+            <form style={{ display: 'none' }} id="cover">
+              <input onChange={readURLCover} type="file" name="file" id="cover-input" />
+            </form>
+          }
+          <label htmlFor="cover-input" className='profile__cover-img'>
+            <img
+              style={{
+                '--x': Cover.x * -1 + '%',
+                '--y': Cover.y * -1 + '%',
+                '--zoom': Cover.zoom + '%',
+              }}
+              src={Cover}
+              alt=''
+            />
+          </label>
 
           <div className='profile__cover-ctnInfo'>
             {uid === user?._id && (
               <form id='avatar'>
                 <input
-                  onChange={readURL}
+                  onChange={readURLAvatar}
                   style={{ display: 'none' }}
                   type='file'
                   name='file'
@@ -246,7 +294,14 @@ const Profile = () => {
               </form>
             )}
 
-            <label htmlFor='avatar-input' className='profile__cover-avatar'>
+            
+
+            <div htmlFor='avatar-input' className='profile__cover-avatar'>
+              {uid === user?._id && 
+                <div onClick={()=>setVisiblePickAvatar(true)} className="button">
+                  <IoIcon.IoMdSettings className='icon' />
+                </div>
+              }
               <img
                 style={{
                   '--x': ImagePos.x * -1 + '%',
@@ -257,7 +312,7 @@ const Profile = () => {
                 alt=''
               />
               {/* <div className="profile__cover-confirm"></div> */}
-            </label>
+            </div>
 
             <p className='profile__cover-name'>
               {UserOwner?.kyc?.first_name} {UserOwner?.kyc?.last_name}
@@ -281,7 +336,7 @@ const Profile = () => {
             </div>
           </div>
 
-          {uid === user?._id  && (
+          {uid === user?._id && (
             <div className='profile__cover-ctnBtn'>
               <button className='button'>
                 <IoIcon.IoMdSettings className='icon' />
@@ -290,7 +345,7 @@ const Profile = () => {
             </div>
           )}
 
-          {uid !== user?._id  && (
+          {uid !== user?._id && (
             <div className='profile__cover-ctnBtn'>
               <button onClick={handleFollow} className={`button ${IsFollowed ? 'active' : ''}`}>
                 {IsFollowed ? (
@@ -305,14 +360,13 @@ const Profile = () => {
         </div>
 
         <div className='container'>
-          {uid !== user?._id  && (
+          {uid !== user?._id && (
             <div className='profile__boxPersonal'>
               <div className='profile__boxPersonal-title'>{profile[language].playlist}</div>
 
               <div
-                className={`layoutFlex pl-10 pr-10 ${
-                  width > BREAK_POINT_MEDIUM ? 'layout-2' : 'layout-1'
-                }`}
+                className={`layoutFlex pl-10 pr-10 ${width > BREAK_POINT_MEDIUM ? 'layout-2' : 'layout-1'
+                  }`}
                 style={{
                   '--gap-row': '40px',
                   '--gap-column': '40px',
@@ -373,16 +427,15 @@ const Profile = () => {
             </div>
           )}
 
-          {uid === user?._id  && (
+          {uid === user?._id && (
             <Tab>
               <TabPane name={profile[language].personal} key='1'>
                 <div className='profile__boxPersonal'>
                   <div className='profile__boxPersonal-title'>{profile[language].playlist}</div>
 
                   <div
-                    className={`layoutFlex pl-10 pr-10 ${
-                      width > BREAK_POINT_MEDIUM ? 'layout-2' : 'layout-1'
-                    }`}
+                    className={`layoutFlex pl-10 pr-10 ${width > BREAK_POINT_MEDIUM ? 'layout-2' : 'layout-1'
+                      }`}
                     style={{
                       '--gap-row': '40px',
                       '--gap-column': '40px',
@@ -538,9 +591,8 @@ const Profile = () => {
 
                 <div className='profile__boxManage'>
                   <div
-                    className={`profile__boxManage-title profile__historyTitle ${
-                      !isShowHistory ? 'mb-0' : ''
-                    }`}
+                    className={`profile__boxManage-title profile__historyTitle ${!isShowHistory ? 'mb-0' : ''
+                      }`}
                     onClick={() => setIsShowHistory(!isShowHistory)}
                   >
                     <span>History</span>
