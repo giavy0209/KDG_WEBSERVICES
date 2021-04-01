@@ -454,6 +454,41 @@ const live = {
   },
 };
 
+const convert_date_ago = {
+  vi: {
+    ago: 'trước',
+    later: 'sau',
+    second: 'giây',
+    seconds: 'giây',
+    minute: 'phút',
+    minutes: 'phút',
+    hour: 'giờ',
+    hours: 'giờ',
+    day: 'ngày',
+    days: 'ngày',
+    month: 'tháng',
+    months: 'tháng',
+    year: 'năm',
+    years: 'năm',
+  },
+  en: {
+    ago: 'ago',
+    later: 'later',
+    second: 'second',
+    seconds: 'seconds',
+    minute: 'minute',
+    minutes: 'minutes',
+    hour: 'hour',
+    hours: 'hours',
+    day: 'day',
+    days: 'days',
+    month: 'month',
+    months: 'months',
+    year: 'year',
+    years: 'years',
+  },
+};
+
 export const initialState = {
   language: 'vi',
   listLanguage,
@@ -473,6 +508,7 @@ export const initialState = {
   cropLang,
   watch,
   live,
+  convert_date_ago,
 };
 
 export const CHANGE_LANGUAGE = 'CHANGE_LANGUAGE';

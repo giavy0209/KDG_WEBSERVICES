@@ -345,10 +345,16 @@ const Profile = () => {
                       <div className='profile__video-info'>
                         <p className='profile__video-info-title'>{o.name}</p>
                         <div className='profile__video-info-view'>
-                          <span>
-                            {o.views} {profile[language].views}
-                          </span>
-                          <span>{o.create_date}</span>
+                          {o.views} {profile[language].views}
+                        </div>
+                        <div
+                          className='profile__video-info-date'
+                          onClick={e => {
+                            e.stopPropagation();
+                            setConvert(x => !x);
+                          }}
+                        >
+                          {convert ? convertDateAgo(o.create_date) : convertDate(o.create_date)}
                         </div>
                         {/* <p className='profile__video-info-tag'></p> */}
                         <p className='profile__video-info-desc'>{o.description}</p>

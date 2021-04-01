@@ -16,7 +16,7 @@ import callAPI from '../../axios';
 import { Avatar, Stream as Streamsss, Video as Videosss } from '../../components';
 import { BREAK_POINT_MEDIUM, BREAK_POINT_SMALL, PLAY_STREAM, STORAGE_DOMAIN } from '../../constant';
 import { useLanguageLayerValue } from '../../context/LanguageLayer';
-import { convertDate, convertTime } from '../../helpers';
+import { convertDate, convertDateAgo, convertTime } from '../../helpers';
 import useNumber from '../../hooks/useNumber';
 import useWindowSize from '../../hooks/useWindowSize';
 import socket from '../../socket';
@@ -27,6 +27,8 @@ const Live = () => {
   const history = useHistory();
   const [width] = useWindowSize();
   const [{ language, live }] = useLanguageLayerValue();
+
+  const [convert, setConvert] = useState(true);
 
   const [Stream, setStream] = useState({});
   const [IsCanPlay, setIsCanPlay] = useState(false);
@@ -789,7 +791,9 @@ const Live = () => {
                 {Stream?.user?.kyc.first_name} {Stream?.user?.kyc.last_name}
               </div>
 
-              <div className='live__date'>{convertDate(Stream.create_date)}</div>
+              <div className='live__date' onClick={() => setConvert(x => !x)}>
+                {convert ? convertDateAgo(Stream.create_date) : convertDate(Stream.create_date)}
+              </div>
 
               <div className='live__view'>
                 <span>
