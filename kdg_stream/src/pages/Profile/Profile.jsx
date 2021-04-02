@@ -36,16 +36,21 @@ const Profile = () => {
   const [Cover, setCover] = useState('');
   const [CoverPos, setCoverPos] = useState({ zoom: 1, x: 0, y: 0 });
 
-  const onCancelCrop = useCallback(() => {
+  const onCancelCrop = useCallback((label) => {
     dispatch(actChangeUploadStatus({
       ...uploadStatus , 
       isShowCrop : false,
       _id : null,
     }))
-    setImage(uploadStatus.currentImage)
+    if(label === 'avatar-input') {
+      setImage(uploadStatus.currentImage)
+    }
+    if(label === 'cover-input') {
+      setCover(uploadStatus.currentImage)
+    }
   },[uploadStatus])
 
-  const onFinishCrop = useCallback(() => {
+  const onFinishCrop = useCallback((label) => {
     setImage(uploadStatus.image)
     setImagePos(uploadStatus.imagePos)
     dispatch(actChangeUploadStatus({
@@ -53,6 +58,14 @@ const Profile = () => {
       isShowCrop : false,
       _id : null,
     }))
+    if(label === 'avatar-input') {
+      setImage(uploadStatus.image)
+      setImagePos(uploadStatus.imagePos)
+    }
+    if(label === 'cover-input') {
+      setCover(uploadStatus.image)
+      setCoverPos(uploadStatus.imagePos)
+    }
   },[uploadStatus])
 
   const handlePickAvatar = useCallback(() => {
@@ -63,6 +76,15 @@ const Profile = () => {
       currentImage : Image
     }))
   },[uploadStatus,Image])
+
+  const handlePickCover = useCallback(() => {
+    setVisiblePickAvatar(true)
+    dispatch(actChangeUploadStatus({
+      ...uploadStatus,
+      label : 'cover-input',
+      currentImage : Cover
+    }))
+  },[uploadStatus,Cover])
 
   const readURLAvatar = useCallback(input => {
     input.persist();
@@ -100,9 +122,9 @@ const Profile = () => {
         setUserOwner(res.data);
         setIsFollowed(res.data.isFollowed);
         setImage(res.data.kyc.avatar?.path ? STORAGE_DOMAIN + res.data.kyc.avatar?.path : avatar0);
-        setImagePos(res.data?.kyc?.avatar_pos ? res.data.kyc.avatar_pos : { x: 0, y: 0, zoom: 1 });
+        setImagePos(res.data?.kyc?.avatar_pos ? res.data.kyc.avatar_pos : { x: 0, y: 0, zoom: 100 });
         setCover(res.data.kyc.cover?.path ? STORAGE_DOMAIN + res.data.kyc.cover?.path : cover1);
-        setCoverPos(res.data?.kyc?.cover_pos ? res.data.kyc.cover_pos : { x: 0, y: 0, zoom: 1 });
+        setCoverPos(res.data?.kyc?.cover_pos ? res.data.kyc.cover_pos : { x: 0, y: 0, zoom: 100 });
       });
     }
   }, [uid]);
@@ -128,17 +150,24 @@ const Profile = () => {
               <input type='file' name='file' id='cover-input' />
             </form>
           )}
-          <label htmlFor='cover-input' className='profile__cover-img'>
+          <div htmlFor='cover-input' className='profile__cover-img'>
+            {uid === user?._id && (
+                <div 
+                onClick={handlePickCover} 
+                className='button'>
+                  <IoIcon.IoMdSettings className='icon' />
+                </div>
+            )}
             <img
               style={{
-                '--x': Cover.x * -1 + '%',
-                '--y': Cover.y * -1 + '%',
-                '--zoom': Cover.zoom + '%',
+                '--x': CoverPos.x * -1 + '%',
+                '--y': CoverPos.y * -1 + '%',
+                '--zoom': CoverPos.zoom + '%',
               }}
               src={Cover}
               alt=''
             />
-          </label>
+          </div>
 
           <div className='profile__cover-ctnInfo'>
             {uid === user?._id && (

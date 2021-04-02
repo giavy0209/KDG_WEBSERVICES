@@ -78,23 +78,52 @@ $width-cover-ctnInfo: 500px;
     margin-bottom: 20px;
     height: $top-cover-ctnInfo + $height-cover-ctnInfo;
     overflow: hidden;
+    
     &-img {
       display: block;
       position: relative;
+      overflow: hidden;
+
+      &:hover {
+        .button {
+          opacity: 1;
+        }
+      }
+      .button{
+        position: absolute ;
+        top: 0;
+        left: 50%;
+        transform: translate(-50% , 0);
+        width: 768px;
+        max-width: 100%;
+        border-radius: 0;
+        opacity: 0;
+        transition: .3s;
+        cursor: pointer;
+        z-index: 999;
+        background-color: transparent;
+        border-top: 0;
+        &:hover { 
+          background-color: #fff;
+          transform: translate(-50% , 0)
+        }
+      }
 
       &::before {
         content: '';
         display: block;
-        padding-top: $height-cover-photo;
+        padding-top: 30%;
       }
 
       > img {
-        display: block;
         position: absolute;
         top: 0;
         left: 0;
-        width: 100%;
-        height: 100%;
+        transform: translate(var(--x), var(--y));
+        width: var(--zoom);
+
+        display: block;
+
         object-fit: cover;
       }
     }
@@ -169,9 +198,9 @@ $width-cover-ctnInfo: 500px;
         top: 0;
         left: 0;
         transform: translate(var(--x), var(--y));
+        width: var(--zoom);
 
         display: block;
-        width: var(--zoom);
 
         object-fit: cover;
       }

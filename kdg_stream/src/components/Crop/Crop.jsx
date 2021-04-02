@@ -30,25 +30,26 @@ export default function Crop({
   }, [uploadStatus]);
 
   const handleUploadAvatar = useCallback(async () => {
+    const type = label === 'avatar-input' ? 1 : 2
     if(_id){
-      callAPI.post('/avatar?avatar='+_id);
+      callAPI.post(`/avatar?avatar=${_id}&type=${type}`);
     }else{
       const data = new FormData();
       data.append('file' , document.getElementById(label).files[0])
-      callAPI.post('/avatar', data);
+      callAPI.post(`/avatar?type=${type}`, data);
     }
-    callAPI.post('/avatar_pos', imagePos);
+    callAPI.post(`/avatar_pos?type=${type}`, imagePos);
     document.getElementById(label).value = null
-    onFinish()
+    onFinish(label)
   }, [imagePos ,label, _id , onFinish]);
 
   return (
-    <div className='crop-container'>
+    <div className={`crop-container ${label === 'avatar-input' ? 'avatar-crop' : ''}`}>
       <Cropper
         image={image}
         zoom={zoom / 1000}
         crop={crop}
-        aspect={1 / 1}
+        aspect={label === 'avatar-input' ? 1 / 1 : 3 / 1}
         onCropChange={setCrop}
         onCropComplete={onCropComplete}
         onZoomChange={setZoom}
@@ -70,7 +71,7 @@ export default function Crop({
         </button>
 
         <button
-          onClick={onCancel}
+          onClick={()=>{onCancel(label)}}
           className='button'
         >
           <span>{cropLang[language].cancel}</span>
