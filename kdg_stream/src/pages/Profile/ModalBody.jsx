@@ -5,7 +5,7 @@ import { Tab, TabPane } from '../../components';
 import ListImages from './ListImages';
 export default function ModalBody() {
   const uploadStatus = useSelector(state => state.uploadStatus);
-
+  
   return (
     <Tab>
       <TabPane name='Chọn hình'>
