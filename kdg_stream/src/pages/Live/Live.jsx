@@ -3,6 +3,7 @@ import Axios from 'axios';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import ReactHlsPlayer from 'react-hls-player';
 import * as AiIcon from 'react-icons/ai';
+import * as BiIcon from 'react-icons/bi';
 import * as BsIcon from 'react-icons/bs';
 // import * as FaIcon from 'react-icons/fa';
 import * as HiIcon from 'react-icons/hi';
@@ -579,6 +580,8 @@ const Live = () => {
     return () => window.removeEventListener('keydown', playVideoByKeyboard);
   }, [isFullScreen, handleMuteVideo, handleToggleFullscreen]);
 
+  const [isShowMenu, setIsShowMenu] = useState(false);
+
   return (
     <div className='live'>
       <div className='live__left'>
@@ -774,7 +777,19 @@ const Live = () => {
         </div>
 
         <div className='live__info'>
-          <div className='live__titleVideo'>{Stream?.name}</div>
+          <div className='live__titleVideo'>
+            {Stream?.name}
+
+            <div className='iconBox' onClick={() => setIsShowMenu(x => !x)}>
+              <BiIcon.BiDotsVerticalRounded className='icon' />
+
+              <div className={`menu ${isShowMenu ? 'show' : ''}`}>
+                <div className='menu-item'>Edit</div>
+                {/* <div className='menu-item'>Delete</div>
+                <div className='menu-item'>Add</div> */}
+              </div>
+            </div>
+          </div>
 
           <div className='live__info-info'>
             <div

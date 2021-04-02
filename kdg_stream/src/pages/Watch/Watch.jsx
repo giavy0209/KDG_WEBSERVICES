@@ -2,6 +2,7 @@ import { CircularProgress } from '@material-ui/core';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import * as MdIcon from 'react-icons/md';
 import * as RiIcon from 'react-icons/ri';
+import * as BiIcon from 'react-icons/bi';
 import { useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 import '../../assets/css/watch.css';
@@ -12,18 +13,14 @@ import { useLanguageLayerValue } from '../../context/LanguageLayer';
 import { convertDate, convertDateAgo } from '../../helpers';
 import useNumber from '../../hooks/useNumber';
 import useWindowSize from '../../hooks/useWindowSize';
-import avatarDefault from '../../assets/images/avatarDefault.png';
 
 const Watch = () => {
   const history = useHistory();
   const id = new URLSearchParams(useLocation().search).get('v');
   const user = useSelector(state => state.user);
 
-  const isLoaded = useRef(false)
-
   const [width] = useWindowSize();
   const [{ language, watch }] = useLanguageLayerValue();
-
 
   const [convert, setConvert] = useState(true);
 
@@ -87,23 +84,23 @@ const Watch = () => {
     };
   }, [getRecommend]);
 
-  const handleGetComment = useCallback (async (videoId , next) => {
-    const res = await callAPI.get(`/comment?video=${videoId}&next=${next}`)
+  const handleGetComment = useCallback(async (videoId, next) => {
+    const res = await callAPI.get(`/comment?video=${videoId}&next=${next}`);
     console.log(res.data);
-    setComments(res.data)
-    setTotalComment(res.total)
-  },[])
+    setComments(res.data);
+    setTotalComment(res.total);
+  }, []);
 
   useMemo(() => {
-    if(id ){
+    if (id) {
       callAPI.get('/video?sid=' + id).then(res => {
         setVideo(res.data);
         setIsFollowed(res.is_followed);
         setTotalFollow(res.data.user?.kinglive?.total_follower);
-        handleGetComment(res.data._id)
+        handleGetComment(res.data._id);
       });
     }
-  }, [id]);
+  }, [id, handleGetComment]);
 
   const handleFollow = useCallback(async () => {
     const res = await callAPI.post('follow?id=' + Video?.user._id);
@@ -112,24 +109,49 @@ const Watch = () => {
     }
   }, [Video, IsFollowed]);
 
-  const handleComment = useCallback(async e => {
-    e.preventDefault()
-    if(Video?._id){
-      const data = new FormData(e.target)
-      const res = await callAPI.post(`/comment?video=${Video._id}` , {comment : data.get('comment')})
-      console.log(res);
-      setComments(comments => {
-        console.log(comments);
-        return [res.data , ...comments]
-      })
-      e.target.reset()
-    }
-  },[Video])
+  const handleComment = useCallback(
+    async e => {
+      e.preventDefault();
+      if (Video?._id) {
+        const data = new FormData(e.target);
+        const res = await callAPI.post(`/comment?video=${Video._id}`, {
+          comment: data.get('comment'),
+        });
+        console.log(res);
+        setComments(comments => {
+          console.log(comments);
+          return [res.data, ...comments];
+        });
+        e.target.reset();
+      }
+    },
+    [Video]
+  );
 
   useEffect(() => {
     console.log(Comments);
-  }, [ Comments])
-  
+  }, [Comments]);
+
+  const [isShowMenu, setIsShowMenu] = useState(false);
+
+  useEffect(() => {
+    const hideMenu1 = () => {
+      isShowMenu && setIsShowMenu(false);
+    };
+
+    const hideMenu2 = e => {
+      if (e.keyCode !== 27) return;
+      isShowMenu && setIsShowMenu(false);
+    };
+
+    window.addEventListener('click', hideMenu1);
+    window.addEventListener('keyup', hideMenu2);
+
+    return () => {
+      window.removeEventListener('click', hideMenu1);
+      window.removeEventListener('keyup', hideMenu2);
+    };
+  }, [isShowMenu]);
 
   return (
     <div className='watch'>
@@ -147,7 +169,28 @@ const Watch = () => {
         </div>
 
         <div className='watch__info'>
-          <div className='watch__titleVideo'>{Video?.name}</div>
+          <div className='watch__titleVideo'>
+            {Video?.name}
+
+            <div className='iconBox' onClick={() => setIsShowMenu(x => !x)}>
+              <BiIcon.BiDotsVerticalRounded className='icon' />
+
+              <div className={`menu ${isShowMenu ? 'show' : ''}`}>
+                <div className='menu-item'>
+                  <BiIcon.BiEditAlt className='icon' />
+                  Edit
+                </div>
+                <div className='menu-item'>
+                  <BiIcon.BiEditAlt className='icon' />
+                  Report
+                </div>
+                <div className='menu-item'>
+                  <BiIcon.BiEditAlt className='icon' />
+                  Delete
+                </div>
+              </div>
+            </div>
+          </div>
 
           <div className='watch__info-info'>
             <div
@@ -207,43 +250,48 @@ const Watch = () => {
           </div>
         </div>
 
-        <div className="watch__comment">
-          <div className="watch__comment-total">{useNumber(TotalComment)} Bình luận</div>
-          <div className="watch__comment-input">
-            <div className="left">
+        <div className='watch__comment'>
+          <div className='watch__comment-total'>{useNumber(TotalComment)} Bình luận</div>
+          <div className='watch__comment-input'>
+            <div className='left'>
               <Avatar
                 src={
-                  Video?.user.kyc.avatar ? STORAGE_DOMAIN + Video?.user?.kyc.avatar.path : avatarDefault
+                  Video?.user?.kyc.avatar?.path
+                    ? STORAGE_DOMAIN + Video?.user?.kyc.avatar?.path
+                    : undefined
                 }
-                position={Video?.user.kyc.avatar_pos || null}
+                position={Video?.user?.kyc.avatar_pos}
               />
             </div>
-            <form onSubmit={handleComment} className="right">
-              <input placeholder="Bình luận" type="text" name="comment" />
+
+            <form onSubmit={handleComment} className='right'>
+              <input placeholder='Bình luận' type='text' name='comment' />
             </form>
           </div>
-          <div className="watch__comment-list">
-            {
-              Comments.map(o => <div className="comment">
-                <div className="left">
+          <div className='watch__comment-list'>
+            {Comments.map(o => (
+              <div className='comment'>
+                <div className='left'>
                   <Avatar
                     src={
-                      o?.user.kyc.avatar ? STORAGE_DOMAIN + o?.user?.kyc.avatar.path : avatarDefault
+                      o?.user?.kyc.avatar?.path
+                        ? STORAGE_DOMAIN + o?.user?.kyc.avatar?.path
+                        : undefined
                     }
-                    position={o?.user.kyc.avatar_pos || null}
+                    position={o?.user?.kyc.avatar_pos}
                   />
                 </div>
-                <div className="right">
-                  <div className="name">{o.user.kyc.first_name} {o.user.kyc.last_name}</div>
-                  <div className="content">
-                    {o.comment}
+
+                <div className='right'>
+                  <div className='name'>
+                    {o.user.kyc.first_name} {o.user.kyc.last_name}
                   </div>
+                  <div className='content'>{o.comment}</div>
                 </div>
-              </div> )
-            }
+              </div>
+            ))}
           </div>
         </div>
-
       </div>
 
       <div className='watch__right'>

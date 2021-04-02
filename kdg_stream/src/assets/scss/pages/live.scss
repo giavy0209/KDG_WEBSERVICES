@@ -650,8 +650,6 @@ $z-index-live-chatfullscreen: 20002;
 
     @media (max-width: $break-point-small) {
       > button {
-        // padding: 0 20px;
-
         > .icon {
           margin-right: 0;
         }
@@ -670,6 +668,74 @@ $z-index-live-chatfullscreen: 20002;
     color: $sub-title-color;
     font-size: 30px;
     font-weight: 700;
+
+    padding-right: 30px;
+
+    position: relative;
+
+    > .iconBox {
+      cursor: pointer;
+      user-select: none;
+
+      position: absolute;
+      top: 0;
+      right: 0;
+
+      width: 30px;
+      height: 34px;
+
+      border-radius: 50%;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      // background: pink;
+
+      > .icon {
+        font-size: 24px;
+      }
+
+      > .menu {
+        z-index: 2000;
+        position: absolute;
+        top: 100%;
+        right: 0;
+
+        border-radius: 5px;
+        border: $border-bottom;
+
+        display: flex;
+        flex-flow: column nowrap;
+
+        > .menu-item {
+          cursor: pointer;
+          user-select: none;
+
+          color: $light-text-color;
+          font-size: $size-5;
+          font-weight: 500;
+
+          background-color: $background-white;
+
+          padding: 5px 10px;
+
+          border-bottom: $border-bottom;
+
+          &:hover {
+            background-color: #e4e4e4;
+          }
+        }
+
+        opacity: 0;
+        pointer-events: none;
+
+        &.show {
+          opacity: 1;
+          pointer-events: all;
+        }
+      }
+    }
   }
 
   &__avatar {
