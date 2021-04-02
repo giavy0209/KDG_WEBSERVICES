@@ -12,19 +12,26 @@ import { useLanguageLayerValue } from '../../context/LanguageLayer';
 import { convertDate, convertDateAgo } from '../../helpers';
 import useNumber from '../../hooks/useNumber';
 import useWindowSize from '../../hooks/useWindowSize';
+import avatarDefault from '../../assets/images/avatarDefault.png';
 
 const Watch = () => {
   const history = useHistory();
+  const id = new URLSearchParams(useLocation().search).get('v');
+  const user = useSelector(state => state.user);
+
+  const isLoaded = useRef(false)
 
   const [width] = useWindowSize();
   const [{ language, watch }] = useLanguageLayerValue();
 
-  const id = new URLSearchParams(useLocation().search).get('v');
-  const user = useSelector(state => state.user);
 
   const [convert, setConvert] = useState(true);
 
   const [Video, setVideo] = useState(null);
+
+  const [Comments, setComments] = useState([]);
+  const [TotalComment, setTotalComment] = useState(0);
+
   const [TotalFollow, setTotalFollow] = useState(0);
   const [IsFollowed, setIsFollowed] = useState(false);
   const [isShowMore, setIsShowMore] = useState(false);
@@ -80,12 +87,22 @@ const Watch = () => {
     };
   }, [getRecommend]);
 
+  const handleGetComment = useCallback (async (videoId , next) => {
+    const res = await callAPI.get(`/comment?video=${videoId}&next=${next}`)
+    console.log(res.data);
+    setComments(res.data)
+    setTotalComment(res.total)
+  },[])
+
   useMemo(() => {
-    callAPI.get('/video?sid=' + id).then(res => {
-      setVideo(res.data);
-      setIsFollowed(res.is_followed);
-      setTotalFollow(res.data.user?.kinglive?.total_follower);
-    });
+    if(id ){
+      callAPI.get('/video?sid=' + id).then(res => {
+        setVideo(res.data);
+        setIsFollowed(res.is_followed);
+        setTotalFollow(res.data.user?.kinglive?.total_follower);
+        handleGetComment(res.data._id)
+      });
+    }
   }, [id]);
 
   const handleFollow = useCallback(async () => {
@@ -96,10 +113,23 @@ const Watch = () => {
   }, [Video, IsFollowed]);
 
   const handleComment = useCallback(async e => {
-    const data = new FormData(e.target)
-    const res = await callAPI.post(`/comment?video=${Video._id}` , data)
-
+    e.preventDefault()
+    if(Video?._id){
+      const data = new FormData(e.target)
+      const res = await callAPI.post(`/comment?video=${Video._id}` , {comment : data.get('comment')})
+      console.log(res);
+      setComments(comments => {
+        console.log(comments);
+        return [res.data , ...comments]
+      })
+      e.target.reset()
+    }
   },[Video])
+
+  useEffect(() => {
+    console.log(Comments);
+  }, [ Comments])
+  
 
   return (
     <div className='watch'>
@@ -178,12 +208,12 @@ const Watch = () => {
         </div>
 
         <div className="watch__comment">
-          <div className="watch__comment-total">{useNumber(100000)} Bình luận</div>
+          <div className="watch__comment-total">{useNumber(TotalComment)} Bình luận</div>
           <div className="watch__comment-input">
             <div className="left">
               <Avatar
                 src={
-                  Video?.user.kyc.avatar ? STORAGE_DOMAIN + Video?.user?.kyc.avatar.path : avatar0
+                  Video?.user.kyc.avatar ? STORAGE_DOMAIN + Video?.user?.kyc.avatar.path : avatarDefault
                 }
                 position={Video?.user.kyc.avatar_pos || null}
               />
@@ -191,6 +221,26 @@ const Watch = () => {
             <form onSubmit={handleComment} className="right">
               <input placeholder="Bình luận" type="text" name="comment" />
             </form>
+          </div>
+          <div className="watch__comment-list">
+            {
+              Comments.map(o => <div className="comment">
+                <div className="left">
+                  <Avatar
+                    src={
+                      o?.user.kyc.avatar ? STORAGE_DOMAIN + o?.user?.kyc.avatar.path : avatarDefault
+                    }
+                    position={o?.user.kyc.avatar_pos || null}
+                  />
+                </div>
+                <div className="right">
+                  <div className="name">{o.user.kyc.first_name} {o.user.kyc.last_name}</div>
+                  <div className="content">
+                    {o.comment}
+                  </div>
+                </div>
+              </div> )
+            }
           </div>
         </div>
 
