@@ -32,9 +32,12 @@
     align-items: center;
   }
 
-  .reactEasyCrop_CropArea {
-    border-radius: 50%;
+  &.avatar-crop{
+    .reactEasyCrop_CropArea {
+      border-radius: 50%;
+    }
   }
+  
 }
 
 .controls {

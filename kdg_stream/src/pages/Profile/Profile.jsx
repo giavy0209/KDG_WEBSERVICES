@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import * as IoIcon from 'react-icons/io';
 import * as RiIcon from 'react-icons/ri';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import '../../assets/css/profile.css';
 import avatarDefault from '../../assets/images/avatarDefault.png';
@@ -11,21 +11,24 @@ import { Crop } from '../../components';
 import { STORAGE_DOMAIN } from '../../constant';
 import { useLanguageLayerValue } from '../../context/LanguageLayer';
 import useNumber from '../../hooks/useNumber';
+import { actChangeUploadStatus } from '../../store/action';
 import Videos from './MainContainer';
 import Modal from './Modal';
 import ModalBody from './ModalBody';
 
 const Profile = () => {
+  const dispatch = useDispatch();
   const uid = new URLSearchParams(useLocation().search).get('uid');
-  let user = useSelector(state => state.user);
+  const user = useSelector(state => state.user);
+  const uploadStatus = useSelector(state => state.uploadStatus);
   const [{ language, profile }] = useLanguageLayerValue();
+
   const [IsFollowed, setIsFollowed] = useState(false);
   const [UserOwner, setUserOwner] = useState({});
 
   const [VisiblePickAvatar, setVisiblePickAvatar] = useState(false);
 
-  const [IsShowCropAvatar, setIsShowCropAvatar] = useState(false);
-  const [IsShowCropCover, setIsShowCropCover] = useState(false);
+  const [FullScreen, setFullScreen] = useState('');
 
   const [Image, setImage] = useState('');
   const [ImagePos, setImagePos] = useState({ zoom: 1, x: 0, y: 0 });
@@ -33,39 +36,103 @@ const Profile = () => {
   const [Cover, setCover] = useState('');
   const [CoverPos, setCoverPos] = useState({ zoom: 1, x: 0, y: 0 });
 
-  const readURLAvatar = input => {
-    input.persist();
-    input = input.target;
-    if (input.files && input.files[0]) {
-      var reader = new FileReader();
-      reader.onload = async function (e) {
-        let buffer = e.target.result;
-        let videoBlob = new Blob([new Uint8Array(buffer)]);
-        let url = window.URL.createObjectURL(videoBlob);
-        input.parentElement.nextElementSibling.querySelector('img').setAttribute('src', url);
-        setCover(url);
-        setIsShowCropAvatar(true);
-      };
-      reader.readAsArrayBuffer(input.files[0]);
-    }
-  };
+  const onCancelCrop = useCallback(
+    label => {
+      dispatch(
+        actChangeUploadStatus({
+          ...uploadStatus,
+          isShowCrop: false,
+          _id: null,
+        })
+      );
+      if (label === 'avatar-input') {
+        setImage(uploadStatus.currentImage);
+      }
+      if (label === 'cover-input') {
+        setCover(uploadStatus.currentImage);
+      }
+    },
+    [uploadStatus]
+  );
 
-  const readURLCover = input => {
-    input.persist();
-    input = input.target;
-    if (input.files && input.files[0]) {
-      var reader = new FileReader();
-      reader.onload = async function (e) {
-        let buffer = e.target.result;
-        let videoBlob = new Blob([new Uint8Array(buffer)]);
-        let url = window.URL.createObjectURL(videoBlob);
-        input.parentElement.nextElementSibling.querySelector('img').setAttribute('src', url);
-        setImage(url);
-        setIsShowCropAvatar(true);
-      };
-      reader.readAsArrayBuffer(input.files[0]);
-    }
-  };
+  const onFinishCrop = useCallback(
+    label => {
+      dispatch(
+        actChangeUploadStatus({
+          ...uploadStatus,
+          isShowCrop: false,
+          _id: null,
+        })
+      );
+
+      if (label === 'avatar-input') {
+        setImage(uploadStatus.image);
+        setImagePos(uploadStatus.imagePos);
+      }
+      if (label === 'cover-input') {
+        setCover(uploadStatus.image);
+        setCoverPos(uploadStatus.imagePos);
+      }
+    },
+    [uploadStatus]
+  );
+
+  const handlePickAvatar = useCallback(() => {
+    setVisiblePickAvatar(true);
+    dispatch(
+      actChangeUploadStatus({
+        ...uploadStatus,
+        label: 'avatar-input',
+        currentImage: Image,
+      })
+    );
+  }, [uploadStatus, Image]);
+
+  const handlePickCover = useCallback(() => {
+    setVisiblePickAvatar(true);
+    dispatch(
+      actChangeUploadStatus({
+        ...uploadStatus,
+        label: 'cover-input',
+        currentImage: Cover,
+      })
+    );
+  }, [uploadStatus, Cover]);
+
+  const readURLAvatar = useCallback(
+    input => {
+      input.persist();
+      input = input.target;
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = async function (e) {
+          let buffer = e.target.result;
+          let videoBlob = new Blob([new Uint8Array(buffer)]);
+          let url = window.URL.createObjectURL(videoBlob);
+          input.parentElement.nextElementSibling.querySelector('img').setAttribute('src', url);
+          if (uploadStatus.label === 'avatar-input') {
+            setImage(url);
+          }
+          if (uploadStatus.label === 'cover-input') {
+            setCover(url);
+          }
+          dispatch(
+            actChangeUploadStatus({
+              ...uploadStatus,
+              image: url,
+              isShowCrop: true,
+            })
+          );
+        };
+        reader.readAsArrayBuffer(input.files[0]);
+      }
+    },
+    [uploadStatus]
+  );
+
+  const fullScreenImage = useCallback(src => {
+    setFullScreen(src);
+  }, []);
 
   const handleFollow = useCallback(async () => {
     if (uid) {
@@ -84,62 +151,53 @@ const Profile = () => {
         setImage(
           res.data.kyc.avatar?.path ? STORAGE_DOMAIN + res.data.kyc.avatar?.path : avatarDefault
         );
-        setImagePos(res.data?.kyc?.avatar_pos ? res.data.kyc.avatar_pos : { x: 0, y: 0, zoom: 1 });
+        setImagePos(
+          res.data?.kyc?.avatar_pos ? res.data.kyc.avatar_pos : { x: 0, y: 0, zoom: 100 }
+        );
         setCover(res.data.kyc.cover?.path ? STORAGE_DOMAIN + res.data.kyc.cover?.path : cover1);
-        setCoverPos(res.data?.kyc?.cover_pos ? res.data.kyc.cover_pos : { x: 0, y: 0, zoom: 1 });
+        setCoverPos(res.data?.kyc?.cover_pos ? res.data.kyc.cover_pos : { x: 0, y: 0, zoom: 100 });
       });
     }
   }, [uid]);
   return (
     <div className='profile'>
+      {FullScreen && (
+        <div onClick={() => setFullScreen(null)} className='fullscreen-mask'>
+          <img src={FullScreen} alt='' className='fullscreen' />
+        </div>
+      )}
       <Modal
         visible={VisiblePickAvatar}
         onCancle={() => setVisiblePickAvatar(false)}
         title={'Avatar'}
         content={<ModalBody />}
       />
-      {IsShowCropAvatar && (
-        <Crop
-          Image={Image}
-          ImagePos={ImagePos}
-          setImage={setImage}
-          setImagePos={setImagePos}
-          setIsShowCrop={setIsShowCropAvatar}
-          currentImage={
-            user?.kyc?.avatar ? STORAGE_DOMAIN + user?.kyc?.avatar?.path : avatarDefault
-          }
-        />
-      )}
-
-      {IsShowCropCover && (
-        <Crop
-          Image={Cover}
-          ImagePos={CoverPos}
-          setImage={setCover}
-          setImagePos={setCoverPos}
-          setIsShowCrop={setIsShowCropCover}
-          currentImage={user?.kyc?.avatar ? STORAGE_DOMAIN + user?.kyc?.cover?.path : cover1}
-        />
-      )}
+      {uploadStatus?.isShowCrop && <Crop onCancel={onCancelCrop} onFinish={onFinishCrop} />}
 
       <div className='profile__center mt-10'>
         <div className='profile__cover'>
           {uid === user?._id && (
             <form style={{ display: 'none' }} id='cover'>
-              <input onChange={readURLCover} type='file' name='file' id='cover-input' />
+              <input onChange={readURLAvatar} type='file' name='file' id='cover-input' />
             </form>
           )}
-          <label htmlFor='cover-input' className='profile__cover-img'>
+          <div htmlFor='cover-input' className='profile__cover-img'>
+            {uid === user?._id && (
+              <div onClick={handlePickCover} className='button'>
+                <IoIcon.IoMdSettings className='icon' />
+              </div>
+            )}
             <img
+              onClick={() => fullScreenImage(Cover)}
               style={{
-                '--x': Cover.x * -1 + '%',
-                '--y': Cover.y * -1 + '%',
-                '--zoom': Cover.zoom + '%',
+                '--x': CoverPos.x * -1 + '%',
+                '--y': CoverPos.y * -1 + '%',
+                '--zoom': CoverPos.zoom + '%',
               }}
               src={Cover}
               alt=''
             />
-          </label>
+          </div>
 
           <div className='profile__cover-ctnInfo'>
             {uid === user?._id && (
@@ -154,13 +212,14 @@ const Profile = () => {
               </form>
             )}
 
-            <div htmlFor='avatar-input' className='profile__cover-avatar'>
+            <div className='profile__cover-avatar'>
               {uid === user?._id && (
-                <div onClick={() => setVisiblePickAvatar(true)} className='button'>
+                <div onClick={handlePickAvatar} className='button'>
                   <IoIcon.IoMdSettings className='icon' />
                 </div>
               )}
               <img
+                onClick={() => fullScreenImage(Image)}
                 style={{
                   '--x': ImagePos.x * -1 + '%',
                   '--y': ImagePos.y * -1 + '%',

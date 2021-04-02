@@ -1,45 +1,55 @@
 import React, { useCallback, useState } from 'react';
 import Cropper from 'react-easy-crop';
+import { useDispatch, useSelector } from 'react-redux';
 import '../../assets/css/crop.css';
 import callAPI from '../../axios';
 import { useLanguageLayerValue } from '../../context/LanguageLayer';
+import { actChangeUploadStatus } from '../../store/action';
 
 export default function Crop({
-  Image,
-  currentImage,
-  setIsShowCrop,
-  setImage,
-  ImagePos,
-  setImagePos,
+  onCancel = ()=>{},
+  onFinish = ()=>{}
 }) {
+  const dispatch = useDispatch()
+  const uploadStatus = useSelector(state => state.uploadStatus)
+  const { image, imagePos ,label , _id} = uploadStatus || {}
   const [{ language, cropLang }] = useLanguageLayerValue();
 
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1000);
 
-  const onCropComplete = useCallback(
-    ({ x, y, width }, croppedAreaPixels) => {
-      console.log(x, y);
-      setImagePos({ x, y, zoom: 10000 / width });
-    },
-    [setImagePos]
-  );
+  const onCropComplete = useCallback(({ x, y, width }) => {
+    dispatch(actChangeUploadStatus({
+      ...uploadStatus , 
+      imagePos : {
+        x,
+        y,
+        zoom : 10000/width
+      }
+    }))
+  }, [uploadStatus]);
 
   const handleUploadAvatar = useCallback(async () => {
-    setIsShowCrop(false);
-    const data = new FormData(document.getElementById('avatar'));
-    callAPI.post('/avatar', data);
-    callAPI.post('/avatar_pos', ImagePos);
-    document.getElementById('avatar').reset()
-  }, [ImagePos, setIsShowCrop]);
+    const type = label === 'avatar-input' ? 1 : 2
+    if(_id){
+      callAPI.post(`/avatar?avatar=${_id}&type=${type}`);
+    }else{
+      const data = new FormData();
+      data.append('file' , document.getElementById(label).files[0])
+      callAPI.post(`/avatar?type=${type}`, data);
+    }
+    callAPI.post(`/avatar_pos?type=${type}`, imagePos);
+    document.getElementById(label).value = null
+    onFinish(label)
+  }, [imagePos ,label, _id , onFinish]);
 
   return (
-    <div className='crop-container'>
+    <div className={`crop-container ${label === 'avatar-input' ? 'avatar-crop' : ''}`}>
       <Cropper
-        image={Image}
+        image={image}
         zoom={zoom / 1000}
         crop={crop}
-        aspect={1 / 1}
+        aspect={label === 'avatar-input' ? 1 / 1 : 3 / 1}
         onCropChange={setCrop}
         onCropComplete={onCropComplete}
         onZoomChange={setZoom}
@@ -61,10 +71,7 @@ export default function Crop({
         </button>
 
         <button
-          onClick={() => {
-            setIsShowCrop(false);
-            setImage(currentImage);
-          }}
+          onClick={()=>{onCancel(label)}}
           className='button'
         >
           <span>{cropLang[language].cancel}</span>
