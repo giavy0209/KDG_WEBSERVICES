@@ -96,6 +96,12 @@ const Watch = () => {
     }
   }, [Video, IsFollowed]);
 
+  const handleComment = useCallback(async e => {
+    const data = new FormData(e.target)
+    const res = await callAPI.post(`/comment?video=${Video._id}` , data)
+
+  },[Video])
+
   return (
     <div className='watch'>
       <div className='watch__left'>
@@ -171,6 +177,24 @@ const Watch = () => {
             )}
           </div>
         </div>
+
+        <div className="watch__comment">
+          <div className="watch__comment-total">{useNumber(100000)} Bình luận</div>
+          <div className="watch__comment-input">
+            <div className="left">
+              <Avatar
+                src={
+                  Video?.user.kyc.avatar ? STORAGE_DOMAIN + Video?.user?.kyc.avatar.path : avatar0
+                }
+                position={Video?.user.kyc.avatar_pos || null}
+              />
+            </div>
+            <form onSubmit={handleComment} className="right">
+              <input placeholder="Bình luận" type="text" name="comment" />
+            </form>
+          </div>
+        </div>
+
       </div>
 
       <div className='watch__right'>
