@@ -2,7 +2,7 @@ import { CircularProgress } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import { Stream, Video } from '../../components';
+import { Video } from '../../components';
 import { STORAGE_DOMAIN } from '../../constant';
 import { useLanguageLayerValue } from '../../context/LanguageLayer';
 import useWindowSize from '../../hooks/useWindowSize';
@@ -11,7 +11,6 @@ const HomeLeft = props => {
   const { Streammings, Videos, isLoading } = props;
 
   const history = useHistory();
-
   const [width] = useWindowSize();
   const [{ language, home }] = useLanguageLayerValue();
 
@@ -33,11 +32,11 @@ const HomeLeft = props => {
 
         <div
           className={`layoutFlex ${
-            width > 1280
+            width > 1080
               ? 'layout-4'
-              : width > 860
+              : width > 815
               ? 'layout-3'
-              : width > 500
+              : width > 520
               ? 'layout-2'
               : 'layout-1'
           }`}
@@ -48,15 +47,16 @@ const HomeLeft = props => {
         >
           {Streammings.map(el => (
             <div key={el._id} className='layoutFlex-item'>
-              <Stream
+              <Video
+                video={el}
+                type='stream'
+                title={el.name}
+                description={el.description}
+                avataPos={el.user?.kyc.avatar_pos}
+                onClick={() => history.push('/live?s=' + el._id)}
                 avatar={
                   el.user?.kyc.avatar?.path ? STORAGE_DOMAIN + el.user.kyc.avatar.path : undefined
                 }
-                avataPos={el.user?.kyc.avatar_pos}
-                video={el}
-                title={el.name}
-                description={el.description}
-                onClick={() => history.push('/live?s=' + el._id)}
               />
             </div>
           ))}
@@ -72,11 +72,11 @@ const HomeLeft = props => {
 
         <div
           className={`layoutFlex ${
-            width > 1280
+            width > 1080
               ? 'layout-4'
-              : width > 860
+              : width > 815
               ? 'layout-3'
-              : width > 500
+              : width > 520
               ? 'layout-2'
               : 'layout-1'
           }`}
@@ -88,14 +88,15 @@ const HomeLeft = props => {
           {Videos.map(el => (
             <div key={el._id} className='layoutFlex-item'>
               <Video
+                video={el}
+                type='video'
+                title={el.name}
+                description={el.description}
+                avataPos={el.user?.kyc.avatar_pos}
+                onClick={() => history.push('/watch?v=' + el.short_id)}
                 avatar={
                   el.user?.kyc.avatar?.path ? STORAGE_DOMAIN + el.user.kyc.avatar.path : undefined
                 }
-                avataPos={el.user?.kyc.avatar_pos}
-                video={el}
-                title={el.name}
-                description={el.description}
-                onClick={() => history.push('/watch?v=' + el.short_id)}
               />
             </div>
           ))}
@@ -103,6 +104,7 @@ const HomeLeft = props => {
 
         {isLoading && (
           <CircularProgress
+            color='inherit'
             style={{
               display: 'flex',
               justifyContent: 'center',
@@ -110,7 +112,6 @@ const HomeLeft = props => {
               margin: '20px',
               color: '#e41a7f',
             }}
-            color='inherit'
           />
         )}
       </div>

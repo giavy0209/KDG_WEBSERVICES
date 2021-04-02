@@ -7,9 +7,9 @@ import { useLanguageLayerValue } from '../../context/LanguageLayer';
 
 const HomeRight = props => {
   const { Ranking } = props;
+  console.log(Ranking);
 
   const history = useHistory();
-
   const [{ language, home }] = useLanguageLayerValue();
 
   return (
@@ -42,9 +42,7 @@ const HomeRight = props => {
                 type='follow'
                 numb={o.kinglive.total_follower}
                 name={o.kyc ? `${o.kyc.first_name} ${o.kyc.last_name}` : ''}
-                avatar={
-                  o.kyc.avatar?.path ? STORAGE_DOMAIN + o.kyc.avatar?.path : undefined
-                }
+                avatar={o.kyc.avatar?.path ? STORAGE_DOMAIN + o.kyc.avatar?.path : undefined}
                 avatarPos={o.kyc.avatar_pos}
                 onClick={() => history.push('/profile?uid=' + o._id)}
               />
@@ -59,9 +57,7 @@ const HomeRight = props => {
                 type='view'
                 numb={o.kinglive.total_view}
                 name={o.kyc ? `${o.kyc.first_name} ${o.kyc.last_name}` : ''}
-                avatar={
-                  o.kyc.avatar?.path ? STORAGE_DOMAIN + o.kyc.avatar?.path : undefined
-                }
+                avatar={o.kyc.avatar?.path ? STORAGE_DOMAIN + o.kyc.avatar?.path : undefined}
                 avatarPos={o.kyc.avatar_pos}
                 onClick={() => history.push('/profile?uid=' + o._id)}
               />

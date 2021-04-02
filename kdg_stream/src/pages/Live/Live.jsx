@@ -11,7 +11,6 @@ import * as RiIcon from 'react-icons/ri';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import '../../assets/css/live.css';
-import avatar0 from '../../assets/images/header/avatar0.png';
 import callAPI from '../../axios';
 import { Avatar, Stream as Streamsss, Video as Videosss } from '../../components';
 import { BREAK_POINT_MEDIUM, BREAK_POINT_SMALL, PLAY_STREAM, STORAGE_DOMAIN } from '../../constant';
@@ -261,6 +260,7 @@ const Live = () => {
       socket.emit('join_stream', res.data._id);
       streamId = res.data._id;
       setStream(res.data);
+      // console.log(res.data);
       setIsFollowed(res.is_followed);
 
       interval = setInterval(() => {
@@ -273,7 +273,10 @@ const Live = () => {
     });
 
     const handleReceiveChat = function (chatData) {
-      setChat(_chat => [..._chat, chatData]);
+      setChat(_chat => {
+        console.log([..._chat, chatData]);
+        return [..._chat, chatData];
+      });
     };
     socket.on('chat', handleReceiveChat);
 
@@ -326,7 +329,7 @@ const Live = () => {
     });
 
     callAPI.get('/streammings').then(res => {
-      console.log(res.data);
+      // console.log(res.data);
       setStreammings(res.data);
     });
   }, []);
@@ -593,13 +596,13 @@ const Live = () => {
                 {Chat.map((o, i) => (
                   <div className='live__chatfullscreen-top-ctn' key={i}>
                     <div className='live__chatfullscreen-top-ctn-avatar'>
-                      <img
+                      <Avatar
                         src={
                           o.user?.kyc.avatar?.path
                             ? STORAGE_DOMAIN + o.user?.kyc.avatar?.path
-                            : avatar0
+                            : undefined
                         }
-                        alt=''
+                        position={o.user?.kyc.avatar_pos}
                       />
                     </div>
 
@@ -614,22 +617,24 @@ const Live = () => {
                 ))}
               </div>
 
-              <div className='live__chatfullscreen-bottom'>
-                {/* <div className='live__chatfullscreen-bottom-btn'>
-                  <div className='live__chatfullscreen-bottom-btn-gift'>
-                    <FaIcon.FaGift className='icon' />
-                    <span>Gift</span>
-                  </div>
-                </div> */}
+              {user && (
+                <div className='live__chatfullscreen-bottom'>
+                  {/* <div className='live__chatfullscreen-bottom-btn'>
+                    <div className='live__chatfullscreen-bottom-btn-gift'>
+                      <FaIcon.FaGift className='icon' />
+                      <span>Gift</span>
+                    </div>
+                  </div> */}
 
-                {user && (
                   <div className='live__chatfullscreen-bottom-chat'>
                     <div className='live__chatfullscreen-bottom-chat-avatar'>
-                      <img
+                      <Avatar
                         src={
-                          user?.kyc.avatar?.path ? STORAGE_DOMAIN + user?.kyc.avatar?.path : avatar0
+                          user?.kyc.avatar?.path
+                            ? STORAGE_DOMAIN + user?.kyc.avatar?.path
+                            : undefined
                         }
-                        alt=''
+                        position={user?.kyc.avatar_pos}
                       />
                     </div>
 
@@ -651,8 +656,8 @@ const Live = () => {
                       </button> */}
                     </form>
                   </div>
-                )}
-              </div>
+                </div>
+              )}
             </div>
           )}
 
@@ -779,10 +784,10 @@ const Live = () => {
               <Avatar
                 src={
                   Stream?.user?.kyc.avatar?.path
-                    ? STORAGE_DOMAIN + Stream.user.kyc.avatar.path
-                    : avatar0
+                    ? STORAGE_DOMAIN + Stream?.user?.kyc.avatar?.path
+                    : undefined
                 }
-                position={Stream?.user?.kyc.avatar_pos || null}
+                position={Stream?.user?.kyc.avatar_pos}
               />
             </div>
 
@@ -839,13 +844,13 @@ const Live = () => {
               {Chat.map((o, i) => (
                 <div className='live__chatBox-top-ctn' key={i}>
                   <div className='live__chatBox-top-ctn-avatar'>
-                    <img
-                      alt=''
+                    <Avatar
                       src={
                         o.user?.kyc.avatar?.path
                           ? STORAGE_DOMAIN + o.user?.kyc.avatar?.path
-                          : avatar0
+                          : undefined
                       }
+                      position={o.user?.kyc.avatar_pos}
                     />
                   </div>
 
@@ -871,11 +876,11 @@ const Live = () => {
               {user && (
                 <div className='live__chatBox-bottom-chat'>
                   <div className='live__chatBox-bottom-chat-avatar'>
-                    <img
+                    <Avatar
                       src={
-                        user?.kyc.avatar?.path ? STORAGE_DOMAIN + user?.kyc.avatar?.path : avatar0
+                        user?.kyc.avatar?.path ? STORAGE_DOMAIN + user?.kyc.avatar?.path : undefined
                       }
-                      alt=''
+                      position={user?.kyc.avatar_pos}
                     />
                   </div>
 

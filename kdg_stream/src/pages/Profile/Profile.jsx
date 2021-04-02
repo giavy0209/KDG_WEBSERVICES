@@ -1,13 +1,11 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-
+import React, { useCallback, useMemo, useState } from 'react';
 import * as IoIcon from 'react-icons/io';
 import * as RiIcon from 'react-icons/ri';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import '../../assets/css/profile.css';
-import avatar0 from '../../assets/images/header/avatar0.png';
+import avatarDefault from '../../assets/images/avatarDefault.png';
 import cover1 from '../../assets/images/profile/cover1.png';
-
 import callAPI from '../../axios';
 import { Crop } from '../../components';
 import { STORAGE_DOMAIN } from '../../constant';
@@ -83,7 +81,9 @@ const Profile = () => {
       callAPI.get('/user?uid=' + uid).then(res => {
         setUserOwner(res.data);
         setIsFollowed(res.data.isFollowed);
-        setImage(res.data.kyc.avatar?.path ? STORAGE_DOMAIN + res.data.kyc.avatar?.path : avatar0);
+        setImage(
+          res.data.kyc.avatar?.path ? STORAGE_DOMAIN + res.data.kyc.avatar?.path : avatarDefault
+        );
         setImagePos(res.data?.kyc?.avatar_pos ? res.data.kyc.avatar_pos : { x: 0, y: 0, zoom: 1 });
         setCover(res.data.kyc.cover?.path ? STORAGE_DOMAIN + res.data.kyc.cover?.path : cover1);
         setCoverPos(res.data?.kyc?.cover_pos ? res.data.kyc.cover_pos : { x: 0, y: 0, zoom: 1 });
@@ -105,7 +105,9 @@ const Profile = () => {
           setImage={setImage}
           setImagePos={setImagePos}
           setIsShowCrop={setIsShowCropAvatar}
-          currentImage={user?.kyc?.avatar ? STORAGE_DOMAIN + user?.kyc?.avatar?.path : avatar0}
+          currentImage={
+            user?.kyc?.avatar ? STORAGE_DOMAIN + user?.kyc?.avatar?.path : avatarDefault
+          }
         />
       )}
 

@@ -1,27 +1,27 @@
-import {  Tab, TabPane } from '../../components';
-import ListImages from './ListImages'
-import '../../assets/css/profile.css'
 import { useCallback, useMemo, useState } from 'react';
+import '../../assets/css/profile.css';
 import callAPI from '../../axios';
+import { Tab, TabPane } from '../../components';
+import ListImages from './ListImages';
+
 export default function ModalBody() {
-    const [Avatars, setAvatars] = useState([]);
-    const getAvatar = useCallback(async () => {
-        const res = await callAPI.get('/avatar')
-        setAvatars(res.data)
-    },[])
+  const [Avatars, setAvatars] = useState([]);
 
-    useMemo(() => {
-        getAvatar()
-    },[])
+  const getAvatar = useCallback(async () => {
+    const res = await callAPI.get('/avatar');
+    setAvatars(res.data);
+  }, []);
 
-    return (
-        <Tab> 
-            <TabPane name="Chọn hình">
-                <ListImages />
-            </TabPane>
-            <TabPane name="Tải hình lên">
+  useMemo(() => {
+    getAvatar();
+  }, [getAvatar]);
 
-            </TabPane>
-        </Tab>
-    )
+  return (
+    <Tab>
+      <TabPane name='Chọn hình'>
+        <ListImages />
+      </TabPane>
+      <TabPane name='Tải hình lên'></TabPane>
+    </Tab>
+  );
 }
