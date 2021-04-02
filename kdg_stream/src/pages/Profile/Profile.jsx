@@ -1,13 +1,11 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-
+import React, { useCallback, useMemo, useState } from 'react';
 import * as IoIcon from 'react-icons/io';
 import * as RiIcon from 'react-icons/ri';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import '../../assets/css/profile.css';
-import avatar0 from '../../assets/images/header/avatar0.png';
+import avatarDefault from '../../assets/images/avatarDefault.png';
 import cover1 from '../../assets/images/profile/cover1.png';
-
 import callAPI from '../../axios';
 import { Crop } from '../../components';
 import { STORAGE_DOMAIN } from '../../constant';
@@ -19,10 +17,10 @@ import Modal from './Modal';
 import ModalBody from './ModalBody';
 
 const Profile = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const uid = new URLSearchParams(useLocation().search).get('uid');
   const user = useSelector(state => state.user);
-  const uploadStatus = useSelector(state => state.uploadStatus)
+  const uploadStatus = useSelector(state => state.uploadStatus);
   const [{ language, profile }] = useLanguageLayerValue();
 
   const [IsFollowed, setIsFollowed] = useState(false);
@@ -38,84 +36,103 @@ const Profile = () => {
   const [Cover, setCover] = useState('');
   const [CoverPos, setCoverPos] = useState({ zoom: 1, x: 0, y: 0 });
 
-  const onCancelCrop = useCallback((label) => {
-    dispatch(actChangeUploadStatus({
-      ...uploadStatus , 
-      isShowCrop : false,
-      _id : null,
-    }))
-    if(label === 'avatar-input') {
-      setImage(uploadStatus.currentImage)
-    }
-    if(label === 'cover-input') {
-      setCover(uploadStatus.currentImage)
-    }
-  },[uploadStatus])
+  const onCancelCrop = useCallback(
+    label => {
+      dispatch(
+        actChangeUploadStatus({
+          ...uploadStatus,
+          isShowCrop: false,
+          _id: null,
+        })
+      );
+      if (label === 'avatar-input') {
+        setImage(uploadStatus.currentImage);
+      }
+      if (label === 'cover-input') {
+        setCover(uploadStatus.currentImage);
+      }
+    },
+    [uploadStatus]
+  );
 
-  const onFinishCrop = useCallback((label) => {
-    dispatch(actChangeUploadStatus({
-      ...uploadStatus , 
-      isShowCrop : false,
-      _id : null,
-    }))
+  const onFinishCrop = useCallback(
+    label => {
+      dispatch(
+        actChangeUploadStatus({
+          ...uploadStatus,
+          isShowCrop: false,
+          _id: null,
+        })
+      );
 
-    if(label === 'avatar-input') {
-      setImage(uploadStatus.image)
-      setImagePos(uploadStatus.imagePos)
-    }
-    if(label === 'cover-input') {
-      setCover(uploadStatus.image)
-      setCoverPos(uploadStatus.imagePos)
-    }
-  },[uploadStatus])
+      if (label === 'avatar-input') {
+        setImage(uploadStatus.image);
+        setImagePos(uploadStatus.imagePos);
+      }
+      if (label === 'cover-input') {
+        setCover(uploadStatus.image);
+        setCoverPos(uploadStatus.imagePos);
+      }
+    },
+    [uploadStatus]
+  );
 
   const handlePickAvatar = useCallback(() => {
-    setVisiblePickAvatar(true)
-    dispatch(actChangeUploadStatus({
-      ...uploadStatus,
-      label : 'avatar-input',
-      currentImage : Image
-    }))
-  },[uploadStatus,Image])
+    setVisiblePickAvatar(true);
+    dispatch(
+      actChangeUploadStatus({
+        ...uploadStatus,
+        label: 'avatar-input',
+        currentImage: Image,
+      })
+    );
+  }, [uploadStatus, Image]);
 
   const handlePickCover = useCallback(() => {
-    setVisiblePickAvatar(true)
-    dispatch(actChangeUploadStatus({
-      ...uploadStatus,
-      label : 'cover-input',
-      currentImage : Cover
-    }))
-  },[uploadStatus,Cover])
+    setVisiblePickAvatar(true);
+    dispatch(
+      actChangeUploadStatus({
+        ...uploadStatus,
+        label: 'cover-input',
+        currentImage: Cover,
+      })
+    );
+  }, [uploadStatus, Cover]);
 
-  const readURLAvatar = useCallback(input => {
-    input.persist();
-    input = input.target;
-    if (input.files && input.files[0]) {
-      var reader = new FileReader();
-      reader.onload = async function (e) {
-        let buffer = e.target.result;
-        let videoBlob = new Blob([new Uint8Array(buffer)]);
-        let url = window.URL.createObjectURL(videoBlob);
-        input.parentElement.nextElementSibling.querySelector('img').setAttribute('src', url);
-        if(uploadStatus.label === 'avatar-input') {
-          setImage(url);
-        }
-        if(uploadStatus.label === 'cover-input') {
-          setCover(url);
-        }
-        dispatch(actChangeUploadStatus({
-          ...uploadStatus , 
-          image : url,
-          isShowCrop : true
-        }))
-      };
-      reader.readAsArrayBuffer(input.files[0]);
-    }
-  },[uploadStatus]) 
+  const readURLAvatar = useCallback(
+    input => {
+      input.persist();
+      input = input.target;
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = async function (e) {
+          let buffer = e.target.result;
+          let videoBlob = new Blob([new Uint8Array(buffer)]);
+          let url = window.URL.createObjectURL(videoBlob);
+          input.parentElement.nextElementSibling.querySelector('img').setAttribute('src', url);
+          if (uploadStatus.label === 'avatar-input') {
+            setImage(url);
+          }
+          if (uploadStatus.label === 'cover-input') {
+            setCover(url);
+          }
+          dispatch(
+            actChangeUploadStatus({
+              ...uploadStatus,
+              image: url,
+              isShowCrop: true,
+            })
+          );
+        };
+        reader.readAsArrayBuffer(input.files[0]);
+      }
+    },
+    [uploadStatus]
+  );
 
-  const fullScreenImage = useCallback((src) => {
-    setFullScreen(src)
-  },[])
+  const fullScreenImage = useCallback(src => {
+    setFullScreen(src);
+  }, []);
 
   const handleFollow = useCallback(async () => {
     if (uid) {
@@ -131,8 +148,12 @@ const Profile = () => {
       callAPI.get('/user?uid=' + uid).then(res => {
         setUserOwner(res.data);
         setIsFollowed(res.data.isFollowed);
-        setImage(res.data.kyc.avatar?.path ? STORAGE_DOMAIN + res.data.kyc.avatar?.path : avatar0);
-        setImagePos(res.data?.kyc?.avatar_pos ? res.data.kyc.avatar_pos : { x: 0, y: 0, zoom: 100 });
+        setImage(
+          res.data.kyc.avatar?.path ? STORAGE_DOMAIN + res.data.kyc.avatar?.path : avatarDefault
+        );
+        setImagePos(
+          res.data?.kyc?.avatar_pos ? res.data.kyc.avatar_pos : { x: 0, y: 0, zoom: 100 }
+        );
         setCover(res.data.kyc.cover?.path ? STORAGE_DOMAIN + res.data.kyc.cover?.path : cover1);
         setCoverPos(res.data?.kyc?.cover_pos ? res.data.kyc.cover_pos : { x: 0, y: 0, zoom: 100 });
       });
@@ -140,24 +161,18 @@ const Profile = () => {
   }, [uid]);
   return (
     <div className='profile'>
-      {
-        FullScreen && 
-        <div onClick={() => setFullScreen(null)} className="fullscreen-mask">
-          <img src={FullScreen} alt="" className="fullscreen"/>
-        </div> 
-      }
+      {FullScreen && (
+        <div onClick={() => setFullScreen(null)} className='fullscreen-mask'>
+          <img src={FullScreen} alt='' className='fullscreen' />
+        </div>
+      )}
       <Modal
         visible={VisiblePickAvatar}
         onCancle={() => setVisiblePickAvatar(false)}
         title={'Avatar'}
         content={<ModalBody />}
       />
-      {uploadStatus?.isShowCrop && (
-        <Crop
-          onCancel={onCancelCrop}
-          onFinish={onFinishCrop}
-        />
-      )}
+      {uploadStatus?.isShowCrop && <Crop onCancel={onCancelCrop} onFinish={onFinishCrop} />}
 
       <div className='profile__center mt-10'>
         <div className='profile__cover'>
@@ -168,11 +183,9 @@ const Profile = () => {
           )}
           <div htmlFor='cover-input' className='profile__cover-img'>
             {uid === user?._id && (
-                <div 
-                onClick={handlePickCover} 
-                className='button'>
-                  <IoIcon.IoMdSettings className='icon' />
-                </div>
+              <div onClick={handlePickCover} className='button'>
+                <IoIcon.IoMdSettings className='icon' />
+              </div>
             )}
             <img
               onClick={() => fullScreenImage(Cover)}
@@ -201,9 +214,7 @@ const Profile = () => {
 
             <div className='profile__cover-avatar'>
               {uid === user?._id && (
-                <div 
-                onClick={handlePickAvatar} 
-                className='button'>
+                <div onClick={handlePickAvatar} className='button'>
                   <IoIcon.IoMdSettings className='icon' />
                 </div>
               )}

@@ -240,23 +240,10 @@
 
     width: 50px;
     height: 50px;
+
     overflow: hidden;
+
     border-radius: 50%;
-
-    &-img {
-      cursor: pointer;
-      user-select: none;
-
-      display: block;
-      position: absolute;
-      top: 0;
-      left: 0;
-      transform: translate(var(--x), var(--y));
-
-      width: var(--zoom);
-
-      object-fit: cover;
-    }
   }
 
   &__info {
@@ -268,25 +255,13 @@
 
     &-avatar {
       position: relative;
+
       width: 50px;
       height: 50px;
+
       overflow: hidden;
+
       border-radius: 50%;
-
-      &-img {
-        // cursor: pointer;
-        // user-select: none;
-
-        display: block;
-        position: absolute;
-        top: 0;
-        left: 0;
-        transform: translate(var(--x), var(--y));
-
-        width: var(--zoom);
-        object-fit: cover;
-        border-radius: 50%;
-      }
     }
 
     > div:nth-child(2) {

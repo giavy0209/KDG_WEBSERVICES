@@ -1,19 +1,24 @@
 import '../../assets/css/avatar.css';
+import avatarDefault from '../../assets/images/avatarDefault.png';
 
-export default function Avatar({ position, src }) {
+export default function Avatar({ position, src = avatarDefault }) {
   return (
     <>
       <div className='avatar'>
-        <img
-          alt=''
-          style={{
-            '--x': position?.x ? position.x * -1 + '%' : 0,
-            '--y': position?.y ? position.y * -1 + '%' : 0,
-            '--zoom': position?.zoom ? position.zoom + '%' : '100%',
-          }}
-          className='avatar-img'
-          src={src}
-        />
+        {src === avatarDefault ? (
+          <img alt='' src={src} className='avatar__default' />
+        ) : (
+          <img
+            alt=''
+            style={{
+              '--x': position?.x ? position.x * -1 + '%' : 0,
+              '--y': position?.y ? position.y * -1 + '%' : 0,
+              '--zoom': position?.zoom ? position.zoom + '%' : '100%',
+            }}
+            className='avatar-img'
+            src={src}
+          />
+        )}
       </div>
     </>
   );

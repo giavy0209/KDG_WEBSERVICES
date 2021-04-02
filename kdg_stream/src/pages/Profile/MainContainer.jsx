@@ -1,9 +1,8 @@
 import { CircularProgress } from '@material-ui/core';
-import * as IoIcon from 'react-icons/io';
-import * as FaIcon from 'react-icons/fa';
-import * as TiIcon from 'react-icons/ti';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import * as HiIcon from 'react-icons/hi';
-import { Crop, Popper1, Tab, Table, TabPane } from '../../components';
+import * as TiIcon from 'react-icons/ti';
+import { useHistory } from 'react-router';
 import package1 from '../../assets/images/profile/package1.png';
 import package2 from '../../assets/images/profile/package2.png';
 import package3 from '../../assets/images/profile/package3.png';
@@ -13,13 +12,12 @@ import package6 from '../../assets/images/profile/package6.png';
 import package7 from '../../assets/images/profile/package7.png';
 import package8 from '../../assets/images/profile/package8.png';
 import package9 from '../../assets/images/profile/package9.png';
-import { convertDate, convertDateAgo } from '../../helpers';
+import callAPI from '../../axios';
+import { Popper1, Tab, Table, TabPane } from '../../components';
 import { BREAK_POINT_MEDIUM, STORAGE_DOMAIN } from '../../constant';
 import { useLanguageLayerValue } from '../../context/LanguageLayer';
+import { convertDate, convertDateAgo } from '../../helpers';
 import useWindowSize from '../../hooks/useWindowSize';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { useHistory } from 'react-router';
-import callAPI from '../../axios';
 
 const dataHead = {
   status: 'Status',
@@ -64,6 +62,7 @@ const dataPackage = [
   package8,
   package9,
 ];
+
 export default function MainContainer({ uid, user }) {
   const history = useHistory();
   const [isLoading, setIsLoading] = useState(false);
@@ -80,6 +79,7 @@ export default function MainContainer({ uid, user }) {
   const isLoadRef = useRef(true);
 
   const isLoadFirst = useRef(true);
+
   const getVideo = useCallback(async () => {
     const res = await callAPI.get(
       `/videos?user=${uid}&limit=10&last=${Videos[Videos.length - 1]?._id}`
@@ -91,6 +91,7 @@ export default function MainContainer({ uid, user }) {
 
     setVideos([...Videos, ...res.data]);
   }, [Videos, uid]);
+
   useEffect(() => {
     function removePopper1ByClick() {
       setIsShow(false);
@@ -108,6 +109,7 @@ export default function MainContainer({ uid, user }) {
       window.removeEventListener('keyup', removePopper1ByEsc);
     };
   }, []);
+
   useEffect(() => {
     const handleLoad = async () => {
       const totalHeight = document.getElementById('root').clientHeight;
@@ -132,7 +134,8 @@ export default function MainContainer({ uid, user }) {
     return () => {
       window.removeEventListener('scroll', handleLoad);
     };
-  }, [getVideo]);
+  }, [getVideo, uid]);
+
   return (
     <div className='container'>
       {isShow && <Popper1 type={type} pack={pack} />}

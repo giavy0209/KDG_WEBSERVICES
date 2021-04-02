@@ -5,7 +5,6 @@ import * as RiIcon from 'react-icons/ri';
 import { useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 import '../../assets/css/watch.css';
-import avatar0 from '../../assets/images/header/avatar0.png';
 import callAPI from '../../axios';
 import { Avatar, Stream, Video as Videosss } from '../../components';
 import { BREAK_POINT_MEDIUM, BREAK_POINT_SMALL, STORAGE_DOMAIN } from '../../constant';
@@ -127,9 +126,9 @@ const Watch = () => {
             >
               <Avatar
                 src={
-                  Video?.user.kyc.avatar ? STORAGE_DOMAIN + Video?.user?.kyc.avatar.path : avatar0
+                  Video?.user.kyc.avatar ? STORAGE_DOMAIN + Video?.user?.kyc.avatar.path : undefined
                 }
-                position={Video?.user.kyc.avatar_pos || null}
+                position={Video?.user.kyc.avatar_pos}
               />
             </div>
 

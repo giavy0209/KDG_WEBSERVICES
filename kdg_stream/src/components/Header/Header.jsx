@@ -5,8 +5,8 @@ import * as RiIcon from 'react-icons/ri';
 import * as VscIcon from 'react-icons/vsc';
 import { useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
+import { Avatar } from '..';
 import '../../assets/css/header.css';
-import avatar0 from '../../assets/images/header/avatar0.png';
 import diamond0 from '../../assets/images/header/diamond0.svg';
 import logo from '../../assets/images/header/logo.svg';
 import { BREAK_POINT_MEDIUM, STORAGE_DOMAIN } from '../../constant';
@@ -117,15 +117,9 @@ const Header = () => {
       >
         <div className='header__info bb'>
           <div className='header__info-avatar'>
-            <img
-              src={user?.kyc.avatar ? STORAGE_DOMAIN + user?.kyc.avatar?.path : avatar0}
-              alt=''
-              style={{
-                '--x': user?.kyc.avatar_pos ? user?.kyc.avatar_pos.x * -1 + '%' : 0,
-                '--y': user?.kyc.avatar_pos ? user?.kyc.avatar_pos.y * -1 + '%' : 0,
-                '--zoom': user?.kyc.avatar_pos ? user?.kyc.avatar_pos.zoom + '%' : '100%',
-              }}
-              className='header__info-avatar-img'
+            <Avatar
+              src={user?.kyc.avatar ? STORAGE_DOMAIN + user?.kyc.avatar?.path : undefined}
+              position={user?.kyc.avatar_pos}
             />
           </div>
           <div>
@@ -141,7 +135,7 @@ const Header = () => {
           <div
             className='header__manage'
             onClick={() => {
-              history.push('/profile?uid='+user?._id);
+              history.push('/profile?uid=' + user?._id);
               setIsShowUserinfo(false);
             }}
           >
@@ -225,15 +219,9 @@ const Header = () => {
             />
 
             <div className='header__avatar' onClick={handleShowPopper(setIsShowUserinfo)}>
-              <img
-                alt=''
-                className='header__avatar-img'
-                src={user?.kyc.avatar ? STORAGE_DOMAIN + user?.kyc.avatar?.path : avatar0}
-                style={{
-                  '--x': user?.kyc.avatar_pos ? user?.kyc.avatar_pos.x * -1 + '%' : 0,
-                  '--y': user?.kyc.avatar_pos ? user?.kyc.avatar_pos.y * -1 + '%' : 0,
-                  '--zoom': user?.kyc.avatar_pos ? user?.kyc.avatar_pos.zoom + '%' : '100%',
-                }}
+              <Avatar
+                src={user?.kyc.avatar ? STORAGE_DOMAIN + user?.kyc.avatar?.path : undefined}
+                position={user?.kyc.avatar_pos}
               />
             </div>
           </>

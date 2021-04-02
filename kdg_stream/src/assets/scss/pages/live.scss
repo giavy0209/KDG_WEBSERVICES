@@ -126,6 +126,8 @@ $z-index-live-chatfullscreen: 20002;
         }
 
         &-avatar {
+          position: relative;
+
           width: 30px;
           height: 30px;
           margin-right: 10px;
@@ -210,6 +212,8 @@ $z-index-live-chatfullscreen: 20002;
         $avatar-width: 40px;
 
         &-avatar {
+          position: relative;
+
           width: $avatar-width;
           height: $avatar-width;
 
@@ -282,8 +286,11 @@ $z-index-live-chatfullscreen: 20002;
   }
 
   &__videoCtn {
-    margin-bottom: 25px;
     position: relative;
+
+    margin-bottom: 25px;
+
+    background-color: #000;
 
     &::before {
       content: '';
@@ -814,6 +821,8 @@ $z-index-live-chatfullscreen: 20002;
         }
 
         &-avatar {
+          position: relative;
+
           width: 30px;
           height: 30px;
           margin-right: 10px;
@@ -894,6 +903,8 @@ $z-index-live-chatfullscreen: 20002;
         $avatar-width: 40px;
 
         &-avatar {
+          position: relative;
+
           width: $avatar-width;
           height: $avatar-width;
 

@@ -1,5 +1,5 @@
-import '../../assets/css/profile.css'
 import { useCallback, useMemo, useState } from 'react';
+import '../../assets/css/profile.css';
 import callAPI from '../../axios';
 import { STORAGE_DOMAIN } from '../../constant';
 import { useDispatch, useSelector } from 'react-redux';
@@ -24,7 +24,7 @@ export default function ModalBody() {
 
     useMemo(() => {
         getAvatar()
-    },[])
+    },[getAvatar])
 
     return (
         <div className="kdg-row kdg-column-3">
@@ -40,5 +40,7 @@ export default function ModalBody() {
                 )
             }
         </div>
-    )
+      ))}
+    </div>
+  );
 }
