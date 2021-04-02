@@ -1,7 +1,8 @@
 import * as GoIcon from 'react-icons/go';
 import { useSelector } from 'react-redux';
 import '../../assets/css/profile.css';
-
+import { Tab, TabPane } from '../../components';
+import ListImages from './ListImages';
 export default function ModalBody() {
   const uploadStatus = useSelector(state => state.uploadStatus);
 

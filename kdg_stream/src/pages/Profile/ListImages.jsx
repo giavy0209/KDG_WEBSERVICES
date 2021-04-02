@@ -4,6 +4,7 @@ import callAPI from '../../axios';
 import { STORAGE_DOMAIN } from '../../constant';
 import { useDispatch, useSelector } from 'react-redux';
 import { actChangeUploadStatus } from '../../store/action';
+
 export default function ModalBody() {
     const dispatch = useDispatch()
     const uploadStatus = useSelector(state => state.uploadStatus)
@@ -40,7 +41,5 @@ export default function ModalBody() {
                 )
             }
         </div>
-      ))}
-    </div>
   );
 }
