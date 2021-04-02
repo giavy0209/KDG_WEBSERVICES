@@ -52,7 +52,7 @@ const Profile = () => {
         setCover(uploadStatus.currentImage);
       }
     },
-    [uploadStatus]
+    [uploadStatus, dispatch]
   );
 
   const onFinishCrop = useCallback(
@@ -74,7 +74,7 @@ const Profile = () => {
         setCoverPos(uploadStatus.imagePos);
       }
     },
-    [uploadStatus]
+    [uploadStatus, dispatch]
   );
 
   const handlePickAvatar = useCallback(() => {
@@ -86,7 +86,7 @@ const Profile = () => {
         currentImage: Image,
       })
     );
-  }, [uploadStatus, Image]);
+  }, [uploadStatus, dispatch, Image]);
 
   const handlePickCover = useCallback(() => {
     setVisiblePickAvatar(true);
@@ -97,7 +97,7 @@ const Profile = () => {
         currentImage: Cover,
       })
     );
-  }, [uploadStatus, Cover]);
+  }, [uploadStatus, dispatch, Cover]);
 
   const readURLAvatar = useCallback(
     input => {
@@ -127,7 +127,7 @@ const Profile = () => {
         reader.readAsArrayBuffer(input.files[0]);
       }
     },
-    [uploadStatus]
+    [uploadStatus, dispatch]
   );
 
   const fullScreenImage = useCallback(src => {
