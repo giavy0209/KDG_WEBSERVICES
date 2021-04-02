@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import * as IoIcon from 'react-icons/io';
 import * as RiIcon from 'react-icons/ri';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import '../../assets/css/profile.css';
 import avatar0 from '../../assets/images/header/avatar0.png';
@@ -13,21 +13,22 @@ import { Crop } from '../../components';
 import { STORAGE_DOMAIN } from '../../constant';
 import { useLanguageLayerValue } from '../../context/LanguageLayer';
 import useNumber from '../../hooks/useNumber';
+import { actChangeUploadStatus } from '../../store/action';
 import Videos from './MainContainer';
 import Modal from './Modal';
 import ModalBody from './ModalBody';
 
 const Profile = () => {
+  const dispatch = useDispatch()
   const uid = new URLSearchParams(useLocation().search).get('uid');
-  let user = useSelector(state => state.user);
+  const user = useSelector(state => state.user);
+  const uploadStatus = useSelector(state => state.uploadStatus)
   const [{ language, profile }] = useLanguageLayerValue();
+
   const [IsFollowed, setIsFollowed] = useState(false);
   const [UserOwner, setUserOwner] = useState({});
 
   const [VisiblePickAvatar, setVisiblePickAvatar] = useState(false);
-
-  const [IsShowCropAvatar, setIsShowCropAvatar] = useState(false);
-  const [IsShowCropCover, setIsShowCropCover] = useState(false);
 
   const [Image, setImage] = useState('');
   const [ImagePos, setImagePos] = useState({ zoom: 1, x: 0, y: 0 });
@@ -35,24 +36,35 @@ const Profile = () => {
   const [Cover, setCover] = useState('');
   const [CoverPos, setCoverPos] = useState({ zoom: 1, x: 0, y: 0 });
 
-  const readURLAvatar = input => {
-    input.persist();
-    input = input.target;
-    if (input.files && input.files[0]) {
-      var reader = new FileReader();
-      reader.onload = async function (e) {
-        let buffer = e.target.result;
-        let videoBlob = new Blob([new Uint8Array(buffer)]);
-        let url = window.URL.createObjectURL(videoBlob);
-        input.parentElement.nextElementSibling.querySelector('img').setAttribute('src', url);
-        setCover(url);
-        setIsShowCropAvatar(true);
-      };
-      reader.readAsArrayBuffer(input.files[0]);
-    }
-  };
+  const onCancelCrop = useCallback(() => {
+    dispatch(actChangeUploadStatus({
+      ...uploadStatus , 
+      isShowCrop : false,
+      _id : null,
+    }))
+    setImage(uploadStatus.currentImage)
+  },[uploadStatus])
 
-  const readURLCover = input => {
+  const onFinishCrop = useCallback(() => {
+    setImage(uploadStatus.image)
+    setImagePos(uploadStatus.imagePos)
+    dispatch(actChangeUploadStatus({
+      ...uploadStatus , 
+      isShowCrop : false,
+      _id : null,
+    }))
+  },[uploadStatus])
+
+  const handlePickAvatar = useCallback(() => {
+    setVisiblePickAvatar(true)
+    dispatch(actChangeUploadStatus({
+      ...uploadStatus,
+      label : 'avatar-input',
+      currentImage : Image
+    }))
+  },[uploadStatus,Image])
+
+  const readURLAvatar = useCallback(input => {
     input.persist();
     input = input.target;
     if (input.files && input.files[0]) {
@@ -63,11 +75,15 @@ const Profile = () => {
         let url = window.URL.createObjectURL(videoBlob);
         input.parentElement.nextElementSibling.querySelector('img').setAttribute('src', url);
         setImage(url);
-        setIsShowCropAvatar(true);
+        dispatch(actChangeUploadStatus({
+          ...uploadStatus , 
+          image : url,
+          isShowCrop : true
+        }))
       };
       reader.readAsArrayBuffer(input.files[0]);
     }
-  };
+  },[uploadStatus]) 
 
   const handleFollow = useCallback(async () => {
     if (uid) {
@@ -98,25 +114,10 @@ const Profile = () => {
         title={'Avatar'}
         content={<ModalBody />}
       />
-      {IsShowCropAvatar && (
+      {uploadStatus?.isShowCrop && (
         <Crop
-          Image={Image}
-          ImagePos={ImagePos}
-          setImage={setImage}
-          setImagePos={setImagePos}
-          setIsShowCrop={setIsShowCropAvatar}
-          currentImage={user?.kyc?.avatar ? STORAGE_DOMAIN + user?.kyc?.avatar?.path : avatar0}
-        />
-      )}
-
-      {IsShowCropCover && (
-        <Crop
-          Image={Cover}
-          ImagePos={CoverPos}
-          setImage={setCover}
-          setImagePos={setCoverPos}
-          setIsShowCrop={setIsShowCropCover}
-          currentImage={user?.kyc?.avatar ? STORAGE_DOMAIN + user?.kyc?.cover?.path : cover1}
+          onCancel={onCancelCrop}
+          onFinish={onFinishCrop}
         />
       )}
 
@@ -124,7 +125,7 @@ const Profile = () => {
         <div className='profile__cover'>
           {uid === user?._id && (
             <form style={{ display: 'none' }} id='cover'>
-              <input onChange={readURLCover} type='file' name='file' id='cover-input' />
+              <input type='file' name='file' id='cover-input' />
             </form>
           )}
           <label htmlFor='cover-input' className='profile__cover-img'>
@@ -152,9 +153,11 @@ const Profile = () => {
               </form>
             )}
 
-            <div htmlFor='avatar-input' className='profile__cover-avatar'>
+            <div className='profile__cover-avatar'>
               {uid === user?._id && (
-                <div onClick={() => setVisiblePickAvatar(true)} className='button'>
+                <div 
+                onClick={handlePickAvatar} 
+                className='button'>
                   <IoIcon.IoMdSettings className='icon' />
                 </div>
               )}
