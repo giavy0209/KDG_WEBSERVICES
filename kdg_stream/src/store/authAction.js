@@ -1,8 +1,10 @@
 import callAPI from '../axios';
 import { storage } from '../helpers';
+import { actChangeUnreadNoti } from './action';
 
 export const CHANGE_USER = 'CHANGE_USER';
 export const CHANGE_BALANCE = 'CHANGE_BALANCE';
+export const CHANGE_NOTIES = 'CHANGE_NOTIES';
 
 export function actChangeUser(user) {
   return {
@@ -44,6 +46,20 @@ export function asyncLogin(formData) {
   };
 }
 
+export function actChangeNoties(noties) {
+  return {
+    type: CHANGE_NOTIES,
+    payload: { noties },
+  };
+}
+export function asyncGetNoties(){
+  return async dispatch => {
+    const res = await callAPI.get('/noti')
+    dispatch(actChangeNoties(res.data))
+    dispatch(actChangeUnreadNoti(res.unread))
+  }
+}
+
 export function asyncInitAuth(_refresh, _jwt) {
   return async dispatch => {
     if (!_refresh) {
@@ -60,6 +76,10 @@ export function asyncInitAuth(_refresh, _jwt) {
       storage.setToken(_jwt);
       storage.setRefresh(_refresh);
     }
-    await Promise.all([dispatch(asyncGetUser()), dispatch(asyncGetBalances())]);
+    await Promise.all([
+      dispatch(asyncGetUser()), 
+      dispatch(asyncGetBalances()),
+      dispatch(asyncGetNoties())
+    ]);
   };
 }

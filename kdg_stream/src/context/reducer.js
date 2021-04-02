@@ -208,6 +208,7 @@ const header = {
     login: 'Đăng nhập',
     upload: 'Tải lên',
     setup: 'Thiết lập',
+    noti101 : 'data đã theo dõi bạn',
   },
   en: {
     search: 'Search',
@@ -227,6 +228,7 @@ const header = {
     login: 'Sign in',
     upload: 'Upload',
     setup: 'Setup',
+    noti101 : 'data followed you'
   },
 };
 

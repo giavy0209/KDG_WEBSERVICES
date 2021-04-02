@@ -3,26 +3,35 @@ import * as GoIcon from 'react-icons/go';
 import * as IoIcon from 'react-icons/io';
 import * as RiIcon from 'react-icons/ri';
 import * as VscIcon from 'react-icons/vsc';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 import { Avatar } from '..';
 import '../../assets/css/header.css';
 import diamond0 from '../../assets/images/header/diamond0.svg';
 import logo from '../../assets/images/header/logo.svg';
+import callAPI from '../../axios';
 import { BREAK_POINT_MEDIUM, STORAGE_DOMAIN } from '../../constant';
 import { useLanguageLayerValue } from '../../context/LanguageLayer';
 import useNumber from '../../hooks/useNumber';
 import useWindowSize from '../../hooks/useWindowSize';
+import { actChangeUnreadNoti } from '../../store/action';
+import {convertDateAgo} from '../../helpers'
 
-const handleShowPopper = fn => () => fn(x => !x);
+const handleShowPopper = (fnMain , ...fnSubs ) => () => {
+  fnMain(x => !x)
+  fnSubs.forEach(fnSub => fnSub())
+}
 
 const Header = () => {
   const [{ language, header }] = useLanguageLayerValue();
   const [width] = useWindowSize();
   const history = useHistory();
   const location = useLocation();
+  const dispatch = useDispatch()
 
   const user = useSelector(state => state.user);
+  const unreadNoti = useSelector(state => state.unreadNoti);
+  const noties = useSelector(state => state.noties);
   const first_name = user?.kyc.first_name;
   const last_name = user?.kyc.last_name;
   const email = user?.email;
@@ -43,6 +52,20 @@ const Header = () => {
     },
     [location, history]
   );
+
+  const handleReaded = useCallback(async () => {
+    if(unreadNoti > 0){
+      await callAPI.post('/readed')
+      dispatch(actChangeUnreadNoti(0))
+    }
+  },[unreadNoti])
+
+  const handleType = useCallback(({type , data}) => {
+    let text = header[language]['noti'+type]
+    if(type === 101) text = text.replace('data' , data.name)
+
+    return text
+  },[header , language])
 
   useEffect(() => {
     const handleHidePopper = () => {
@@ -105,10 +128,21 @@ const Header = () => {
         <div className='header__title'>
           <p>{header[language].notification}</p>
         </div>
-        <div className='header__emptyNotification'>
-          <p>{header[language].notihere}</p>
-          <p>{header[language].notidesc1}</p>
-        </div>
+          {
+            noties?.length === 0 ? 
+            <>
+              <div className='header__emptyNotification'>
+                <p>{header[language].notihere}</p>
+                <p>{header[language].notidesc1}</p>
+              </div>
+            </> :
+            noties?.map(o => 
+            <div className="header__noti">
+              <p>{handleType(o)}</p>
+              <p className="header__noti-date">{convertDateAgo(o.create_date)}</p>
+            </div>
+            )
+          }
       </div>
 
       <div
@@ -207,16 +241,17 @@ const Header = () => {
                 <span>{header[language].buyNB}</span>
               </button>
             ) : (
-              <RiIcon.RiVipDiamondLine
-                className='header__iconHover'
-                onClick={handleShowPopper(setIsShowBuyNB)}
-              />
+              <div onClick={handleShowPopper(setIsShowBuyNB)} className="header__iconHover">
+                <RiIcon.RiVipDiamondLine/>
+              </div>
             )}
 
-            <VscIcon.VscBell
-              className='header__iconHover'
-              onClick={handleShowPopper(setIsShowNoti)}
-            />
+            <div onClick={handleShowPopper(setIsShowNoti , handleReaded)} className="header__iconHover">
+              {unreadNoti > 0 &&<span className="count">
+                <span>{unreadNoti <= 99 ? unreadNoti : '99+'}</span>
+              </span>}
+              <VscIcon.VscBell />
+            </div>
 
             <div className='header__avatar' onClick={handleShowPopper(setIsShowUserinfo)}>
               <Avatar

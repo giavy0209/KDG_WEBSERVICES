@@ -9,3 +9,12 @@ export function actChangeUploadStatus(uploadStatus) {
     payload: { uploadStatus },
   };
 }
+
+export const CHANGE_UNREAD_NOTI = 'CHANGE_UNREAD_NOTI';
+
+export function actChangeUnreadNoti(unreadNoti) {
+  return {
+    type: CHANGE_UNREAD_NOTI,
+    payload: { unreadNoti },
+  };
+}
