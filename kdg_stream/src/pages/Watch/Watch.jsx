@@ -133,15 +133,18 @@ const Watch = () => {
   }, [Comments]);
 
   const [isShowMenu, setIsShowMenu] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
 
   useEffect(() => {
     const hideMenu1 = () => {
       isShowMenu && setIsShowMenu(false);
+      isEdit && setIsEdit(false);
     };
 
     const hideMenu2 = e => {
       if (e.keyCode !== 27) return;
       isShowMenu && setIsShowMenu(false);
+      isEdit && setIsEdit(false);
     };
 
     window.addEventListener('click', hideMenu1);
@@ -151,10 +154,37 @@ const Watch = () => {
       window.removeEventListener('click', hideMenu1);
       window.removeEventListener('keyup', hideMenu2);
     };
-  }, [isShowMenu]);
+  }, [isShowMenu, isEdit]);
+
+  const handleSubmitEdit = e => {
+    e.preventDefault();
+
+    const formData = new FormData(e.target);
+
+    const data = {};
+    for (const x of formData) {
+      data[x[0]] = x[1];
+    }
+
+    console.log(data);
+  };
 
   return (
     <div className='watch'>
+      {isEdit && (
+        <div className='popup-edit' onClick={e => e.stopPropagation()}>
+          <form onSubmit={handleSubmitEdit}>
+            <div className='label'>Title</div>
+            <input type='text' name='title' defaultValue={Video?.name} />
+
+            <div className='label'>Description</div>
+            <textarea name='description' defaultValue={Video?.description}></textarea>
+
+            <button className='button'>Edit</button>
+          </form>
+        </div>
+      )}
+
       <div className='watch__left'>
         <div className='watch__videoBox'>
           {Video && (
@@ -176,7 +206,7 @@ const Watch = () => {
               <BiIcon.BiDotsVerticalRounded className='icon' />
 
               <div className={`menu ${isShowMenu ? 'show' : ''}`}>
-                <div className='menu-item'>
+                <div className='menu-item' onClick={() => setIsEdit(true)}>
                   <BiIcon.BiEditAlt className='icon' />
                   Edit
                 </div>
