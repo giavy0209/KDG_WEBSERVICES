@@ -30,6 +30,8 @@ const Profile = () => {
 
   const [VisiblePickAvatar, setVisiblePickAvatar] = useState(false);
 
+  const [FullScreen, setFullScreen] = useState('');
+
   const [Image, setImage] = useState('');
   const [ImagePos, setImagePos] = useState({ zoom: 1, x: 0, y: 0 });
 
@@ -107,6 +109,10 @@ const Profile = () => {
     }
   },[uploadStatus]) 
 
+  const fullScreenImage = useCallback((src) => {
+    setFullScreen(src)
+  },[])
+
   const handleFollow = useCallback(async () => {
     if (uid) {
       const res = await callAPI.post('/follow?id=' + uid);
@@ -130,6 +136,12 @@ const Profile = () => {
   }, [uid]);
   return (
     <div className='profile'>
+      {
+        FullScreen && 
+        <div onClick={() => setFullScreen(null)} className="fullscreen-mask">
+          <img src={FullScreen} alt="" className="fullscreen"/>
+        </div> 
+      }
       <Modal
         visible={VisiblePickAvatar}
         onCancle={() => setVisiblePickAvatar(false)}
@@ -159,6 +171,7 @@ const Profile = () => {
                 </div>
             )}
             <img
+              onClick={() => fullScreenImage(Cover)}
               style={{
                 '--x': CoverPos.x * -1 + '%',
                 '--y': CoverPos.y * -1 + '%',
@@ -191,6 +204,7 @@ const Profile = () => {
                 </div>
               )}
               <img
+                onClick={() => fullScreenImage(Image)}
                 style={{
                   '--x': ImagePos.x * -1 + '%',
                   '--y': ImagePos.y * -1 + '%',
