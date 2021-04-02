@@ -53,13 +53,12 @@ const Profile = () => {
   },[uploadStatus])
 
   const onFinishCrop = useCallback((label) => {
-    setImage(uploadStatus.image)
-    setImagePos(uploadStatus.imagePos)
     dispatch(actChangeUploadStatus({
       ...uploadStatus , 
       isShowCrop : false,
       _id : null,
     }))
+
     if(label === 'avatar-input') {
       setImage(uploadStatus.image)
       setImagePos(uploadStatus.imagePos)
@@ -98,7 +97,12 @@ const Profile = () => {
         let videoBlob = new Blob([new Uint8Array(buffer)]);
         let url = window.URL.createObjectURL(videoBlob);
         input.parentElement.nextElementSibling.querySelector('img').setAttribute('src', url);
-        setImage(url);
+        if(uploadStatus.label === 'avatar-input') {
+          setImage(url);
+        }
+        if(uploadStatus.label === 'cover-input') {
+          setCover(url);
+        }
         dispatch(actChangeUploadStatus({
           ...uploadStatus , 
           image : url,
@@ -159,7 +163,7 @@ const Profile = () => {
         <div className='profile__cover'>
           {uid === user?._id && (
             <form style={{ display: 'none' }} id='cover'>
-              <input type='file' name='file' id='cover-input' />
+              <input onChange={readURLAvatar} type='file' name='file' id='cover-input' />
             </form>
           )}
           <div htmlFor='cover-input' className='profile__cover-img'>
