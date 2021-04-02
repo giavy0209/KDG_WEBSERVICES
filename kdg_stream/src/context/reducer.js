@@ -209,6 +209,7 @@ const header = {
     upload: 'Tải lên',
     setup: 'Thiết lập',
     noti101 : 'data đã theo dõi bạn',
+    noti102 : 'data1 đã bình luận trong video data2',
   },
   en: {
     search: 'Search',
@@ -228,7 +229,8 @@ const header = {
     login: 'Sign in',
     upload: 'Upload',
     setup: 'Setup',
-    noti101 : 'data followed you'
+    noti101 : 'data followed you',
+    noti102 : 'data1 on your video data2',
   },
 };
 

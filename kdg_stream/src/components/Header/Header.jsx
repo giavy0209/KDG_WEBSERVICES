@@ -63,7 +63,7 @@ const Header = () => {
   const handleType = useCallback(({type , data}) => {
     let text = header[language]['noti'+type]
     if(type === 101) text = text.replace('data' , data.name)
-
+    if(type === 102) text = text.replace('data1' , data.name).replace('data2' , data.video_name)
     return text
   },[header , language])
 
