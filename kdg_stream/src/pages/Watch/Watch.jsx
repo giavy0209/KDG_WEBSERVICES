@@ -326,7 +326,7 @@ const Watch = () => {
 
       <div className='watch__right'>
         {Streammings.length > 0 && (
-          <div className='watch__title' onClick={() => setIsShowStreammings(x => !x)}>
+          <div className='watch__titleList' onClick={() => setIsShowStreammings(x => !x)}>
             <span>{watch[language].watchlive}</span>
             <MdIcon.MdArrowDropDown className={isShowStreammings ? 'down' : 'up'} />
           </div>
@@ -350,13 +350,15 @@ const Watch = () => {
             {Streammings.map(el => (
               <div key={el._id} className='layoutFlex-item'>
                 <Stream
-                  avatar={
-                    el.user?.kyc.avatar?.path ? STORAGE_DOMAIN + el.user.kyc.avatar.path : undefined
-                  }
-                  avataPos={el.user?.kyc?.avatar_pos}
                   video={el}
                   title={el.name}
                   description={el.description}
+                  avataPos={el.user?.kyc?.avatar_pos}
+                  avatar={
+                    el.user?.kyc.avatar?.path
+                      ? STORAGE_DOMAIN + el.user?.kyc.avatar?.path
+                      : undefined
+                  }
                   onClick={() => {
                     history.push('/live?s=' + el._id);
                     window.scrollTo(0, 0);
@@ -368,7 +370,7 @@ const Watch = () => {
         )}
 
         {Videos.length > 0 && (
-          <div className='watch__title' onClick={() => setIsShowRecommend(x => !x)}>
+          <div className='watch__titleList' onClick={() => setIsShowRecommend(x => !x)}>
             <span>{watch[language].recommend}</span>
             <MdIcon.MdArrowDropDown className={isShowRecommend ? 'down' : 'up'} />
           </div>
@@ -411,6 +413,7 @@ const Watch = () => {
 
         {isLoading && (
           <CircularProgress
+            color='inherit'
             style={{
               display: 'flex',
               justifyContent: 'center',
@@ -418,7 +421,6 @@ const Watch = () => {
               margin: '20px',
               color: '#e41a7f',
             }}
-            color='inherit'
           />
         )}
       </div>

@@ -40,10 +40,7 @@ const HomeLeft = props => {
               ? 'layout-2'
               : 'layout-1'
           }`}
-          style={{
-            '--gap-column': '40px',
-            '--gap-row': '40px',
-          }}
+          style={{ '--gap-column': '40px', '--gap-row': '40px' }}
         >
           {Streammings.map(el => (
             <div key={el._id} className='layoutFlex-item'>
@@ -80,10 +77,7 @@ const HomeLeft = props => {
               ? 'layout-2'
               : 'layout-1'
           }`}
-          style={{
-            '--gap-column': '40px',
-            '--gap-row': '40px',
-          }}
+          style={{ '--gap-column': '40px', '--gap-row': '40px' }}
         >
           {Videos.map(el => (
             <div key={el._id} className='layoutFlex-item'>

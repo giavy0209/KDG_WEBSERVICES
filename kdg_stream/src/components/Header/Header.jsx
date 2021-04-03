@@ -15,19 +15,19 @@ import { useLanguageLayerValue } from '../../context/LanguageLayer';
 import useNumber from '../../hooks/useNumber';
 import useWindowSize from '../../hooks/useWindowSize';
 import { actChangeUnreadNoti } from '../../store/action';
-import {convertDateAgo} from '../../helpers'
+import { convertDateAgo } from '../../helpers';
 
-const handleShowPopper = (fnMain , ...fnSubs ) => () => {
-  fnMain(x => !x)
-  fnSubs.forEach(fnSub => fnSub())
-}
+const handleShowPopper = (fnMain, ...fnSubs) => () => {
+  fnMain(x => !x);
+  fnSubs.forEach(fnSub => fnSub());
+};
 
 const Header = () => {
   const [{ language, header }] = useLanguageLayerValue();
   const [width] = useWindowSize();
   const history = useHistory();
   const location = useLocation();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const user = useSelector(state => state.user);
   const unreadNoti = useSelector(state => state.unreadNoti);
@@ -54,46 +54,42 @@ const Header = () => {
   );
 
   const handleReaded = useCallback(async () => {
-    if(unreadNoti > 0){
-      await callAPI.post('/readed')
-      dispatch(actChangeUnreadNoti(0))
+    if (unreadNoti > 0) {
+      await callAPI.post('/readed');
+      dispatch(actChangeUnreadNoti(0));
     }
-  },[unreadNoti])
+  }, [unreadNoti]);
 
-  const handleType = useCallback(({type , data}) => {
-    let text = header[language]['noti'+type]
-    if(type === 101) text = text.replace('data' , data.name)
-    if(type === 102) text = text.replace('data1' , data.name).replace('data2' , data.video_name)
-    return text
-  },[header , language])
+  const handleType = useCallback(
+    ({ type, data }) => {
+      let text = header[language]['noti' + type];
+      if (type === 101) text = text.replace('data', data.name);
+      if (type === 102) text = text.replace('data1', data.name).replace('data2', data.video_name);
+      return text;
+    },
+    [header, language]
+  );
 
   useEffect(() => {
-    const handleHidePopper = () => {
+    const handleHidePopper1 = () => {
       isShowBuyNB && setIsShowBuyNB(x => !x);
       isShowNoti && setIsShowNoti(x => !x);
       isShowUserinfo && setIsShowUserinfo(x => !x);
     };
 
-    document.addEventListener('click', handleHidePopper);
-
-    return () => {
-      document.removeEventListener('click', handleHidePopper);
-    };
-  }, [isShowBuyNB, isShowNoti, isShowUserinfo]);
-
-  useEffect(() => {
-    const handleHidePopper = e => {
-      if (e.keyCode === 27) {
-        isShowBuyNB && setIsShowBuyNB(x => !x);
-        isShowNoti && setIsShowNoti(x => !x);
-        isShowUserinfo && setIsShowUserinfo(x => !x);
-      }
+    const handleHidePopper2 = e => {
+      if (e.keyCode !== 27) return;
+      isShowBuyNB && setIsShowBuyNB(x => !x);
+      isShowNoti && setIsShowNoti(x => !x);
+      isShowUserinfo && setIsShowUserinfo(x => !x);
     };
 
-    window.addEventListener('keyup', handleHidePopper);
+    document.addEventListener('click', handleHidePopper1);
+    window.addEventListener('keyup', handleHidePopper2);
 
     return () => {
-      window.removeEventListener('keyup', handleHidePopper);
+      document.removeEventListener('click', handleHidePopper1);
+      window.removeEventListener('keyup', handleHidePopper2);
     };
   }, [isShowBuyNB, isShowNoti, isShowUserinfo]);
 
@@ -128,21 +124,20 @@ const Header = () => {
         <div className='header__title'>
           <p>{header[language].notification}</p>
         </div>
-          {
-            noties?.length === 0 ? 
-            <>
-              <div className='header__emptyNotification'>
-                <p>{header[language].notihere}</p>
-                <p>{header[language].notidesc1}</p>
-              </div>
-            </> :
-            noties?.map(o => 
-            <div className="header__noti">
+
+        {noties?.length === 0 ? (
+          <div className='header__emptyNotification'>
+            <p>{header[language].notihere}</p>
+            <p>{header[language].notidesc1}</p>
+          </div>
+        ) : (
+          noties?.map(o => (
+            <div className='header__noti'>
               <p>{handleType(o)}</p>
-              <p className="header__noti-date">{convertDateAgo(o.create_date)}</p>
+              <p className='header__noti-date'>{convertDateAgo(o.create_date)}</p>
             </div>
-            )
-          }
+          ))
+        )}
       </div>
 
       <div
@@ -241,15 +236,20 @@ const Header = () => {
                 <span>{header[language].buyNB}</span>
               </button>
             ) : (
-              <div onClick={handleShowPopper(setIsShowBuyNB)} className="header__iconHover">
-                <RiIcon.RiVipDiamondLine/>
+              <div onClick={handleShowPopper(setIsShowBuyNB)} className='header__iconHover'>
+                <RiIcon.RiVipDiamondLine />
               </div>
             )}
 
-            <div onClick={handleShowPopper(setIsShowNoti , handleReaded)} className="header__iconHover">
-              {unreadNoti > 0 &&<span className="count">
-                <span>{unreadNoti <= 99 ? unreadNoti : '99+'}</span>
-              </span>}
+            <div
+              onClick={handleShowPopper(setIsShowNoti, handleReaded)}
+              className='header__iconHover'
+            >
+              {unreadNoti > 0 && (
+                <span className='count'>
+                  <span>{unreadNoti <= 99 ? unreadNoti : '99+'}</span>
+                </span>
+              )}
               <VscIcon.VscBell />
             </div>
 
