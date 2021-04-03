@@ -58,7 +58,7 @@ const Header = () => {
       await callAPI.post('/readed');
       dispatch(actChangeUnreadNoti(0));
     }
-  }, [unreadNoti]);
+  }, [unreadNoti, dispatch]);
 
   const handleType = useCallback(
     ({ type, data }) => {
