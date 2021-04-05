@@ -159,6 +159,7 @@ const Profile = () => {
       });
     }
   }, [uid]);
+
   return (
     <div className='profile'>
       {FullScreen && (

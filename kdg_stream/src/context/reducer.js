@@ -422,9 +422,7 @@ const watch = {
     showmore: 'HIỂN THỊ THÊM',
     unfollow: 'BỎ THEO DÕI',
     follow: 'THEO DÕI',
-    watchlive: 'Xem trực tiếp',
-    recommend: 'Được đề xuất',
-    loadmore : 'Tải thêm'
+    loadmore: 'Tải thêm',
   },
   en: {
     views: 'views',
@@ -433,9 +431,7 @@ const watch = {
     showmore: ' SHOW MORE',
     unfollow: 'UNFOLLOW',
     follow: 'FOLLOW',
-    watchlive: 'Watch live',
-    recommend: 'Recommend',
-    loadmore : 'Load more'
+    loadmore: 'Load more',
   },
 };
 
@@ -499,6 +495,17 @@ const convert_date_ago = {
   },
 };
 
+const recommend = {
+  vi: {
+    watchlive: 'Xem trực tiếp',
+    recommend: 'Được đề xuất',
+  },
+  en: {
+    watchlive: 'Watch live',
+    recommend: 'Recommend',
+  },
+};
+
 export const initialState = {
   language: 'vi',
   listLanguage,
@@ -519,6 +526,7 @@ export const initialState = {
   watch,
   live,
   convert_date_ago,
+  recommend,
 };
 
 export const CHANGE_LANGUAGE = 'CHANGE_LANGUAGE';

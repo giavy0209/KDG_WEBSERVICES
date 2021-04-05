@@ -13,6 +13,54 @@
   background-color: $background-white;
   box-shadow: $box-shadow;
 
+  &__left {
+    width: calc(75% - 10px);
+    padding: 0 25px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    @media (max-width: $break-point-small) {
+      width: calc(65% - 10px);
+      padding-left: 10px;
+      padding-right: 0;
+    }
+
+    &--left {
+      width: 50%;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      @media (max-width: $break-point-small) {
+        width: auto;
+      }
+    }
+
+    &--right {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+
+  &__right {
+    width: 25%;
+    padding: 0 25px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    @media (max-width: $break-point-small) {
+      width: 35%;
+      padding-left: 0;
+      padding-right: 10px;
+    }
+  }
+
   &__searchBarCon {
     position: fixed;
     z-index: $z-index-searchBar;
@@ -67,42 +115,6 @@
     }
   }
 
-  &__left {
-    width: calc(75% - 10px);
-    padding: 0 25px;
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    &--left {
-      width: 50%;
-
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-
-      @media (max-width: 768px) {
-        width: auto;
-      }
-    }
-
-    &--right {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-  }
-
-  &__right {
-    width: 25%;
-    padding: 0 25px;
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
   &__logo {
     cursor: pointer;
     user-select: none;
@@ -117,20 +129,11 @@
       z-index: 2;
     }
 
+    @extend %hover-effect;
     &:hover {
       &::before {
-        content: '';
-        pointer-events: none;
-
-        z-index: 1;
-        position: absolute;
         top: -5px;
-        left: -10px;
-        right: -10px;
         bottom: -5px;
-
-        border-radius: 5px;
-        background-color: $background-color-hover;
       }
     }
   }
@@ -288,6 +291,11 @@
     overflow: hidden;
 
     border-radius: 50%;
+
+    @media (max-width: $break-point-extra-small) {
+      width: 30px;
+      height: 30px;
+    }
   }
 
   &__info {
@@ -354,17 +362,6 @@
 
     &:hover {
       text-decoration: underline;
-    }
-  }
-
-  @media (max-width: 768px) {
-    &__left {
-      padding-left: 10px;
-    }
-
-    &__right {
-      padding-left: 0;
-      padding-right: 10px;
     }
   }
 }

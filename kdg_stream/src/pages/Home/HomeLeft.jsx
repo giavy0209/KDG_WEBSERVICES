@@ -50,7 +50,10 @@ const HomeLeft = props => {
                 title={el.name}
                 description={el.description}
                 avataPos={el.user?.kyc.avatar_pos}
-                onClick={() => history.push('/live?s=' + el._id)}
+                onClick={() => {
+                  history.push('/live?s=' + el._id);
+                  window.scrollTo(0, 0);
+                }}
                 avatar={
                   el.user?.kyc.avatar?.path ? STORAGE_DOMAIN + el.user.kyc.avatar.path : undefined
                 }
@@ -87,7 +90,10 @@ const HomeLeft = props => {
                 title={el.name}
                 description={el.description}
                 avataPos={el.user?.kyc.avatar_pos}
-                onClick={() => history.push('/watch?v=' + el.short_id)}
+                onClick={() => {
+                  history.push('/watch?v=' + el.short_id);
+                  window.scrollTo(0, 0);
+                }}
                 avatar={
                   el.user?.kyc.avatar?.path ? STORAGE_DOMAIN + el.user.kyc.avatar.path : undefined
                 }

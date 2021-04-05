@@ -139,7 +139,7 @@ const Header = () => {
           </div>
         ) : (
           noties?.map(o => (
-            <div key={o._id} onClick={()=>handleClickNoti(o)} className='header__noti'>
+            <div key={o._id} onClick={() => handleClickNoti(o)} className='header__noti'>
               <p>{handleType(o)}</p>
               <p className='header__noti-date'>{convertDateAgo(o.create_date)}</p>
             </div>

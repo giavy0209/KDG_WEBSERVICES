@@ -16,6 +16,7 @@ import Popper1 from './Popper1';
 import Crop from './Crop';
 import ScrollButton from './ScrollButton';
 import Avatar from './Avatar';
+import Recommend from './Recommend';
 
 export {
   Footer,
@@ -35,5 +36,6 @@ export {
   Crop,
   Stream,
   ScrollButton,
-  Avatar
+  Avatar,
+  Recommend,
 };

@@ -1,14 +1,12 @@
-import { CircularProgress } from '@material-ui/core';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import * as MdIcon from 'react-icons/md';
-import * as RiIcon from 'react-icons/ri';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import * as BiIcon from 'react-icons/bi';
+import * as RiIcon from 'react-icons/ri';
 import { useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 import '../../assets/css/watch.css';
 import callAPI from '../../axios';
-import { Avatar, Stream, Video as Videosss } from '../../components';
-import { BREAK_POINT_MEDIUM, BREAK_POINT_SMALL, STORAGE_DOMAIN } from '../../constant';
+import { Avatar, Recommend } from '../../components';
+import { BREAK_POINT_SMALL, STORAGE_DOMAIN } from '../../constant';
 import { useLanguageLayerValue } from '../../context/LanguageLayer';
 import { convertDate, convertDateAgo } from '../../helpers';
 import useNumber from '../../hooks/useNumber';
@@ -17,13 +15,14 @@ import useWindowSize from '../../hooks/useWindowSize';
 const Watch = () => {
   const history = useHistory();
   const id = new URLSearchParams(useLocation().search).get('v');
-  
+
   const user = useSelector(state => state.user);
 
   const [width] = useWindowSize();
   const [{ language, watch }] = useLanguageLayerValue();
 
   const [convert, setConvert] = useState(true);
+  const [isShowMore, setIsShowMore] = useState(false);
 
   const [Video, setVideo] = useState(null);
 
@@ -32,62 +31,10 @@ const Watch = () => {
 
   const [TotalFollow, setTotalFollow] = useState(0);
   const [IsFollowed, setIsFollowed] = useState(false);
-  const [isShowMore, setIsShowMore] = useState(false);
-
-  const [Videos, setVideos] = useState([]);
-  const [Streammings, setStreammings] = useState([]);
-
-  const [isShowStreammings, setIsShowStreammings] = useState(true);
-  const [isShowRecommend, setIsShowRecommend] = useState(true);
-
-  useMemo(() => {
-    callAPI.get('/recommend').then(res => {
-      setVideos([...res.data]);
-    });
-
-    callAPI.get('/streammings').then(res => {
-      setStreammings(res.data);
-    });
-  }, []);
-
-  const isLoadRef = useRef(true);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const getRecommend = useCallback(async () => {
-    const ids = Videos.map(o => o._id);
-    const res = await callAPI.get(`/recommend?ids=${ids}`);
-
-    if (res.data.length === 0) {
-      return (isLoadRef.current = false);
-    }
-
-    setVideos([...Videos, ...res.data]);
-  }, [Videos]);
-
-  useEffect(() => {
-    const handleLoad = async () => {
-      const totalHeight = document.getElementById('root').clientHeight;
-      const scrolledHeight = window.scrollY + window.innerHeight;
-      const restHeight = totalHeight - scrolledHeight;
-      const isEnd = restHeight <= 300;
-
-      if (isEnd && isLoadRef.current) {
-        setIsLoading(true);
-        await getRecommend();
-        setIsLoading(false);
-      }
-    };
-
-    window.addEventListener('scroll', handleLoad);
-
-    return () => {
-      window.removeEventListener('scroll', handleLoad);
-    };
-  }, [getRecommend]);
 
   const handleGetComment = useCallback(async (videoId, next) => {
     const res = await callAPI.get(`/comment?video=${videoId}&next=${next}`);
-    setComments(comment => [...comment,...res.data]);
+    setComments(comment => [...comment, ...res.data]);
     setTotalComment(res.total);
   }, []);
 
@@ -156,7 +103,7 @@ const Watch = () => {
     };
   }, [isShowMenu, isEdit]);
 
-  const handleSubmitEdit = e => {
+  const handleEdit = e => {
     e.preventDefault();
 
     const formData = new FormData(e.target);
@@ -173,7 +120,7 @@ const Watch = () => {
     <div className='watch'>
       {isEdit && (
         <div className='popup-edit' onClick={e => e.stopPropagation()}>
-          <form onSubmit={handleSubmitEdit}>
+          <form onSubmit={handleEdit}>
             <div className='label'>Title</div>
             <input type='text' name='title' defaultValue={Video?.name} />
 
@@ -202,8 +149,8 @@ const Watch = () => {
           <div className='watch__titleVideo'>
             {Video?.name}
 
-            <div className='iconBox' onClick={() => setIsShowMenu(x => !x)}>
-              <BiIcon.BiDotsVerticalRounded className='icon' />
+            <div className='watch__menuBox' onClick={() => setIsShowMenu(x => !x)}>
+              <BiIcon.BiDotsVerticalRounded className='menu-icon' />
 
               <div className={`menu ${isShowMenu ? 'show' : ''}`}>
                 <div className='menu-item' onClick={() => setIsEdit(true)}>
@@ -285,11 +232,7 @@ const Watch = () => {
           <div className='watch__comment-input'>
             <div className='left'>
               <Avatar
-                src={
-                  user?.kyc.avatar?.path
-                    ? STORAGE_DOMAIN + user?.kyc.avatar?.path
-                    : undefined
-                }
+                src={user?.kyc.avatar?.path ? STORAGE_DOMAIN + user?.kyc.avatar?.path : undefined}
                 position={user?.kyc.avatar_pos}
               />
             </div>
@@ -320,110 +263,18 @@ const Watch = () => {
                 </div>
               </div>
             ))}
-            <div onClick={()=>handleGetComment(Video._id , Comments[Comments.length - 1]?._id)} className="button mt-20">{watch[language].loadmore}</div>
+            <div
+              onClick={() => handleGetComment(Video._id, Comments[Comments.length - 1]?._id)}
+              className='button mt-20'
+            >
+              {watch[language].loadmore}
+            </div>
           </div>
         </div>
       </div>
 
       <div className='watch__right'>
-        {Streammings.length > 0 && (
-          <div className='watch__titleList' onClick={() => setIsShowStreammings(x => !x)}>
-            <span>{watch[language].watchlive}</span>
-            <MdIcon.MdArrowDropDown className={isShowStreammings ? 'down' : 'up'} />
-          </div>
-        )}
-
-        {isShowStreammings && (
-          <div
-            className={`layoutFlex ${
-              width > BREAK_POINT_MEDIUM
-                ? 'layout-1'
-                : width > 1187
-                ? 'layout-4'
-                : width > 897
-                ? 'layout-3'
-                : width > 577
-                ? 'layout-2'
-                : 'layout-1'
-            }`}
-            style={{ '--gap-row': '40px', '--gap-column': '40px' }}
-          >
-            {Streammings.map(el => (
-              <div key={el._id} className='layoutFlex-item'>
-                <Stream
-                  video={el}
-                  title={el.name}
-                  description={el.description}
-                  avataPos={el.user?.kyc?.avatar_pos}
-                  avatar={
-                    el.user?.kyc.avatar?.path
-                      ? STORAGE_DOMAIN + el.user?.kyc.avatar?.path
-                      : undefined
-                  }
-                  onClick={() => {
-                    history.push('/live?s=' + el._id);
-                    window.scrollTo(0, 0);
-                  }}
-                />
-              </div>
-            ))}
-          </div>
-        )}
-
-        {Videos.length > 0 && (
-          <div className='watch__titleList' onClick={() => setIsShowRecommend(x => !x)}>
-            <span>{watch[language].recommend}</span>
-            <MdIcon.MdArrowDropDown className={isShowRecommend ? 'down' : 'up'} />
-          </div>
-        )}
-
-        {isShowRecommend && (
-          <div
-            className={`layoutFlex ${
-              width > BREAK_POINT_MEDIUM
-                ? 'layout-1'
-                : width > 1187
-                ? 'layout-4'
-                : width > 897
-                ? 'layout-3'
-                : width > 577
-                ? 'layout-2'
-                : 'layout-1'
-            }`}
-            style={{ '--gap-row': '40px', '--gap-column': '40px' }}
-          >
-            {Videos.map(el => (
-              <div key={el._id} className='layoutFlex-item'>
-                <Videosss
-                  avatar={
-                    el.user?.kyc.avatar?.path ? STORAGE_DOMAIN + el.user.kyc.avatar.path : null
-                  }
-                  video={el}
-                  avataPos={el.user?.kyc?.avatar_pos}
-                  title={el.name}
-                  description={el.description}
-                  onClick={() => {
-                    history.push('/watch?v=' + el.short_id);
-                    window.scrollTo(0, 0);
-                  }}
-                />
-              </div>
-            ))}
-          </div>
-        )}
-
-        {isLoading && (
-          <CircularProgress
-            color='inherit'
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              width: '100%',
-              margin: '20px',
-              color: '#e41a7f',
-            }}
-          />
-        )}
+        <Recommend />
       </div>
     </div>
   );
