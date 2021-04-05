@@ -212,6 +212,7 @@ const header = {
     noti102 : 'data1 đã bình luận trong video data2',
     noti103 : 'Video data1 đã tải lên thành công',
     noti104 : 'data1 đã đăng video mới: data2',
+    noti105 : 'data1 đang phát trực tiếp',
   },
   en: {
     search: 'Search',
@@ -235,6 +236,7 @@ const header = {
     noti102 : 'data1 on your video data2',
     noti103 : 'Your video data1 uploaded',
     noti104 : 'data1 uploaded new video: data2',
+    noti105 : 'data1 is streaming',
   },
 };
 
