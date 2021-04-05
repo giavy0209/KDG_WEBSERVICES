@@ -17,6 +17,7 @@ import useWindowSize from '../../hooks/useWindowSize';
 const Watch = () => {
   const history = useHistory();
   const id = new URLSearchParams(useLocation().search).get('v');
+  
   const user = useSelector(state => state.user);
 
   const [width] = useWindowSize();
@@ -86,8 +87,7 @@ const Watch = () => {
 
   const handleGetComment = useCallback(async (videoId, next) => {
     const res = await callAPI.get(`/comment?video=${videoId}&next=${next}`);
-    console.log(res.data);
-    setComments(res.data);
+    setComments(comment => [...comment,...res.data]);
     setTotalComment(res.total);
   }, []);
 
@@ -286,11 +286,11 @@ const Watch = () => {
             <div className='left'>
               <Avatar
                 src={
-                  Video?.user?.kyc.avatar?.path
-                    ? STORAGE_DOMAIN + Video?.user?.kyc.avatar?.path
+                  user?.kyc.avatar?.path
+                    ? STORAGE_DOMAIN + user?.kyc.avatar?.path
                     : undefined
                 }
-                position={Video?.user?.kyc.avatar_pos}
+                position={user?.kyc.avatar_pos}
               />
             </div>
 
@@ -320,6 +320,7 @@ const Watch = () => {
                 </div>
               </div>
             ))}
+            <div onClick={()=>handleGetComment(Video._id , Comments[Comments.length - 1]?._id)} className="button mt-20">{watch[language].loadmore}</div>
           </div>
         </div>
       </div>

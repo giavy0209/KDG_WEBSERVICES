@@ -210,6 +210,7 @@ const header = {
     setup: 'Thiết lập',
     noti101 : 'data đã theo dõi bạn',
     noti102 : 'data1 đã bình luận trong video data2',
+    noti103 : 'Video data1 đã tải lên thành công',
   },
   en: {
     search: 'Search',
@@ -231,6 +232,7 @@ const header = {
     setup: 'Setup',
     noti101 : 'data followed you',
     noti102 : 'data1 on your video data2',
+    noti103 : 'Your video data1 uploaded',
   },
 };
 
@@ -420,6 +422,7 @@ const watch = {
     follow: 'THEO DÕI',
     watchlive: 'Xem trực tiếp',
     recommend: 'Được đề xuất',
+    loadmore : 'Tải thêm'
   },
   en: {
     views: 'views',
@@ -430,6 +433,7 @@ const watch = {
     follow: 'FOLLOW',
     watchlive: 'Watch live',
     recommend: 'Recommend',
+    loadmore : 'Load more'
   },
 };
 

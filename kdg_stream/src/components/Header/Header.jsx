@@ -65,10 +65,16 @@ const Header = () => {
       let text = header[language]['noti' + type];
       if (type === 101) text = text.replace('data', data.name);
       if (type === 102) text = text.replace('data1', data.name).replace('data2', data.video_name);
+      if (type === 103) text = text.replace('data1', data.video_name)
       return text;
     },
     [header, language]
   );
+
+  const handleClickNoti = useCallback(({type , data}) => {
+    if(type === 101) history.push(`/profile?uid=${data.user}`)
+    if(type === 102) history.push(`/watch?v=${data.video}`)
+  },[])
 
   useEffect(() => {
     const handleHidePopper1 = () => {
@@ -132,7 +138,7 @@ const Header = () => {
           </div>
         ) : (
           noties?.map(o => (
-            <div className='header__noti'>
+            <div onClick={()=>handleClickNoti(o)} className='header__noti'>
               <p>{handleType(o)}</p>
               <p className='header__noti-date'>{convertDateAgo(o.create_date)}</p>
             </div>
