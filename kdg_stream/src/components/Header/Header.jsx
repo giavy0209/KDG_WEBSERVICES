@@ -73,7 +73,7 @@ const Header = () => {
 
   const handleClickNoti = useCallback(({type , data}) => {
     if(type === 101) history.push(`/profile?uid=${data.user}`)
-    if(type === 102) history.push(`/watch?v=${data.video}`)
+    if(type === 102 || type === 103) history.push(`/watch?v=${data.video}`)
   },[])
 
   useEffect(() => {
