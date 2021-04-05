@@ -8,9 +8,10 @@ import { useLanguageLayerValue } from '../../context/LanguageLayer';
 import useWindowSize from '../../hooks/useWindowSize';
 
 const HomeLeft = props => {
-  const { Streammings, Videos, isLoading } = props;
+  const { recommendList, streammingsList, isLoading } = props;
 
   const history = useHistory();
+
   const [width] = useWindowSize();
   const [{ language, home }] = useLanguageLayerValue();
 
@@ -24,7 +25,7 @@ const HomeLeft = props => {
       </div> */}
 
       <div>
-        {Streammings.length > 0 && (
+        {streammingsList.length > 0 && (
           <div className='main__title'>
             <p>{home[language].watchLive}</p>
           </div>
@@ -42,7 +43,7 @@ const HomeLeft = props => {
           }`}
           style={{ '--gap-column': '40px', '--gap-row': '40px' }}
         >
-          {Streammings.map(el => (
+          {streammingsList.map(el => (
             <div key={el._id} className='layoutFlex-item'>
               <Video
                 video={el}
@@ -64,7 +65,7 @@ const HomeLeft = props => {
       </div>
 
       <div>
-        {Videos.length > 0 && (
+        {recommendList.length > 0 && (
           <div className='main__title'>
             <p>{home[language].recommend}</p>
           </div>
@@ -82,7 +83,7 @@ const HomeLeft = props => {
           }`}
           style={{ '--gap-column': '40px', '--gap-row': '40px' }}
         >
-          {Videos.map(el => (
+          {recommendList.map(el => (
             <div key={el._id} className='layoutFlex-item'>
               <Video
                 video={el}
@@ -120,8 +121,8 @@ const HomeLeft = props => {
 };
 
 HomeLeft.propTypes = {
-  Streammings: PropTypes.array.isRequired,
-  Videos: PropTypes.array.isRequired,
+  recommendList: PropTypes.array.isRequired,
+  streammingsList: PropTypes.array.isRequired,
   isLoading: PropTypes.bool.isRequired,
 };
 

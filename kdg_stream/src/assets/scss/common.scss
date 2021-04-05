@@ -64,6 +64,13 @@ $z-index-header: 9000;
 $z-index-searchBar: 200;
 $z-index-right: 100;
 
+$z-index-scroll-button: 19999;
+$z-index-fullscreen: 20000;
+$z-index-controls: 20001;
+$z-index-live-chatfullscreen: 20002;
+
+$z-index-popup: 30000;
+
 // ----------------------------------------------------------- //
 
 // --------------------------MIXIN---------------------------- //
@@ -102,6 +109,27 @@ $z-index-right: 100;
 
       background-color: $background-color-hover;
     }
+  }
+}
+
+%input-effect {
+  position: relative;
+  .effect {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    right: 50%;
+
+    transition: all 0.3s ease-out;
+
+    background-color: $main-color;
+
+    height: 2px;
+  }
+
+  input:focus + .effect {
+    left: 0;
+    right: 0;
   }
 }
 

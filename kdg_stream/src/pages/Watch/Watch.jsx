@@ -85,7 +85,6 @@ const Watch = () => {
   useEffect(() => {
     const hideMenu1 = () => {
       isShowMenu && setIsShowMenu(false);
-      isEdit && setIsEdit(false);
     };
 
     const hideMenu2 = e => {
@@ -119,15 +118,19 @@ const Watch = () => {
   return (
     <div className='watch'>
       {isEdit && (
-        <div className='popup-edit' onClick={e => e.stopPropagation()}>
-          <form onSubmit={handleEdit}>
+        <div className='popupBox' onClick={e => e.stopPropagation()}>
+          <div className='mask' onClick={() => setIsEdit(false)}></div>
+
+          <form className='content' onSubmit={handleEdit}>
             <div className='label'>Title</div>
             <input type='text' name='title' defaultValue={Video?.name} />
 
             <div className='label'>Description</div>
             <textarea name='description' defaultValue={Video?.description}></textarea>
 
-            <button className='button'>Edit</button>
+            <button style={{ width: '100%' }} className='button'>
+              Edit
+            </button>
           </form>
         </div>
       )}
@@ -228,7 +231,9 @@ const Watch = () => {
         </div>
 
         <div className='watch__comment'>
-          <div className='watch__comment-total'>{useNumber(TotalComment)} Bình luận</div>
+          <div className='watch__comment-total'>
+            {useNumber(TotalComment)} {watch[language].comment}
+          </div>
 
           <div className='watch__comment-input'>
             <div className='left'>
@@ -240,6 +245,7 @@ const Watch = () => {
 
             <form onSubmit={handleComment} className='right'>
               <input placeholder={watch[language].comment} type='text' name='comment' />
+              <span className='effect'></span>
             </form>
           </div>
 
@@ -265,13 +271,6 @@ const Watch = () => {
                 </div>
               </div>
             ))}
-
-            {/* <div
-              onClick={() => handleGetComment(Video._id, Comments[Comments.length - 1]?._id)}
-              className='button mt-20'
-            >
-              {watch[language].loadmore}
-            </div> */}
 
             <div
               className='watch__showMore'

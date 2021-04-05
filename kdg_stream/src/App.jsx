@@ -7,11 +7,17 @@ import { storage } from './helpers';
 import { Home, Live, Login, Profile, Setup, Upload, Watch } from './pages';
 import socket from './socket';
 import { actChangeUnreadNoti } from './store/action';
-import { actChangeBalances, actChangeNoties, actChangeUser, asyncInitAuth } from './store/authAction';
-import { toast ,ToastContainer} from 'react-toastify';
+import {
+  actChangeBalances,
+  actChangeNoties,
+  actChangeUser,
+  asyncInitAuth,
+} from './store/authAction';
+import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import store from './store'
+import store from './store';
 import { useLanguageLayerValue } from './context/LanguageLayer';
+
 const App = () => {
   const [{ language, header }] = useLanguageLayerValue();
   const location = useLocation();
@@ -34,18 +40,22 @@ const App = () => {
       let text = header[language]['noti' + type];
       if (type === 101) text = text.replace('data', data.name);
       if (type === 102) text = text.replace('data1', data.name).replace('data2', data.video_name);
-      if (type === 103) text = text.replace('data1', data.video_name)
-      if (type === 105) text = text.replace('data1', data.user_name).replace('data2', data.video_name)
-      if (type === 105) text = text.replace('data1', data.user_name)
+      if (type === 103) text = text.replace('data1', data.video_name);
+      if (type === 105)
+        text = text.replace('data1', data.user_name).replace('data2', data.video_name);
+      if (type === 105) text = text.replace('data1', data.user_name);
       return text;
     },
     [header, language]
   );
 
-  const handleClickNoti = useCallback(({type , data}) => {
-    if(type === 101) history.push(`/profile?uid=${data.user}`)
-    if(type === 102 || type === 103 || type === 104) history.push(`/watch?v=${data.video}`)
-  },[])
+  const handleClickNoti = useCallback(
+    ({ type, data }) => {
+      if (type === 101) history.push(`/profile?uid=${data.user}`);
+      if (type === 102 || type === 103 || type === 104) history.push(`/watch?v=${data.video}`);
+    },
+    [history]
+  );
 
   useEffect(() => {
     const listenBalance = res => {
@@ -55,21 +65,21 @@ const App = () => {
       dispatch(actChangeUser(res.data));
     };
     const listenNoti = res => {
-      dispatch(actChangeUnreadNoti(res.unread))
-      const noties = store.getState().noties || []
-      dispatch(actChangeNoties([res.data , ...noties]))
-      toast(<div onClick={()=>handleClickNoti(res.data)}>{handleType(res.data)}</div>);
-    }
+      dispatch(actChangeUnreadNoti(res.unread));
+      const noties = store.getState().noties || [];
+      dispatch(actChangeNoties([res.data, ...noties]));
+      toast(<div onClick={() => handleClickNoti(res.data)}>{handleType(res.data)}</div>);
+    };
 
     socket.on('balances', listenBalance);
     socket.on('user', listenUser);
-    socket.on('noti' , listenNoti)
+    socket.on('noti', listenNoti);
     return () => {
-      socket.removeEventListener('balances' , listenBalance)
-      socket.removeEventListener('user' , listenUser)
-      socket.removeEventListener('noti' , listenNoti)
-    }
-  }, [dispatch , handleType]);
+      socket.removeEventListener('balances', listenBalance);
+      socket.removeEventListener('user', listenUser);
+      socket.removeEventListener('noti', listenNoti);
+    };
+  }, [dispatch, handleType, handleClickNoti]);
 
   return (
     <>

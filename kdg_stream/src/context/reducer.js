@@ -434,7 +434,7 @@ const watch = {
     showmore: ' SHOW MORE',
     unfollow: 'UNFOLLOW',
     follow: 'FOLLOW',
-    comment: 'Comment',
+    comment: 'Comments',
     loadmore: 'Load more',
   },
 };
