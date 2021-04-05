@@ -10,7 +10,7 @@ import '../../assets/css/header.css';
 import diamond0 from '../../assets/images/header/diamond0.svg';
 import logo from '../../assets/images/header/logo.svg';
 import callAPI from '../../axios';
-import { BREAK_POINT_MEDIUM, STORAGE_DOMAIN } from '../../constant';
+import { BREAK_POINT_MEDIUM, BREAK_POINT_SMALL, STORAGE_DOMAIN } from '../../constant';
 import { useLanguageLayerValue } from '../../context/LanguageLayer';
 import useNumber from '../../hooks/useNumber';
 import useWindowSize from '../../hooks/useWindowSize';
@@ -121,7 +121,7 @@ const Header = () => {
       </div>
 
       <div className={`popper ${isShowNoti ? 'show' : ''}`} onClick={e => e.stopPropagation()}>
-        <div className='header__title'>
+        <div className='main__title pl-25 pr-25'>
           <p>{header[language].notification}</p>
         </div>
 
@@ -132,7 +132,7 @@ const Header = () => {
           </div>
         ) : (
           noties?.map(o => (
-            <div className='header__noti'>
+            <div key={o._id} className='header__noti'>
               <p>{handleType(o)}</p>
               <p className='header__noti-date'>{convertDateAgo(o.create_date)}</p>
             </div>
@@ -191,7 +191,7 @@ const Header = () => {
             <img src={logo} alt='logo' />
           </div>
 
-          {width > 768 ? (
+          {width > BREAK_POINT_SMALL ? (
             <div className='header__search'>
               <IoIcon.IoMdSearch className='header__searchIcon1 header__iconHover' />
               <input type='text' placeholder={header[language].search} />
@@ -243,7 +243,7 @@ const Header = () => {
 
             <div
               onClick={handleShowPopper(setIsShowNoti, handleReaded)}
-              className='header__iconHover'
+              className='header__notiIcon header__iconHover'
             >
               {unreadNoti > 0 && (
                 <span className='count'>
