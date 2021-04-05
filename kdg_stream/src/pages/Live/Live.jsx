@@ -1,6 +1,5 @@
-import { CircularProgress } from '@material-ui/core';
 import Axios from 'axios';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import ReactHlsPlayer from 'react-hls-player';
 import * as AiIcon from 'react-icons/ai';
 import * as BiIcon from 'react-icons/bi';
@@ -13,8 +12,8 @@ import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import '../../assets/css/live.css';
 import callAPI from '../../axios';
-import { Avatar, Stream as Streamsss, Video as Videosss } from '../../components';
-import { BREAK_POINT_MEDIUM, BREAK_POINT_SMALL, PLAY_STREAM, STORAGE_DOMAIN } from '../../constant';
+import { Avatar, Recommend } from '../../components';
+import { BREAK_POINT_SMALL, PLAY_STREAM, STORAGE_DOMAIN } from '../../constant';
 import { useLanguageLayerValue } from '../../context/LanguageLayer';
 import { convertDate, convertDateAgo, convertTime } from '../../helpers';
 import useNumber from '../../hooks/useNumber';
@@ -317,58 +316,6 @@ const Live = () => {
     },
     [Stream]
   );
-
-  const [Videos, setVideos] = useState([]);
-  const [Streammings, setStreammings] = useState([]);
-
-  const [isShowStreammings, setIsShowStreammings] = useState(true);
-  const [isShowRecommend, setIsShowRecommend] = useState(true);
-
-  useMemo(() => {
-    callAPI.get('/recommend').then(res => {
-      setVideos([...res.data]);
-    });
-
-    callAPI.get('/streammings').then(res => {
-      // console.log(res.data);
-      setStreammings(res.data);
-    });
-  }, []);
-
-  const isLoadRef = useRef(true);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const getRecommend = useCallback(async () => {
-    const ids = Videos.map(o => o._id);
-    const res = await callAPI.get(`/recommend?ids=${ids}`);
-
-    if (res.data.length === 0) {
-      return (isLoadRef.current = false);
-    }
-
-    setVideos([...Videos, ...res.data]);
-  }, [Videos]);
-
-  useEffect(() => {
-    const handleLoad = async () => {
-      const totalHeight = document.getElementById('root').clientHeight;
-      const scrolledHeight = window.scrollY + window.innerHeight;
-      const restHeight = totalHeight - scrolledHeight;
-      const isEnd = restHeight <= 300;
-
-      if (isEnd && isLoadRef.current) {
-        setIsLoading(true);
-        await getRecommend();
-        setIsLoading(false);
-      }
-    };
-
-    window.addEventListener('scroll', handleLoad);
-
-    return () => {
-      window.removeEventListener('scroll', handleLoad);
-    };
-  }, [getRecommend]);
 
   useEffect(() => {
     const playVideoByKeyboard = e => {
@@ -918,100 +865,7 @@ const Live = () => {
           </div>
         </div>
 
-        {Streammings.length > 0 && (
-          <div className='live__title' onClick={() => setIsShowStreammings(x => !x)}>
-            <span>{live[language].watchlive}</span>
-            <MdIcon.MdArrowDropDown className={isShowStreammings ? 'down' : 'up'} />
-          </div>
-        )}
-
-        {isShowStreammings && (
-          <div
-            className={`layoutFlex ${
-              width > BREAK_POINT_MEDIUM
-                ? 'layout-1'
-                : width > 1187
-                ? 'layout-4'
-                : width > 897
-                ? 'layout-3'
-                : width > 577
-                ? 'layout-2'
-                : 'layout-1'
-            }`}
-            style={{ '--gap-row': '40px', '--gap-column': '40px' }}
-          >
-            {Streammings.map(el => (
-              <div key={el._id} className='layoutFlex-item'>
-                <Streamsss
-                  avatar={
-                    el.user?.kyc.avatar?.path ? STORAGE_DOMAIN + el.user.kyc.avatar.path : undefined
-                  }
-                  video={el}
-                  title={el.name}
-                  description={el.description}
-                  onClick={() => {
-                    history.push('/live?s=' + el._id);
-                    window.scrollTo(0, 0);
-                  }}
-                />
-              </div>
-            ))}
-          </div>
-        )}
-
-        {Videos.length > 0 && (
-          <div className='live__title' onClick={() => setIsShowRecommend(x => !x)}>
-            <span>{live[language].recommend}</span>
-            <MdIcon.MdArrowDropDown className={isShowRecommend ? 'down' : 'up'} />
-          </div>
-        )}
-
-        {isShowRecommend && (
-          <div
-            className={`layoutFlex ${
-              width > BREAK_POINT_MEDIUM
-                ? 'layout-1'
-                : width > 1187
-                ? 'layout-4'
-                : width > 897
-                ? 'layout-3'
-                : width > 577
-                ? 'layout-2'
-                : 'layout-1'
-            }`}
-            style={{ '--gap-row': '40px', '--gap-column': '40px' }}
-          >
-            {Videos.map(el => (
-              <div key={el._id} className='layoutFlex-item'>
-                <Videosss
-                  avatar={
-                    el.user?.kyc.avatar?.path ? STORAGE_DOMAIN + el.user.kyc.avatar.path : null
-                  }
-                  video={el}
-                  title={el.name}
-                  description={el.description}
-                  onClick={() => {
-                    history.push('/watch?v=' + el.short_id);
-                    window.scrollTo(0, 0);
-                  }}
-                />
-              </div>
-            ))}
-          </div>
-        )}
-
-        {isLoading && (
-          <CircularProgress
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              width: '100%',
-              margin: '20px',
-              color: '#e41a7f',
-            }}
-            color='inherit'
-          />
-        )}
+        <Recommend />
       </div>
     </div>
   );

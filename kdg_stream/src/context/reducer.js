@@ -208,9 +208,9 @@ const header = {
     login: 'Đăng nhập',
     upload: 'Tải lên',
     setup: 'Thiết lập',
-    noti101 : 'data đã theo dõi bạn',
-    noti102 : 'data1 đã bình luận trong video data2',
-    noti103 : 'Video data1 đã tải lên thành công',
+    noti101: 'data đã theo dõi bạn',
+    noti102: 'data1 đã bình luận trong video data2',
+    noti103: 'Video data1 đã tải lên thành công',
   },
   en: {
     search: 'Search',
@@ -230,9 +230,9 @@ const header = {
     login: 'Sign in',
     upload: 'Upload',
     setup: 'Setup',
-    noti101 : 'data followed you',
-    noti102 : 'data1 on your video data2',
-    noti103 : 'Your video data1 uploaded',
+    noti101: 'data followed you',
+    noti102: 'data1 on your video data2',
+    noti103: 'Your video data1 uploaded',
   },
 };
 
@@ -420,9 +420,7 @@ const watch = {
     showmore: 'HIỂN THỊ THÊM',
     unfollow: 'BỎ THEO DÕI',
     follow: 'THEO DÕI',
-    watchlive: 'Xem trực tiếp',
-    recommend: 'Được đề xuất',
-    loadmore : 'Tải thêm'
+    loadmore: 'Tải thêm',
   },
   en: {
     views: 'views',
@@ -431,9 +429,7 @@ const watch = {
     showmore: ' SHOW MORE',
     unfollow: 'UNFOLLOW',
     follow: 'FOLLOW',
-    watchlive: 'Watch live',
-    recommend: 'Recommend',
-    loadmore : 'Load more'
+    loadmore: 'Load more',
   },
 };
 
@@ -497,6 +493,17 @@ const convert_date_ago = {
   },
 };
 
+const recommend = {
+  vi: {
+    watchlive: 'Xem trực tiếp',
+    recommend: 'Được đề xuất',
+  },
+  en: {
+    watchlive: 'Watch live',
+    recommend: 'Recommend',
+  },
+};
+
 export const initialState = {
   language: 'vi',
   listLanguage,
@@ -517,6 +524,7 @@ export const initialState = {
   watch,
   live,
   convert_date_ago,
+  recommend,
 };
 
 export const CHANGE_LANGUAGE = 'CHANGE_LANGUAGE';
