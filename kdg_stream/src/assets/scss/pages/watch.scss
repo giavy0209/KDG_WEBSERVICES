@@ -261,8 +261,10 @@
     color: $main-color;
     font-size: $size-5;
     font-weight: 500;
+    text-transform: uppercase;
+    text-align: center;
 
-    margin-top: 30px;
+    padding: 15px 0;
 
     &:hover {
       text-decoration: underline;
@@ -270,56 +272,73 @@
   }
 
   &__comment {
-    padding-top: 30px;
-    border-top: 1px solid #272727;
+    padding-top: 20px;
+
+    border-top: 1px solid $sub-title-color;
+
+    $avatar-width: 50px;
+
     &-total {
       font-weight: 700;
-      color: #272727;
+      color: $sub-title-color;
     }
+
     &-input {
       display: flex;
-      align-items: flex-end;
+      align-items: center;
+
       .left {
         position: relative;
-        width: 50px;
-        height: 50px;
+
+        width: $avatar-width;
+        height: $avatar-width;
       }
+
       .right {
-        width: calc(100% - 60px);
-        margin-left: 10px;
+        width: calc(100% - #{$avatar-width});
+        padding-left: 10px;
+
         input {
           width: 100%;
+          padding-bottom: 5px;
+          padding-left: 10px;
+
           border: none;
-          border-bottom: 1px solid #000;
-          padding: 5px;
-          font-size: 28px;
+          border-bottom: 1px solid $sub-title-color;
+
+          font-size: $size-3;
           background-color: transparent;
         }
       }
     }
+
     &-list {
       .comment {
         display: flex;
         align-items: flex-start;
+
         width: 100%;
         margin-top: 30px;
+
         .left {
           position: relative;
-          width: 50px;
-          height: 50px;
+
+          width: $avatar-width;
+          height: $avatar-width;
         }
+
         .right {
-          width: calc(100% - 60px);
-          margin-left: 10px;
+          width: calc(100% - #{$avatar-width});
+          padding-left: 10px;
+
           .name {
-            font-size: 24px;
+            color: $sub-title-color;
+            font-size: $size-4;
             font-weight: 600;
-            color: #272727;
           }
+
           .content {
-            margin-top: 5px;
-            font-size: 18px;
-            font-weight: 400;
+            font-size: $size-6;
           }
         }
       }

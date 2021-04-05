@@ -231,7 +231,7 @@ const header = {
     upload: 'Upload',
     setup: 'Setup',
     noti101: 'data followed you',
-    noti102: 'data1 on your video data2',
+    noti102: 'data1 commented on your video data2',
     noti103: 'Your video data1 uploaded',
   },
 };
@@ -420,6 +420,7 @@ const watch = {
     showmore: 'HIỂN THỊ THÊM',
     unfollow: 'BỎ THEO DÕI',
     follow: 'THEO DÕI',
+    comment: 'Bình luận',
     loadmore: 'Tải thêm',
   },
   en: {
@@ -429,6 +430,7 @@ const watch = {
     showmore: ' SHOW MORE',
     unfollow: 'UNFOLLOW',
     follow: 'FOLLOW',
+    comment: 'Comment',
     loadmore: 'Load more',
   },
 };

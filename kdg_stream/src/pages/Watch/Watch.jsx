@@ -229,6 +229,7 @@ const Watch = () => {
 
         <div className='watch__comment'>
           <div className='watch__comment-total'>{useNumber(TotalComment)} Bình luận</div>
+
           <div className='watch__comment-input'>
             <div className='left'>
               <Avatar
@@ -238,9 +239,10 @@ const Watch = () => {
             </div>
 
             <form onSubmit={handleComment} className='right'>
-              <input placeholder='Bình luận' type='text' name='comment' />
+              <input placeholder={watch[language].comment} type='text' name='comment' />
             </form>
           </div>
+
           <div className='watch__comment-list'>
             {Comments.map(o => (
               <div className='comment'>
@@ -263,9 +265,17 @@ const Watch = () => {
                 </div>
               </div>
             ))}
-            <div
+
+            {/* <div
               onClick={() => handleGetComment(Video._id, Comments[Comments.length - 1]?._id)}
               className='button mt-20'
+            >
+              {watch[language].loadmore}
+            </div> */}
+
+            <div
+              className='watch__showMore'
+              onClick={() => handleGetComment(Video._id, Comments[Comments.length - 1]?._id)}
             >
               {watch[language].loadmore}
             </div>
