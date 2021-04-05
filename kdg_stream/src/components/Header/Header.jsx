@@ -66,6 +66,7 @@ const Header = () => {
       if (type === 101) text = text.replace('data', data.name);
       if (type === 102) text = text.replace('data1', data.name).replace('data2', data.video_name);
       if (type === 103) text = text.replace('data1', data.video_name)
+      if (type === 104) text = text.replace('data1', data.user_name).replace('data2', data.video_name)
       return text;
     },
     [header, language]
@@ -73,7 +74,7 @@ const Header = () => {
 
   const handleClickNoti = useCallback(({type , data}) => {
     if(type === 101) history.push(`/profile?uid=${data.user}`)
-    if(type === 102 || type === 103) history.push(`/watch?v=${data.video}`)
+    if(type === 102 || type === 103 || type === 104) history.push(`/watch?v=${data.video}`)
   },[])
 
   useEffect(() => {

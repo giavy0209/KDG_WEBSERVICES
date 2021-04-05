@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
 import 'react-notifications/lib/notifications.css';
 import { useDispatch } from 'react-redux';
-import { Redirect, Route, Switch, useLocation } from 'react-router-dom';
+import { Redirect, Route, Switch, useHistory, useLocation } from 'react-router-dom';
 import { Footer, Header, ScrollButton } from './components';
 import { storage } from './helpers';
 import { Home, Live, Login, Profile, Setup, Upload, Watch } from './pages';
@@ -15,6 +15,7 @@ import { useLanguageLayerValue } from './context/LanguageLayer';
 const App = () => {
   const [{ language, header }] = useLanguageLayerValue();
   const location = useLocation();
+  const history = useHistory();
   const dispatch = useDispatch();
   const refresh = new URLSearchParams(location.search).get('refresh');
 
@@ -28,12 +29,22 @@ const App = () => {
     }
   }, [refresh, dispatch]);
 
-  const handleType = useCallback(({type , data}) => {
-    let text = header[language]['noti'+type]
-    if(type === 101) text = text.replace('data' , data.name)
-    if(type === 102) text = text.replace('data1' , data.name).replace('data2' , data.video_name)
-    return text
-  },[language, header ])
+  const handleType = useCallback(
+    ({ type, data }) => {
+      let text = header[language]['noti' + type];
+      if (type === 101) text = text.replace('data', data.name);
+      if (type === 102) text = text.replace('data1', data.name).replace('data2', data.video_name);
+      if (type === 103) text = text.replace('data1', data.video_name)
+      if (type === 104) text = text.replace('data1', data.user_name).replace('data2', data.video_name)
+      return text;
+    },
+    [header, language]
+  );
+
+  const handleClickNoti = useCallback(({type , data}) => {
+    if(type === 101) history.push(`/profile?uid=${data.user}`)
+    if(type === 102 || type === 103 || type === 104) history.push(`/watch?v=${data.video}`)
+  },[])
 
   useEffect(() => {
     const listenBalance = res => {
@@ -46,7 +57,7 @@ const App = () => {
       dispatch(actChangeUnreadNoti(res.unread))
       const noties = store.getState().noties || []
       dispatch(actChangeNoties([res.data , ...noties]))
-      toast(handleType(res.data));
+      toast(<div onClick={()=>handleClickNoti(res.data)}>{handleType(res.data)}</div>);
     }
 
     socket.on('balances', listenBalance);
