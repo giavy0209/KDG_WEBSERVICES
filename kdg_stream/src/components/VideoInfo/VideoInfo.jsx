@@ -130,14 +130,14 @@ const VideoInfo = props => {
           <div className='mask' onClick={() => setShowEdit(false)}></div>
 
           <form className='content' onSubmit={handleEdit}>
-            <div className='label'>Title</div>
+            <div className='label'>{videoinfo[language].title}</div>
             <input type='text' name='title' defaultValue={video?.name} />
 
-            <div className='label'>Description</div>
+            <div className='label'>{videoinfo[language].desc}</div>
             <textarea name='description' defaultValue={video?.description}></textarea>
 
             <button style={{ width: '100%' }} className='button'>
-              Edit
+              {videoinfo[language].edit}
             </button>
           </form>
         </div>
@@ -155,11 +155,11 @@ const VideoInfo = props => {
             <div className={`menu ${showMenu ? 'show' : ''}`}>
               <div className='menu-item' onClick={() => setShowEdit(true)}>
                 <BiIcon.BiEditAlt className='icon' />
-                Edit
+                {videoinfo[language].edit}
               </div>
               <div className='menu-item'>
                 <BiIcon.BiEditAlt className='icon' />
-                Delete
+                {videoinfo[language].delete}
               </div>
             </div>
           </div>

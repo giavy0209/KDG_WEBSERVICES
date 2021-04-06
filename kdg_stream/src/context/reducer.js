@@ -485,6 +485,10 @@ const videoinfo = {
     follow: 'THEO DÕI',
     comment: 'Bình luận',
     loadmore: 'Tải thêm',
+    edit: 'Chỉnh sửa',
+    delete: 'Xoá',
+    title: 'Tiêu đề',
+    desc: 'Mô tả',
   },
   en: {
     views: 'views',
@@ -495,6 +499,10 @@ const videoinfo = {
     follow: 'FOLLOW',
     comment: 'Comments',
     loadmore: 'Load more',
+    edit: 'Edit',
+    delete: 'Delete',
+    title: 'Title',
+    desc: 'Description',
   },
 };
 

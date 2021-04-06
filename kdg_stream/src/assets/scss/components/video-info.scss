@@ -84,6 +84,8 @@
       display: flex;
       flex-flow: column nowrap;
 
+      width: max-content;
+
       > .menu-item {
         cursor: pointer;
         user-select: none;
@@ -378,7 +380,7 @@
 
     width: 100%;
     padding: 15px;
-    min-height: 130px;
+    min-height: 300px;
     margin-bottom: 20px;
 
     resize: none;
