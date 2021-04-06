@@ -115,7 +115,7 @@ export default function MainContainer({ uid, user }) {
       const totalHeight = document.getElementById('root').clientHeight;
       const scrolledHeight = window.scrollY + window.innerHeight;
       const restHeight = totalHeight - scrolledHeight;
-      const isEnd = restHeight <= 200;
+      const isEnd = restHeight <= 500;
 
       if (isEnd && isLoadRef.current) {
         setIsLoading(true);

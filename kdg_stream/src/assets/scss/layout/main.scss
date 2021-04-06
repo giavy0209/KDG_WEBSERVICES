@@ -65,10 +65,12 @@
       width: var(--min-width-large);
 
       border-top-left-radius: 0;
+      box-shadow: unset;
 
       transform: translateX(100%);
       &.show {
         transform: translateX(0);
+        box-shadow: $box-shadow-right;
       }
     }
 
