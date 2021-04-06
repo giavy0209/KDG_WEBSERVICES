@@ -59,16 +59,19 @@ const Watch = () => {
   const handleComment = useCallback(
     async e => {
       e.preventDefault();
+
       if (Video?._id) {
         const data = new FormData(e.target);
         const res = await callAPI.post(`/comment?video=${Video._id}`, {
           comment: data.get('comment'),
         });
         console.log(res);
+
         setComments(comments => {
           console.log(comments);
           return [res.data, ...comments];
         });
+
         e.target.reset();
       }
     },
@@ -115,6 +118,31 @@ const Watch = () => {
     console.log(data);
   };
 
+  const rippleEffect = e => {
+    const effectEleArr = document.querySelectorAll('.rippleBox');
+
+    let timeoutId;
+
+    effectEleArr.forEach(effectEle => {
+      if (!effectEle) return;
+
+      const { left, top } = effectEle.getBoundingClientRect();
+
+      let x = e.clientX - left;
+      let y = e.clientY - top;
+
+      let rippleEle = document.createElement('span');
+      rippleEle.classList.add('ripple');
+      rippleEle.style.left = x + 'px';
+      rippleEle.style.top = y + 'px';
+
+      effectEle.appendChild(rippleEle);
+
+      if (timeoutId) clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => rippleEle.remove(), 400);
+    });
+  };
+
   return (
     <div className='watch'>
       {isEdit && (
@@ -153,16 +181,14 @@ const Watch = () => {
             {Video?.name}
 
             <div className='watch__menuBox' onClick={() => setIsShowMenu(x => !x)}>
+              <div className='rippleBox' onClick={rippleEffect}></div>
+
               <BiIcon.BiDotsVerticalRounded className='menu-icon' />
 
               <div className={`menu ${isShowMenu ? 'show' : ''}`}>
                 <div className='menu-item' onClick={() => setIsEdit(true)}>
                   <BiIcon.BiEditAlt className='icon' />
                   Edit
-                </div>
-                <div className='menu-item'>
-                  <BiIcon.BiEditAlt className='icon' />
-                  Report
                 </div>
                 <div className='menu-item'>
                   <BiIcon.BiEditAlt className='icon' />
@@ -265,7 +291,11 @@ const Watch = () => {
 
                 <div className='right'>
                   <div className='name'>
-                    {o.user.kyc.first_name} {o.user.kyc.last_name}
+                    <span>
+                      {o.user.kyc.first_name} {o.user.kyc.last_name}
+                    </span>
+                    <span> • </span>
+                    <span>5 minutes ago</span>
                   </div>
                   <div className='content'>{o.comment}</div>
                 </div>
