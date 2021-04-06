@@ -416,51 +416,16 @@ const cropLang = {
   },
 };
 
-const watch = {
-  vi: {
-    views: 'lượt xem',
-    followers: 'người theo dõi',
-    hide: 'ẨN BỚT',
-    showmore: 'HIỂN THỊ THÊM',
-    unfollow: 'BỎ THEO DÕI',
-    follow: 'THEO DÕI',
-    comment: 'Bình luận',
-    loadmore: 'Tải thêm',
-  },
-  en: {
-    views: 'views',
-    followers: 'followers',
-    hide: 'HIDE',
-    showmore: ' SHOW MORE',
-    unfollow: 'UNFOLLOW',
-    follow: 'FOLLOW',
-    comment: 'Comments',
-    loadmore: 'Load more',
-  },
-};
-
 const live = {
   vi: {
     chathere: 'Nhập để trò chuyện',
-    views: 'lượt xem',
-    followers: 'người theo dõi',
-    hide: 'ẨN BỚT',
-    showmore: 'HIỂN THỊ THÊM',
-    unfollow: 'BỎ THEO DÕI',
-    follow: 'THEO DÕI',
-    watchlive: 'Xem trực tiếp',
-    recommend: 'Được đề xuất',
+    showchat: 'Hiện trò chuyện',
+    hidechat: 'Ẩn trò chuyện',
   },
   en: {
     chathere: 'Chat here',
-    views: 'views',
-    followers: 'followers',
-    hide: 'HIDE',
-    showmore: ' SHOW MORE',
-    unfollow: 'UNFOLLOW',
-    follow: 'FOLLOW',
-    watchlive: 'Watch live',
-    recommend: 'Recommend',
+    showchat: 'Show Chat',
+    hidechat: 'Hide Chat',
   },
 };
 
@@ -510,6 +475,29 @@ const recommend = {
   },
 };
 
+const videoinfo = {
+  vi: {
+    views: 'lượt xem',
+    followers: 'người theo dõi',
+    hide: 'ẨN BỚT',
+    showmore: 'HIỂN THỊ THÊM',
+    unfollow: 'BỎ THEO DÕI',
+    follow: 'THEO DÕI',
+    comment: 'Bình luận',
+    loadmore: 'Tải thêm',
+  },
+  en: {
+    views: 'views',
+    followers: 'followers',
+    hide: 'HIDE',
+    showmore: ' SHOW MORE',
+    unfollow: 'UNFOLLOW',
+    follow: 'FOLLOW',
+    comment: 'Comments',
+    loadmore: 'Load more',
+  },
+};
+
 export const initialState = {
   language: 'vi',
   listLanguage,
@@ -527,10 +515,10 @@ export const initialState = {
   upload,
   setup,
   cropLang,
-  watch,
   live,
   convert_date_ago,
   recommend,
+  videoinfo,
 };
 
 export const CHANGE_LANGUAGE = 'CHANGE_LANGUAGE';

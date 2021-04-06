@@ -2,43 +2,33 @@ import Axios from 'axios';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import ReactHlsPlayer from 'react-hls-player';
 import * as AiIcon from 'react-icons/ai';
-import * as BiIcon from 'react-icons/bi';
 import * as BsIcon from 'react-icons/bs';
 // import * as FaIcon from 'react-icons/fa';
 import * as HiIcon from 'react-icons/hi';
 import * as MdIcon from 'react-icons/md';
 import * as RiIcon from 'react-icons/ri';
 import { useSelector } from 'react-redux';
-import { useHistory } from 'react-router-dom';
 import '../../assets/css/live.css';
 import callAPI from '../../axios';
-import { Avatar, Recommend } from '../../components';
-import { BREAK_POINT_SMALL, PLAY_STREAM, STORAGE_DOMAIN } from '../../constant';
+import { Avatar, Recommend, VideoInfo } from '../../components';
+import { PLAY_STREAM, STORAGE_DOMAIN } from '../../constant';
 import { useLanguageLayerValue } from '../../context/LanguageLayer';
-import { convertDate, convertDateAgo, convertTime } from '../../helpers';
-import useNumber from '../../hooks/useNumber';
-import useWindowSize from '../../hooks/useWindowSize';
+import { convertTime } from '../../helpers';
 import socket from '../../socket';
 
 const Live = () => {
   const user = useSelector(state => state.user);
 
-  const history = useHistory();
-  const [width] = useWindowSize();
   const [{ language, live }] = useLanguageLayerValue();
-
-  const [convert, setConvert] = useState(true);
 
   const [Stream, setStream] = useState({});
   const [IsCanPlay, setIsCanPlay] = useState(false);
 
-  const [IsFollowed, setIsFollowed] = useState(false);
   const [Chat, setChat] = useState([]);
 
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [isHideFullscreenChat, setIsHideFullscreenChat] = useState(false);
   const [isHideChat, setIsHideChat] = useState(false);
-  const [isShowMore, setIsShowMore] = useState(false);
 
   const [isMouseDownVolume, setIsMouseDownVolume] = useState(false);
   const [isMouseDownPlayback, setIsMouseDownPlayback] = useState(false);
@@ -260,8 +250,6 @@ const Live = () => {
       socket.emit('join_stream', res.data._id);
       streamId = res.data._id;
       setStream(res.data);
-      // console.log(res.data);
-      setIsFollowed(res.is_followed);
 
       interval = setInterval(() => {
         Axios.get(`${PLAY_STREAM}${res.data.key}/index.m3u8`).then(res => {
@@ -297,13 +285,6 @@ const Live = () => {
       el.scroll(0, el.scrollHeight + 9999);
     });
   }, [Chat]);
-
-  const handleFollow = useCallback(async () => {
-    const res = await callAPI.post('follow?id=' + Stream?.user._id);
-    if (res.status === 1) {
-      setIsFollowed(!IsFollowed);
-    }
-  }, [Stream, IsFollowed]);
 
   const handleChat = useCallback(
     e => {
@@ -527,8 +508,6 @@ const Live = () => {
     return () => window.removeEventListener('keydown', playVideoByKeyboard);
   }, [isFullScreen, handleMuteVideo, handleToggleFullscreen]);
 
-  const [isShowMenu, setIsShowMenu] = useState(false);
-
   return (
     <div className='live'>
       <div className='live__left'>
@@ -598,9 +577,11 @@ const Live = () => {
                         type='text'
                         placeholder={live[language].chathere}
                       />
+
                       <button type='submit' className='icon icon-send'>
                         <RiIcon.RiSendPlaneFill />
                       </button>
+
                       {/* <button type='button' className='icon icon-emo'>
                         <RiIcon.RiEmotionLaughLine />
                       </button> */}
@@ -723,80 +704,7 @@ const Live = () => {
           </div>
         </div>
 
-        <div className='live__info'>
-          <div className='live__titleVideo'>
-            {Stream?.name}
-
-            <div className='iconBox' onClick={() => setIsShowMenu(x => !x)}>
-              <BiIcon.BiDotsVerticalRounded className='icon' />
-
-              <div className={`menu ${isShowMenu ? 'show' : ''}`}>
-                <div className='menu-item'>Edit</div>
-                {/* <div className='menu-item'>Delete</div>
-                <div className='menu-item'>Add</div> */}
-              </div>
-            </div>
-          </div>
-
-          <div className='live__info-info'>
-            <div
-              className='live__avatar'
-              onClick={() => history.push('/profile?uid=' + Stream?.user._id)}
-            >
-              <Avatar
-                src={
-                  Stream?.user?.kyc.avatar?.path
-                    ? STORAGE_DOMAIN + Stream?.user?.kyc.avatar?.path
-                    : undefined
-                }
-                position={Stream?.user?.kyc.avatar_pos}
-              />
-            </div>
-
-            <div>
-              <div className='live__name'>
-                {Stream?.user?.kyc.first_name} {Stream?.user?.kyc.last_name}
-              </div>
-
-              <div className='live__date' onClick={() => setConvert(x => !x)}>
-                {convert ? convertDateAgo(Stream.create_date) : convertDate(Stream.create_date)}
-              </div>
-
-              <div className='live__view'>
-                <span>
-                  {useNumber(Stream?.viewers)} {live[language].views}
-                </span>
-                <span> • </span>
-                <span>
-                  {useNumber(Stream?.user?.followers)} {live[language].followers}
-                </span>
-              </div>
-
-              <div className={`live__desc ${isShowMore ? 'd-block' : ''}`}>
-                {Stream?.description}
-              </div>
-
-              <div className='live__showMore' onClick={() => setIsShowMore(x => !x)}>
-                {isShowMore ? live[language].hide : live[language].showmore}
-              </div>
-            </div>
-
-            {Stream?.user?._id !== user?._id && (
-              <div className='live__action'>
-                <button onClick={handleFollow} className={`button ${IsFollowed ? 'active' : ''}`}>
-                  {IsFollowed ? (
-                    <RiIcon.RiUserUnfollowLine className='icon' />
-                  ) : (
-                    <RiIcon.RiUserFollowLine className='icon' />
-                  )}
-                  {width > BREAK_POINT_SMALL && (
-                    <span>{IsFollowed ? live[language].unfollow : live[language].follow}</span>
-                  )}
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
+        <VideoInfo id={id} type='live' />
       </div>
 
       <div className='live__right'>
@@ -827,15 +735,15 @@ const Live = () => {
               ))}
             </div>
 
-            <div className='live__chatBox-bottom'>
-              {/* <div className='live__chatBox-bottom-btn'>
-                <div className='live__chatBox-bottom-btn-gift'>
-                  <FaIcon.FaGift className='icon' />
-                  <span>Gift</span>
-                </div>
-              </div> */}
+            {user && (
+              <div className='live__chatBox-bottom'>
+                {/* <div className='live__chatBox-bottom-btn'>
+                  <div className='live__chatBox-bottom-btn-gift'>
+                    <FaIcon.FaGift className='icon' />
+                    <span>Gift</span>
+                  </div>
+                </div> */}
 
-              {user && (
                 <div className='live__chatBox-bottom-chat'>
                   <div className='live__chatBox-bottom-chat-avatar'>
                     <Avatar
@@ -847,21 +755,28 @@ const Live = () => {
                   </div>
 
                   <form onSubmit={handleChat} className='live__chatBox-bottom-chat-inputBox'>
-                    <input ref={chatRef} name='chat' type='text' placeholder='Chat here' />
+                    <input
+                      ref={chatRef}
+                      name='chat'
+                      type='text'
+                      placeholder={live[language].chathere}
+                    />
+
                     <button type='submit' className='icon icon-send'>
                       <RiIcon.RiSendPlaneFill />
                     </button>
+
                     {/* <button type='button' className='icon icon-emo'>
                       <RiIcon.RiEmotionLaughLine />
                     </button> */}
                   </form>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
 
-          <div className='live__chatBtn' onClick={() => setIsHideChat(!isHideChat)}>
-            {!isHideChat ? 'Hide Chat' : 'Show Chat'}
+          <div className='live__chatBtn' onClick={() => setIsHideChat(x => !x)}>
+            {isHideChat ? live[language].showchat : live[language].hidechat}
           </div>
         </div>
 

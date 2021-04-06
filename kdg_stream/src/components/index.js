@@ -17,6 +17,7 @@ import Crop from './Crop';
 import ScrollButton from './ScrollButton';
 import Avatar from './Avatar';
 import Recommend from './Recommend';
+import VideoInfo from './VideoInfo';
 
 export {
   Footer,
@@ -38,4 +39,5 @@ export {
   ScrollButton,
   Avatar,
   Recommend,
+  VideoInfo,
 };
