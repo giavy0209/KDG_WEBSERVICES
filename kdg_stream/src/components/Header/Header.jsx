@@ -7,15 +7,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 import { Avatar } from '..';
 import '../../assets/css/header.css';
-import diamond0 from '../../assets/images/header/diamond0.svg';
-import logo from '../../assets/images/header/logo.svg';
+import diamond from '../../assets/images/diamond.svg';
+import logo from '../../assets/images/logo.svg';
 import callAPI from '../../axios';
 import { BREAK_POINT_MEDIUM, BREAK_POINT_SMALL, STORAGE_DOMAIN } from '../../constant';
 import { useLanguageLayerValue } from '../../context/LanguageLayer';
+import { convertDateAgo } from '../../helpers';
 import useNumber from '../../hooks/useNumber';
 import useWindowSize from '../../hooks/useWindowSize';
 import { actChangeUnreadNoti } from '../../store/action';
-import { convertDateAgo } from '../../helpers';
 
 const handleShowPopper = (fnMain, ...fnSubs) => () => {
   fnMain(x => !x);
@@ -244,7 +244,7 @@ const Header = () => {
                 className={`button-buyNB ${isShowBuyNB ? 'show' : ''}`}
                 onClick={handleShowPopper(setIsShowBuyNB)}
               >
-                <img src={diamond0} alt='icon' className='mr-10' />
+                <img src={diamond} alt='icon' className='mr-10' />
                 <span>{header[language].buyNB}</span>
               </button>
             ) : (

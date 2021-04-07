@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 import '../../assets/css/profile.css';
 import avatarDefault from '../../assets/images/avatarDefault.png';
-import cover1 from '../../assets/images/profile/cover1.png';
+import coverDefault from '../../assets/images/coverDefault.png';
 import callAPI from '../../axios';
 import { Crop } from '../../components';
 import { STORAGE_DOMAIN } from '../../constant';
@@ -162,7 +162,9 @@ const Profile = () => {
         setImagePos(
           res.data?.kyc?.avatar_pos ? res.data.kyc.avatar_pos : { x: 0, y: 0, zoom: 100 }
         );
-        setCover(res.data.kyc.cover?.path ? STORAGE_DOMAIN + res.data.kyc.cover?.path : cover1);
+        setCover(
+          res.data.kyc.cover?.path ? STORAGE_DOMAIN + res.data.kyc.cover?.path : coverDefault
+        );
         setCoverPos(res.data?.kyc?.cover_pos ? res.data.kyc.cover_pos : { x: 0, y: 0, zoom: 100 });
       });
     }
