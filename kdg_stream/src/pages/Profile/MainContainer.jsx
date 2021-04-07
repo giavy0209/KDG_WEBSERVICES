@@ -139,6 +139,7 @@ export default function MainContainer({ uid, user }) {
   return (
     <div className='container'>
       {isShow && <Popper1 type={type} pack={pack} />}
+
       {uid !== user?._id && (
         <div className='profile__boxPersonal'>
           <div className='profile__boxPersonal-title'>{profile[language].playlist}</div>
@@ -147,10 +148,7 @@ export default function MainContainer({ uid, user }) {
             className={`layoutFlex pl-10 pr-10 ${
               width > BREAK_POINT_MEDIUM ? 'layout-2' : 'layout-1'
             }`}
-            style={{
-              '--gap-row': '40px',
-              '--gap-column': '40px',
-            }}
+            style={{ '--gap-row': '40px', '--gap-column': '40px' }}
           >
             {Videos.map(o => (
               <div
@@ -207,6 +205,7 @@ export default function MainContainer({ uid, user }) {
 
           {isLoading && (
             <CircularProgress
+              color='inherit'
               style={{
                 display: 'flex',
                 justifyContent: 'center',
@@ -214,7 +213,6 @@ export default function MainContainer({ uid, user }) {
                 margin: '20px',
                 color: '#e41a7f',
               }}
-              color='inherit'
             />
           )}
         </div>
@@ -230,10 +228,7 @@ export default function MainContainer({ uid, user }) {
                 className={`layoutFlex pl-10 pr-10 ${
                   width > BREAK_POINT_MEDIUM ? 'layout-2' : 'layout-1'
                 }`}
-                style={{
-                  '--gap-row': '40px',
-                  '--gap-column': '40px',
-                }}
+                style={{ '--gap-row': '40px', '--gap-column': '40px' }}
               >
                 {Videos.map(o => (
                   <div
@@ -292,6 +287,7 @@ export default function MainContainer({ uid, user }) {
 
             {isLoading && (
               <CircularProgress
+                color='inherit'
                 style={{
                   display: 'flex',
                   justifyContent: 'center',
@@ -299,7 +295,6 @@ export default function MainContainer({ uid, user }) {
                   margin: '20px',
                   color: '#e41a7f',
                 }}
-                color='inherit'
               />
             )}
 
@@ -317,10 +312,7 @@ export default function MainContainer({ uid, user }) {
                     ? 'layout-2'
                     : 'layout-1'
                 }`}
-                style={{
-                  '--gap-column': width > 992 ? '50px' : '25px',
-                  '--gap-row': '40px',
-                }}
+                style={{ '--gap-row': '40px', '--gap-column': '40px' }}
               >
                 {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(el => (
                   <div
@@ -339,7 +331,7 @@ export default function MainContainer({ uid, user }) {
           </TabPane>
 
           <TabPane name={profile[language].manage} key='2'>
-            <div className='profile__boxManage'>
+            {/* <div className='profile__boxManage'>
               <div className='profile__boxManage-title'>Convert</div>
               <div className='profile__convert'>
                 <div className='profile__convert-date'>Today, 02-01-2021</div>
@@ -382,9 +374,9 @@ export default function MainContainer({ uid, user }) {
                   Learn more
                 </div>
               </div>
-            </div>
+            </div> */}
 
-            <div className='profile__boxManage'>
+            {/* <div className='profile__boxManage'>
               <div
                 className={`profile__boxManage-title profile__historyTitle ${
                   !isShowHistory ? 'mb-0' : ''
@@ -406,9 +398,9 @@ export default function MainContainer({ uid, user }) {
                   View All
                 </div>
               </div>
-            </div>
+            </div> */}
 
-            <div className='profile__boxManage'>
+            {/* <div className='profile__boxManage'>
               <div className='profile__boxManage-title'>Manage Donate</div>
               <div
                 className={`layoutFlex layout-8`}
@@ -441,7 +433,7 @@ export default function MainContainer({ uid, user }) {
                   <HiIcon.HiPlus className='icon' />
                 </div>
               </div>
-            </div>
+            </div> */}
 
             {/* <div className='profile__boxManage'>
               <div className='profile__boxManage-title'>Donate</div>

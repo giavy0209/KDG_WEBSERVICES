@@ -1,8 +1,8 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import * as IoIcon from 'react-icons/io';
 import * as RiIcon from 'react-icons/ri';
 import { useDispatch, useSelector } from 'react-redux';
-import { useLocation } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import '../../assets/css/profile.css';
 import avatarDefault from '../../assets/images/avatarDefault.png';
 import cover1 from '../../assets/images/profile/cover1.png';
@@ -18,8 +18,10 @@ import ModalBody from './ModalBody';
 
 const Profile = () => {
   const dispatch = useDispatch();
+  const history = useHistory();
   const uid = new URLSearchParams(useLocation().search).get('uid');
   const user = useSelector(state => state.user);
+
   const uploadStatus = useSelector(state => state.uploadStatus);
   const [{ language, profile }] = useLanguageLayerValue();
 
@@ -35,6 +37,12 @@ const Profile = () => {
 
   const [Cover, setCover] = useState('');
   const [CoverPos, setCoverPos] = useState({ zoom: 1, x: 0, y: 0 });
+
+  useEffect(() => {
+    if (uid || !user) return;
+
+    history.push(window.location.pathname + '?uid=' + user?._id);
+  }, [uid, user]);
 
   const onCancelCrop = useCallback(
     label => {
