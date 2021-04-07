@@ -41,8 +41,8 @@ const Profile = () => {
   useEffect(() => {
     if (uid || !user) return;
 
-    history.push(window.location.pathname + '?uid=' + user?._id);
-  }, [uid, user]);
+    history.push(window.location.pathname + '?uid=' + user._id);
+  }, [uid, user, history]);
 
   const onCancelCrop = useCallback(
     label => {

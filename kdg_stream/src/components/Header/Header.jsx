@@ -8,9 +8,15 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { Avatar } from '..';
 import '../../assets/css/header.css';
 import diamond from '../../assets/images/diamond.svg';
-import logo from '../../assets/images/logo.svg';
+import logoText from '../../assets/images/logotext.png';
+import logo from '../../assets/images/logo.png';
 import callAPI from '../../axios';
-import { BREAK_POINT_MEDIUM, BREAK_POINT_SMALL, STORAGE_DOMAIN } from '../../constant';
+import {
+  BREAK_POINT_EXTRA_SMALL,
+  BREAK_POINT_MEDIUM,
+  BREAK_POINT_SMALL,
+  STORAGE_DOMAIN,
+} from '../../constant';
 import { useLanguageLayerValue } from '../../context/LanguageLayer';
 import { convertDateAgo } from '../../helpers';
 import useNumber from '../../hooks/useNumber';
@@ -200,7 +206,11 @@ const Header = () => {
       <div className='header__left'>
         <div className='header__left--left'>
           <div className='header__logo' onClick={() => handleNavigation('/home')}>
-            <img src={logo} alt='logo' />
+            {width > BREAK_POINT_EXTRA_SMALL ? (
+              <img src={logoText} alt='logo' />
+            ) : (
+              <img src={logo} alt='logo' />
+            )}
           </div>
 
           {width > BREAK_POINT_SMALL ? (

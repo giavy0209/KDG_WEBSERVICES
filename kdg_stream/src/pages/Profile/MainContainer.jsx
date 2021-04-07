@@ -331,52 +331,7 @@ export default function MainContainer({ uid, user }) {
           </TabPane>
 
           <TabPane name={profile[language].manage} key='2'>
-            {/* <div className='profile__boxManage'>
-              <div className='profile__boxManage-title'>Convert</div>
-              <div className='profile__convert'>
-                <div className='profile__convert-date'>Today, 02-01-2021</div>
-                <div className='profile__convert-exchange'>
-                  <div>
-                    <p>From</p>
-                    <p>KDG</p>
-                  </div>
-                  <div></div>
-                  <div>
-                    <p>To</p>
-                    <p>NB</p>
-                  </div>
-                </div>
-                <div className='profile__convert-rate'>
-                  <div>
-                    <p>100</p>
-                    <p>KDG</p>
-                  </div>
-                  <div>
-                    <p>500</p>
-                    <p>NB</p>
-                  </div>
-                </div>
-                <div className='profile__convert-asset'>
-                  <div>
-                    <p>500 KDG</p>
-                  </div>
-                  <div>
-                    <p>1000 NB</p>
-                  </div>
-                </div>
-                <div className='profile__convert-btnCtn'>
-                  <div className='profile__convert-btn'>Change</div>
-                </div>
-                <div
-                  className='profile__link'
-                  onClick={() => window.open('https://www.youtube.com/')}
-                >
-                  Learn more
-                </div>
-              </div>
-            </div> */}
-
-            {/* <div className='profile__boxManage'>
+            <div className='profile__boxManage'>
               <div
                 className={`profile__boxManage-title profile__historyTitle ${
                   !isShowHistory ? 'mb-0' : ''
@@ -398,7 +353,7 @@ export default function MainContainer({ uid, user }) {
                   View All
                 </div>
               </div>
-            </div> */}
+            </div>
 
             {/* <div className='profile__boxManage'>
               <div className='profile__boxManage-title'>Manage Donate</div>
@@ -432,13 +387,6 @@ export default function MainContainer({ uid, user }) {
                 >
                   <HiIcon.HiPlus className='icon' />
                 </div>
-              </div>
-            </div> */}
-
-            {/* <div className='profile__boxManage'>
-              <div className='profile__boxManage-title'>Donate</div>
-              <div style={{ overflowX: 'auto' }}>
-                <Table dataHead={dataHead1} dataBody={dataBody1} />
               </div>
             </div> */}
           </TabPane>
