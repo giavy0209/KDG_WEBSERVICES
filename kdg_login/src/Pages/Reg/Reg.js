@@ -1,14 +1,14 @@
-import React, { useCallback, useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useHistory, useParams } from 'react-router-dom';
-import { message } from 'antd';
-import { validateForm } from '../../helpers';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
-import { actChangeLoading } from '../../store/action';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { message } from 'antd';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useHistory, useParams } from 'react-router-dom';
 import callAPI from '../../axios';
 import ChooseLanguage from '../../components/ChooseLanguages';
 import { useLang } from '../../context/LanguageLayer';
+import { validateForm } from '../../helpers';
+import { actChangeLoading } from '../../store/action';
 
 export default function Reg() {
   const [{ language, RegPageLanguage }] = useLang();
@@ -77,7 +77,13 @@ export default function Reg() {
   const handleReg = useCallback(
     async e => {
       e.preventDefault();
-      if (!ValidForm.email || !ValidForm.password || !ValidForm.email_code || !ValidForm.repassword || !check) {
+      if (
+        !ValidForm.email ||
+        !ValidForm.password ||
+        !ValidForm.email_code ||
+        !ValidForm.repassword ||
+        !check
+      ) {
         return;
       }
 
@@ -137,7 +143,8 @@ export default function Reg() {
                   clearTimeout(CountDownSendMailTimeOut);
                   if (!e.target.value.match(validateForm.email)) {
                     e.target.nextElementSibling.classList.add('show');
-                    e.target.nextElementSibling.innerText = RegPageLanguage[language].not_valid_email;
+                    e.target.nextElementSibling.innerText =
+                      RegPageLanguage[language].not_valid_email;
                     setValidForm({ ...ValidForm, email: false });
                   } else {
                     e.target.nextElementSibling.classList.remove('show');
@@ -160,11 +167,13 @@ export default function Reg() {
                     let repassword = document.querySelector('#repassword');
                     if (!e.target.value.match(validateForm.password)) {
                       e.target.nextElementSibling.classList.add('show');
-                      e.target.nextElementSibling.innerText = RegPageLanguage[language].error_password;
+                      e.target.nextElementSibling.innerText =
+                        RegPageLanguage[language].error_password;
                       setValidForm({ ...ValidForm, password: false });
                     } else if (e.target.value !== repassword.value) {
                       repassword.nextElementSibling.classList.add('show');
-                      repassword.nextElementSibling.innerText = RegPageLanguage[language].password_not_match;
+                      repassword.nextElementSibling.innerText =
+                        RegPageLanguage[language].password_not_match;
                       setValidForm({ ...ValidForm, repassword: false });
                       e.target.nextElementSibling.classList.remove('show');
                       e.target.nextElementSibling.innerText = '';
@@ -193,7 +202,8 @@ export default function Reg() {
                     let password = document.querySelector('#password');
                     if (e.target.value !== password.value) {
                       e.target.nextElementSibling.classList.add('show');
-                      e.target.nextElementSibling.innerText = RegPageLanguage[language].password_not_match;
+                      e.target.nextElementSibling.innerText =
+                        RegPageLanguage[language].password_not_match;
                       setValidForm({ ...ValidForm, repassword: false });
                     } else {
                       e.target.nextElementSibling.classList.remove('show');
@@ -220,7 +230,8 @@ export default function Reg() {
                   onChange={e => {
                     if (!Number(e.target.value) || e.target.value.length !== 6) {
                       e.target.nextElementSibling.classList.add('show');
-                      e.target.nextElementSibling.innerText = RegPageLanguage[language].not_valid_register_code;
+                      e.target.nextElementSibling.innerText =
+                        RegPageLanguage[language].not_valid_register_code;
                       setValidForm({ ...ValidForm, email_code: false });
                     } else {
                       e.target.nextElementSibling.classList.remove('show');
@@ -235,10 +246,14 @@ export default function Reg() {
                 <label>Button</label>
                 <span
                   onClick={() => getCode(document.getElementById('email').value)}
-                  className={`button ${CountDownSendMail === null && ValidForm.email ? 'valid' : 'not-valid'}`}
+                  className={`button ${
+                    CountDownSendMail === null && ValidForm.email ? 'valid' : 'not-valid'
+                  }`}
                 >
                   {RegPageLanguage[language].get_code}
-                  <span className='count-down'>{CountDownSendMail !== null && CountDownSendMail}</span>
+                  <span className='count-down'>
+                    {CountDownSendMail !== null && CountDownSendMail}
+                  </span>
                 </span>
                 <span></span>
               </div>
@@ -250,7 +265,12 @@ export default function Reg() {
             </div>
 
             <div className='form-group type-checkbox'>
-              <input id='confirm' name='confirm' type='checkbox' onChange={e => setcheck(e.target.checked)} />
+              <input
+                id='confirm'
+                name='confirm'
+                type='checkbox'
+                onChange={e => setcheck(e.target.checked)}
+              />
               <label
                 htmlFor='confirm'
                 dangerouslySetInnerHTML={{ __html: RegPageLanguage[language].agreement }}
@@ -260,7 +280,11 @@ export default function Reg() {
             <div className='form-group half'>
               <button
                 className={`button ${
-                  ValidForm.email && ValidForm.password && ValidForm.email_code && ValidForm.repassword && check
+                  ValidForm.email &&
+                  ValidForm.password &&
+                  ValidForm.email_code &&
+                  ValidForm.repassword &&
+                  check
                     ? 'valid'
                     : 'not-valid'
                 }`}

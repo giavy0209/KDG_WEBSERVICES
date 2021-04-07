@@ -32,13 +32,14 @@ export default function Services() {
                 <p className='des'>{ServicesPageLanguage[language].desc_wallet}</p>
               </div>
             </div>
-            <div 
-            onClick={() => window.open('https://kinglive.tv?refresh=' + refresh)}
-            className='service img img-3-1'>
+            <div
+              onClick={() => window.open('https://kinglive.tv?refresh=' + refresh)}
+              className='service img img-3-1'
+            >
               <img src={livebg} alt='' />
               <div className='logo'>
                 <img src={live} alt='' />
-                {/* <p className='des'>{ServicesPageLanguage[language].desc_live}</p> */}
+                <p className='des'>{ServicesPageLanguage[language].desc_live}</p>
               </div>
             </div>
             <div className='service img img-3-1'>
