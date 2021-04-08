@@ -4,7 +4,7 @@ import * as RiIcon from 'react-icons/ri';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 import '../../assets/css/profile.css';
-import avatarDefault from '../../assets/images/avatarDefault.png';
+import avatarDefault from '../../assets/images/avatarDefault.svg';
 import coverDefault from '../../assets/images/coverDefault.png';
 import callAPI from '../../axios';
 import { Crop } from '../../components';
@@ -12,7 +12,7 @@ import { STORAGE_DOMAIN } from '../../constant';
 import { useLanguageLayerValue } from '../../context/LanguageLayer';
 import useNumber from '../../hooks/useNumber';
 import { actChangeUploadStatus } from '../../store/action';
-import Videos from './MainContainer';
+import MainContainer from './MainContainer';
 import Modal from './Modal';
 import ModalBody from './ModalBody';
 
@@ -286,7 +286,7 @@ const Profile = () => {
           )}
         </div>
 
-        <Videos uid={uid} user={user} />
+        <MainContainer uid={uid} user={user} />
       </div>
     </div>
   );
