@@ -11,8 +11,9 @@
 
   &__copyright {
     line-height: $footer-height;
-    font-size: $size-6;
+    font-size: $size-7;
     font-weight: 500;
+
     margin-right: 40px;
     @include hidden-text(1);
   }

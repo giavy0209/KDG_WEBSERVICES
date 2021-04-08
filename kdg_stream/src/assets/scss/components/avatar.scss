@@ -10,6 +10,8 @@
 
   border-radius: 50%;
 
+  background-color: #f0f0f0;
+
   .avatar-img {
     position: absolute;
     top: 0;
@@ -21,11 +23,11 @@
 
   &__default {
     position: absolute;
-    top: 0;
-    left: 0;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 
-    width: 100%;
-    height: 100%;
+    width: 50%;
 
     object-fit: cover;
   }

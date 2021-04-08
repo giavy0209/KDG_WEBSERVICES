@@ -46,15 +46,15 @@ $icon-width: 9%;
     width: calc(100% - #{$avatar-width} - #{$icon-width});
 
     &-name {
-      color: $sub-title-color;
-      font-size: $size-4;
-      font-weight: 700;
+      color: $title-color;
+      font-size: $size-6;
+      font-weight: 600;
       @include hidden-text(2);
     }
 
     &-numb {
       color: $text-color;
-      font-size: $size-6;
+      font-size: $size-7;
       font-weight: 500;
       @include hidden-text(1);
     }

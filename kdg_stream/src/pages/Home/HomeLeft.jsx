@@ -26,7 +26,7 @@ const HomeLeft = props => {
 
       <div>
         {streammingsList.length > 0 && (
-          <div className='main__title'>
+          <div className='main__title left'>
             <p>{home[language].watchLive}</p>
           </div>
         )}
@@ -66,7 +66,7 @@ const HomeLeft = props => {
 
       <div>
         {recommendList.length > 0 && (
-          <div className='main__title'>
+          <div className='main__title left'>
             <p>{home[language].recommend}</p>
           </div>
         )}

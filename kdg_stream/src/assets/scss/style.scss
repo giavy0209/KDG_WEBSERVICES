@@ -131,7 +131,7 @@
   cursor: pointer;
   user-select: none;
 
-  font-size: $size-4;
+  font-size: $size-5;
   font-weight: 600;
   color: $main-color;
   background-color: $background-white;
@@ -174,31 +174,5 @@
       padding: 0 5px;
       border-radius: 999px;
     }
-  }
-}
-
-.button-buyNB {
-  cursor: pointer;
-  user-select: none;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  min-width: 150px;
-  height: 44px;
-  line-height: 44px;
-
-  color: #525252;
-  font-size: $size-4;
-  font-weight: 700;
-
-  border-radius: 5px;
-  background-color: #f0f0f0;
-  transition: 0.3s;
-
-  &:hover,
-  &.show {
-    background-color: $background-color-hover;
   }
 }

@@ -51,6 +51,7 @@ const Cover = () => {
       <div
         className={`coverOverlay coverOverlayRight ${activeIndex === itemCover - 1 ? '' : 'show'}`}
       ></div>
+
       <div className='label-container'>
         <div className='label'>
           <p>{cover[language].live}</p>
@@ -60,6 +61,7 @@ const Cover = () => {
           <p>{viewers}</p>
         </div>
       </div>
+
       <div className='coverTrack'>
         <div className='cover' style={{ '--item': itemCover }}></div>
       </div>

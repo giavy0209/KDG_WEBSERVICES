@@ -14,6 +14,7 @@ import callAPI from '../../axios';
 import {
   BREAK_POINT_EXTRA_SMALL,
   BREAK_POINT_MEDIUM,
+  BREAK_POINT_992,
   BREAK_POINT_SMALL,
   STORAGE_DOMAIN,
 } from '../../constant';
@@ -38,17 +39,18 @@ const Header = () => {
   const user = useSelector(state => state.user);
   const unreadNoti = useSelector(state => state.unreadNoti);
   const noties = useSelector(state => state.noties);
+
+  const email = user?.email;
   const first_name = user?.kyc.first_name;
   const last_name = user?.kyc.last_name;
-  const email = user?.email;
   const followNumber = useNumber(user?.kinglive?.total_follower);
 
   const NBs = useNumber(10000);
 
+  const [showSearch, setShowSearch] = useState(false);
   const [isShowBuyNB, setIsShowBuyNB] = useState(false);
-  const [isShowNoti, setIsShowNoti] = useState(false);
-  const [isShowUserinfo, setIsShowUserinfo] = useState(false);
-  const [isShowSearchBar, setIsShowSearchBar] = useState(false);
+  const [showNoti, setShowNoti] = useState(false);
+  const [showInfo, setShowInfo] = useState(false);
 
   const handleNavigation = useCallback(
     pathname => {
@@ -91,15 +93,15 @@ const Header = () => {
   useEffect(() => {
     const handleHidePopper1 = () => {
       isShowBuyNB && setIsShowBuyNB(x => !x);
-      isShowNoti && setIsShowNoti(x => !x);
-      isShowUserinfo && setIsShowUserinfo(x => !x);
+      showNoti && setShowNoti(x => !x);
+      showInfo && setShowInfo(x => !x);
     };
 
     const handleHidePopper2 = e => {
       if (e.keyCode !== 27) return;
       isShowBuyNB && setIsShowBuyNB(x => !x);
-      isShowNoti && setIsShowNoti(x => !x);
-      isShowUserinfo && setIsShowUserinfo(x => !x);
+      showNoti && setShowNoti(x => !x);
+      showInfo && setShowInfo(x => !x);
     };
 
     document.addEventListener('click', handleHidePopper1);
@@ -109,15 +111,15 @@ const Header = () => {
       document.removeEventListener('click', handleHidePopper1);
       window.removeEventListener('keyup', handleHidePopper2);
     };
-  }, [isShowBuyNB, isShowNoti, isShowUserinfo]);
+  }, [isShowBuyNB, showNoti, showInfo]);
 
   return (
     <div className='header'>
-      {isShowSearchBar && (
-        <div className='header__searchBarCon'>
+      {showSearch && (
+        <div className='header__searchBarContainer'>
           <IoIcon.IoMdArrowBack
             className='header__iconHover mr-20'
-            onClick={() => setIsShowSearchBar(false)}
+            onClick={() => setShowSearch(false)}
           />
           <div className='header__searchBar'>
             <IoIcon.IoMdSearch className='header__searchIcon1 header__iconHover' />
@@ -138,8 +140,8 @@ const Header = () => {
         </div>
       </div>
 
-      <div className={`popper ${isShowNoti ? 'show' : ''}`} onClick={e => e.stopPropagation()}>
-        <div className='main__title pl-25 pr-25'>
+      <div className={`popper ${showNoti ? 'show' : ''}`} onClick={e => e.stopPropagation()}>
+        <div className='main__title right pl-25 pr-25'>
           <p>{header[language].notification}</p>
         </div>
 
@@ -150,7 +152,7 @@ const Header = () => {
           </div>
         ) : (
           noties?.map(o => (
-            <div key={o._id} onClick={() => handleClickNoti(o)} className='header__noti'>
+            <div key={o._id} onClick={() => handleClickNoti(o)} className='header__notiItem'>
               <p>{handleType(o)}</p>
               <p className='header__noti-date'>{convertDateAgo(o.last_update)}</p>
             </div>
@@ -159,7 +161,7 @@ const Header = () => {
       </div>
 
       <div
-        className={`popper popper--userinfo ${isShowUserinfo ? 'show' : ''}`}
+        className={`popper popper--userinfo ${showInfo ? 'show' : ''}`}
         onClick={e => e.stopPropagation()}
       >
         <div className='header__info bb'>
@@ -183,7 +185,7 @@ const Header = () => {
             className='header__manage'
             onClick={() => {
               history.push('/profile?uid=' + user?._id);
-              setIsShowUserinfo(false);
+              setShowInfo(false);
             }}
           >
             {header[language].personalinfo}
@@ -192,90 +194,78 @@ const Header = () => {
             className='header__manage'
             onClick={() => {
               handleNavigation('/profile');
-              setIsShowUserinfo(false);
+              setShowInfo(false);
             }}
           >
             {header[language].assetmanagement}
           </div>
         </div>
-        <div className='header__manage' onClick={() => setIsShowUserinfo(false)}>
+        <div className='header__manage' onClick={() => setShowInfo(false)}>
           {header[language].logout}
         </div>
       </div>
 
       <div className='header__left'>
-        <div className='header__left--left'>
-          <div className='header__logo' onClick={() => handleNavigation('/home')}>
-            {width > BREAK_POINT_EXTRA_SMALL ? (
-              <img src={logoText} alt='logo' />
-            ) : (
-              <img src={logo} alt='logo' />
-            )}
-          </div>
-
-          {width > BREAK_POINT_SMALL ? (
-            <div className='header__search'>
-              <IoIcon.IoMdSearch className='header__searchIcon1 header__iconHover' />
-              <input type='text' placeholder={header[language].search} />
-            </div>
+        <div className='header__logo' onClick={() => handleNavigation('/home')}>
+          {width > BREAK_POINT_EXTRA_SMALL ? (
+            <img src={logoText} alt='logo' />
           ) : (
-            <IoIcon.IoMdSearch
-              className='header__iconHover ml-20'
-              onClick={() => setIsShowSearchBar(true)}
-            />
+            <img src={logo} alt='logo' />
           )}
         </div>
 
-        {user && (
-          <div className='header__left--right'>
-            <button className='button header__button mr-10' onClick={() => history.push('/upload')}>
-              {width > BREAK_POINT_MEDIUM ? (
-                header[language].upload
-              ) : (
-                <GoIcon.GoCloudUpload className='icon' />
-              )}
-            </button>
-            <button className='button header__button' onClick={() => history.push('/setup')}>
-              {width > BREAK_POINT_MEDIUM ? (
-                header[language].setup
-              ) : (
-                <IoIcon.IoMdSettings className='icon' />
-              )}
-            </button>
+        {width > BREAK_POINT_SMALL ? (
+          <div className='header__search'>
+            <IoIcon.IoMdSearch className='header__searchIcon1 header__iconHover' />
+            <input type='text' placeholder={header[language].search} />
           </div>
+        ) : (
+          <IoIcon.IoMdSearch
+            className='header__iconHover ml-20'
+            onClick={() => setShowSearch(true)}
+          />
         )}
       </div>
 
       <div className='header__right'>
         {user && (
           <>
-            {width > BREAK_POINT_MEDIUM ? (
-              <button
-                className={`button-buyNB ${isShowBuyNB ? 'show' : ''}`}
-                onClick={handleShowPopper(setIsShowBuyNB)}
-              >
-                <img src={diamond} alt='icon' className='mr-10' />
-                <span>{header[language].buyNB}</span>
-              </button>
-            ) : (
-              <div onClick={handleShowPopper(setIsShowBuyNB)} className='header__iconHover'>
-                <RiIcon.RiVipDiamondLine />
-              </div>
-            )}
+            <button className='button header__button mr-10' onClick={() => history.push('/upload')}>
+              {width > BREAK_POINT_992 ? (
+                header[language].upload
+              ) : (
+                <GoIcon.GoCloudUpload className='icon' />
+              )}
+            </button>
+
+            <button
+              className={`button active header__button ${
+                width <= BREAK_POINT_EXTRA_SMALL ? 'mr-20' : 'mr-40'
+              }`}
+              onClick={() => history.push('/setup')}
+            >
+              {width > BREAK_POINT_992 ? (
+                header[language].setup
+              ) : (
+                <IoIcon.IoMdSettings className='icon' />
+              )}
+            </button>
 
             <div
-              onClick={handleShowPopper(setIsShowNoti, handleReaded)}
-              className='header__notiIcon header__iconHover'
+              onClick={handleShowPopper(setShowNoti, handleReaded)}
+              className={`header__noti header__iconHover ${
+                width <= BREAK_POINT_EXTRA_SMALL ? 'mr-20' : 'mr-40'
+              }`}
             >
               {unreadNoti > 0 && (
-                <span className='count'>
+                <span className='header__noti-unread'>
                   <span>{unreadNoti <= 99 ? unreadNoti : '99+'}</span>
                 </span>
               )}
               <VscIcon.VscBell />
             </div>
 
-            <div className='header__avatar' onClick={handleShowPopper(setIsShowUserinfo)}>
+            <div className='header__avatar' onClick={handleShowPopper(setShowInfo)}>
               <Avatar
                 src={user?.kyc.avatar ? STORAGE_DOMAIN + user?.kyc.avatar?.path : undefined}
                 position={user?.kyc.avatar_pos}

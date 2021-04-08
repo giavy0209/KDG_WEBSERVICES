@@ -1,5 +1,5 @@
 import '../../assets/css/avatar.css';
-import avatarDefault from '../../assets/images/avatarDefault.png';
+import avatarDefault from '../../assets/images/avatarDefault.svg';
 
 export default function Avatar({ position, src = avatarDefault }) {
   return (

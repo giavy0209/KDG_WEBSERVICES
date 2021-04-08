@@ -2,6 +2,7 @@
 
 $break-point-large: 1430px;
 $break-point-medium: 1280px;
+$break-point-992: 992px;
 $break-point-small: 768px;
 $break-point-extra-small: 576px;
 
@@ -9,9 +10,9 @@ $break-point-extra-small: 576px;
 
 // ---------------------------HEIGHT-------------------------- //
 
-$footer-height: 30px;
+$footer-height: 40px;
 $sidebar-footer-height: 50px;
-$header-height: 56px;
+$header-height: 70px;
 $search-height: 40px;
 $logo-height: 30px;
 
@@ -34,18 +35,20 @@ $size-7: 14px;
 // --------------------------COLOR---------------------------- //
 
 $main-color: #e41a7f;
-$title-color: #000;
+$title-color: #303030;
 $sub-title-color: #272727;
 $text-color: #707070;
 $light-text-color: #909090;
-$placeholder-text-color: #bababa;
+$placeholder-text-color: #b2b2b2;
+
 $border-color: #555;
 
 $background-white: #fff;
 $background-color-footer: #eaeaea;
 $background-color-main: #f7f7f7;
 
-$background-color-hover: #d9d9d9;
+// $background-color-hover: #d9d9d9;
+$background-color-hover: #e4e4e4;
 $background-color-hover1: #e4e4e4;
 
 $box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);

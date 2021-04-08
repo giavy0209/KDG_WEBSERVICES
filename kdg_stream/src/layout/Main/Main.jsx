@@ -27,7 +27,7 @@ const Main = props => {
       const header = document.querySelector('.header');
       const { top } = header.getBoundingClientRect();
 
-      rightRef.current.style.top = top + header.clientHeight + 10 + 'px';
+      rightRef.current.style.top = top + header.clientHeight + 20 + 'px';
     };
 
     window.addEventListener('scroll', handlePositionRight);

@@ -8,5 +8,6 @@ export const ITEM_PER_PAGE = 50;
 
 export const BREAK_POINT_LARGE = 1430;
 export const BREAK_POINT_MEDIUM = 1280;
+export const BREAK_POINT_992 = 992;
 export const BREAK_POINT_SMALL = 768;
 export const BREAK_POINT_EXTRA_SMALL = 576;

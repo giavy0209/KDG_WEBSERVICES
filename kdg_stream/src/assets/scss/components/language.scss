@@ -21,7 +21,7 @@
   }
 
   &__selected {
-    font-size: $size-4;
+    font-size: $size-5;
     transition: 0.3s;
     margin-right: 5px;
     @include hidden-text(1);

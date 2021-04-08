@@ -14,7 +14,7 @@ const HomeRight = props => {
 
   return (
     <>
-      <div className='main__title mb-0 ml-25 mr-25'>
+      <div className='main__title right ml-25 mr-25'>
         <p>{home[language].ranking}</p>
       </div>
 
