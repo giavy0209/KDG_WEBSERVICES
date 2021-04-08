@@ -42,10 +42,7 @@ const Header = () => {
   const last_name = user?.kyc.last_name;
   const followNumber = useNumber(user?.kinglive?.total_follower);
 
-  const NBs = useNumber(10000);
-
   const [showSearch, setShowSearch] = useState(false);
-  const [isShowBuyNB, setIsShowBuyNB] = useState(false);
   const [showNoti, setShowNoti] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
 
@@ -68,7 +65,7 @@ const Header = () => {
   const handleType = useCallback(
     ({ type, data }) => {
       let text = header[language]['noti' + type];
-      if (type === 101) text = text.replace('data', data.name);
+      if (type === 101) text = text.replace('data1', data.name);
       if (type === 102) text = text.replace('data1', data.name).replace('data2', data.video_name);
       if (type === 103) text = text.replace('data1', data.video_name);
       if (type === 104) text = text.replace('data1', data.name).replace('data2', data.video_name);
@@ -89,14 +86,12 @@ const Header = () => {
 
   useEffect(() => {
     const handleHidePopper1 = () => {
-      isShowBuyNB && setIsShowBuyNB(x => !x);
       showNoti && setShowNoti(x => !x);
       showInfo && setShowInfo(x => !x);
     };
 
     const handleHidePopper2 = e => {
       if (e.keyCode !== 27) return;
-      isShowBuyNB && setIsShowBuyNB(x => !x);
       showNoti && setShowNoti(x => !x);
       showInfo && setShowInfo(x => !x);
     };
@@ -108,7 +103,7 @@ const Header = () => {
       document.removeEventListener('click', handleHidePopper1);
       window.removeEventListener('keyup', handleHidePopper2);
     };
-  }, [isShowBuyNB, showNoti, showInfo]);
+  }, [showNoti, showInfo]);
 
   return (
     <div className='header'>
@@ -124,18 +119,6 @@ const Header = () => {
           </div>
         </div>
       )}
-
-      <div className={`popper ${isShowBuyNB ? 'show' : ''}`} onClick={e => e.stopPropagation()}>
-        <div className='header__buyNB bb'>
-          <p className='header__NBquantity'>
-            <span>{`${header[language].youhave} ${NBs} ${header[language].NBs}`}</span>
-          </p>
-          <p className='header__NBdesc'>{header[language].desc1}</p>
-          <p className='header__NBdetail' onClick={() => setIsShowBuyNB(false)}>
-            {header[language].detail}
-          </p>
-        </div>
-      </div>
 
       <div className={`popper ${showNoti ? 'show' : ''}`} onClick={e => e.stopPropagation()}>
         <div className='main__title right pl-25 pr-25'>

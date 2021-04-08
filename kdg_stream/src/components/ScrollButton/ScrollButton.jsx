@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import * as IoIcon from 'react-icons/io';
 import '../../assets/css/scroll-button.css';
+import { scrollTop } from '../../helpers';
 
 const ScrollButton = () => {
   const buttonRef = useRef();
@@ -18,17 +19,11 @@ const ScrollButton = () => {
 
     window.addEventListener('scroll', handleScrollTop);
 
-    return () => {
-      window.removeEventListener('scroll', handleScrollTop);
-    };
+    return () => window.removeEventListener('scroll', handleScrollTop);
   }, []);
 
-  const handleClick = () => {
-    window.scrollTo(0, 0);
-  };
-
   return (
-    <div ref={buttonRef} className='scroll-button' onClick={handleClick}>
+    <div ref={buttonRef} className='scroll-button' onClick={scrollTop}>
       <IoIcon.IoIosArrowUp className='icon' />
     </div>
   );
