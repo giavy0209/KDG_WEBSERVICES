@@ -193,11 +193,6 @@ const formForgot = {
 const header = {
   vi: {
     search: 'Tìm kiếm',
-    buyNB: 'Mua NB',
-    youhave: 'Bạn có',
-    NBs: 'Ngọc Bội',
-    desc1: 'Giá được hiển thị bằng Ngọc Bội, bạn có thể đổi Ngọc Bội từ KDG',
-    detail: 'chi tiết tại đây',
     notification: 'Thông báo',
     notihere: 'Thông báo của bạn ở đây',
     notidesc1: 'Đăng ký kênh yêu thích của bạn để nhận thông báo về video mới nhất của họ',
@@ -216,11 +211,6 @@ const header = {
   },
   en: {
     search: 'Search',
-    buyNB: 'Buy JPs',
-    youhave: 'You have',
-    NBs: 'Jade Pendant',
-    desc1: 'Prices are shown in Jade Pendant, you can swap Jade Pendant from KDG',
-    detail: 'detail here',
     notification: 'Notifications',
     notihere: 'Your notifications live here',
     notidesc1:

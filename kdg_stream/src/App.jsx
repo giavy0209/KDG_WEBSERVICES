@@ -38,12 +38,11 @@ const App = () => {
   const handleType = useCallback(
     ({ type, data }) => {
       let text = header[language]['noti' + type];
-      if (type === 101) text = text.replace('data', data.name);
+      if (type === 101) text = text.replace('data1', data.name);
       if (type === 102) text = text.replace('data1', data.name).replace('data2', data.video_name);
       if (type === 103) text = text.replace('data1', data.video_name);
-      if (type === 104)
-        text = text.replace('data1', data.user_name).replace('data2', data.video_name);
-      if (type === 105) text = text.replace('data1', data.user_name);
+      if (type === 104) text = text.replace('data1', data.name).replace('data2', data.video_name);
+      if (type === 105) text = text.replace('data1', data.name);
       return text;
     },
     [header, language]
@@ -53,6 +52,7 @@ const App = () => {
     ({ type, data }) => {
       if (type === 101) history.push(`/profile?uid=${data.user}`);
       if (type === 102 || type === 103 || type === 104) history.push(`/watch?v=${data.video}`);
+      if (type === 105) history.push(`/live?s=${data.video}`);
     },
     [history]
   );

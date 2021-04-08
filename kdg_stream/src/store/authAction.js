@@ -52,12 +52,12 @@ export function actChangeNoties(noties) {
     payload: { noties },
   };
 }
-export function asyncGetNoties(){
+export function asyncGetNoties() {
   return async dispatch => {
-    const res = await callAPI.get('/noti')
-    dispatch(actChangeNoties(res.data))
-    dispatch(actChangeUnreadNoti(res.unread))
-  }
+    const res = await callAPI.get('/noti');
+    dispatch(actChangeNoties(res.data));
+    dispatch(actChangeUnreadNoti(res.unread));
+  };
 }
 
 export function asyncInitAuth(_refresh, _jwt) {
@@ -77,9 +77,9 @@ export function asyncInitAuth(_refresh, _jwt) {
       storage.setRefresh(_refresh);
     }
     await Promise.all([
-      dispatch(asyncGetUser()), 
+      dispatch(asyncGetUser()),
       dispatch(asyncGetBalances()),
-      dispatch(asyncGetNoties())
+      dispatch(asyncGetNoties()),
     ]);
   };
 }

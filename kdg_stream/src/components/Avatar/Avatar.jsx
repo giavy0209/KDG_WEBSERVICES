@@ -9,14 +9,14 @@ export default function Avatar({ position, src = avatarDefault }) {
           <img alt='' src={src} className='avatar__default' />
         ) : (
           <img
+            className='avatar__real'
             alt=''
+            src={src}
             style={{
               '--x': position?.x ? position.x * -1 + '%' : 0,
               '--y': position?.y ? position.y * -1 + '%' : 0,
               '--zoom': position?.zoom ? position.zoom + '%' : '100%',
             }}
-            className='avatar-img'
-            src={src}
           />
         )}
       </div>
