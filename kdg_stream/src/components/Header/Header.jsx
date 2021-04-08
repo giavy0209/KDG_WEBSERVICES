@@ -1,20 +1,17 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import * as GoIcon from 'react-icons/go';
 import * as IoIcon from 'react-icons/io';
-import * as RiIcon from 'react-icons/ri';
 import * as VscIcon from 'react-icons/vsc';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 import { Avatar } from '..';
 import '../../assets/css/header.css';
-import diamond from '../../assets/images/diamond.svg';
-import logoText from '../../assets/images/logotext.png';
 import logo from '../../assets/images/logo.png';
+import logoText from '../../assets/images/logotext.png';
 import callAPI from '../../axios';
 import {
-  BREAK_POINT_EXTRA_SMALL,
-  BREAK_POINT_MEDIUM,
   BREAK_POINT_992,
+  BREAK_POINT_EXTRA_SMALL,
   BREAK_POINT_SMALL,
   STORAGE_DOMAIN,
 } from '../../constant';

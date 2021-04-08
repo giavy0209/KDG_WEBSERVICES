@@ -6,7 +6,7 @@ import * as IoIcon from 'react-icons/io';
 import { useHistory } from 'react-router-dom';
 import { smoothscroll } from '../../helpers';
 import useWindowSize from '../../hooks/useWindowSize';
-import avatarDefault from '../../assets/images/avatarDefault.png';
+import avatarDefault from '../../assets/images/avatarDefault.svg';
 
 const widthItem = 60;
 const gapItem = 30;

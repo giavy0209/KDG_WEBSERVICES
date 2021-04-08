@@ -1,17 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import '../../assets/css/cover.css';
-
-import * as MdIcon from 'react-icons/md';
+import React, { useEffect, useState } from 'react';
 import * as IoIcon from 'react-icons/io';
-
+import * as MdIcon from 'react-icons/md';
+import { useHistory } from 'react-router-dom';
+import '../../assets/css/cover.css';
+import coverDefault from '../../assets/images/coverDefault.png';
 import { useLanguageLayerValue } from '../../context/LanguageLayer';
 import { smoothscroll } from '../../helpers/';
-import { useHistory } from 'react-router-dom';
 import useNumber from '../../hooks/useNumber';
-
-// import thumb1 from '../../assets/images/cover/thumb1.png';
-// import thumb2 from '../../assets/images/cover/thumb2.jpg';
-// import thumb3 from '../../assets/images/cover/thumb3.jpg';
 
 const itemCover = 3;
 
@@ -63,7 +58,13 @@ const Cover = () => {
       </div>
 
       <div className='coverTrack'>
-        <div className='cover' style={{ '--item': itemCover }}></div>
+        <div className='cover' style={{ '--item': itemCover }}>
+          {Array.from(new Array(3)).map((x, i) => (
+            <div key={i} className='cover__item' onClick={() => history.push('/profile')}>
+              <img src={coverDefault} alt='' />
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
