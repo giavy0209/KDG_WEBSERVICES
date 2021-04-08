@@ -278,15 +278,19 @@
   }
 
   &__notiItem {
+    cursor: pointer;
+    user-select: none;
+
     padding: 10px;
     transition: 0.3s;
-    cursor: pointer;
-    &:hover {
-      background-color: #ccc;
-    }
+
     &-date {
       font-size: 12px;
       text-align: right;
+    }
+
+    &:hover {
+      background-color: $background-color-hover;
     }
   }
 

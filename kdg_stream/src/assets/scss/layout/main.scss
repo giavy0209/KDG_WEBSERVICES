@@ -46,7 +46,7 @@
   &__left {
     width: calc(var(--width-left) - 10px);
     padding: 0 25px;
-    margin-top: 20px;
+    margin-top: $gap-header-main;
 
     background-color: $background-white;
 
@@ -70,7 +70,7 @@
 
   &__right {
     width: calc(100% - var(--width-left));
-    height: calc(100vh - 10px - #{$header-height});
+    height: calc(100vh - #{$gap-header-main} - #{$header-height});
 
     background-color: $background-white;
 
