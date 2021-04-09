@@ -6,6 +6,9 @@ const FormData = require('form-data');
 
 const compressing = require('compressing');
 
+const {exec, execSync} = require('child_process')
+
+
 const str = `mYE88UnACvCTUZS6jBGOlyMqX3u0spuRddEXZGyHKixl3oMxRcHooYIJhVvoFTpGgY8AuBX6xFOFgimZKT4fQE0NJS4fWGfi7zK1KGS8KX6k96oD5jNg5crASmAWn8ImDPxmUZYyBQfx3Y85DlA694ACpZwBT44lFnhXJA8TN4zqmfKuztQlPfY0pfdnQLsLWrqy3WR1`
 
 const sendFile = async function (type) {
@@ -22,12 +25,15 @@ const sendFile = async function (type) {
 
 async function compress(type) {
     try {
+        execSync('npm run build', {cwd : path.join(__dirname , type) })
+        console.log('builded ' + type);
         const res = await compressing.zip.compressDir(path.join(__dirname ,type, 'build'), path.join(__dirname,'file.zip'))
-    
+        console.log('compressed  ' + type);
         if(type === 'kdg_stream') type = 'kinglive'
         if(type === 'kdg_wallet') type = 'wallet'
         if(type === 'kdg_login') type = 'login'
         await sendFile(type)
+        console.log('Sended  ' + type + ' to server');
     } catch (error) {
         throw new Error(error)
     }
