@@ -337,13 +337,13 @@
       color: $sub-title-color;
       font-size: $size-2;
       font-weight: 700;
-      @include hidden-text(2);
+      @include hidden-text(1);
     }
 
     &-follow {
       color: $text-color;
       font-size: $size-4;
-      @include hidden-text(2);
+      @include hidden-text(1);
     }
   }
 
