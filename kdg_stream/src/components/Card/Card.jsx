@@ -25,7 +25,7 @@ const Card = props => {
   const handleClick = () => onClick && onClick();
 
   return (
-    <div onClick={handleClick} className={`card ${index === 0 ? 'mt-20' : ''}`}>
+    <div onClick={handleClick} className='card'>
       <div className='card__avatar'>
         <Avatar src={avatar} position={avatarPos} />
       </div>

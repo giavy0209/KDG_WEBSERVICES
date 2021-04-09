@@ -70,7 +70,7 @@
 
   &__right {
     width: calc(100% - var(--width-left));
-    height: calc(100vh - #{$gap-header-main} - #{$header-height});
+    height: calc(100vh - #{$footer-height} - #{$header-height} - #{$gap-header-main});
 
     background-color: $background-white;
 

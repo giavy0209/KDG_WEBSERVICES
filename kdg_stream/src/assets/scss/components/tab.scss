@@ -2,22 +2,14 @@
 
 $tab-header-height: 50px;
 
-.tab-home {
-  height: calc(100% - 48px);
-  overflow-y: hidden;
-
-  &::-webkit-scrollbar {
-    display: none;
+.tabContainer {
+  &__home {
+    height: calc(100% - 71px);
   }
 }
 
 .tab {
   height: 100%;
-
-  overflow-y: hidden;
-  &::-webkit-scrollbar {
-    display: none;
-  }
 
   &__header {
     cursor: pointer;
@@ -76,8 +68,6 @@ $tab-header-height: 50px;
       }
 
       &:hover {
-        // border-top-left-radius: 10px;
-        // border-top-right-radius: 10px;
         border-radius: 10px;
         background-color: $background-color-hover;
       }
@@ -85,29 +75,27 @@ $tab-header-height: 50px;
   }
 
   &__track {
-    width: 100%;
-
     overflow-x: hidden;
-    height: calc(100% - #{$tab-header-height});
 
-    @extend %hidden-scrollbar;
+    width: 100%;
+    height: calc(100% - #{$tab-header-height});
   }
 
   &__content {
     display: flex;
     align-items: flex-start;
 
-    width: calc(100% * var(--item));
     height: 100%;
-
-    @extend %hidden-scrollbar;
+    width: calc(100% * var(--item));
 
     &-child {
-      width: calc(100% / var(--item));
-      height: 100%;
       position: relative;
 
-      @extend %hidden-scrollbar;
+      height: 100%;
+      width: calc(100% / var(--item));
+
+      overflow-y: auto;
+      @extend %custom-scrollbar;
     }
   }
 }

@@ -18,18 +18,19 @@ const HomeRight = props => {
         <p>{home[language].ranking}</p>
       </div>
 
-      <div className='tab-home'>
+      <div className='tabContainer__home'>
         <Tab>
           {/* <TabPane name={home[language].donate} key='1'>
             {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(el => (
               <Card
-                key={el}
-                index={el}
+                key={o._id}
+                index={index}
                 type='donate'
-                numb={12345}
-                name='Trà Long'
-                avatar={avatar1}
-                onClick={() => history.push('/profile')}
+                numb={o.kinglive.total_follower}
+                name={o.kyc ? `${o.kyc.first_name} ${o.kyc.last_name}` : ''}
+                avatar={o.kyc.avatar?.path ? STORAGE_DOMAIN + o.kyc.avatar?.path : undefined}
+                avatarPos={o.kyc.avatar_pos}
+                onClick={() => history.push('/profile?uid=' + o._id)}
               />
             ))}
           </TabPane> */}
