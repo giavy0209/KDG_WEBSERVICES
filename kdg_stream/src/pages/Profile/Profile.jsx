@@ -177,12 +177,14 @@ const Profile = () => {
           <img src={FullScreen} alt='' className='fullscreen' />
         </div>
       )}
+
       <Modal
         visible={VisiblePickAvatar}
         onCancle={() => setVisiblePickAvatar(false)}
         title={'Avatar'}
         content={<ModalBody />}
       />
+
       {uploadStatus?.isShowCrop && <Crop onCancel={onCancelCrop} onFinish={onFinishCrop} />}
 
       <div className='profile__center mt-10'>
