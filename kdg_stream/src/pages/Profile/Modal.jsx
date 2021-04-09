@@ -1,4 +1,4 @@
-import '../../assets/css/profile.css';
+import '../../assets/css/modal.css';
 
 export default function Modal({ onCancle, title, visible, content }) {
   if (visible) {

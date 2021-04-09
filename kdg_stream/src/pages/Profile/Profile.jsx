@@ -138,18 +138,18 @@ const Profile = () => {
     [uploadStatus, dispatch]
   );
 
-  const fullScreenImage = useCallback(src => {
-    setFullScreen(src);
-  }, []);
+  // const fullScreenImage = useCallback(src => {
+  //   setFullScreen(src);
+  // }, []);
 
   const handleFollow = useCallback(async () => {
     if (uid) {
       const res = await callAPI.post('/follow?id=' + uid);
       if (res.status === 1) {
-        setIsFollowed(!IsFollowed);
+        setIsFollowed(x => !x);
       }
     }
-  }, [uid, IsFollowed]);
+  }, [uid]);
 
   useMemo(() => {
     if (uid) {
@@ -202,7 +202,7 @@ const Profile = () => {
               </div>
             )}
             <img
-              onClick={() => fullScreenImage(Cover)}
+              onClick={() => setFullScreen(Cover)}
               style={{
                 '--x': CoverPos.x * -1 + '%',
                 '--y': CoverPos.y * -1 + '%',
@@ -233,7 +233,7 @@ const Profile = () => {
                 </div>
               )}
               <img
-                onClick={() => fullScreenImage(Image)}
+                onClick={() => setFullScreen(Image)}
                 style={{
                   '--x': ImagePos.x * -1 + '%',
                   '--y': ImagePos.y * -1 + '%',
