@@ -194,6 +194,7 @@ const Profile = () => {
               <input onChange={readURLAvatar} type='file' name='file' id='cover-input' />
             </form>
           )}
+
           <div htmlFor='cover-input' className='profile__cover-img'>
             {uid === user?._id && (
               <div onClick={handlePickCover} className='button'>
