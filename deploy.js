@@ -25,7 +25,7 @@ const sendFile = async function (type) {
 
 async function compress(type) {
     try {
-        execSync('npm run build', {cwd : path.join(__dirname , 'kdg_stream') })
+        execSync('npm run build', {cwd : path.join(__dirname , type) })
         console.log('builded ' + type);
         const res = await compressing.zip.compressDir(path.join(__dirname ,type, 'build'), path.join(__dirname,'file.zip'))
         console.log('compressed  ' + type);
