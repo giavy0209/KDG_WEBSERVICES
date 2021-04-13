@@ -282,15 +282,25 @@
     user-select: none;
 
     padding: 10px;
+
     transition: 0.3s;
 
+    font-size: $size-6;
+    color: $title-color;
+
     &-date {
+      color: $text-color;
       font-size: 12px;
       text-align: right;
     }
 
     &:hover {
       background-color: $background-color-hover;
+    }
+
+    @media (max-width: $break-point-small) {
+      padding: 10px 20px;
+      color: $title-color;
     }
   }
 
@@ -334,15 +344,15 @@
     }
 
     &-name {
-      color: $sub-title-color;
-      font-size: $size-2;
+      color: $main-color;
+      font-size: $size-3;
       font-weight: 700;
       @include hidden-text(1);
     }
 
     &-follow {
       color: $text-color;
-      font-size: $size-4;
+      font-size: $size-5;
       @include hidden-text(1);
     }
   }
@@ -355,8 +365,8 @@
     height: 50px;
     line-height: 50px;
 
-    color: $text-color;
-    font-size: $size-4;
+    color: $title-color;
+    font-size: $size-5;
 
     &:hover {
       background-color: $background-color-hover;

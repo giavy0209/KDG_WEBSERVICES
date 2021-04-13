@@ -13,7 +13,7 @@ import package7 from '../../assets/images/profile/package7.png';
 import package8 from '../../assets/images/profile/package8.png';
 import package9 from '../../assets/images/profile/package9.png';
 import callAPI from '../../axios';
-import { Popper1, Tab, Table, TabPane } from '../../components';
+import { Popper1, RecommendVideo, Tab, Table, TabPane } from '../../components';
 import { BREAK_POINT_MEDIUM, STORAGE_DOMAIN } from '../../constant';
 import { useLanguageLayerValue } from '../../context/LanguageLayer';
 import { convertDate, convertDateAgo } from '../../helpers';
@@ -200,6 +200,9 @@ export default function MainContainer({ uid, user }) {
                   </div>
                 </div>
               </div>
+              // <div key={o._id} className='layoutFlex-item'>
+              //   <RecommendVideo video={o} onClick={() => history.push('/watch?v=' + o.short_id)} />
+              // </div>
             ))}
           </div>
 
@@ -281,6 +284,13 @@ export default function MainContainer({ uid, user }) {
                       </div>
                     </div>
                   </div>
+                  // <div key={o._id} className='layoutFlex-item'>
+                  //   <RecommendVideo
+                  //     type='me'
+                  //     video={o}
+                  //     onClick={() => history.push('/watch?v=' + o.short_id)}
+                  //   />
+                  // </div>
                 ))}
               </div>
             </div>
@@ -331,7 +341,7 @@ export default function MainContainer({ uid, user }) {
           </TabPane>
 
           <TabPane name={profile[language].manage} key='2'>
-            <div className='profile__boxManage'>
+            {/* <div className='profile__boxManage'>
               <div
                 className={`profile__boxManage-title profile__historyTitle ${
                   !isShowHistory ? 'mb-0' : ''
@@ -353,7 +363,7 @@ export default function MainContainer({ uid, user }) {
                   View All
                 </div>
               </div>
-            </div>
+            </div> */}
 
             {/* <div className='profile__boxManage'>
               <div className='profile__boxManage-title'>Manage Donate</div>

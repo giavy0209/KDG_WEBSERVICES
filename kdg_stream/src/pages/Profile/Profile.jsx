@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import * as IoIcon from 'react-icons/io';
+import * as FaIcon from 'react-icons/fa';
 import * as RiIcon from 'react-icons/ri';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
@@ -162,9 +163,10 @@ const Profile = () => {
         setImagePos(
           res.data?.kyc?.avatar_pos ? res.data.kyc.avatar_pos : { x: 0, y: 0, zoom: 100 }
         );
-        setCover(
-          res.data.kyc.cover?.path ? STORAGE_DOMAIN + res.data.kyc.cover?.path : coverDefault
-        );
+        // setCover(
+        //   res.data.kyc.cover?.path ? STORAGE_DOMAIN + res.data.kyc.cover?.path : coverDefault
+        // );
+        setCover(coverDefault);
         setCoverPos(res.data?.kyc?.cover_pos ? res.data.kyc.cover_pos : { x: 0, y: 0, zoom: 100 });
       });
     }
@@ -229,7 +231,7 @@ const Profile = () => {
             <div className='profile__cover-avatar'>
               {uid === user?._id && (
                 <div onClick={handlePickAvatar} className='button'>
-                  <IoIcon.IoMdSettings className='icon' />
+                  <FaIcon.FaCamera className='icon' />
                 </div>
               )}
               <img
@@ -266,16 +268,16 @@ const Profile = () => {
             </div>
           </div>
 
-          {uid === user?._id && (
+          {/* {uid === user?._id && (
             <div className='profile__cover-ctnBtn'>
               <button className='button'>
                 <IoIcon.IoMdSettings className='icon' />
                 <span>{profile[language].setting}</span>
               </button>
             </div>
-          )}
+          )} */}
 
-          {uid !== user?._id && (
+          {/* {uid !== user?._id && (
             <div className='profile__cover-ctnBtn'>
               <button onClick={handleFollow} className={`button ${IsFollowed ? 'active' : ''}`}>
                 {IsFollowed ? (
@@ -286,7 +288,7 @@ const Profile = () => {
                 <span>{IsFollowed ? profile[language].unfollow : profile[language].follow}</span>
               </button>
             </div>
-          )}
+          )} */}
         </div>
 
         <MainContainer uid={uid} user={user} />

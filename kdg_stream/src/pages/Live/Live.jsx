@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import ReactHlsPlayer from 'react-hls-player';
 import * as AiIcon from 'react-icons/ai';
 import * as BsIcon from 'react-icons/bs';
-// import * as FaIcon from 'react-icons/fa';
+import * as FaIcon from 'react-icons/fa';
 import * as HiIcon from 'react-icons/hi';
 import * as MdIcon from 'react-icons/md';
 import * as RiIcon from 'react-icons/ri';
@@ -511,7 +511,14 @@ const Live = () => {
   return (
     <div className='live'>
       <div className='live__left'>
-        <div className={`live__videoCtn ${isFullScreen ? 'fullscreen' : ''}`}>
+        <div
+          style={{
+            '--z-index-fullscreen': isFullScreen ? 30000 : 20000,
+            '--z-index-controls': isFullScreen ? 30001 : 20001,
+            '--z-index-chat': isFullScreen ? 30002 : 20002,
+          }}
+          className={`live__videoCtn ${isFullScreen ? 'fullscreen' : ''}`}
+        >
           {isFullScreen && (
             <div className={`live__chatfullscreen ${isHideFullscreenChat ? 'hide' : ''}`}>
               <div
@@ -766,9 +773,9 @@ const Live = () => {
                       <RiIcon.RiSendPlaneFill />
                     </button>
 
-                    {/* <button type='button' className='icon icon-emo'>
-                      <RiIcon.RiEmotionLaughLine />
-                    </button> */}
+                    <button type='button' className='icon icon-gift'>
+                      <FaIcon.FaGift />
+                    </button>
                   </form>
                 </div>
               </div>
