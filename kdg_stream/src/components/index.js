@@ -18,6 +18,7 @@ import ScrollButton from './ScrollButton';
 import Avatar from './Avatar';
 import Recommend from './Recommend';
 import VideoInfo from './VideoInfo';
+import RecommendVideo from './RecommendVideo';
 
 export {
   Footer,
@@ -40,4 +41,5 @@ export {
   Avatar,
   Recommend,
   VideoInfo,
+  RecommendVideo,
 };

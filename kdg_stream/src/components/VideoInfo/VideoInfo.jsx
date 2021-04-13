@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import * as BiIcon from 'react-icons/bi';
 import * as RiIcon from 'react-icons/ri';
 import { useSelector } from 'react-redux';
@@ -77,10 +77,13 @@ const VideoInfo = props => {
     [video]
   );
 
+  const [isShowLoadmore, setIsShowLoadmore] = useState(true);
   const handleGetComment = useCallback(async (videoId, next) => {
     const res = await callAPI.get(`/comment?video=${videoId}&next=${next}`);
     setComments(comment => [...comment, ...res.data]);
     setTotalComment(res.total);
+
+    if (res.data.length <= 10) setIsShowLoadmore(false);
   }, []);
 
   useMemo(() => {
@@ -122,6 +125,18 @@ const VideoInfo = props => {
       window.removeEventListener('keyup', hideMenu2);
     };
   }, [showMenu, showEdit]);
+
+  const descRef = useRef();
+  const [isShowmore, setIsShowmore] = useState(true);
+  useEffect(() => {
+    if (!descRef.current) return;
+
+    if (descRef.current.clientHeight > 96) {
+      setIsShowmore(true);
+    } else {
+      setIsShowmore(false);
+    }
+  }, [descRef.current?.clientHeight]);
 
   return (
     <div className='videoInfo'>
@@ -165,6 +180,23 @@ const VideoInfo = props => {
           </div>
         </div>
 
+        <div className='videoInfo__view1'>
+          <span>
+            {useNumber(video?.views)} {videoinfo[language].views}
+          </span>
+          <span> • </span>
+          {type === 'watch' && (
+            <span onClick={() => setConvert(x => !x)}>
+              {convert ? convertDateAgo(video?.create_date) : convertDate(video?.create_date)}
+            </span>
+          )}
+          {type === 'live' && (
+            <span onClick={() => setConvert(x => !x)}>
+              {convert ? convertDateAgo(video?.start_date) : convertDate(video?.start_date)}
+            </span>
+          )}
+        </div>
+
         <div className='videoInfo__info-info'>
           <div
             className='videoInfo__avatar'
@@ -185,27 +217,21 @@ const VideoInfo = props => {
               {video?.user?.kyc.first_name} {video?.user?.kyc.last_name}
             </div>
 
-            <div className='videoInfo__date' onClick={() => setConvert(x => !x)}>
-              {convert ? convertDateAgo(video?.create_date) : convertDate(video?.create_date)}
-            </div>
-
             <div className='videoInfo__view'>
-              <span>
-                {useNumber(video?.views)} {videoinfo[language].views}
-              </span>
-              <span> • </span>
               <span>
                 {useNumber(totalFollow)} {videoinfo[language].followers}
               </span>
             </div>
 
-            <div className={`videoInfo__desc ${showMore ? 'd-block' : ''}`}>
+            <div ref={descRef} className={`videoInfo__desc ${showMore ? 'd-block' : ''}`}>
               {video?.description}
             </div>
 
-            <div className='videoInfo__showMore' onClick={() => setShowMore(x => !x)}>
-              {showMore ? videoinfo[language].hide : videoinfo[language].showmore}
-            </div>
+            {isShowmore && (
+              <div className='videoInfo__showMore' onClick={() => setShowMore(x => !x)}>
+                {showMore ? videoinfo[language].hide : videoinfo[language].showmore}
+              </div>
+            )}
           </div>
 
           {user?._id !== video?.user._id && (
@@ -274,12 +300,14 @@ const VideoInfo = props => {
               </div>
             ))}
 
-            <div
-              className='videoInfo__showMore'
-              onClick={() => handleGetComment(video._id, comments[comments.length - 1]?._id)}
-            >
-              {videoinfo[language].loadmore}
-            </div>
+            {isShowLoadmore && (
+              <div
+                className='videoInfo__showMore'
+                onClick={() => handleGetComment(video._id, comments[comments.length - 1]?._id)}
+              >
+                {videoinfo[language].loadmore}
+              </div>
+            )}
           </div>
         </div>
       )}

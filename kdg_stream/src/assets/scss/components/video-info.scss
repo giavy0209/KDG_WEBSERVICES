@@ -11,7 +11,7 @@
 
       margin-top: 20px;
 
-      $avatar-width: 75px;
+      $avatar-width: 50px;
 
       > div:nth-child(1) {
         width: $avatar-width;
@@ -30,7 +30,7 @@
 
   &__titleVideo {
     color: $sub-title-color;
-    font-size: 30px;
+    font-size: $size-3;
     line-height: 34px;
     font-weight: 700;
 
@@ -146,9 +146,9 @@
   }
 
   &__name {
-    color: $sub-title-color;
-    font-size: $size-2;
-    font-weight: 700;
+    color: $title-color;
+    font-size: $size-6;
+    font-weight: 500;
   }
 
   &__date {
@@ -167,17 +167,31 @@
   }
 
   &__view {
-    color: $main-color;
-    font-size: $size-5;
-    font-weight: 500;
+    color: $text-color;
+    font-size: $size-7;
+
+    margin-bottom: 30px;
+  }
+
+  &__view1 {
+    color: $text-color;
+    font-size: $size-6;
 
     margin-bottom: 10px;
+
+    > span:nth-child(3) {
+      cursor: pointer;
+      user-select: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
   }
 
   &__desc {
-    font-size: $size-5;
+    font-size: $size-6;
     line-height: 1.5;
-    font-weight: 500;
 
     white-space: pre-wrap;
 
@@ -192,11 +206,10 @@
     cursor: pointer;
     user-select: none;
 
-    color: $main-color;
-    font-size: $size-5;
+    color: $text-color;
+    font-size: $size-6;
     font-weight: 500;
-    text-transform: uppercase;
-    text-align: center;
+    text-transform: capitalize;
 
     padding: 15px 0;
 
@@ -227,15 +240,16 @@
   }
 
   &__comment {
-    padding-top: 20px;
+    padding-top: 35px;
 
-    border-top: 1px solid rgba($color: $sub-title-color, $alpha: 1);
+    border-top: $border-bottom;
 
     $avatar-width: 50px;
 
     &-total {
-      font-weight: 700;
       color: $sub-title-color;
+
+      margin-bottom: 15px;
     }
 
     &-input {
@@ -259,10 +273,10 @@
           padding-left: 10px;
 
           border: none;
-          border-bottom: 1px solid rgba($color: $sub-title-color, $alpha: 0.5);
+          border-bottom: $border-bottom;
 
           color: $text-color;
-          font-size: $size-3;
+          font-size: $size-7;
 
           background-color: transparent;
         }
@@ -291,8 +305,8 @@
           padding-left: 10px;
 
           .name {
-            color: $sub-title-color;
-            font-size: $size-5;
+            color: $title-color;
+            font-size: $size-6;
             font-weight: 600;
 
             margin-bottom: 5px;

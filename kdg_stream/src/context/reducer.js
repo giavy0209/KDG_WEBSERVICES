@@ -469,8 +469,8 @@ const videoinfo = {
   vi: {
     views: 'lượt xem',
     followers: 'người theo dõi',
-    hide: 'ẨN BỚT',
-    showmore: 'HIỂN THỊ THÊM',
+    hide: 'Ẩn bớt',
+    showmore: 'Hiển thị thêm',
     unfollow: 'BỎ THEO DÕI',
     follow: 'THEO DÕI',
     comment: 'Bình luận',

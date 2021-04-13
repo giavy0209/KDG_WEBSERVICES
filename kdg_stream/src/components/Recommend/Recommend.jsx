@@ -2,10 +2,10 @@ import { CircularProgress } from '@material-ui/core';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import * as MdIcon from 'react-icons/md';
 import { useHistory } from 'react-router-dom';
-import { Video } from '..';
+import { RecommendVideo } from '..';
 import '../../assets/css/recommend.css';
 import callAPI from '../../axios';
-import { BREAK_POINT_MEDIUM, STORAGE_DOMAIN } from '../../constant';
+import { BREAK_POINT_MEDIUM } from '../../constant';
 import { useLanguageLayerValue } from '../../context/LanguageLayer';
 import useWindowSize from '../../hooks/useWindowSize';
 
@@ -92,19 +92,13 @@ const Recommend = () => {
         >
           {streammingsList.map(el => (
             <div key={el._id} className='layoutFlex-item'>
-              <Video
+              <RecommendVideo
+                type='live'
                 video={el}
-                type='stream'
-                title={el.name}
-                description={el.description}
-                avataPos={el.user?.kyc.avatar_pos}
                 onClick={() => {
                   history.push('/live?s=' + el._id);
                   window.scrollTo(0, 0);
                 }}
-                avatar={
-                  el.user?.kyc.avatar?.path ? STORAGE_DOMAIN + el.user.kyc.avatar.path : undefined
-                }
               />
             </div>
           ))}
@@ -135,19 +129,12 @@ const Recommend = () => {
         >
           {recommendList.map(el => (
             <div key={el._id} className='layoutFlex-item'>
-              <Video
+              <RecommendVideo
                 video={el}
-                type='video'
-                title={el.name}
-                description={el.description}
-                avataPos={el.user?.kyc.avatar_pos}
                 onClick={() => {
                   history.push('/watch?v=' + el.short_id);
                   window.scrollTo(0, 0);
                 }}
-                avatar={
-                  el.user?.kyc.avatar?.path ? STORAGE_DOMAIN + el.user.kyc.avatar.path : undefined
-                }
               />
             </div>
           ))}
