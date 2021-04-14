@@ -28,16 +28,17 @@ const Profile = () => {
 
   const [IsFollowed, setIsFollowed] = useState(false);
   const [UserOwner, setUserOwner] = useState({});
+  const kinglive = useMemo(() => UserOwner.kinglive, [UserOwner]);
 
   const [VisiblePickAvatar, setVisiblePickAvatar] = useState(false);
 
   const [FullScreen, setFullScreen] = useState('');
 
   const [Image, setImage] = useState('');
-  const [ImagePos, setImagePos] = useState({ zoom: 1, x: 0, y: 0 });
+  const [ImagePos, setImagePos] = useState({ zoom: 100, x: 0, y: 0 });
 
   const [Cover, setCover] = useState('');
-  const [CoverPos, setCoverPos] = useState({ zoom: 1, x: 0, y: 0 });
+  const [CoverPos, setCoverPos] = useState({ zoom: 100, x: 0, y: 0 });
 
   useEffect(() => {
     if (uid || !user) return;
@@ -156,6 +157,7 @@ const Profile = () => {
     if (uid) {
       callAPI.get('/user?uid=' + uid).then(res => {
         setUserOwner(res.data);
+        console.log(res.data);
         setIsFollowed(res.data.isFollowed);
         setImage(
           res.data.kyc.avatar?.path ? STORAGE_DOMAIN + res.data.kyc.avatar?.path : avatarDefault
@@ -163,14 +165,20 @@ const Profile = () => {
         setImagePos(
           res.data?.kyc?.avatar_pos ? res.data.kyc.avatar_pos : { x: 0, y: 0, zoom: 100 }
         );
-        // setCover(
-        //   res.data.kyc.cover?.path ? STORAGE_DOMAIN + res.data.kyc.cover?.path : coverDefault
-        // );
-        setCover(coverDefault);
+        setCover(
+          res.data.kyc.cover?.path ? STORAGE_DOMAIN + res.data.kyc.cover?.path : coverDefault
+        );
+        // setCover(coverDefault);
         setCoverPos(res.data?.kyc?.cover_pos ? res.data.kyc.cover_pos : { x: 0, y: 0, zoom: 100 });
       });
     }
   }, [uid]);
+
+  const posImg = pos => ({
+    '--x': pos.x * -1 + '%',
+    '--y': pos.y * -1 + '%',
+    '--zoom': pos.zoom + '%',
+  });
 
   return (
     <div className='profile'>
@@ -189,110 +197,96 @@ const Profile = () => {
 
       {uploadStatus?.isShowCrop && <Crop onCancel={onCancelCrop} onFinish={onFinishCrop} />}
 
-      <div className='profile__center mt-10'>
-        <div className='profile__cover'>
+      <div className='profile__cover'>
+        {uid === user?._id && (
+          <form style={{ display: 'none' }} id='cover'>
+            <input onChange={readURLAvatar} type='file' name='file' id='cover-input' />
+          </form>
+        )}
+
+        {uid === user?._id && (
+          <form style={{ display: 'none' }} id='avatar'>
+            <input onChange={readURLAvatar} type='file' name='file' id='avatar-input' />
+          </form>
+        )}
+
+        <div className='profile__IMGcover'>
+          <img onClick={() => setFullScreen(Cover)} style={posImg(CoverPos)} src={Cover} alt='' />
+          <span></span>
+
           {uid === user?._id && (
-            <form style={{ display: 'none' }} id='cover'>
-              <input onChange={readURLAvatar} type='file' name='file' id='cover-input' />
-            </form>
+            <div onClick={handlePickCover} className='profile__IMGcover-button'>
+              <FaIcon.FaCamera className='icon' />
+              <span>Change Cover</span>
+            </div>
           )}
+        </div>
 
-          <div htmlFor='cover-input' className='profile__cover-img'>
-            {uid === user?._id && (
-              <div onClick={handlePickCover} className='button'>
-                <IoIcon.IoMdSettings className='icon' />
-              </div>
-            )}
-            <img
-              onClick={() => setFullScreen(Cover)}
-              style={{
-                '--x': CoverPos.x * -1 + '%',
-                '--y': CoverPos.y * -1 + '%',
-                '--zoom': CoverPos.zoom + '%',
-              }}
-              src={Cover}
-              alt=''
-            />
-          </div>
-
-          <div className='profile__cover-ctnInfo'>
-            {uid === user?._id && (
-              <form id='avatar'>
-                <input
-                  onChange={readURLAvatar}
-                  style={{ display: 'none' }}
-                  type='file'
-                  name='file'
-                  id='avatar-input'
-                />
-              </form>
-            )}
-
-            <div className='profile__cover-avatar'>
-              {uid === user?._id && (
-                <div onClick={handlePickAvatar} className='button'>
-                  <FaIcon.FaCamera className='icon' />
-                </div>
-              )}
+        <div className='profile__infoBox'>
+          <div className='profile__IMGavatarBox'>
+            <div className='profile__IMGavatar'>
               <img
                 onClick={() => setFullScreen(Image)}
-                style={{
-                  '--x': ImagePos.x * -1 + '%',
-                  '--y': ImagePos.y * -1 + '%',
-                  '--zoom': ImagePos.zoom + '%',
-                }}
+                style={posImg(ImagePos)}
                 src={Image}
                 alt=''
               />
+              <span></span>
             </div>
 
-            <p className='profile__cover-name'>
-              {UserOwner?.kyc?.first_name} {UserOwner?.kyc?.last_name}
-            </p>
-
-            <div className='layoutFlex layout-3' style={{ '--gap-column': '10px' }}>
-              <div className='profile__cover-info layoutFlex-item'>
-                <p>{profile[language].follower}</p>
-                <p>{useNumber(UserOwner.total_follows)}</p>
+            {uid === user?._id && (
+              <div onClick={handlePickAvatar} className='profile__IMGavatarBox-button'>
+                <FaIcon.FaCamera className='icon' />
               </div>
-
-              <div className='profile__cover-info layoutFlex-item'>
-                <p>{profile[language].following}</p>
-                <p>{useNumber(UserOwner.total_followed)}</p>
-              </div>
-
-              <div className='profile__cover-info layoutFlex-item'>
-                <p>{profile[language].balance}</p>
-                <p>{useNumber(0)}</p>
-              </div>
-            </div>
+            )}
           </div>
 
-          {/* {uid === user?._id && (
-            <div className='profile__cover-ctnBtn'>
-              <button className='button'>
-                <IoIcon.IoMdSettings className='icon' />
-                <span>{profile[language].setting}</span>
-              </button>
-            </div>
-          )} */}
+          <div className='profile__name'>
+            {UserOwner.kyc?.first_name} {UserOwner.kyc?.last_name}
+          </div>
 
-          {/* {uid !== user?._id && (
-            <div className='profile__cover-ctnBtn'>
-              <button onClick={handleFollow} className={`button ${IsFollowed ? 'active' : ''}`}>
-                {IsFollowed ? (
-                  <RiIcon.RiUserUnfollowLine className='icon' />
-                ) : (
-                  <RiIcon.RiUserFollowLine className='icon' />
-                )}
-                <span>{IsFollowed ? profile[language].unfollow : profile[language].follow}</span>
-              </button>
+          <div className='layoutFlex layout-3' style={{ '--gap-column': '10px' }}>
+            <div className='layoutFlex-item profile__info'>
+              <p>{profile[language].follower}</p>
+              <p>{useNumber(kinglive?.total_follower)}</p>
             </div>
-          )} */}
+
+            <div className='layoutFlex-item profile__info'>
+              <p>{profile[language].following}</p>
+              <p>{useNumber(kinglive?.total_followed)}</p>
+            </div>
+
+            <div className='layoutFlex-item profile__info'>
+              <p>{profile[language].total_view}</p>
+              <p>{useNumber(kinglive?.total_view)}</p>
+            </div>
+          </div>
         </div>
-
-        <MainContainer uid={uid} user={user} />
       </div>
+
+      {/* {uid === user?._id && (
+        <div className='profile__cover-ctnBtn'>
+          <button className='button'>
+            <IoIcon.IoMdSettings className='icon' />
+            <span>{profile[language].setting}</span>
+          </button>
+        </div>
+      )} */}
+
+      {/* {uid !== user?._id && (
+        <div className='profile__cover-ctnBtn'>
+          <button onClick={handleFollow} className={`button ${IsFollowed ? 'active' : ''}`}>
+            {IsFollowed ? (
+              <RiIcon.RiUserUnfollowLine className='icon' />
+            ) : (
+              <RiIcon.RiUserFollowLine className='icon' />
+            )}
+            <span>{IsFollowed ? profile[language].unfollow : profile[language].follow}</span>
+          </button>
+        </div>
+      )} */}
+
+      <MainContainer uid={uid} user={user} />
     </div>
   );
 };

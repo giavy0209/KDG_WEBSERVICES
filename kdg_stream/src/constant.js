@@ -11,3 +11,4 @@ export const BREAK_POINT_MEDIUM = 1280;
 export const BREAK_POINT_992 = 992;
 export const BREAK_POINT_SMALL = 768;
 export const BREAK_POINT_EXTRA_SMALL = 576;
+export const BREAK_POINT_EXTRA_EXTRA_SMALL = 400;

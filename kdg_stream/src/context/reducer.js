@@ -290,7 +290,7 @@ const profile = {
   vi: {
     follower: 'Người theo dõi',
     following: 'Đang theo dõi',
-    balance: 'Số dư khả dụng',
+    total_view: 'Tổng lượt xem',
     setting: 'Cài đặt',
     follow: 'Theo dõi',
     unfollow: 'Bỏ theo dõi',
@@ -303,7 +303,7 @@ const profile = {
   en: {
     follower: 'Follower',
     following: 'Following',
-    balance: 'Balance',
+    total_view: 'Total views',
     setting: 'Setting',
     follow: 'Follow',
     unfollow: 'Unfollow',

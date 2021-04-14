@@ -5,6 +5,7 @@ $break-point-medium: 1280px;
 $break-point-992: 992px;
 $break-point-small: 768px;
 $break-point-extra-small: 576px;
+$break-point-extra-extra-small: 400px;
 
 // ----------------------------------------------------------- //
 
@@ -73,6 +74,7 @@ $z-index-controls: 20001;
 $z-index-live-chatfullscreen: 20002;
 
 $z-index-popup: 30000;
+$z-index-modal: 30000;
 
 // ----------------------------------------------------------- //
 
@@ -85,6 +87,51 @@ $z-index-popup: 30000;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: $line;
+}
+
+@mixin padding-img($ratio, $color-hover, $border-radius) {
+  overflow: hidden;
+
+  cursor: pointer;
+
+  position: relative;
+
+  &::before {
+    content: '';
+    display: block;
+    padding-top: (1 / $ratio) * 100%;
+  }
+
+  > img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translate(var(--x), var(--y));
+
+    width: var(--zoom);
+
+    & + span {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+
+      background-color: $color-hover;
+
+      border-radius: $border-radius;
+
+      pointer-events: none;
+
+      opacity: 0;
+
+      transition: 0.3s;
+    }
+
+    &:hover + span {
+      opacity: 1;
+    }
+  }
 }
 
 %hidden-scrollbar {

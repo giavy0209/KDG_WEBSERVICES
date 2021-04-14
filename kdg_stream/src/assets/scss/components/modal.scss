@@ -19,7 +19,7 @@ label.upload-avatar {
 }
 
 .modal {
-  z-index: 9999;
+  z-index: $z-index-modal;
   position: fixed;
   top: 0;
   left: 0;

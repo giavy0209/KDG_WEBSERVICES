@@ -5,14 +5,19 @@ import { STORAGE_DOMAIN } from '../../constant';
 import { useDispatch, useSelector } from 'react-redux';
 import { actChangeUploadStatus } from '../../store/action';
 
-export default function ModalBody() {
+export default function ListImages() {
   const dispatch = useDispatch();
   const uploadStatus = useSelector(state => state.uploadStatus);
   const [Avatars, setAvatars] = useState([]);
+
   const getAvatar = useCallback(async () => {
     const res = await callAPI.get('/avatar');
     setAvatars(res.data);
   }, []);
+
+  useMemo(() => {
+    getAvatar();
+  }, [getAvatar]);
 
   const handleOpenCrop = useCallback(
     (image, _id) => {
@@ -28,17 +33,13 @@ export default function ModalBody() {
     [uploadStatus, dispatch]
   );
 
-  useMemo(() => {
-    getAvatar();
-  }, [getAvatar]);
-
   return (
     <div className='kdg-row kdg-column-3'>
       {Avatars.map(o => (
         <div
-          onClick={() => handleOpenCrop(STORAGE_DOMAIN + o.path, o._id)}
           key={o._id}
           className='item'
+          onClick={() => handleOpenCrop(STORAGE_DOMAIN + o.path, o._id)}
         >
           <div className='img img-1-1'>
             <img src={STORAGE_DOMAIN + o.path} alt='' />
