@@ -468,6 +468,7 @@ const recommend = {
 const videoinfo = {
   vi: {
     views: 'lượt xem',
+    watching: 'đang xem',
     followers: 'người theo dõi',
     hide: 'Ẩn bớt',
     showmore: 'Hiển thị thêm',
@@ -482,6 +483,7 @@ const videoinfo = {
   },
   en: {
     views: 'views',
+    watching: 'watching',
     followers: 'followers',
     hide: 'HIDE',
     showmore: ' SHOW MORE',

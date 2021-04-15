@@ -28,7 +28,7 @@
     }
   }
 
-  &__titleVideo {
+  &__title {
     color: $sub-title-color;
     font-size: $size-3;
     line-height: 34px;
@@ -38,6 +38,22 @@
     padding-right: 34px;
 
     position: relative;
+  }
+
+  &__descTitle {
+    color: $text-color;
+    font-size: $size-6;
+
+    margin-bottom: 10px;
+
+    > span:nth-child(3) {
+      cursor: pointer;
+      user-select: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
   }
 
   &__menuBox {
@@ -166,27 +182,11 @@
     }
   }
 
-  &__view {
+  &__followers {
     color: $text-color;
     font-size: $size-7;
 
     margin-bottom: 30px;
-  }
-
-  &__view1 {
-    color: $text-color;
-    font-size: $size-6;
-
-    margin-bottom: 10px;
-
-    > span:nth-child(3) {
-      cursor: pointer;
-      user-select: none;
-
-      &:hover {
-        text-decoration: underline;
-      }
-    }
   }
 
   &__desc {
