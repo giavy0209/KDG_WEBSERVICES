@@ -1,10 +1,5 @@
 @import '../common.scss';
 
-$height-cover-photo: 300px;
-$top-cover-ctnInfo: 70px;
-$height-cover-ctnInfo: 370px;
-$width-cover-ctnInfo: 500px;
-
 .profile {
   .fullscreen-mask {
     z-index: 99999;
@@ -35,11 +30,18 @@ $width-cover-ctnInfo: 500px;
     }
   }
 
+  &__cover {
+    position: relative;
+
+    max-width: 940px;
+    margin: 0 auto 200px;
+  }
+
   &__IMGcover {
+    @include padding-img(3, rgba($color: #fff, $alpha: 0.1), 0);
+
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
-
-    @include padding-img(3, rgba($color: #fff, $alpha: 0.1), 0);
 
     &-button {
       > .icon {
@@ -192,53 +194,48 @@ $width-cover-ctnInfo: 500px;
     }
   }
 
-  &__cover {
-    position: relative;
+  &__action {
+    z-index: 2;
+    position: absolute;
+    top: 20px;
+    left: 20px;
 
-    margin: 0 auto 200px;
-
-    max-width: 940px;
-
-    &-confirm {
+    &-button {
       cursor: pointer;
 
-      position: absolute;
-      bottom: 10px;
-      left: 50%;
-      transform: translate(-50%, 0) rotate(-45deg);
+      display: flex;
+      justify-content: center;
+      align-items: center;
 
-      width: 40px;
-      height: 30px;
-      padding: 10px;
+      > .icon {
+        margin-right: 5px;
+      }
 
-      border-left: 2px solid #00ff00;
-      border-bottom: 2px solid #00ff00;
+      padding: 10px 20px;
+
+      color: $main-color;
+      font-size: $size-6;
+      background-color: $background-white;
+
+      border: 2px solid $main-color;
+      border-radius: 5px;
 
       transition: 0.3s;
-      &:hover {
-        background-color: #efefef;
+
+      &.active {
+        color: $background-white;
+        background-color: $main-color;
       }
-    }
 
-    &-ctnBtn {
-      display: flex;
+      @media (max-width: $break-point-small) {
+        > .icon {
+          margin-right: 0;
+        }
 
-      position: absolute;
-      right: 25px;
-      top: $height-cover-photo + 25px;
+        padding: 10px;
 
-      @media (max-width: $break-point-medium) {
-        top: $top-cover-ctnInfo + 25px;
-        right: 10px;
-
-        > button {
-          > .icon {
-            margin-right: 0;
-          }
-
-          > span {
-            display: none;
-          }
+        > span {
+          display: none;
         }
       }
     }

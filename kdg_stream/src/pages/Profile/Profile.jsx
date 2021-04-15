@@ -157,7 +157,6 @@ const Profile = () => {
     if (uid) {
       callAPI.get('/user?uid=' + uid).then(res => {
         setUserOwner(res.data);
-        console.log(res.data);
         setIsFollowed(res.data.isFollowed);
         setImage(
           res.data.kyc.avatar?.path ? STORAGE_DOMAIN + res.data.kyc.avatar?.path : avatarDefault
@@ -168,7 +167,6 @@ const Profile = () => {
         setCover(
           res.data.kyc.cover?.path ? STORAGE_DOMAIN + res.data.kyc.cover?.path : coverDefault
         );
-        // setCover(coverDefault);
         setCoverPos(res.data?.kyc?.cover_pos ? res.data.kyc.cover_pos : { x: 0, y: 0, zoom: 100 });
       });
     }
@@ -220,6 +218,31 @@ const Profile = () => {
               <span>Change Cover</span>
             </div>
           )}
+
+          {/* {uid === user?._id && (
+            <div className='profile__action'>
+              <button className='profile__action-button'>
+                <IoIcon.IoMdSettings className='icon' />
+                <span>{profile[language].edit}</span>
+              </button>
+            </div>
+          )} */}
+
+          {uid !== user?._id && (
+            <div className='profile__action'>
+              <button
+                onClick={handleFollow}
+                className={`profile__action-button ${IsFollowed ? 'active' : ''}`}
+              >
+                {IsFollowed ? (
+                  <RiIcon.RiUserUnfollowLine className='icon' />
+                ) : (
+                  <RiIcon.RiUserFollowLine className='icon' />
+                )}
+                <span>{IsFollowed ? profile[language].unfollow : profile[language].follow}</span>
+              </button>
+            </div>
+          )}
         </div>
 
         <div className='profile__infoBox'>
@@ -263,28 +286,6 @@ const Profile = () => {
           </div>
         </div>
       </div>
-
-      {/* {uid === user?._id && (
-        <div className='profile__cover-ctnBtn'>
-          <button className='button'>
-            <IoIcon.IoMdSettings className='icon' />
-            <span>{profile[language].setting}</span>
-          </button>
-        </div>
-      )} */}
-
-      {/* {uid !== user?._id && (
-        <div className='profile__cover-ctnBtn'>
-          <button onClick={handleFollow} className={`button ${IsFollowed ? 'active' : ''}`}>
-            {IsFollowed ? (
-              <RiIcon.RiUserUnfollowLine className='icon' />
-            ) : (
-              <RiIcon.RiUserFollowLine className='icon' />
-            )}
-            <span>{IsFollowed ? profile[language].unfollow : profile[language].follow}</span>
-          </button>
-        </div>
-      )} */}
 
       <MainContainer uid={uid} user={user} />
     </div>
