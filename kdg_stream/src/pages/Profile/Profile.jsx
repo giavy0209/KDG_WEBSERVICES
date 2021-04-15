@@ -228,7 +228,7 @@ const Profile = () => {
             </div>
           )} */}
 
-          {uid !== user?._id && (
+          {user && uid !== user?._id && (
             <div className='profile__action'>
               <button
                 onClick={handleFollow}

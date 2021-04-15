@@ -58,6 +58,7 @@ $tab-header-height: 50px;
     &-child {
       color: #a9a9a9;
       text-align: center;
+      text-transform: capitalize;
 
       p {
         @include hidden-text(1);
@@ -71,6 +72,10 @@ $tab-header-height: 50px;
         border-radius: 10px;
         background-color: $background-color-hover;
       }
+    }
+
+    @media (max-width: $break-point-extra-small) {
+      font-size: $size-6;
     }
   }
 

@@ -12,15 +12,15 @@ const rank = [rank1, rank2, rank3];
 const Card = props => {
   const {
     index = 0,
-    type = 'donate',
-    numb = 0,
+    type = 'KDG',
+    amount = 0,
     name = 'User',
     avatar,
     avatarPos,
     onClick = null,
   } = props;
 
-  const [{ language, card }] = useLanguageLayerValue();
+  const [{ language, home }] = useLanguageLayerValue();
 
   const handleClick = () => onClick && onClick();
 
@@ -32,12 +32,12 @@ const Card = props => {
 
       <div className='card__info'>
         <p className='card__info-name'>{name}</p>
-        <p className='card__info-numb'>
-          {useNumber(numb)} {card[language][type]}
+        <p className='card__info-amount'>
+          {useNumber(amount)} {home[language][type]}
         </p>
       </div>
 
-      {<img className='card__icon' src={rank[index]} alt='' />}
+      <img className='card__icon' src={rank[index]} alt='' />
     </div>
   );
 };

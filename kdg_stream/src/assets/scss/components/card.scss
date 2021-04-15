@@ -34,16 +34,6 @@ $icon-width: 9%;
       display: block;
       padding-top: 100%;
     }
-
-    > img {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 50%;
-    }
   }
 
   &__info {
@@ -55,13 +45,15 @@ $icon-width: 9%;
       color: $title-color;
       font-size: $size-6;
       font-weight: 600;
+
       @include hidden-text(2);
     }
 
-    &-numb {
+    &-amount {
       color: $text-color;
       font-size: $size-7;
       font-weight: 500;
+
       @include hidden-text(1);
     }
   }

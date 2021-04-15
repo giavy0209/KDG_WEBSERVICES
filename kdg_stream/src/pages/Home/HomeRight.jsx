@@ -7,7 +7,6 @@ import { useLanguageLayerValue } from '../../context/LanguageLayer';
 
 const HomeRight = props => {
   const { Ranking } = props;
-  console.log(Ranking);
 
   const history = useHistory();
   const [{ language, home }] = useLanguageLayerValue();
@@ -20,13 +19,13 @@ const HomeRight = props => {
 
       <div className='tabContainer__home'>
         <Tab>
-          {/* <TabPane name={home[language].donate} key='1'>
+          {/* <TabPane name={home[language].KDG} key='1'>
             {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(el => (
               <Card
                 key={o._id}
                 index={index}
-                type='donate'
-                numb={o.kinglive.total_follower}
+                type='KDG'
+                amount={o.kinglive.total_follower}
                 name={o.kyc ? `${o.kyc.first_name} ${o.kyc.last_name}` : ''}
                 avatar={o.kyc.avatar?.path ? STORAGE_DOMAIN + o.kyc.avatar?.path : undefined}
                 avatarPos={o.kyc.avatar_pos}
@@ -35,13 +34,13 @@ const HomeRight = props => {
             ))}
           </TabPane> */}
 
-          <TabPane name={home[language].follow} key='2'>
+          <TabPane name={home[language].followers} key='2'>
             {Ranking?.follows?.map((o, index) => (
               <Card
                 key={o._id}
                 index={index}
-                type='follow'
-                numb={o.kinglive.total_follower}
+                type='followers'
+                amount={o.kinglive.total_follower}
                 name={o.kyc ? `${o.kyc.first_name} ${o.kyc.last_name}` : ''}
                 avatar={o.kyc.avatar?.path ? STORAGE_DOMAIN + o.kyc.avatar?.path : undefined}
                 avatarPos={o.kyc.avatar_pos}
@@ -50,13 +49,13 @@ const HomeRight = props => {
             ))}
           </TabPane>
 
-          <TabPane name={home[language].view} key='3'>
+          <TabPane name={home[language].views} key='3'>
             {Ranking?.views?.map((o, index) => (
               <Card
                 key={o._id}
                 index={index}
-                type='view'
-                numb={o.kinglive.total_view}
+                type='views'
+                amount={o.kinglive.total_view}
                 name={o.kyc ? `${o.kyc.first_name} ${o.kyc.last_name}` : ''}
                 avatar={o.kyc.avatar?.path ? STORAGE_DOMAIN + o.kyc.avatar?.path : undefined}
                 avatarPos={o.kyc.avatar_pos}

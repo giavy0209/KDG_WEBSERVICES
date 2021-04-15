@@ -243,19 +243,6 @@ const hooksNumber = {
   },
 };
 
-const card = {
-  vi: {
-    donate: 'Ngọc bội',
-    follow: 'Theo dõi',
-    view: 'Lượt xem',
-  },
-  en: {
-    donate: 'Jade Pendant',
-    follow: 'Follow',
-    view: 'View',
-  },
-};
-
 const cover = {
   vi: {
     live: 'Trực tiếp',
@@ -267,22 +254,22 @@ const cover = {
 
 const home = {
   vi: {
+    ranking: 'Bảng xếp hạng',
     following: 'Đang theo dõi',
     watchLive: 'Xem trực tiếp',
     recommend: 'Được đề xuất',
-    ranking: 'Bảng xếp hạng',
-    donate: 'Ngọc bội',
-    follow: 'Theo dõi',
-    view: 'Lượt xem',
+    KDG: 'KDG',
+    followers: 'người theo dõi',
+    views: 'lượt xem',
   },
   en: {
+    ranking: 'Ranking',
     following: 'Following',
     watchLive: 'Watch Live',
     recommend: 'Recommend',
-    ranking: 'Ranking',
-    donate: 'Donate',
-    follow: 'Follow',
-    view: 'Views',
+    KDG: 'KDG',
+    followers: 'followers',
+    views: 'views',
   },
 };
 
@@ -499,7 +486,7 @@ const videoinfo = {
 };
 
 export const initialState = {
-  language: 'vi',
+  language: 'en',
   listLanguage,
   footer,
   login,
@@ -508,7 +495,6 @@ export const initialState = {
   formForgot,
   header,
   hooksNumber,
-  card,
   cover,
   home,
   profile,
