@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { Redirect, Route, Switch, useHistory, useLocation } from 'react-router-dom';
 import { Footer, Header, ScrollButton } from './components';
 import { storage } from './helpers';
-import { Home, Live, Login, Profile, Setup, Upload, Watch } from './pages';
+import { Home, Live, Login, Profile, Setup, Upload, Watch ,Search} from './pages';
 import socket from './socket';
 import { actChangeUnreadNoti } from './store/action';
 import {
@@ -104,6 +104,7 @@ const App = () => {
         <Route path='/watch' component={Watch} exact />
 
         <Route path='/live' component={Live} exact />
+        <Route path='/result' component={Search} exact />
       </Switch>
     </>
   );

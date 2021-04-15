@@ -9,7 +9,7 @@ import { BREAK_POINT_MEDIUM } from '../../constant';
 import { useLanguageLayerValue } from '../../context/LanguageLayer';
 import useWindowSize from '../../hooks/useWindowSize';
 
-const Recommend = () => {
+const Recommend = ({id}) => {
   const history = useHistory();
 
   const [width] = useWindowSize();
@@ -25,25 +25,25 @@ const Recommend = () => {
   const [showRecommend, setShowRecommend] = useState(true);
 
   useMemo(() => {
-    callAPI.get('/recommend').then(res => {
+    callAPI.get(`/recommend_by_video?video=${id}`).then(res => {
       setRecommendList([...res.data]);
     });
 
     callAPI.get('/streammings').then(res => {
       setStreammingsList(res.data);
     });
-  }, []);
+  }, [id]);
 
   const getRecommend = useCallback(async () => {
     const ids = recommendList.map(o => o._id);
-    const res = await callAPI.get(`/recommend?ids=${ids}`);
+    const res = await callAPI.get(`/recommend_by_video?ids=${ids}&video=${id}`);
 
     if (res.data.length === 0) {
       return (isLoadRef.current = false);
     }
 
     setRecommendList([...recommendList, ...res.data]);
-  }, [recommendList]);
+  }, [recommendList , id]);
 
   useEffect(() => {
     const handleLoad = async () => {

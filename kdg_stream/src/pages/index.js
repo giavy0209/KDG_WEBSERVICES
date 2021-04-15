@@ -5,5 +5,6 @@ import Profile from './Profile';
 import Setup from './Setup';
 import Upload from './Upload';
 import Watch from './Watch';
+import Search from './Search';
 
-export { Home, Profile, Setup, Login, Live, Upload, Watch };
+export { Home, Profile, Setup, Login, Live, Upload, Watch ,Search };
