@@ -1,6 +1,11 @@
 @import './font.scss';
 @import './reset.scss';
 
+.Toastify {
+  // position: absolute;
+  z-index: 999999;
+}
+
 .container {
   max-width: 1320px;
   margin: 0 auto;

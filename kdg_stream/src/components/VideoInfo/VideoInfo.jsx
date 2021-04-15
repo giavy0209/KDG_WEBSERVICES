@@ -167,10 +167,10 @@ const VideoInfo = props => {
         </div>
       )}
 
-      <div className='videoInfo__info'>
-        <div className='videoInfo__title'>
-          <span>{video?.name}</span>
+      <div className='videoInfo__title'>
+        <span>{video?.name}</span>
 
+        {user?._id === video?.user._id && (
           <div className='videoInfo__menuBox' onClick={() => setShowMenu(x => !x)}>
             <div className='rippleBox' onClick={rippleEffect}></div>
 
@@ -187,80 +187,80 @@ const VideoInfo = props => {
               </div>
             </div>
           </div>
-        </div>
+        )}
+      </div>
 
-        <div className='videoInfo__descTitle'>
-          <span>
-            {type === 'watch' && `${views} ${videoinfo[language].views}`}
-            {type === 'live' && `${views} ${videoinfo[language].watching}`}
+      <div className='videoInfo__descTitle'>
+        <span>
+          {type === 'watch' && `${views} ${videoinfo[language].views}`}
+          {type === 'live' && `${views} ${videoinfo[language].watching}`}
+        </span>
+        <span> • </span>
+        {type === 'watch' && (
+          <span onClick={() => setConvert(x => !x)}>
+            {convert ? convertDateAgo(video?.create_date) : convertDate(video?.create_date)}
           </span>
-          <span> • </span>
-          {type === 'watch' && (
-            <span onClick={() => setConvert(x => !x)}>
-              {convert ? convertDateAgo(video?.create_date) : convertDate(video?.create_date)}
+        )}
+        {type === 'live' && (
+          <span onClick={() => setConvert(x => !x)}>
+            {convert ? convertDateAgo(video?.start_date) : convertDate(video?.start_date)}
+          </span>
+        )}
+      </div>
+
+      <div className='videoInfo__info'>
+        <div
+          className='videoInfo__avatar'
+          onClick={() => history.push('/profile?uid=' + video?.user._id)}
+        >
+          <Avatar
+            src={
+              video?.user?.kyc.avatar?.path
+                ? STORAGE_DOMAIN + video?.user?.kyc.avatar?.path
+                : undefined
+            }
+            position={video?.user?.kyc.avatar_pos}
+          />
+        </div>
+
+        <div>
+          <div className='videoInfo__name'>
+            {video?.user?.kyc.first_name} {video?.user?.kyc.last_name}
+          </div>
+
+          <div className='videoInfo__followers'>
+            <span>
+              {useNumber(totalFollow)} {videoinfo[language].followers}
             </span>
-          )}
-          {type === 'live' && (
-            <span onClick={() => setConvert(x => !x)}>
-              {convert ? convertDateAgo(video?.start_date) : convertDate(video?.start_date)}
-            </span>
+          </div>
+
+          <div ref={descRef} className={`videoInfo__desc ${showMore ? 'd-block' : ''}`}>
+            {video?.description}
+          </div>
+
+          {showMoreBTN && (
+            <div className='videoInfo__showMore' onClick={() => setShowMore(x => !x)}>
+              {showMore ? videoinfo[language].hide : videoinfo[language].showmore}
+            </div>
           )}
         </div>
 
-        <div className='videoInfo__info-info'>
-          <div
-            className='videoInfo__avatar'
-            onClick={() => history.push('/profile?uid=' + video?.user._id)}
-          >
-            <Avatar
-              src={
-                video?.user?.kyc.avatar?.path
-                  ? STORAGE_DOMAIN + video?.user?.kyc.avatar?.path
-                  : undefined
-              }
-              position={video?.user?.kyc.avatar_pos}
-            />
+        {user?._id !== video?.user._id && (
+          <div className='videoInfo__action'>
+            <button onClick={handleFollow} className={`button ${isFollowed ? 'active' : ''}`}>
+              {isFollowed ? (
+                <RiIcon.RiUserUnfollowLine className='icon' />
+              ) : (
+                <RiIcon.RiUserFollowLine className='icon' />
+              )}
+              {width > BREAK_POINT_SMALL && (
+                <span>
+                  {isFollowed ? videoinfo[language].unfollow : videoinfo[language].follow}
+                </span>
+              )}
+            </button>
           </div>
-
-          <div>
-            <div className='videoInfo__name'>
-              {video?.user?.kyc.first_name} {video?.user?.kyc.last_name}
-            </div>
-
-            <div className='videoInfo__followers'>
-              <span>
-                {useNumber(totalFollow)} {videoinfo[language].followers}
-              </span>
-            </div>
-
-            <div ref={descRef} className={`videoInfo__desc ${showMore ? 'd-block' : ''}`}>
-              {video?.description}
-            </div>
-
-            {showMoreBTN && (
-              <div className='videoInfo__showMore' onClick={() => setShowMore(x => !x)}>
-                {showMore ? videoinfo[language].hide : videoinfo[language].showmore}
-              </div>
-            )}
-          </div>
-
-          {user?._id !== video?.user._id && (
-            <div className='videoInfo__action'>
-              <button onClick={handleFollow} className={`button ${isFollowed ? 'active' : ''}`}>
-                {isFollowed ? (
-                  <RiIcon.RiUserUnfollowLine className='icon' />
-                ) : (
-                  <RiIcon.RiUserFollowLine className='icon' />
-                )}
-                {width > BREAK_POINT_SMALL && (
-                  <span>
-                    {isFollowed ? videoinfo[language].unfollow : videoinfo[language].follow}
-                  </span>
-                )}
-              </button>
-            </div>
-          )}
-        </div>
+        )}
       </div>
 
       {type === 'watch' && (
@@ -303,19 +303,26 @@ const VideoInfo = props => {
                       {o.user.kyc.first_name} {o.user.kyc.last_name}
                     </span>
                     <span> • </span>
-                    <span data-current="ago" data-ago={convertDateAgo(o.create_date)} data-date={convertDate(o.create_date)} onClick={e => {
-                      const el = e.target
-                      const dataCurrent = el.getAttribute('data-current')
-                      const dataDate = el.getAttribute('data-date')
-                      const dataAgo = el.getAttribute('data-ago')
-                      if(dataCurrent === 'ago') {
-                        el.setAttribute('data-current' , 'date')
-                        el.innerText = dataDate
-                      }else {
-                        el.setAttribute('data-current' , 'ago')
-                        el.innerText = dataAgo
-                      }
-                    }}>{convertDateAgo(o.create_date)}</span>
+                    <span
+                      data-current='ago'
+                      data-ago={convertDateAgo(o.create_date)}
+                      data-date={convertDate(o.create_date)}
+                      onClick={e => {
+                        const el = e.target;
+                        const dataCurrent = el.getAttribute('data-current');
+                        const dataDate = el.getAttribute('data-date');
+                        const dataAgo = el.getAttribute('data-ago');
+                        if (dataCurrent === 'ago') {
+                          el.setAttribute('data-current', 'date');
+                          el.innerText = dataDate;
+                        } else {
+                          el.setAttribute('data-current', 'ago');
+                          el.innerText = dataAgo;
+                        }
+                      }}
+                    >
+                      {convertDateAgo(o.create_date)}
+                    </span>
                   </div>
                   <div className='content'>{o.comment}</div>
                 </div>

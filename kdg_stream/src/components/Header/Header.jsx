@@ -68,7 +68,8 @@ const Header = () => {
       if (type === 101) text = text.replace('data1', data.name);
       if (type === 102) text = text.replace('data1', data.name).replace('data2', data.video_name);
       if (type === 103) text = text.replace('data1', data.video_name);
-      if (type === 104) text = text.replace('data1', data.name).replace('data2', data.video_name);
+      if (type === 104)
+        text = text.replace('data1', data.user_name).replace('data2', data.video_name);
       if (type === 105) text = text.replace('data1', data.name);
       return text;
     },
@@ -180,7 +181,15 @@ const Header = () => {
             {header[language].assetmanagement}
           </div>
         </div>
-        <div className='header__manage' onClick={() => {setShowInfo(false) ; storage.clearRefresh(); storage.clearToken(); window.open('/home' , '_self')} }>
+        <div
+          className='header__manage'
+          onClick={() => {
+            setShowInfo(false);
+            storage.clearRefresh();
+            storage.clearToken();
+            window.open('/home', '_self');
+          }}
+        >
           {header[language].logout}
         </div>
       </div>
