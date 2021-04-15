@@ -16,7 +16,7 @@ import {
   STORAGE_DOMAIN,
 } from '../../constant';
 import { useLanguageLayerValue } from '../../context/LanguageLayer';
-import { convertDateAgo } from '../../helpers';
+import { convertDateAgo, storage } from '../../helpers';
 import useNumber from '../../hooks/useNumber';
 import useWindowSize from '../../hooks/useWindowSize';
 import { actChangeUnreadNoti } from '../../store/action';
@@ -180,7 +180,7 @@ const Header = () => {
             {header[language].assetmanagement}
           </div>
         </div>
-        <div className='header__manage' onClick={() => setShowInfo(false)}>
+        <div className='header__manage' onClick={() => {setShowInfo(false) ; storage.clearRefresh(); storage.clearToken(); window.open('/home' , '_self')} }>
           {header[language].logout}
         </div>
       </div>

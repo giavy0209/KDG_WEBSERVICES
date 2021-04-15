@@ -292,7 +292,19 @@ const VideoInfo = props => {
                       {o.user.kyc.first_name} {o.user.kyc.last_name}
                     </span>
                     <span> • </span>
-                    <span>5 minutes ago</span>
+                    <span data-current="ago" data-ago={convertDateAgo(o.create_date)} data-date={convertDate(o.create_date)} onClick={e => {
+                      const el = e.target
+                      const dataCurrent = el.getAttribute('data-current')
+                      const dataDate = el.getAttribute('data-date')
+                      const dataAgo = el.getAttribute('data-ago')
+                      if(dataCurrent === 'ago') {
+                        el.setAttribute('data-current' , 'date')
+                        el.innerText = dataDate
+                      }else {
+                        el.setAttribute('data-current' , 'ago')
+                        el.innerText = dataAgo
+                      }
+                    }}>{convertDateAgo(o.create_date)}</span>
                   </div>
                   <div className='content'>{o.comment}</div>
                 </div>
