@@ -195,10 +195,10 @@ const Header = () => {
         </div>
 
         {width > BREAK_POINT_SMALL ? (
-          <div className='header__search'>
-            <IoIcon.IoMdSearch className='header__searchIcon1 header__iconHover' />
-            <input type='text' placeholder={header[language].search} />
-          </div>
+          <form method="get" action="/result" className='header__search'>
+            <button type="submit" className='header__searchIcon1 header__iconHover' ><IoIcon.IoMdSearch /></button>
+            <input type='text' name="search" placeholder={header[language].search} />
+          </form>
         ) : (
           <IoIcon.IoMdSearch
             className='header__iconHover ml-20'

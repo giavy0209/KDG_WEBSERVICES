@@ -8,7 +8,7 @@ const Main = props => {
   const {
     className = '',
     left = 'left',
-    right = 'right',
+    right = undefined,
     widthLeft = '75%',
     minWidthLeftLarge = '400px',
   } = props;
@@ -48,7 +48,7 @@ const Main = props => {
     >
       <div className='main__left'>{left}</div>
 
-      <div ref={rightRef} className={`main__right ${isShow ? 'show' : ''}`}>
+      {right && <div ref={rightRef} className={`main__right ${isShow ? 'show' : ''}`}>
         {width <= BREAK_POINT_LARGE && (
           <div className={`main__arrow ${isShow ? 'show' : ''}`} onClick={() => setIsShow(x => !x)}>
             <MdIcon.MdKeyboardArrowLeft className='icon' />
@@ -56,7 +56,7 @@ const Main = props => {
         )}
 
         {right}
-      </div>
+      </div>}
     </div>
   );
 };

@@ -34,7 +34,7 @@ const Watch = () => {
       </div>
 
       <div className='watch__right'>
-        <Recommend />
+        <Recommend id={id}/>
       </div>
     </div>
   );

@@ -26,8 +26,9 @@ const Upload = () => {
     input = input.target;
 
     if (input.files && input.files[0]) {
-      setVideoTitle(input.files[0].name);
-      setVideoDesc(input.files[0].name);
+      if(!VideoTitle)setVideoTitle(input.files[0].name);
+      if(!VideoDesc)setVideoDesc(input.files[0].name);
+      
 
       var reader = new FileReader();
 
@@ -40,7 +41,7 @@ const Upload = () => {
 
       reader.readAsArrayBuffer(input.files[0]);
     }
-  }, []);
+  }, [VideoTitle,VideoDesc]);
 
   const handleUpload = useCallback(
     async e => {
