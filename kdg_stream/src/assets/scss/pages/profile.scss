@@ -249,6 +249,8 @@
     align-items: flex-start;
     justify-content: space-between;
 
+    height: 100%;
+
     position: relative;
 
     @extend %hover-effect;

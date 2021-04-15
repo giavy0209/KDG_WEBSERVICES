@@ -18,7 +18,7 @@ const HomeLeft = props => {
   return (
     <>
       {/* <div>
-        <div className='main__title'>
+        <div className='main__title left'>
           <p>{home[language].following}</p>
         </div>
         <Following />

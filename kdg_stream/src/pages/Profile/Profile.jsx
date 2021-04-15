@@ -219,7 +219,7 @@ const Profile = () => {
             </div>
           )}
 
-          {/* {uid === user?._id && (
+          {/* {user && user._id !== uid && (
             <div className='profile__action'>
               <button className='profile__action-button'>
                 <IoIcon.IoMdSettings className='icon' />
@@ -228,7 +228,7 @@ const Profile = () => {
             </div>
           )} */}
 
-          {user && uid !== user?._id && (
+          {user && user._id !== uid && (
             <div className='profile__action'>
               <button
                 onClick={handleFollow}
@@ -270,7 +270,7 @@ const Profile = () => {
 
           <div className='layoutFlex layout-3' style={{ '--gap-column': '10px' }}>
             <div className='layoutFlex-item profile__info'>
-              <p>{profile[language].follower}</p>
+              <p>{profile[language].followers}</p>
               <p>{useNumber(kinglive?.total_follower)}</p>
             </div>
 
