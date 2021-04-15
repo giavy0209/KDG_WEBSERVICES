@@ -2,6 +2,7 @@ import React from 'react';
 import { Avatar } from '..';
 import '../../assets/css/video.css';
 import { STORAGE_DOMAIN } from '../../constant';
+import { convertTime } from '../../helpers';
 
 const Video = props => {
   const {
@@ -20,6 +21,7 @@ const Video = props => {
     <div className='video' onClick={handleClick}>
       <div className='video__thumb'>
         {type === 'video' && (
+          <>
           <img
             onMouseOver={e => {
               var targat = e.target;
@@ -38,6 +40,8 @@ const Video = props => {
             src={`https://vz-3f44931c-ed0.b-cdn.net/${video.guid}/thumbnail.jpg`}
             alt=''
           />
+          <span className="video__duration">{convertTime(video.duration)}</span>
+          </>
         )}
 
         {type === 'stream' && <img src={`${STORAGE_DOMAIN}${video.thumbnail.path}`} alt='' />}

@@ -316,6 +316,8 @@
               color: $text-color;
               font-size: $size-7;
               font-weight: 400;
+              cursor: pointer;
+              user-select: none;
             }
           }
 
