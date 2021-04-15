@@ -23,9 +23,10 @@ const VideoInfo = props => {
   const [showMenu, setShowMenu] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
   const [convert, setConvert] = useState(true);
-  const [showMore, setShowMore] = useState(false);
+  const [showMore, setShowMore] = useState(true);
 
   const [video, setVideo] = useState(null);
+  const views = useNumber(video?.views);
 
   const [comments, setComments] = useState([]);
   const [totalComment, setTotalComment] = useState(0);
@@ -126,14 +127,23 @@ const VideoInfo = props => {
   }, [showMenu, showEdit]);
 
   const descRef = useRef();
-  const [isShowmore, setIsShowmore] = useState(true);
+  const [showMoreBTN, setShowMoreBTN] = useState(true);
+  const firstRunRef = useRef(true);
   useEffect(() => {
     if (!descRef.current) return;
+    if (descRef.current.clientHeight === 0) return;
 
-    if (descRef.current.clientHeight > 96) {
-      setIsShowmore(true);
-    } else {
-      setIsShowmore(false);
+    if (firstRunRef.current) {
+      console.log(descRef.current.clientHeight);
+
+      if (descRef.current.clientHeight > 96) {
+        setShowMoreBTN(true);
+        setShowMore(false);
+      } else {
+        setShowMoreBTN(false);
+      }
+
+      firstRunRef.current = false;
     }
   }, [descRef.current?.clientHeight]);
 
@@ -158,7 +168,7 @@ const VideoInfo = props => {
       )}
 
       <div className='videoInfo__info'>
-        <div className='videoInfo__titleVideo'>
+        <div className='videoInfo__title'>
           <span>{video?.name}</span>
 
           <div className='videoInfo__menuBox' onClick={() => setShowMenu(x => !x)}>
@@ -179,9 +189,10 @@ const VideoInfo = props => {
           </div>
         </div>
 
-        <div className='videoInfo__view1'>
+        <div className='videoInfo__descTitle'>
           <span>
-            {useNumber(video?.views)} {videoinfo[language].views}
+            {type === 'watch' && `${views} ${videoinfo[language].views}`}
+            {type === 'live' && `${views} ${videoinfo[language].watching}`}
           </span>
           <span> • </span>
           {type === 'watch' && (
@@ -216,7 +227,7 @@ const VideoInfo = props => {
               {video?.user?.kyc.first_name} {video?.user?.kyc.last_name}
             </div>
 
-            <div className='videoInfo__view'>
+            <div className='videoInfo__followers'>
               <span>
                 {useNumber(totalFollow)} {videoinfo[language].followers}
               </span>
@@ -226,7 +237,7 @@ const VideoInfo = props => {
               {video?.description}
             </div>
 
-            {isShowmore && (
+            {showMoreBTN && (
               <div className='videoInfo__showMore' onClick={() => setShowMore(x => !x)}>
                 {showMore ? videoinfo[language].hide : videoinfo[language].showmore}
               </div>
