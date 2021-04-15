@@ -114,10 +114,12 @@ const Header = () => {
             className='header__iconHover mr-20'
             onClick={() => setShowSearch(false)}
           />
-          <div className='header__searchBar'>
-            <IoIcon.IoMdSearch className='header__searchIcon1 header__iconHover' />
-            <input type='text' placeholder={header[language].search} />
-          </div>
+          <form method='get' action='/result' className='header__searchBar'>
+            <button type='submit' className='header__searchIcon1 header__iconHover'>
+              <IoIcon.IoMdSearch />
+            </button>
+            <input type='text' name='search' placeholder={header[language].search} />
+          </form>
         </div>
       )}
 
@@ -204,9 +206,11 @@ const Header = () => {
         </div>
 
         {width > BREAK_POINT_SMALL ? (
-          <form method="get" action="/result" className='header__search'>
-            <button type="submit" className='header__searchIcon1 header__iconHover' ><IoIcon.IoMdSearch /></button>
-            <input type='text' name="search" placeholder={header[language].search} />
+          <form method='get' action='/result' className='header__search'>
+            <button type='submit' className='header__searchIcon1 header__iconHover'>
+              <IoIcon.IoMdSearch />
+            </button>
+            <input type='text' name='search' placeholder={header[language].search} />
           </form>
         ) : (
           <IoIcon.IoMdSearch

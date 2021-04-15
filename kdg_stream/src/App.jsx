@@ -2,10 +2,14 @@ import React, { useCallback, useEffect, useMemo } from 'react';
 import 'react-notifications/lib/notifications.css';
 import { useDispatch } from 'react-redux';
 import { Redirect, Route, Switch, useHistory, useLocation } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { Footer, Header, ScrollButton } from './components';
+import { useLanguageLayerValue } from './context/LanguageLayer';
 import { storage } from './helpers';
-import { Home, Live, Login, Profile, Setup, Upload, Watch ,Search} from './pages';
+import { Home, Live, Login, Profile, Search, Setup, Upload, Watch } from './pages';
 import socket from './socket';
+import store from './store';
 import { actChangeUnreadNoti } from './store/action';
 import {
   actChangeBalances,
@@ -13,10 +17,6 @@ import {
   actChangeUser,
   asyncInitAuth,
 } from './store/authAction';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import store from './store';
-import { useLanguageLayerValue } from './context/LanguageLayer';
 
 const App = () => {
   const [{ language, header }] = useLanguageLayerValue();
@@ -104,6 +104,7 @@ const App = () => {
         <Route path='/watch' component={Watch} exact />
 
         <Route path='/live' component={Live} exact />
+
         <Route path='/result' component={Search} exact />
       </Switch>
     </>

@@ -5,7 +5,7 @@ import callAPI from '../../axios';
 import { Main } from '../../layout';
 import SearchLeft from './SearchLeft';
 
-const Home = () => {
+const Search = () => {
   const search = new URLSearchParams(useLocation().search).get('search');
   const isLoadRef = useRef(true);
   const [isLoading, setIsLoading] = useState(false);
@@ -16,7 +16,6 @@ const Home = () => {
     callAPI.get(`/search?s=${search}`).then(res => {
       setSearchList([...res.data]);
     });
-
   }, [search]);
 
   const getSearch = useCallback(async () => {
@@ -28,7 +27,7 @@ const Home = () => {
     }
 
     setSearchList([...SearchList, ...res.data]);
-  }, [SearchList,search]);
+  }, [SearchList, search]);
 
   useEffect(() => {
     const handleLoad = async () => {
@@ -52,16 +51,8 @@ const Home = () => {
   }, [getSearch]);
 
   return (
-    <Main
-      className='home'
-      left={
-        <SearchLeft
-          SearchList={SearchList}
-          isLoading={isLoading}
-        />
-      }
-    />
+    <Main className='search' left={<SearchLeft SearchList={SearchList} isLoading={isLoading} />} />
   );
 };
 
-export default Home;
+export default Search;

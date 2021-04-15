@@ -134,8 +134,6 @@ const VideoInfo = props => {
     if (descRef.current.clientHeight === 0) return;
 
     if (firstRunRef.current) {
-      console.log(descRef.current.clientHeight);
-
       if (descRef.current.clientHeight > 96) {
         setShowMoreBTN(true);
         setShowMore(false);

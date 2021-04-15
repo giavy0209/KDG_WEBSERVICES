@@ -1,8 +1,7 @@
 @import './font.scss';
 @import './reset.scss';
 
-.Toastify {
-  // position: absolute;
+.Toastify__toast-container {
   z-index: 999999;
 }
 

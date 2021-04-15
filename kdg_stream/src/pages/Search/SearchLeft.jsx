@@ -1,13 +1,13 @@
 import { CircularProgress } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { Video } from '../../components';
 import { STORAGE_DOMAIN } from '../../constant';
 import { useLanguageLayerValue } from '../../context/LanguageLayer';
 import useWindowSize from '../../hooks/useWindowSize';
 
-const HomeLeft = props => {
+const SearchLeft = props => {
   const { SearchList, streammingsList = [], isLoading } = props;
 
   const history = useHistory();
@@ -65,15 +65,15 @@ const HomeLeft = props => {
       </div>
 
       <div>
-        {SearchList.length > 0 ? 
+        {SearchList.length > 0 ? (
           <div className='main__title left'>
             <p>Kết quả</p>
           </div>
-          :
+        ) : (
           <div className='main__title left'>
-            <p>Không tìm thấy video nào liên quan :((</p>
+            <p>Không tìm thấy video nào liên quan 🤦‍♂️😢🤦‍♀️</p>
           </div>
-        }
+        )}
 
         <div
           className={`layoutFlex ${
@@ -124,10 +124,10 @@ const HomeLeft = props => {
   );
 };
 
-HomeLeft.propTypes = {
+SearchLeft.propTypes = {
   SearchList: PropTypes.array.isRequired,
   streammingsList: PropTypes.array.isRequired,
   isLoading: PropTypes.bool.isRequired,
 };
 
-export default HomeLeft;
+export default SearchLeft;
