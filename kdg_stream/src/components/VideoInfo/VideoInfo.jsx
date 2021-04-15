@@ -97,7 +97,6 @@ const VideoInfo = props => {
         });
       } else {
         callAPI.get('/streamming?id=' + id).then(res => {
-          console.log(res);
           setVideo(res.data);
           setIsFollowed(res.is_followed);
           setTotalFollow(res.data.user?.kinglive?.total_follower);
@@ -160,7 +159,7 @@ const VideoInfo = props => {
 
       <div className='videoInfo__info'>
         <div className='videoInfo__titleVideo'>
-          {video?.name}
+          <span>{video?.name}</span>
 
           <div className='videoInfo__menuBox' onClick={() => setShowMenu(x => !x)}>
             <div className='rippleBox' onClick={rippleEffect}></div>
