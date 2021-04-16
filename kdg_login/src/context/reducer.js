@@ -120,12 +120,12 @@ const ServicesPageLanguage = {
   vi: {
     desc_wallet:
       'Nền tảng ví tiền điện tử an toàn, bảo mật cao, nhanh chóng và thân thiện với người dùng',
-    desc_live: 'Nền tảng phát trực tiếp đầu tiên trên thế giới cho trò chơi NFT',
+    desc_live: 'NỀN TẢNG LIVESTREAM ĐẦU TIÊN CHO NFT GAMING VÀ CÁC TÁC PHẨM NGHỆ THUẬT',
     desc_gamehub: 'Sắp ra mắt',
   },
   en: {
     desc_wallet: 'Safe, highly secure, fast and user-friendly crypto wallet platform',
-    desc_live: 'The world first livestream platform for NFT gaming',
+    desc_live: 'THE FIRST LIVESTREAM PLATFORM FOR NFT GAMING AND ART WORKS',
     desc_gamehub: 'Coming soon',
   },
 };
