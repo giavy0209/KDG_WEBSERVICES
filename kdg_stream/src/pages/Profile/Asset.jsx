@@ -6,29 +6,8 @@ import callAPI from "../../axios";
 
 import { Popper1, RecommendVideo, Tab, Table, TabPane } from '../../components';
 import { useLanguageLayerValue } from "../../context/LanguageLayer";
-
-
-
-const dataBody = [
-    {
-        type: 'Convert',
-        date: '01-12-2020',
-        amount: '200 NB',
-        note: 'from NB to KDG',
-    },
-    {
-        type: 'Donate',
-        date: '02-09-2020',
-        amount: '500 NB',
-        note: 'to Ha Lan',
-    },
-    {
-        type: 'Donate',
-        date: '13-01-2020',
-        amount: '135 NB',
-        note: 'to Thay Giao Ba',
-    },
-];
+import { convertDate, convertDateAgo } from "../../helpers";
+import useNumber from "../../hooks/useNumber";
 
 
 export default function App() {
@@ -38,13 +17,16 @@ export default function App() {
 
     const [History, setHistory] = useState([]);
 
+    const [IsMoreHistory, setIsMoreHistory] = useState(true);
+
     const getHistory = useCallback(async () => {
         /**
          * type : 7 = mua gift , 8 = bán gifts , 9 = donate , 10 = nhận donate
          */
-        const res = await callAPI.get('/transactions?type=7,8,9,10')
-        console.log(res);
-    }, [])
+        const res = await callAPI.get(`/transactions?type=7,8,9,10&skip=${History.length}&limit=5`)
+        setHistory([...History , ...res.data])
+        if(res.data.length < 5) setIsMoreHistory(false)
+    }, [History])
 
     const renderType = useCallback((type , {gift : {name} , gift_user : {kyc : {first_name , last_name} }}) => {
         if(type === 7) return profile[language].type7.replace('user_name' , `${first_name ? first_name : ''} ${last_name ? last_name : ''}`).replace('gift_name' ,(name ? name : 'gift'))
@@ -58,10 +40,24 @@ export default function App() {
             {
                 key : "create_date",
                 name : profile[language].date,
+                render : date => <span 
+                onClick={e => {
+                    const el = e.target
+                    const current = el.getAttribute('data-current')
+                    if(current === 'ago') {
+                        el.setAttribute('data-current' , 'date')
+                        el.innerText = el.getAttribute('data-date')
+                    }else {
+                        el.setAttribute('data-current' , 'ago')
+                        el.innerText = el.getAttribute('data-ago')
+                    }
+                }}
+                data-date={convertDate(date)} data-ago={convertDateAgo(date)} data-current="ago">{convertDateAgo(date)}</span>,
             },
             {
                 key : "value",
                 name : profile[language].amount,
+                render : useNumber
             },
             {
                 key : "type",
@@ -71,9 +67,10 @@ export default function App() {
         ]
     } , [language, profile,renderType] );
     useEffect(() => {
-        callAPI.get('/transactions?type=7,8,9,10')
+        callAPI.get(`/transactions?type=7,8,9,10&limit=5`)
             .then(res => {
                 setHistory([...res.data])
+                if(res.data.length < 5) setIsMoreHistory(false)
             })
     }, [])
     return (
@@ -92,12 +89,12 @@ export default function App() {
                     <div style={{ overflowX: 'auto' }}>
                         <Table dataHead={dataHead} dataBody={History} />
                     </div>
-                    <div
+                    {IsMoreHistory && <div
                         className='profile__link'
-                        onClick={() => window.open('https://www.youtube.com/')}
+                        onClick={getHistory}
                     >
                         View More
-                </div>
+                    </div>}
                 </div>
             </div>
 

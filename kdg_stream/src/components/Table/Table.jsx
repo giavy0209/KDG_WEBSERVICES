@@ -16,14 +16,18 @@ const Table = ({ dataHead, dataBody }) => {
                 {dataBody.map((obj, i) => (
                     <tr key={i}>
                         {
-                            dataHead.map(o => <td key={o.key}>
+                            dataHead.map(o => 
+                            <td 
+                            onClick={typeof o.onClick === 'function' ? o.onClick(obj[o.key] , obj, dataBody) : ()=>{}}
+                            key={o.key}>
                                 {
                                     typeof o.render === 'function' ? 
                                     o.render(obj[o.key] , obj, dataBody)
                                     :
                                     obj[o.key]
                                 }
-                            </td> )
+                            </td> 
+                            )
                         }
                     </tr>
                 ))}
