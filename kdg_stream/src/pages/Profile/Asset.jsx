@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 
 import * as HiIcon from 'react-icons/hi';
 import * as TiIcon from 'react-icons/ti';
+import { toast } from "react-toastify";
 import callAPI from "../../axios";
 
 import { Popper1, RecommendVideo, Tab, Table, TabPane } from '../../components';
@@ -16,8 +17,10 @@ export default function App() {
     const [isShowHistory, setIsShowHistory] = useState(true);
 
     const [History, setHistory] = useState([]);
+    const [GiftStorage, setGiftStorage] = useState([]);
 
     const [IsMoreHistory, setIsMoreHistory] = useState(true);
+    const [IsMoreGift, setIsMoreGift] = useState(true);
 
     const getHistory = useCallback(async () => {
         /**
@@ -28,6 +31,12 @@ export default function App() {
         if(res.data.length < 5) setIsMoreHistory(false)
     }, [History])
 
+    const getGift = useCallback(async () => {
+        const res = await callAPI.get(`/storage_gift?skip=${GiftStorage.length}&limit=5`)
+        setGiftStorage([...GiftStorage , ...res.data])
+        if(res.data.length < 5) setIsMoreGift(false)
+    }, [GiftStorage])
+
     const renderType = useCallback((type , {gift : {name} , gift_user : {kyc : {first_name , last_name} }}) => {
         if(type === 7) return profile[language].type7.replace('user_name' , `${first_name ? first_name : ''} ${last_name ? last_name : ''}`).replace('gift_name' ,(name ? name : 'gift'))
         if(type === 8) return profile[language].type8.replace('gift_name' , name)
@@ -35,7 +44,7 @@ export default function App() {
         if(type === 10) return profile[language].type10.replace('user_name' , `${first_name ? first_name : ''} ${last_name ? last_name : ''}`)
     },[language, profile])
 
-    const dataHead = useMemo(() => {
+    const historyHead = useMemo(() => {
         return [
             {
                 key : "create_date",
@@ -66,12 +75,52 @@ export default function App() {
             },
         ]
     } , [language, profile,renderType] );
+
+    const handleSellGift = useCallback(async (gift , quantity) => {
+        await callAPI.post('/sell_gift', {gift , quantity})
+
+        toast('Đã bán thành công')
+        const res = await callAPI.get(`/storage_gift?skip=0&limit=${GiftStorage.length}`)
+        setGiftStorage([...res.data])
+    },[GiftStorage])
+
+    const storageHead = useMemo(() => {
+        return [
+            {
+                key : "quantity",
+                name : profile[language].quantity,
+            },
+            {
+                key : "gift",
+                name : profile[language].gift,
+                width : '30%',
+                render : gift => <img src={gift.img} alt=""/>
+            },
+            {
+                key : "gift",
+                name : profile[language].action,
+                width : '30%',
+                render : (gift , obj) => <>
+                    <button onClick={()=> handleSellGift(gift._id , 1)} className="button">Bán 1</button>
+                    <button onClick={()=> handleSellGift(gift._id , obj.quantity)} className="button">Bán hết</button>
+                </>
+            },
+        ]
+    } , [language, profile] );
+
+
     useEffect(() => {
         callAPI.get(`/transactions?type=7,8,9,10&limit=5`)
-            .then(res => {
-                setHistory([...res.data])
-                if(res.data.length < 5) setIsMoreHistory(false)
-            })
+        .then(res => {
+            setHistory([...res.data])
+            if(res.data.length < 5) setIsMoreHistory(false)
+        })
+
+        callAPI.get('/storage_gift?limit=5')
+        .then(res => {
+            setGiftStorage([...res.data])
+            if(res.data.length < 5) setIsMoreGift(false)
+        })
     }, [])
     return (
         <>
@@ -87,11 +136,34 @@ export default function App() {
 
                 <div className={`profile__history ${isShowHistory ? 'show' : ''}`}>
                     <div style={{ overflowX: 'auto' }}>
-                        <Table dataHead={dataHead} dataBody={History} />
+                        <Table dataHead={historyHead} dataBody={History} />
                     </div>
                     {IsMoreHistory && <div
                         className='profile__link'
                         onClick={getHistory}
+                    >
+                        View More
+                    </div>}
+                </div>
+            </div>
+
+            <div className='profile__boxManage'>
+                <div
+                    className={`profile__boxManage-title profile__historyTitle ${!isShowHistory ? 'mb-0' : ''
+                        }`}
+                    onClick={() => setIsShowHistory(!isShowHistory)}
+                >
+                    <span>Storage</span>
+                    <TiIcon.TiArrowSortedDown className={`icon ${isShowHistory ? 'rotate' : ''}`} />
+                </div>
+
+                <div className={`profile__history ${isShowHistory ? 'show' : ''}`}>
+                    <div style={{ overflowX: 'auto' }}>
+                        <Table dataHead={storageHead} dataBody={GiftStorage} />
+                    </div>
+                    {IsMoreGift && <div
+                        className='profile__link'
+                        onClick={getGift}
                     >
                         View More
                     </div>}

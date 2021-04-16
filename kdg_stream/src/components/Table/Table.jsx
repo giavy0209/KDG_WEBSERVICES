@@ -2,7 +2,7 @@ import React from 'react';
 import '../../assets/css/table.css';
 
 const Table = ({ dataHead, dataBody }) => {
-    console.log(dataBody);
+    console.log(dataHead);
     return (
         <table className='table'>
             <thead>
@@ -18,6 +18,7 @@ const Table = ({ dataHead, dataBody }) => {
                         {
                             dataHead.map(o => 
                             <td 
+                            style={o.width ? {width : o.width} : {}}
                             onClick={typeof o.onClick === 'function' ? o.onClick(obj[o.key] , obj, dataBody) : ()=>{}}
                             key={o.key}>
                                 {

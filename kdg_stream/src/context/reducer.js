@@ -294,6 +294,9 @@ const profile = {
     type8 : 'Bán gift_name',
     type9 : 'Donate cho user_name',
     type10 : 'Nhận donate từ user_name',
+    quantity : 'Số lượng',
+    gift : 'Loại quà',
+    action : 'Hành động',
   },
   en: {
     edit: 'Edit',
@@ -315,6 +318,9 @@ const profile = {
     type8 : 'Sell gift_name',
     type9 : 'Donate user_name',
     type10 : 'Receive donate from user_name',
+    quantity : 'Quantity',
+    gift : 'Gift',
+    action : 'Action',
   },
 };
 
