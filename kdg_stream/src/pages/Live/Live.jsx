@@ -246,6 +246,23 @@ const Live = () => {
   }, []);
 
   const id = new URLSearchParams(window.location.search).get('s');
+  const [ListGift, setListGift] = useState([]);
+  const isShowGift = useRef(false)
+
+  const [CurrentGift, setCurrentGift] = useState(null);
+  useEffect(() => {
+    if(ListGift.length === 0 || isShowGift.current) return
+    isShowGift.current = true
+    const currentGift = ListGift[0]
+    ListGift.splice(0 , 1)
+    setListGift([...ListGift])
+    setCurrentGift(currentGift)
+    setTimeout(() => {
+      isShowGift.current = false
+      setCurrentGift(null)
+    }, currentGift.duration + 300);
+  },[ListGift,CurrentGift])
+
   useEffect(() => {
     let interval;
     let streamId;
@@ -265,16 +282,25 @@ const Live = () => {
 
     const handleReceiveChat = function (chatData) {
       setChat(_chat => {
-        console.log([..._chat, chatData]);
         return [..._chat, chatData];
       });
     };
     socket.on('chat', handleReceiveChat);
 
+    const handleReceiveGift = gift => {
+      setListGift(_listGift => {
+        console.log([..._listGift , gift]);
+        return[..._listGift , gift]
+      })
+    }
+
+    socket.on('gift' , handleReceiveGift)
+
     return () => {
       socket.emit('leave_stream', streamId);
       setChat([]);
       socket.removeEventListener('chat', handleReceiveChat);
+      socket.removeEventListener('gift', handleReceiveGift);
       clearInterval(interval);
     };
   }, [id]);
@@ -518,14 +544,11 @@ const Live = () => {
     callAPI.get('/gifts')
     .then(res => {
       setGifts([...res.data])
-      
-
     })
   },[])
 
   const handleSendGift = useCallback(async (gift_id) => {
     const res = await callAPI.post('/send_gift', {gift : gift_id , to : Stream.user._id})
-    console.log(res);
     if(res.status === 1) toast('Gửi quà thành công')
     if(res.status === 101) toast('Bạn không đủ tiền')
   },[Stream])
@@ -541,6 +564,11 @@ const Live = () => {
           }}
           className={`live__videoCtn ${isFullScreen ? 'fullscreen' : ''}`}
         >
+          <div className={`live__videoCtn-gift ${CurrentGift ? 'show' : ''}`}>
+            <span>{live[language].sendgift.replace('user_name' , CurrentGift?.user_name).replace('gift_name' , CurrentGift?.gift_name)}</span>
+            <img src={CurrentGift?.img} alt=""/>
+          </div>
+
           {isFullScreen && (
             <div className={`live__chatfullscreen ${isHideFullscreenChat ? 'hide' : ''}`}>
               <div

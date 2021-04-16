@@ -37,7 +37,9 @@ export default function App() {
         if(res.data.length < 5) setIsMoreGift(false)
     }, [GiftStorage])
 
-    const renderType = useCallback((type , {gift : {name} , gift_user : {kyc : {first_name , last_name} }}) => {
+    const renderType = useCallback((type , {gift : {name} , gift_user }) => {
+        const {kyc} = gift_user || {}
+        const {first_name , last_name} = kyc || {}
         if(type === 7) return profile[language].type7.replace('user_name' , `${first_name ? first_name : ''} ${last_name ? last_name : ''}`).replace('gift_name' ,(name ? name : 'gift'))
         if(type === 8) return profile[language].type8.replace('gift_name' , name)
         if(type === 9) return profile[language].type9.replace('user_name' , `${first_name ? first_name : ''} ${last_name ? last_name : ''}`)
