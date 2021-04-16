@@ -290,6 +290,10 @@ const profile = {
     date : 'Ngày',
     amount : 'Số lượng',
     note : 'Ghi chú',
+    type7 : 'Tặng gift_name cho user_name',
+    type8 : 'Bán gift_name',
+    type9 : 'Donate cho user_name',
+    type10 : 'Nhận donate từ user_name',
   },
   en: {
     edit: 'Edit',
@@ -307,6 +311,10 @@ const profile = {
     date : 'Date',
     amount : 'Amount',
     note : 'Note',
+    type7 : 'Send gift_name to user_name',
+    type8 : 'Sell gift_name',
+    type9 : 'Donate user_name',
+    type10 : 'Receive donate from user_name',
   },
 };
 

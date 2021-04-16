@@ -29,6 +29,8 @@ const dataBody = [
         note: 'to Thay Giao Ba',
     },
 ];
+
+
 export default function App() {
     const [{ language, profile }] = useLanguageLayerValue();
 
@@ -44,15 +46,30 @@ export default function App() {
         console.log(res);
     }, [])
 
-    const dataHead = useMemo(() => {
-        return {
-            type: profile[language].type,
-            create_date: profile[language].date,
-            value: profile[language].amount,
-            note: profile[language].note,
-        }
-    } , [language, profile] );
+    const renderType = useCallback((type , {gift : {name} , gift_user : {kyc : {first_name , last_name} }}) => {
+        if(type === 7) return profile[language].type7.replace('user_name' , `${first_name ? first_name : ''} ${last_name ? last_name : ''}`).replace('gift_name' ,(name ? name : 'gift'))
+        if(type === 8) return profile[language].type8.replace('gift_name' , name)
+        if(type === 9) return profile[language].type9.replace('user_name' , `${first_name ? first_name : ''} ${last_name ? last_name : ''}`)
+        if(type === 10) return profile[language].type10.replace('user_name' , `${first_name ? first_name : ''} ${last_name ? last_name : ''}`)
+    },[language, profile])
 
+    const dataHead = useMemo(() => {
+        return [
+            {
+                key : "create_date",
+                name : profile[language].date,
+            },
+            {
+                key : "value",
+                name : profile[language].amount,
+            },
+            {
+                key : "type",
+                name : profile[language].note,
+                render : renderType
+            },
+        ]
+    } , [language, profile,renderType] );
     useEffect(() => {
         callAPI.get('/transactions?type=7,8,9,10')
             .then(res => {
@@ -73,7 +90,7 @@ export default function App() {
 
                 <div className={`profile__history ${isShowHistory ? 'show' : ''}`}>
                     <div style={{ overflowX: 'auto' }}>
-                        <Table dataHead={dataHead} dataBody={dataBody} />
+                        <Table dataHead={dataHead} dataBody={History} />
                     </div>
                     <div
                         className='profile__link'
