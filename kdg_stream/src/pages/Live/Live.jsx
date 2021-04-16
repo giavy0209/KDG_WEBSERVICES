@@ -15,6 +15,7 @@ import { PLAY_STREAM, STORAGE_DOMAIN } from '../../constant';
 import { useLanguageLayerValue } from '../../context/LanguageLayer';
 import { convertTime } from '../../helpers';
 import socket from '../../socket';
+import { toast } from 'react-toastify';
 
 const Live = () => {
   const user = useSelector(state => state.user);
@@ -38,6 +39,8 @@ const Live = () => {
   const [currentTime, setCurrentTime] = useState('0:00');
   const [currentVolume, setCurrentVolume] = useState(0);
   const [playbackPercent, setPlaybackPercent] = useState(0);
+
+  const [IsShowGifts, setIsShowGifts] = useState(false);
 
   const chatRef = useRef();
   const controlsRef = useRef();
@@ -508,6 +511,25 @@ const Live = () => {
     return () => window.removeEventListener('keydown', playVideoByKeyboard);
   }, [isFullScreen, handleMuteVideo, handleToggleFullscreen]);
 
+
+  const [Gifts, setGifts] = useState([]);
+
+  useEffect(() => {
+    callAPI.get('/gifts')
+    .then(res => {
+      setGifts([...res.data])
+      
+
+    })
+  },[])
+
+  const handleSendGift = useCallback(async (gift_id) => {
+    const res = await callAPI.post('/send_gift', {gift : gift_id , to : Stream.user._id})
+    console.log(res);
+    if(res.status === 1) toast('Gửi quà thành công')
+    if(res.status === 101) toast('Bạn không đủ tiền')
+  },[Stream])
+
   return (
     <div className='live'>
       <div className='live__left'>
@@ -772,10 +794,20 @@ const Live = () => {
                     <button type='submit' className='icon icon-send'>
                       <RiIcon.RiSendPlaneFill />
                     </button>
-
-                    <button type='button' className='icon icon-gift'>
-                      <FaIcon.FaGift />
-                    </button>
+                    
+                    <div className="icon icon-gift">
+                      <div className={`popup-gift ${IsShowGifts ? 'show' : ''}`}>
+                        {Gifts.map(o => <div key={o._id} onClick={()=> handleSendGift(o._id)} className="item">
+                          <img src={o.img} alt=""/>
+                          <span className="price">{o.price} KDG</span>
+                        </div> )}
+                      </div>
+                      <div 
+                      onClick={()=>setIsShowGifts(!IsShowGifts)}
+                      className='icon-gift-button'>
+                        <FaIcon.FaGift />
+                      </div>
+                    </div>
                   </form>
                 </div>
               </div>

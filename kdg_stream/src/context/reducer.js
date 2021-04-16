@@ -286,6 +286,10 @@ const profile = {
     topDonate: 'Đóng góp nhiều nhất',
     views: 'lượt xem',
     playlist: 'Danh sách phát',
+    type : 'Loại',
+    date : 'Ngày',
+    amount : 'Số lượng',
+    note : 'Ghi chú',
   },
   en: {
     edit: 'Edit',
@@ -299,6 +303,10 @@ const profile = {
     topDonate: 'Top Donate',
     views: 'views',
     playlist: 'Playlist',
+    type : 'Type',
+    date : 'Date',
+    amount : 'Amount',
+    note : 'Note',
   },
 };
 

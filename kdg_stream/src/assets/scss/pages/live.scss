@@ -792,13 +792,60 @@ $width-volumeBar: 80px;
               right: 65px;
             }
 
+            
             &.icon-gift {
               right: 0;
-              border: 2px solid #e41a7f;
-              padding: 2px 7px;
-              background-color: $main-color;
               color: #fff;
               border-radius: 5px;
+
+              .icon-gift-button {
+                padding: 2px 7px;
+                
+                right: 0;
+                border: 2px solid #e41a7f;
+                background-color: $main-color;
+                color: #fff;
+                border-radius: 5px;
+              }
+              .popup-gift {
+                position: absolute;
+                bottom: calc(100% + 30px);
+                padding: 20px;
+                background-color: #fff;
+                border-radius: 5px;
+                box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
+                right: 0;
+                width: 300px;
+                transition: .3s;
+                opacity: 0;
+                pointer-events: none;
+                display: flex;
+                .item{
+                  width: 33.3333%;
+                  position: relative;
+                  img{
+                    width: 100%;
+                  }
+                  .price {
+                    color: #e41a7f;
+                    font-size: 12px;
+                  }
+                }
+                &.show {
+                  opacity: 1;
+                  pointer-events: all;
+                }
+                &::before {
+                  content : "▼";
+                  position: absolute;
+                  top: 100%;
+                  right: 5px;
+                  text-shadow:0 7px 15px black;
+                  font-size: 30px;
+                  line-height: 21px;
+                  
+                }
+              }
             }
           }
         }
