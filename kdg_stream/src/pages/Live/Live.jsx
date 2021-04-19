@@ -52,8 +52,13 @@ const Live = () => {
     socket.on('gift' , handleReceiveGift)
 
     const handleStream = stream => {
-      if(stream.connect_status === 1) setIsCanPlay(true);
+      if(stream.connect_status === 1) {
+        setTimeout(() => {
+          setIsCanPlay(true);
+        }, 5000);
+      }
       else setIsCanPlay(false);
+      
     }
     socket.on('stream' , handleStream)
 
