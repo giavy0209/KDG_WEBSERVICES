@@ -4,7 +4,7 @@ import callAPI from '../../axios';
 import { Main } from '../../layout';
 import HomeLeft from './HomeLeft';
 import HomeRight from './HomeRight';
-// import banner1 from '../../assets/images/banner/BG-nen.gif';
+import banner1 from '../../assets/images/banner/banner1.gif';
 
 const Home = () => {
   const isLoadRef = useRef(true);
@@ -62,7 +62,10 @@ const Home = () => {
 
   return (
     <>
-      {/* <img src='' alt='' /> */}
+      <div className='banner'>
+        <img src={banner1} alt='banner' />
+      </div>
+
       <Main
         className='home'
         left={
