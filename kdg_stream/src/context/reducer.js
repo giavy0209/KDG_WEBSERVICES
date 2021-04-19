@@ -420,11 +420,13 @@ const live = {
     chathere: 'Nhập để trò chuyện',
     showchat: 'Hiện trò chuyện',
     hidechat: 'Ẩn trò chuyện',
+    sendgift: 'user_name đã gửi gift_name cho streamer',
   },
   en: {
     chathere: 'Chat here',
     showchat: 'Show Chat',
     hidechat: 'Hide Chat',
+    sendgift: 'user_name sent gift_name to streamer',
   },
 };
 

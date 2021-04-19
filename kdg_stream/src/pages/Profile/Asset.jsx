@@ -16,22 +16,30 @@ export default function App() {
   const [isShowHistory, setIsShowHistory] = useState(true);
 
   const [History, setHistory] = useState([]);
-
   const [GiftStorage, setGiftStorage] = useState([]);
 
   const [IsMoreHistory, setIsMoreHistory] = useState(true);
   const [IsMoreGift, setIsMoreGift] = useState(true);
 
+  const getHistory = useCallback(async () => {
+    /**
+     * type : 7 = mua gift , 8 = bán gifts , 9 = donate , 10 = nhận donate
+     */
+    const res = await callAPI.get(`/transactions?type=7,8,9,10&skip=${History.length}&limit=5`);
+    setHistory([...History, ...res.data]);
+    if (res.data.length < 5) setIsMoreHistory(false);
+  }, [History]);
+
+  const getGift = useCallback(async () => {
+    const res = await callAPI.get(`/storage_gift?skip=${GiftStorage.length}&limit=5`);
+    setGiftStorage([...GiftStorage, ...res.data]);
+    if (res.data.length < 5) setIsMoreGift(false);
+  }, [GiftStorage]);
+
   const renderType = useCallback(
-    (
-      type,
-      {
-        gift: { name },
-        gift_user: {
-          kyc: { first_name, last_name },
-        },
-      }
-    ) => {
+    (type, { gift: { name }, gift_user }) => {
+      const { kyc } = gift_user || {};
+      const { first_name, last_name } = kyc || {};
       if (type === 7)
         return profile[language].type7
           .replace('user_name', `${first_name ? first_name : ''} ${last_name ? last_name : ''}`)
@@ -50,12 +58,6 @@ export default function App() {
     },
     [language, profile]
   );
-
-  const getGift = useCallback(async () => {
-    const res = await callAPI.get(`/storage_gift?skip=${GiftStorage.length}&limit=5`);
-    setGiftStorage([...GiftStorage, ...res.data]);
-    if (res.data.length < 5) setIsMoreGift(false);
-  }, [GiftStorage]);
 
   const historyHead = useMemo(() => {
     return [
@@ -148,7 +150,6 @@ export default function App() {
       if (res.data.length < 5) setIsMoreGift(false);
     });
   }, []);
-
   return (
     <>
       <div className='profile__boxManage'>
@@ -166,7 +167,11 @@ export default function App() {
           <div style={{ overflowX: 'auto' }}>
             <Table dataHead={historyHead} dataBody={History} />
           </div>
-          {IsMoreHistory && <div className='profile__link'>View More</div>}
+          {IsMoreHistory && (
+            <div className='profile__link' onClick={getHistory}>
+              View More
+            </div>
+          )}
         </div>
       </div>
 
