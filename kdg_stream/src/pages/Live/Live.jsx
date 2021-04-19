@@ -126,18 +126,25 @@ const Live = () => {
     <div className='live'>
       <div className='live__left'>
         
-          {Stream && IsCanPlay && (
-            <VideoPlayer
-            Chat={Chat}
-            Stream={Stream}
-            handleChat={handleChat}
-            ListGift={ListGift}
-            setListGift={setListGift}
-            isHideChat={isHideChat}
-            setIsHideChat={setIsHideChat}
-            chatRef={chatRef}
-            />
-          )}
+          {
+            (Stream && IsCanPlay) ? 
+            (
+              <VideoPlayer
+              Chat={Chat}
+              Stream={Stream}
+              handleChat={handleChat}
+              ListGift={ListGift}
+              setListGift={setListGift}
+              isHideChat={isHideChat}
+              setIsHideChat={setIsHideChat}
+              chatRef={chatRef}
+              />
+            ) 
+            : 
+            (
+              <h1>Thằng này đang đi đái, chờ xíu</h1>
+            )
+          }
         <VideoInfo id={id} type='live' />
       </div>
 
