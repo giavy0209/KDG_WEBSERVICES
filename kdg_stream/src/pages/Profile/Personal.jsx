@@ -114,12 +114,23 @@ export default function App() {
                                         </div>
                                         <div
                                             className='profile__video-info-date'
+                                            data-date={convertDate(o.create_date)}
+                                            data-ago={convertDateAgo(o.create_date)}
+                                            data-current='ago'
                                             onClick={e => {
                                                 e.stopPropagation();
-                                                setConvert(x => !x);
+                                                const el = e.target;
+                                                const current = el.getAttribute('data-current');
+                                                if (current === 'ago') {
+                                                    el.setAttribute('data-current', 'date');
+                                                    el.innerText = el.getAttribute('data-date');
+                                                } else {
+                                                    el.setAttribute('data-current', 'ago');
+                                                    el.innerText = el.getAttribute('data-ago');
+                                                }
                                             }}
                                         >
-                                            {convert ? convertDateAgo(o.create_date) : convertDate(o.create_date)}
+                                            {convertDateAgo(o.create_date)}
                                         </div>
                                         {/* <p className='profile__video-info-tag'></p> */}
                                         <p className='profile__video-info-desc'>{o.description}</p>
@@ -193,12 +204,23 @@ export default function App() {
                                     </div>
                                     <div
                                         className='profile__video-info-date'
+                                        data-date={convertDate(o.create_date)}
+                                        data-ago={convertDateAgo(o.create_date)}
+                                        data-current='ago'
                                         onClick={e => {
                                             e.stopPropagation();
-                                            setConvert(x => !x);
+                                            const el = e.target;
+                                            const current = el.getAttribute('data-current');
+                                            if (current === 'ago') {
+                                                el.setAttribute('data-current', 'date');
+                                                el.innerText = el.getAttribute('data-date');
+                                            } else {
+                                                el.setAttribute('data-current', 'ago');
+                                                el.innerText = el.getAttribute('data-ago');
+                                            }
                                         }}
                                     >
-                                        {convert ? convertDateAgo(o.create_date) : convertDate(o.create_date)}
+                                        {convertDateAgo(o.create_date)}
                                     </div>
                                     {/* <p className='profile__video-info-tag'></p> */}
                                     <p className='profile__video-info-desc'>{o.description}</p>
