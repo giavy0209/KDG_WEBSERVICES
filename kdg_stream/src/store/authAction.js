@@ -86,6 +86,22 @@ export function asyncInitGifts () {
   }
 }
 
+export const CHANGE_GIFTS_STORAGE = 'CHANGE_GIFTS_STORAGE';
+
+export function actChangeGiftStorage (giftStorage) {
+  return {
+    type: CHANGE_GIFTS_STORAGE,
+    payload: { giftStorage },
+  }
+}
+
+export function asyncInitGiftStorage () {
+  return async dispatch => {
+    const res = await callAPI.get('/storage_gift')
+    dispatch(actChangeGiftStorage(res.data))
+  }
+}
+
 
 export function asyncInitAuth(_refresh, _jwt) {
   return async dispatch => {
@@ -107,7 +123,8 @@ export function asyncInitAuth(_refresh, _jwt) {
       dispatch(asyncGetUser()),
       dispatch(asyncGetBalances()),
       dispatch(asyncGetNoties()),
-      dispatch(asyncInitGifts())
+      dispatch(asyncInitGifts()),
+      dispatch(asyncInitGiftStorage())
     ]);
   };
 }

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import * as HiIcon from 'react-icons/hi';
 import * as TiIcon from 'react-icons/ti';
+import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import callAPI from '../../axios';
 
@@ -14,12 +15,12 @@ export default function App() {
   const [{ language, profile }] = useLanguageLayerValue();
 
   const [isShowHistory, setIsShowHistory] = useState(true);
+  const GiftStorage = useSelector(state => state.giftStorage)
 
   const [History, setHistory] = useState([]);
-  const [GiftStorage, setGiftStorage] = useState([]);
+  
 
   const [IsMoreHistory, setIsMoreHistory] = useState(true);
-  const [IsMoreGift, setIsMoreGift] = useState(true);
 
   const getHistory = useCallback(async () => {
     /**
@@ -29,12 +30,6 @@ export default function App() {
     setHistory([...History, ...res.data]);
     if (res.data.length < 5) setIsMoreHistory(false);
   }, [History]);
-
-  const getGift = useCallback(async () => {
-    const res = await callAPI.get(`/storage_gift?skip=${GiftStorage.length}&limit=5`);
-    setGiftStorage([...GiftStorage, ...res.data]);
-    if (res.data.length < 5) setIsMoreGift(false);
-  }, [GiftStorage]);
 
   const renderType = useCallback(
     (type, { gift: { name }, gift_user }) => {
@@ -101,12 +96,9 @@ export default function App() {
   const handleSellGift = useCallback(
     async (gift, quantity) => {
       await callAPI.post('/sell_gift', { gift, quantity });
-
       toast('Đã bán thành công');
-      const res = await callAPI.get(`/storage_gift?skip=0&limit=${GiftStorage.length}`);
-      setGiftStorage([...res.data]);
     },
-    [GiftStorage]
+    []
   );
 
   const storageHead = useMemo(() => {
@@ -143,11 +135,6 @@ export default function App() {
     callAPI.get(`/transactions?type=7,8,9,10&limit=5`).then(res => {
       setHistory([...res.data]);
       if (res.data.length < 5) setIsMoreHistory(false);
-    });
-
-    callAPI.get('/storage_gift?limit=5').then(res => {
-      setGiftStorage([...res.data]);
-      if (res.data.length < 5) setIsMoreGift(false);
     });
   }, []);
   return (
@@ -188,13 +175,8 @@ export default function App() {
 
         <div className={`profile__history ${isShowHistory ? 'show' : ''}`}>
           <div style={{ overflowX: 'auto' }}>
-            <Table dataHead={storageHead} dataBody={GiftStorage} />
+            <Table dataHead={storageHead} dataBody={GiftStorage || []} />
           </div>
-          {IsMoreGift && (
-            <div className='profile__link' onClick={getGift}>
-              View More
-            </div>
-          )}
         </div>
       </div>
 

@@ -330,8 +330,9 @@ $width-volumeBar: 80px;
 
       pointer-events: none;
     }
+    
 
-    video,img {
+    video,.pause-banner {
       position: absolute;
       top: 0;
       left: 0;
