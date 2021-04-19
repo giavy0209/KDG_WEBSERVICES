@@ -18,39 +18,22 @@ import { toast } from 'react-toastify';
 import VideoPlayer from './VideoPlayer'
 const Live = () => {
   const user = useSelector(state => state.user);
-
   const [{ language, live }] = useLanguageLayerValue();
-
   const chatRef = useRef();
-
-
   const [Stream, setStream] = useState({});
   const [IsCanPlay, setIsCanPlay] = useState(false);
-
   const [Chat, setChat] = useState([]);
   const [ListGift, setListGift] = useState([]);
-
-  
-
-
   const [IsShowGifts, setIsShowGifts] = useState(false);
   const [isHideChat, setIsHideChat] = useState(false);
-
-  
-
   const id = new URLSearchParams(window.location.search).get('s');
-  
-  
-
   useEffect(() => {
-    let interval;
     let streamId;
     callAPI.get('/streamming?id=' + id).then(res => {
       socket.emit('join_stream', res.data._id);
       streamId = res.data._id;
       setStream(res.data);
-
-      if(res.connect_status === 1) setIsCanPlay(true);
+      if(res.data.connect_status === 1) setIsCanPlay(true);
     });
 
     const handleReceiveChat = function (chatData) {
