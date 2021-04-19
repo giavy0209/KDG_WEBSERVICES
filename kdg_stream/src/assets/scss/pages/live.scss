@@ -288,6 +288,7 @@ $width-volumeBar: 80px;
     margin-bottom: 25px;
 
     background-color: #000;
+
     &-gift {
       position: absolute;
       top: 50%;
@@ -330,7 +331,7 @@ $width-volumeBar: 80px;
       pointer-events: none;
     }
 
-    video {
+    video,img {
       position: absolute;
       top: 0;
       left: 0;

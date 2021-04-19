@@ -12,6 +12,7 @@ import socket from '../../socket';
 import { toast } from 'react-toastify';
 import VideoPlayer from './VideoPlayer'
 import { actChangeGifts } from '../../store/authAction';
+
 const Live = () => {
   const [{ language, live }] = useLanguageLayerValue();
 
@@ -32,7 +33,7 @@ const Live = () => {
       socket.emit('join_stream', res.data._id);
       streamId = res.data._id;
       setStream(res.data);
-      if(res.data.connect_status === 1) setIsCanPlay(true);
+      if (res.data.connect_status === 1) setIsCanPlay(true);
     });
 
     const handleReceiveChat = function (chatData) {
@@ -44,36 +45,36 @@ const Live = () => {
 
     const handleReceiveGift = gift => {
       setListGift(_listGift => {
-        return[..._listGift , gift]
+        return [..._listGift, gift]
       })
     }
 
-    socket.on('gift' , handleReceiveGift)
+    socket.on('gift', handleReceiveGift)
 
     const handleListGift = listGift => {
       console.log(listGift);
       dispatch(actChangeGifts(listGift))
     }
 
-    socket.on('list_gift' , handleListGift)
+    socket.on('list_gift', handleListGift)
 
     const handleStream = stream => {
-      if(stream.connect_status === 1) {
+      if (stream.connect_status === 1) {
         setTimeout(() => {
           setIsCanPlay(true);
         }, 5000);
       }
       else setIsCanPlay(false);
-      
+
     }
-    socket.on('stream' , handleStream)
+    socket.on('stream', handleStream)
 
     return () => {
       socket.emit('leave_stream', streamId);
       setChat([]);
       socket.removeEventListener('chat', handleReceiveChat);
       socket.removeEventListener('gift', handleReceiveGift);
-      socket.removeEventListener('list_gift' , handleListGift)
+      socket.removeEventListener('list_gift', handleListGift)
       socket.removeEventListener('stream', handleStream);
     };
   }, [id]);
@@ -103,34 +104,26 @@ const Live = () => {
   const Gifts = useSelector(state => state.gifts)
 
   const handleSendGift = useCallback(async (gift_id) => {
-    const res = await callAPI.post('/send_gift', {gift : gift_id , to : Stream.user._id})
-    if(res.status === 1) toast('Gửi quà thành công')
-    if(res.status === 101) toast('Bạn không đủ tiền')
-  },[Stream])
+    const res = await callAPI.post('/send_gift', { gift: gift_id, to: Stream.user._id })
+    if (res.status === 1) toast('Gửi quà thành công')
+    if (res.status === 101) toast('Bạn không đủ tiền')
+  }, [Stream])
 
   return (
     <div className='live'>
       <div className='live__left'>
-        
-          {
-            (Stream && IsCanPlay) ? 
-            (
-              <VideoPlayer
-              Chat={Chat}
-              Stream={Stream}
-              handleChat={handleChat}
-              ListGift={ListGift}
-              setListGift={setListGift}
-              isHideChat={isHideChat}
-              setIsHideChat={setIsHideChat}
-              chatRef={chatRef}
-              />
-            ) 
-            : 
-            (
-              <h1>Thằng này đang đi đái, chờ xíu</h1>
-            )
-          }
+
+        <VideoPlayer
+          Chat={Chat}
+          Stream={Stream}
+          handleChat={handleChat}
+          ListGift={ListGift}
+          setListGift={setListGift}
+          isHideChat={isHideChat}
+          setIsHideChat={setIsHideChat}
+          chatRef={chatRef}
+          IsCanPlay={IsCanPlay}
+        />
         <VideoInfo id={id} type='live' />
       </div>
 
@@ -192,19 +185,19 @@ const Live = () => {
                     <button type='submit' className='icon icon-send'>
                       <RiIcon.RiSendPlaneFill />
                     </button>
-                    
+
                     <div className="icon icon-gift">
                       <div className={`popup-gift ${IsShowGifts ? 'show' : ''}`}>
-                        {Gifts?.map(o => <div key={o._id} onClick={()=> handleSendGift(o._id)} className="item">
-                          <img src={o.img} alt=""/>
+                        {Gifts?.map(o => <div key={o._id} onClick={() => handleSendGift(o._id)} className="item">
+                          <img src={o.img} alt="" />
                           <span className="name">{o.name}</span>
                           <span className="price">{Math.ceil(o.price * 100) / 100} KDG</span>
-                        </div> )}
+                        </div>)}
                         <span className="balance">Số dư {Math.floor(balance * 100) / 100} KDG</span>
                       </div>
-                      <div 
-                      onClick={()=>setIsShowGifts(!IsShowGifts)}
-                      className='icon-gift-button'>
+                      <div
+                        onClick={() => setIsShowGifts(!IsShowGifts)}
+                        className='icon-gift-button'>
                         <FaIcon.FaGift />
                       </div>
                     </div>
