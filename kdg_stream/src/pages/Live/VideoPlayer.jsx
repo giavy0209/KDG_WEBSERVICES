@@ -566,7 +566,7 @@ export default function VideoPlayer({ Stream, Chat, handleChat, ListGift, setLis
                         )
                         :
                         (
-                            <img src={pause} alt=""/>
+                            <img className="pause-banner" src={pause} alt=""/>
                         )
                 }
                 
