@@ -4,7 +4,7 @@ import callAPI from '../../axios';
 import { Main } from '../../layout';
 import HomeLeft from './HomeLeft';
 import HomeRight from './HomeRight';
-import banner1 from '../../assets/images/banner/banner1.gif';
+import banner1 from '../../assets/images/banner/banner1.mp4';
 
 const Home = () => {
   const isLoadRef = useRef(true);
@@ -63,10 +63,7 @@ const Home = () => {
   return (
     <>
       <div className='banner'>
-        <img data-src={banner1} src={banner1} onMouseOver={e => {
-          const url = e.target.getAttribute('data-src')
-          e.target.setAttribute('src' , `${url}?q=${Date.now()}` )
-        }} alt='banner' />
+        <video muted autoPlay src={banner1} loop='infinite'></video>
       </div>
 
       <Main
