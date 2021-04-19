@@ -96,6 +96,7 @@ export function asyncInitAuth(_refresh, _jwt) {
       dispatch(asyncGetUser()),
       dispatch(asyncGetBalances()),
       dispatch(asyncGetNoties()),
+      dispatch(asyncInitGifts())
     ]);
   };
 }

@@ -50,13 +50,7 @@ const Live = () => {
       streamId = res.data._id;
       setStream(res.data);
 
-      interval = setInterval(() => {
-        Axios.get(`${PLAY_STREAM}${res.data.key}/index.m3u8`).then(res => {
-          console.log(res);
-          clearInterval(interval);
-          setIsCanPlay(true);
-        });
-      }, 1000);
+      if(res.connect_status === 1) setIsCanPlay(true);
     });
 
     const handleReceiveChat = function (chatData) {
@@ -68,7 +62,6 @@ const Live = () => {
 
     const handleReceiveGift = gift => {
       setListGift(_listGift => {
-        console.log([..._listGift , gift]);
         return[..._listGift , gift]
       })
     }
@@ -76,9 +69,8 @@ const Live = () => {
     socket.on('gift' , handleReceiveGift)
 
     const handleStream = stream => {
-      if(stream.connect_status === 1) {
-        
-      }
+      if(stream.connect_status === 1) setIsCanPlay(true);
+      else setIsCanPlay(false);
     }
     socket.on('stream' , handleStream)
 
@@ -88,7 +80,6 @@ const Live = () => {
       socket.removeEventListener('chat', handleReceiveChat);
       socket.removeEventListener('gift', handleReceiveGift);
       socket.removeEventListener('stream', handleStream);
-      clearInterval(interval);
     };
   }, [id]);
 
