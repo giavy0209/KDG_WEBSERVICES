@@ -4,6 +4,7 @@ import { actChangeUnreadNoti } from './action';
 
 export const CHANGE_USER = 'CHANGE_USER';
 export const CHANGE_BALANCE = 'CHANGE_BALANCE';
+export const CHANGE_BALANCE_KDG = 'CHANGE_BALANCE_KDG';
 export const CHANGE_NOTIES = 'CHANGE_NOTIES';
 
 export function actChangeUser(user) {
@@ -29,10 +30,19 @@ export function actChangeBalances(balances) {
   };
 }
 
+export function actChangeBalanceKDG(balanceKDG) {
+  return {
+    type: CHANGE_BALANCE_KDG,
+    payload: { balanceKDG },
+  };
+}
+
 export function asyncGetBalances() {
   return async dispatch => {
     const res = await callAPI.get('/balances');
     dispatch(actChangeBalances(res.balances));
+    const balanceKDG = res.balances.find(o => o.coin.code === 'KDG')
+    dispatch(actChangeBalanceKDG(balanceKDG.balance))
   };
 }
 
@@ -76,6 +86,23 @@ export function asyncInitGifts () {
   }
 }
 
+export const CHANGE_GIFTS_STORAGE = 'CHANGE_GIFTS_STORAGE';
+
+export function actChangeGiftStorage (giftStorage) {
+  return {
+    type: CHANGE_GIFTS_STORAGE,
+    payload: { giftStorage },
+  }
+}
+
+export function asyncInitGiftStorage () {
+  return async dispatch => {
+    const res = await callAPI.get('/storage_gift')
+    dispatch(actChangeGiftStorage(res.data))
+  }
+}
+
+
 export function asyncInitAuth(_refresh, _jwt) {
   return async dispatch => {
     if (!_refresh) {
@@ -96,7 +123,8 @@ export function asyncInitAuth(_refresh, _jwt) {
       dispatch(asyncGetUser()),
       dispatch(asyncGetBalances()),
       dispatch(asyncGetNoties()),
-      dispatch(asyncInitGifts())
+      dispatch(asyncInitGifts()),
+      dispatch(asyncInitGiftStorage())
     ]);
   };
 }

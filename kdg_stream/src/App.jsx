@@ -12,7 +12,9 @@ import socket from './socket';
 import store from './store';
 import { actChangeUnreadNoti } from './store/action';
 import {
+  actChangeBalanceKDG,
   actChangeBalances,
+  actChangeGiftStorage,
   actChangeNoties,
   actChangeUser,
   asyncInitAuth,
@@ -61,6 +63,8 @@ const App = () => {
   useEffect(() => {
     const listenBalance = res => {
       dispatch(actChangeBalances(res.balances));
+      const balanceKDG = res.balances.find(o => o.coin.code === 'KDG')
+      dispatch(actChangeBalanceKDG(balanceKDG.balance))
     };
     const listenUser = res => {
       dispatch(actChangeUser(res.data));
@@ -72,13 +76,19 @@ const App = () => {
       toast(<div onClick={() => handleClickNoti(res.data)}>{handleType(res.data)}</div>);
     };
 
+    const listenGiftStorage = res => {
+      dispatch(actChangeGiftStorage(res.data))
+    }
+
     socket.on('balances', listenBalance);
     socket.on('user', listenUser);
     socket.on('noti', listenNoti);
+    socket.on('gift_storage', listenGiftStorage);
     return () => {
       socket.removeEventListener('balances', listenBalance);
       socket.removeEventListener('user', listenUser);
       socket.removeEventListener('noti', listenNoti);
+      socket.removeEventListener('gift_storage', listenGiftStorage);
     };
   }, [dispatch, handleType, handleClickNoti]);
 

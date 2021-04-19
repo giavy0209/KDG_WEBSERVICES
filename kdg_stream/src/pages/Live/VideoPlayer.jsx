@@ -6,14 +6,15 @@ import * as FaIcon from 'react-icons/fa';
 import * as HiIcon from 'react-icons/hi';
 import * as MdIcon from 'react-icons/md';
 import * as RiIcon from 'react-icons/ri';
-import { PLAY_STREAM , STORAGE_DOMAIN} from '../../constant';
+import { PLAY_STREAM, STORAGE_DOMAIN } from '../../constant';
 import { useLanguageLayerValue } from '../../context/LanguageLayer';
 import { Avatar, Recommend, Video, VideoInfo } from '../../components';
 
 import { convertTime } from '../../helpers';
 import { useSelector } from 'react-redux';
+import pause from '../../assets/images/banner/pause.jpg'
 
-export default function VideoPlayer({ Stream, Chat , handleChat , ListGift,setListGift , isHideChat, setIsHideChat , chatRef}) {
+export default function VideoPlayer({ Stream, Chat, handleChat, ListGift, setListGift, isHideChat, setIsHideChat, chatRef,IsCanPlay }) {
     const [{ language, live }] = useLanguageLayerValue();
     const user = useSelector(state => state.user);
 
@@ -550,15 +551,25 @@ export default function VideoPlayer({ Stream, Chat , handleChat , ListGift,setLi
                     </div>
                 )}
 
-                <ReactHlsPlayer
-                    src={`${PLAY_STREAM}${Stream.key}/index.m3u8`}
-                    autoPlay={true}
-                    controls={false}
-                    muted
-                    width='100%'
-                    height='auto'
-                    playerRef={videoRef}
-                />
+                {
+                    (Stream && IsCanPlay) ?
+                        (
+                            <ReactHlsPlayer
+                                src={`${PLAY_STREAM}${Stream.key}/index.m3u8`}
+                                autoPlay={true}
+                                controls={false}
+                                muted
+                                width='100%'
+                                height='auto'
+                                playerRef={videoRef}
+                            />
+                        )
+                        :
+                        (
+                            <img src={pause} alt=""/>
+                        )
+                }
+                
                 <div ref={animationRef} className='live__videoCtn-animation'>
                     <div className='live__videoCtn-animation-iconCircle play-icon'>
                         <AiIcon.AiFillPlayCircle />
