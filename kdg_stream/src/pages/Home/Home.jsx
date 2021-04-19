@@ -4,6 +4,7 @@ import callAPI from '../../axios';
 import { Main } from '../../layout';
 import HomeLeft from './HomeLeft';
 import HomeRight from './HomeRight';
+// import banner1 from '../../assets/images/banner/BG-nen.gif';
 
 const Home = () => {
   const isLoadRef = useRef(true);
@@ -60,17 +61,20 @@ const Home = () => {
   }, [getRecommend]);
 
   return (
-    <Main
-      className='home'
-      left={
-        <HomeLeft
-          recommendList={recommendList}
-          streammingsList={streammingsList}
-          isLoading={isLoading}
-        />
-      }
-      right={<HomeRight Ranking={Ranking} />}
-    />
+    <>
+      {/* <img src='' alt='' /> */}
+      <Main
+        className='home'
+        left={
+          <HomeLeft
+            recommendList={recommendList}
+            streammingsList={streammingsList}
+            isLoading={isLoading}
+          />
+        }
+        right={<HomeRight Ranking={Ranking} />}
+      />
+    </>
   );
 };
 
