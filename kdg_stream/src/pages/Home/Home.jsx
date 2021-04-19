@@ -63,7 +63,10 @@ const Home = () => {
   return (
     <>
       <div className='banner'>
-        <img src={banner1} alt='banner' />
+        <img data-src={banner1} src={banner1} onMouseOver={e => {
+          const url = e.target.getAttribute('data-src')
+          e.target.setAttribute('src' , `${url}?q=${Date.now()}` )
+        }} alt='banner' />
       </div>
 
       <Main
