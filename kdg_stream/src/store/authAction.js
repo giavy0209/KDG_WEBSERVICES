@@ -60,6 +60,22 @@ export function asyncGetNoties() {
   };
 }
 
+export const CHANGE_GIFTS = 'CHANGE_GIFTS';
+
+export function actChangeGifts (gifts) {
+  return {
+    type: CHANGE_GIFTS,
+    payload: { gifts },
+  }
+}
+
+export function asyncInitGifts () {
+  return async dispatch => {
+    const res = await callAPI.get('/gifts')
+    dispatch(actChangeGifts(res.data))
+  }
+}
+
 export function asyncInitAuth(_refresh, _jwt) {
   return async dispatch => {
     if (!_refresh) {
