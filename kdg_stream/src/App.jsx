@@ -12,6 +12,7 @@ import socket from './socket';
 import store from './store';
 import { actChangeUnreadNoti } from './store/action';
 import {
+  actChangeBalanceKDG,
   actChangeBalances,
   actChangeNoties,
   actChangeUser,
@@ -61,6 +62,8 @@ const App = () => {
   useEffect(() => {
     const listenBalance = res => {
       dispatch(actChangeBalances(res.balances));
+      const balanceKDG = res.balances.find(o => o.coin.code === 'KDG')
+      dispatch(actChangeBalanceKDG(balanceKDG.balance))
     };
     const listenUser = res => {
       dispatch(actChangeUser(res.data));

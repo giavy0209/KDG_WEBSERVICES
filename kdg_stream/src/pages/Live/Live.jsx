@@ -16,7 +16,7 @@ const Live = () => {
   const [{ language, live }] = useLanguageLayerValue();
 
   const dispatch = useDispatch()
-
+  const balance = useSelector(state => state.balanceKDG)
   const user = useSelector(state => state.user);
   const chatRef = useRef();
   const [Stream, setStream] = useState({});
@@ -197,8 +197,10 @@ const Live = () => {
                       <div className={`popup-gift ${IsShowGifts ? 'show' : ''}`}>
                         {Gifts?.map(o => <div key={o._id} onClick={()=> handleSendGift(o._id)} className="item">
                           <img src={o.img} alt=""/>
+                          <span className="name">{o.name}</span>
                           <span className="price">{Math.ceil(o.price * 100) / 100} KDG</span>
                         </div> )}
+                        <span className="balance">Số dư {Math.floor(balance * 100) / 100} KDG</span>
                       </div>
                       <div 
                       onClick={()=>setIsShowGifts(!IsShowGifts)}
