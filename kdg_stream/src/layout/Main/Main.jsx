@@ -14,6 +14,7 @@ const Main = props => {
   } = props;
 
   const minWidthLeftSmall = useRef('327px');
+  const bannerHeight = useRef();
 
   const [width] = useWindowSize();
 
@@ -21,13 +22,32 @@ const Main = props => {
   const rightRef = useRef();
 
   useEffect(() => {
+    const bannerEle = document.querySelector('.banner');
+    if (!bannerEle) return (bannerHeight.current = '0px');
+
+    bannerHeight.current = bannerEle.clientHeight + 'px';
+  });
+
+  useEffect(() => {
     const handlePositionRight = () => {
       if (!rightRef.current) return;
 
-      const header = document.querySelector('.header');
-      const { top } = header.getBoundingClientRect();
+      const footerEle = document.querySelector('.footer');
+      const headerEle = document.querySelector('.header');
+      const { top } = headerEle.getBoundingClientRect();
 
-      rightRef.current.style.top = top + header.clientHeight + 20 + 'px';
+      const totalHeight =
+        footerEle.clientHeight +
+        headerEle.clientHeight +
+        Number(bannerHeight.current.replace('px', '')) +
+        20;
+
+      if (window.pageYOffset < totalHeight - headerEle.clientHeight) {
+        rightRef.current.style.top = totalHeight - window.pageYOffset + 'px';
+        return;
+      }
+
+      rightRef.current.style.top = top + headerEle.clientHeight + 20 + 'px';
     };
 
     window.addEventListener('scroll', handlePositionRight);
@@ -44,19 +64,25 @@ const Main = props => {
         '--width-left': widthLeft,
         '--min-width-large': minWidthLeftLarge,
         '--min-width-extra-small': minWidthLeftSmall.current,
+        '--banner-height': bannerHeight.current,
       }}
     >
       <div className='main__left'>{left}</div>
 
-      {right && <div ref={rightRef} className={`main__right ${isShow ? 'show' : ''}`}>
-        {width <= BREAK_POINT_LARGE && (
-          <div className={`main__arrow ${isShow ? 'show' : ''}`} onClick={() => setIsShow(x => !x)}>
-            <MdIcon.MdKeyboardArrowLeft className='icon' />
-          </div>
-        )}
+      {right && (
+        <div ref={rightRef} className={`main__right ${isShow ? 'show' : ''}`}>
+          {width <= BREAK_POINT_LARGE && (
+            <div
+              className={`main__arrow ${isShow ? 'show' : ''}`}
+              onClick={() => setIsShow(x => !x)}
+            >
+              <MdIcon.MdKeyboardArrowLeft className='icon' />
+            </div>
+          )}
 
-        {right}
-      </div>}
+          {right}
+        </div>
+      )}
     </div>
   );
 };

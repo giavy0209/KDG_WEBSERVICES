@@ -80,7 +80,7 @@
 
     z-index: $z-index-right;
     position: fixed;
-    top: calc(#{$footer-height} + #{$header-height} + #{$gap-header-main});
+    top: calc(#{$footer-height} + #{$header-height} + var(--banner-height) + #{$gap-header-main});
     right: 0;
 
     transition: 0.3s;
