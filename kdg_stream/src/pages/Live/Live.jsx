@@ -256,7 +256,10 @@ const Live = () => {
     const currentGift = ListGift[0]
     ListGift.splice(0 , 1)
     setListGift([...ListGift])
-    setCurrentGift(currentGift)
+    setCurrentGift({
+      ...currentGift,
+      img : currentGift.img + `?${Date.now()}`
+    })
     setTimeout(() => {
       isShowGift.current = false
       setCurrentGift(null)
@@ -296,11 +299,19 @@ const Live = () => {
 
     socket.on('gift' , handleReceiveGift)
 
+    const handleStream = stream => {
+      if(stream.connect_status === 1) {
+        
+      }
+    }
+    socket.on('stream' , handleStream)
+
     return () => {
       socket.emit('leave_stream', streamId);
       setChat([]);
       socket.removeEventListener('chat', handleReceiveChat);
       socket.removeEventListener('gift', handleReceiveGift);
+      socket.removeEventListener('stream', handleStream);
       clearInterval(interval);
     };
   }, [id]);

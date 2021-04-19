@@ -136,7 +136,9 @@ export default function App() {
                 </div>
 
                 <div className={`profile__history ${isShowHistory ? 'show' : ''}`}>
-
+                    <div style={{ overflowX: 'auto' }}>
+                        <Table dataHead={historyHead} dataBody={History} />
+                    </div>
                     {IsMoreHistory && <div
                         className='profile__link'
                         onClick={getHistory}
