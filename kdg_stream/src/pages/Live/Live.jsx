@@ -2,7 +2,7 @@ import Axios from 'axios';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import * as FaIcon from 'react-icons/fa';
 import * as RiIcon from 'react-icons/ri';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import '../../assets/css/live.css';
 import callAPI from '../../axios';
 import { Avatar, Recommend, VideoInfo } from '../../components';
@@ -11,9 +11,13 @@ import { useLanguageLayerValue } from '../../context/LanguageLayer';
 import socket from '../../socket';
 import { toast } from 'react-toastify';
 import VideoPlayer from './VideoPlayer'
+import { actChangeGifts } from '../../store/authAction';
 const Live = () => {
-  const user = useSelector(state => state.user);
   const [{ language, live }] = useLanguageLayerValue();
+
+  const dispatch = useDispatch()
+
+  const user = useSelector(state => state.user);
   const chatRef = useRef();
   const [Stream, setStream] = useState({});
   const [IsCanPlay, setIsCanPlay] = useState(false);
@@ -46,6 +50,13 @@ const Live = () => {
 
     socket.on('gift' , handleReceiveGift)
 
+    const handleListGift = listGift => {
+      console.log(listGift);
+      dispatch(actChangeGifts(listGift))
+    }
+
+    socket.on('list_gift' , handleListGift)
+
     const handleStream = stream => {
       if(stream.connect_status === 1) {
         setTimeout(() => {
@@ -62,6 +73,7 @@ const Live = () => {
       setChat([]);
       socket.removeEventListener('chat', handleReceiveChat);
       socket.removeEventListener('gift', handleReceiveGift);
+      socket.removeEventListener('list_gift' , handleListGift)
       socket.removeEventListener('stream', handleStream);
     };
   }, [id]);
@@ -185,7 +197,7 @@ const Live = () => {
                       <div className={`popup-gift ${IsShowGifts ? 'show' : ''}`}>
                         {Gifts?.map(o => <div key={o._id} onClick={()=> handleSendGift(o._id)} className="item">
                           <img src={o.img} alt=""/>
-                          <span className="price">{o.price} KDG</span>
+                          <span className="price">{Math.ceil(o.price * 100) / 100} KDG</span>
                         </div> )}
                       </div>
                       <div 

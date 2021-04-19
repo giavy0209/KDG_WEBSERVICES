@@ -853,9 +853,11 @@ $width-volumeBar: 80px;
                 opacity: 0;
                 pointer-events: none;
                 display: flex;
+                flex-wrap: wrap;
                 .item{
                   width: 33.3333%;
                   position: relative;
+
                   img{
                     width: 100%;
                   }
