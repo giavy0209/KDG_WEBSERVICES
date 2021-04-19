@@ -17,7 +17,6 @@ export default function App() {
 
   const [History, setHistory] = useState([]);
 
-  const [History, setHistory] = useState([]);
   const [GiftStorage, setGiftStorage] = useState([]);
 
   const [IsMoreHistory, setIsMoreHistory] = useState(true);
@@ -57,35 +56,6 @@ export default function App() {
     setGiftStorage([...GiftStorage, ...res.data]);
     if (res.data.length < 5) setIsMoreGift(false);
   }, [GiftStorage]);
-
-  const renderType = useCallback(
-    (
-      type,
-      {
-        gift: { name },
-        gift_user: {
-          kyc: { first_name, last_name },
-        },
-      }
-    ) => {
-      if (type === 7)
-        return profile[language].type7
-          .replace('user_name', `${first_name ? first_name : ''} ${last_name ? last_name : ''}`)
-          .replace('gift_name', name ? name : 'gift');
-      if (type === 8) return profile[language].type8.replace('gift_name', name);
-      if (type === 9)
-        return profile[language].type9.replace(
-          'user_name',
-          `${first_name ? first_name : ''} ${last_name ? last_name : ''}`
-        );
-      if (type === 10)
-        return profile[language].type10.replace(
-          'user_name',
-          `${first_name ? first_name : ''} ${last_name ? last_name : ''}`
-        );
-    },
-    [language, profile]
-  );
 
   const historyHead = useMemo(() => {
     return [
@@ -178,6 +148,7 @@ export default function App() {
       if (res.data.length < 5) setIsMoreGift(false);
     });
   }, []);
+
   return (
     <>
       <div className='profile__boxManage'>
@@ -195,11 +166,7 @@ export default function App() {
           <div style={{ overflowX: 'auto' }}>
             <Table dataHead={historyHead} dataBody={History} />
           </div>
-          {IsMoreHistory && (
-            <div className='profile__link' onClick={getHistory}>
-              View More
-            </div>
-          )}
+          {IsMoreHistory && <div className='profile__link'>View More</div>}
         </div>
       </div>
 
