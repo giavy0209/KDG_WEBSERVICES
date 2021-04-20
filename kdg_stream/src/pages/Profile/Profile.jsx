@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import * as IoIcon from 'react-icons/io';
 import * as FaIcon from 'react-icons/fa';
 import * as RiIcon from 'react-icons/ri';
 import { useDispatch, useSelector } from 'react-redux';

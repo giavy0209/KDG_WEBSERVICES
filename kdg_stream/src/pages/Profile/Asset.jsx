@@ -1,12 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-
-import * as HiIcon from 'react-icons/hi';
 import * as TiIcon from 'react-icons/ti';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import callAPI from '../../axios';
-
-import { Popper1, RecommendVideo, Tab, Table, TabPane } from '../../components';
+import { Table } from '../../components';
 import { useLanguageLayerValue } from '../../context/LanguageLayer';
 import { convertDate, convertDateAgo } from '../../helpers';
 import useNumber from '../../hooks/useNumber';
@@ -15,10 +12,9 @@ export default function App() {
   const [{ language, profile }] = useLanguageLayerValue();
 
   const [isShowHistory, setIsShowHistory] = useState(true);
-  const GiftStorage = useSelector(state => state.giftStorage)
+  const GiftStorage = useSelector(state => state.giftStorage);
 
   const [History, setHistory] = useState([]);
-  
 
   const [IsMoreHistory, setIsMoreHistory] = useState(true);
 
@@ -93,13 +89,10 @@ export default function App() {
     ];
   }, [language, profile, renderType]);
 
-  const handleSellGift = useCallback(
-    async (gift, quantity) => {
-      await callAPI.post('/sell_gift', { gift, quantity });
-      toast('Đã bán thành công');
-    },
-    []
-  );
+  const handleSellGift = useCallback(async (gift, quantity) => {
+    await callAPI.post('/sell_gift', { gift, quantity });
+    toast('Đã bán thành công');
+  }, []);
 
   const storageHead = useMemo(() => {
     return [
@@ -129,7 +122,7 @@ export default function App() {
         ),
       },
     ];
-  }, [language, profile]);
+  }, [language, profile, handleSellGift]);
 
   useEffect(() => {
     callAPI.get(`/transactions?type=7,8,9,10&limit=5`).then(res => {
@@ -137,8 +130,15 @@ export default function App() {
       if (res.data.length < 5) setIsMoreHistory(false);
     });
   }, []);
+
+  // const [isShow, setIsShow] = useState(false);
+  // const [type, setType] = useState('changes');
+  // const [pack, setPack] = useState(null);
+
   return (
     <>
+      {/* {isShow && <Popper1 type={type} pack={pack} />} */}
+
       <div className='profile__boxManage'>
         <div
           className={`profile__boxManage-title profile__historyTitle ${
@@ -181,25 +181,25 @@ export default function App() {
       </div>
 
       {/* <div className='profile__boxManage'>
-              <div className='profile__boxManage-title'>Manage Donate</div>
-              <div
-                className={`layoutFlex layout-8`}
-                style={{ '--gap-column': '60px', '--gap-row': '30px' }}
-              >
-                {dataPackage.map((item, i) => (
-                  <div
-                    key={i}
-                    className='layoutFlex-item profile__package'
-                    onClick={e => {
-                      e.stopPropagation();
-                      setType('changes');
-                      setPack(item);
-                      setIsShow(true);
-                    }}
-                  >
-                    <img src={item} alt='' className='profile__package-img' />
-                  </div>
-                ))}
+        <div className='profile__boxManage-title'>Manage Donate</div>
+        <div
+          className={`layoutFlex layout-8`}
+          style={{ '--gap-column': '60px', '--gap-row': '30px' }}
+        >
+          {dataPackage.map((item, i) => (
+            <div
+              key={i}
+              className='layoutFlex-item profile__package'
+              onClick={e => {
+                e.stopPropagation();
+                setType('changes');
+                setPack(item);
+                setIsShow(true);
+              }}
+            >
+              <img src={item} alt='' className='profile__package-img' />
+            </div>
+          ))}
 
           <div
             className='layoutFlex-item profile__packageAdd'

@@ -1,23 +1,22 @@
-import Axios from 'axios';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import * as FaIcon from 'react-icons/fa';
 import * as RiIcon from 'react-icons/ri';
 import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 import '../../assets/css/live.css';
 import callAPI from '../../axios';
 import { Avatar, Recommend, VideoInfo } from '../../components';
 import { STORAGE_DOMAIN } from '../../constant';
 import { useLanguageLayerValue } from '../../context/LanguageLayer';
 import socket from '../../socket';
-import { toast } from 'react-toastify';
-import VideoPlayer from './VideoPlayer'
 import { actChangeGifts } from '../../store/authAction';
+import VideoPlayer from './VideoPlayer';
 
 const Live = () => {
   const [{ language, live }] = useLanguageLayerValue();
 
-  const dispatch = useDispatch()
-  const balance = useSelector(state => state.balanceKDG)
+  const dispatch = useDispatch();
+  const balance = useSelector(state => state.balanceKDG);
   const user = useSelector(state => state.user);
   const chatRef = useRef();
   const [Stream, setStream] = useState({});
@@ -27,6 +26,7 @@ const Live = () => {
   const [IsShowGifts, setIsShowGifts] = useState(false);
   const [isHideChat, setIsHideChat] = useState(false);
   const id = new URLSearchParams(window.location.search).get('s');
+
   useEffect(() => {
     let streamId;
     callAPI.get('/streamming?id=' + id).then(res => {
@@ -45,39 +45,37 @@ const Live = () => {
 
     const handleReceiveGift = gift => {
       setListGift(_listGift => {
-        return [..._listGift, gift]
-      })
-    }
+        return [..._listGift, gift];
+      });
+    };
 
-    socket.on('gift', handleReceiveGift)
+    socket.on('gift', handleReceiveGift);
 
     const handleListGift = listGift => {
       console.log(listGift);
-      dispatch(actChangeGifts(listGift))
-    }
+      dispatch(actChangeGifts(listGift));
+    };
 
-    socket.on('list_gift', handleListGift)
+    socket.on('list_gift', handleListGift);
 
     const handleStream = stream => {
       if (stream.connect_status === 1) {
         setTimeout(() => {
           setIsCanPlay(true);
         }, 5000);
-      }
-      else setIsCanPlay(false);
-
-    }
-    socket.on('stream', handleStream)
+      } else setIsCanPlay(false);
+    };
+    socket.on('stream', handleStream);
 
     return () => {
       socket.emit('leave_stream', streamId);
       setChat([]);
       socket.removeEventListener('chat', handleReceiveChat);
       socket.removeEventListener('gift', handleReceiveGift);
-      socket.removeEventListener('list_gift', handleListGift)
+      socket.removeEventListener('list_gift', handleListGift);
       socket.removeEventListener('stream', handleStream);
     };
-  }, [id]);
+  }, [dispatch, id]);
 
   useEffect(() => {
     document.querySelectorAll('.live__chatBox-top').forEach(el => {
@@ -101,18 +99,20 @@ const Live = () => {
     [Stream]
   );
 
-  const Gifts = useSelector(state => state.gifts)
+  const Gifts = useSelector(state => state.gifts);
 
-  const handleSendGift = useCallback(async (gift_id) => {
-    const res = await callAPI.post('/send_gift', { gift: gift_id, to: Stream.user._id })
-    if (res.status === 1) toast('Gửi quà thành công')
-    if (res.status === 101) toast('Bạn không đủ tiền')
-  }, [Stream])
+  const handleSendGift = useCallback(
+    async gift_id => {
+      const res = await callAPI.post('/send_gift', { gift: gift_id, to: Stream.user._id });
+      if (res.status === 1) toast('Gửi quà thành công');
+      if (res.status === 101) toast('Bạn không đủ tiền');
+    },
+    [Stream]
+  );
 
   return (
     <div className='live'>
       <div className='live__left'>
-
         <VideoPlayer
           Chat={Chat}
           Stream={Stream}
@@ -157,13 +157,6 @@ const Live = () => {
 
             {user && (
               <div className='live__chatBox-bottom'>
-                {/* <div className='live__chatBox-bottom-btn'>
-                  <div className='live__chatBox-bottom-btn-gift'>
-                    <FaIcon.FaGift className='icon' />
-                    <span>Gift</span>
-                  </div>
-                </div> */}
-
                 <div className='live__chatBox-bottom-chat'>
                   <div className='live__chatBox-bottom-chat-avatar'>
                     <Avatar
@@ -186,18 +179,21 @@ const Live = () => {
                       <RiIcon.RiSendPlaneFill />
                     </button>
 
-                    <div className="icon icon-gift">
+                    <div className='icon icon-gift'>
                       <div className={`popup-gift ${IsShowGifts ? 'show' : ''}`}>
-                        {Gifts?.map(o => <div key={o._id} onClick={() => handleSendGift(o._id)} className="item">
-                          <img src={o.img} alt="" />
-                          <span className="name">{o.name}</span>
-                          <span className="price">{Math.ceil(o.price * 100) / 100} KDG</span>
-                        </div>)}
-                        <span className="balance">Số dư {Math.floor(balance * 100) / 100} KDG</span>
+                        {Gifts?.map(o => (
+                          <div key={o._id} onClick={() => handleSendGift(o._id)} className='item'>
+                            <img src={o.img} alt='' />
+                            <span className='name'>{o.name}</span>
+                            <span className='price'>{Math.ceil(o.price * 100) / 100} KDG</span>
+                          </div>
+                        ))}
+                        <span className='balance'>Số dư {Math.floor(balance * 100) / 100} KDG</span>
                       </div>
                       <div
                         onClick={() => setIsShowGifts(!IsShowGifts)}
-                        className='icon-gift-button'>
+                        className='icon-gift-button'
+                      >
                         <FaIcon.FaGift />
                       </div>
                     </div>

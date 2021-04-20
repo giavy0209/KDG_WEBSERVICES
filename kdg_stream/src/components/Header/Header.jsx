@@ -68,8 +68,7 @@ const Header = () => {
       if (type === 101) text = text.replace('data1', data.name);
       if (type === 102) text = text.replace('data1', data.name).replace('data2', data.video_name);
       if (type === 103) text = text.replace('data1', data.video_name);
-      if (type === 104)
-        text = text.replace('data1', data.user_name).replace('data2', data.video_name);
+      if (type === 104) text = text.replace('data1', data.name).replace('data2', data.video_name);
       if (type === 105) text = text.replace('data1', data.name);
       return text;
     },
@@ -135,7 +134,14 @@ const Header = () => {
           </div>
         ) : (
           noties?.map(o => (
-            <div key={o._id} onClick={() => handleClickNoti(o)} className='header__notiItem'>
+            <div
+              key={o._id}
+              onClick={() => {
+                handleClickNoti(o);
+                setShowNoti(false);
+              }}
+              className='header__notiItem'
+            >
               <p>{handleType(o)}</p>
               <p className='header__notiItem-date'>{convertDateAgo(o.last_update)}</p>
             </div>

@@ -1,10 +1,9 @@
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
-import coverDefault from '../../assets/images/coverDefault.png';
-import { useLanguageLayerValue } from '../../context/LanguageLayer';
 import ReactHlsPlayer from 'react-hls-player';
+import coverDefault from '../../assets/images/coverDefault.png';
 import { PLAY_STREAM } from '../../constant';
-import Axios from 'axios';
+import { useLanguageLayerValue } from '../../context/LanguageLayer';
 
 const SetupLeft = props => {
   const { Stream } = props;
@@ -12,14 +11,15 @@ const SetupLeft = props => {
   const [IsCanPlay, setIsCanPlay] = useState(false);
 
   useEffect(() => {
-    if(Stream.connect_status === 1) {
+    if (Stream.connect_status === 1) {
       setTimeout(() => {
-        setIsCanPlay(true)
+        setIsCanPlay(true);
       }, 5000);
-    }else{
-      setIsCanPlay(false)
+    } else {
+      setIsCanPlay(false);
     }
   }, [Stream]);
+
   return (
     <>
       <div className='main__title'>

@@ -43,8 +43,7 @@ const App = () => {
       if (type === 101) text = text.replace('data1', data.name);
       if (type === 102) text = text.replace('data1', data.name).replace('data2', data.video_name);
       if (type === 103) text = text.replace('data1', data.video_name);
-      if (type === 104)
-        text = text.replace('data1', data.user_name).replace('data2', data.video_name);
+      if (type === 104) text = text.replace('data1', data.name).replace('data2', data.video_name);
       if (type === 105) text = text.replace('data1', data.name);
       return text;
     },
@@ -63,8 +62,8 @@ const App = () => {
   useEffect(() => {
     const listenBalance = res => {
       dispatch(actChangeBalances(res.balances));
-      const balanceKDG = res.balances.find(o => o.coin.code === 'KDG')
-      dispatch(actChangeBalanceKDG(balanceKDG.balance))
+      const balanceKDG = res.balances.find(o => o.coin.code === 'KDG');
+      dispatch(actChangeBalanceKDG(balanceKDG.balance));
     };
     const listenUser = res => {
       dispatch(actChangeUser(res.data));
@@ -77,8 +76,8 @@ const App = () => {
     };
 
     const listenGiftStorage = res => {
-      dispatch(actChangeGiftStorage(res.data))
-    }
+      dispatch(actChangeGiftStorage(res.data));
+    };
 
     socket.on('balances', listenBalance);
     socket.on('user', listenUser);
