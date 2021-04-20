@@ -61,94 +61,96 @@ export default function Personal() {
 
   return (
     <>
-      <div className='profile__boxPersonal'>
-        <div className='profile__boxPersonal-title'>{profile[language].playlist}</div>
+      {Videos.length > 0 && (
+        <div className='profile__boxPersonal'>
+          <div className='profile__boxPersonal-title'>{profile[language].playlist}</div>
 
-        <div
-          className={`layoutFlex pl-10 pr-10 ${
-            width > BREAK_POINT_MEDIUM ? 'layout-2' : 'layout-1'
-          }`}
-          style={{ '--gap-row': '40px', '--gap-column': '40px' }}
-        >
-          {Videos.map(o => (
-            <div
-              key={o._id}
-              className='layoutFlex-item'
-              onClick={() => history.push('/watch?v=' + o.short_id)}
-            >
-              <div className='profile__video'>
-                <div className='profile__video-thumbnail'>
-                  <img
-                    onMouseOver={e => {
-                      var targat = e.target;
-                      targat.setAttribute(
-                        'src',
-                        `https://vz-3f44931c-ed0.b-cdn.net/${o.guid}/preview.webp`
-                      );
-                    }}
-                    onMouseOut={e => {
-                      var targat = e.target;
-                      targat.setAttribute(
-                        'src',
-                        `https://vz-3f44931c-ed0.b-cdn.net/${o.guid}/thumbnail.jpg`
-                      );
-                    }}
-                    src={
-                      o.thumbnail
-                        ? STORAGE_DOMAIN + o.thumbnail.path
-                        : `https://vz-3f44931c-ed0.b-cdn.net/${o.guid}/thumbnail.jpg`
-                    }
-                    alt=''
-                  />
-                </div>
-
-                <div className='profile__video-info'>
-                  <p className='profile__video-info-title'>{o.name}</p>
-                  <div className='profile__video-info-view'>
-                    <span>
-                      {o.views} {profile[language].views}
-                    </span>
-                    <span> • </span>
-                    <span
-                      data-date={convertDate(o.create_date)}
-                      data-ago={convertDateAgo(o.create_date)}
-                      data-current='ago'
-                      onClick={e => {
-                        e.stopPropagation();
-                        const el = e.target;
-                        const current = el.getAttribute('data-current');
-                        if (current === 'ago') {
-                          el.setAttribute('data-current', 'date');
-                          el.innerText = el.getAttribute('data-date');
-                        } else {
-                          el.setAttribute('data-current', 'ago');
-                          el.innerText = el.getAttribute('data-ago');
-                        }
+          <div
+            className={`layoutFlex pl-10 pr-10 ${
+              width > BREAK_POINT_MEDIUM ? 'layout-2' : 'layout-1'
+            }`}
+            style={{ '--gap-row': '40px', '--gap-column': '40px' }}
+          >
+            {Videos.map(o => (
+              <div
+                key={o._id}
+                className='layoutFlex-item'
+                onClick={() => history.push('/watch?v=' + o.short_id)}
+              >
+                <div className='profile__video'>
+                  <div className='profile__video-thumbnail'>
+                    <img
+                      onMouseOver={e => {
+                        var targat = e.target;
+                        targat.setAttribute(
+                          'src',
+                          `https://vz-3f44931c-ed0.b-cdn.net/${o.guid}/preview.webp`
+                        );
                       }}
-                    >
-                      {convertDateAgo(o.create_date)}
-                    </span>
+                      onMouseOut={e => {
+                        var targat = e.target;
+                        targat.setAttribute(
+                          'src',
+                          `https://vz-3f44931c-ed0.b-cdn.net/${o.guid}/thumbnail.jpg`
+                        );
+                      }}
+                      src={
+                        o.thumbnail
+                          ? STORAGE_DOMAIN + o.thumbnail.path
+                          : `https://vz-3f44931c-ed0.b-cdn.net/${o.guid}/thumbnail.jpg`
+                      }
+                      alt=''
+                    />
                   </div>
-                  {/* <p className='profile__video-info-tag'></p> */}
-                  <p className='profile__video-info-desc'>{o.description}</p>
+
+                  <div className='profile__video-info'>
+                    <p className='profile__video-info-title'>{o.name}</p>
+                    <div className='profile__video-info-view'>
+                      <span>
+                        {o.views} {profile[language].views}
+                      </span>
+                      <span> • </span>
+                      <span
+                        data-date={convertDate(o.create_date)}
+                        data-ago={convertDateAgo(o.create_date)}
+                        data-current='ago'
+                        onClick={e => {
+                          e.stopPropagation();
+                          const el = e.target;
+                          const current = el.getAttribute('data-current');
+                          if (current === 'ago') {
+                            el.setAttribute('data-current', 'date');
+                            el.innerText = el.getAttribute('data-date');
+                          } else {
+                            el.setAttribute('data-current', 'ago');
+                            el.innerText = el.getAttribute('data-ago');
+                          }
+                        }}
+                      >
+                        {convertDateAgo(o.create_date)}
+                      </span>
+                    </div>
+                    {/* <p className='profile__video-info-tag'></p> */}
+                    <p className='profile__video-info-desc'>{o.description}</p>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
-      </div>
+            ))}
+          </div>
 
-      {isLoading && (
-        <CircularProgress
-          color='inherit'
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            width: '100%',
-            margin: '20px',
-            color: '#e41a7f',
-          }}
-        />
+          {isLoading && (
+            <CircularProgress
+              color='inherit'
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                width: '100%',
+                margin: '20px',
+                color: '#e41a7f',
+              }}
+            />
+          )}
+        </div>
       )}
 
       {/* <div className='profile__boxPersonal'>
