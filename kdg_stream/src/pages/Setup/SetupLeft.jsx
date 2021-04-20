@@ -12,21 +12,13 @@ const SetupLeft = props => {
   const [IsCanPlay, setIsCanPlay] = useState(false);
 
   useEffect(() => {
-    const id = setInterval(() => {
-      Axios.get(`${PLAY_STREAM}${Stream.key}/index.m3u8`)
-        .then(res => {
-          console.log(res);
-          clearInterval(id);
-          setIsCanPlay(true);
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    }, 1000);
-
-    return () => {
-      clearInterval(id);
-    };
+    if(Stream.connect_status === 1) {
+      setTimeout(() => {
+        setIsCanPlay(true)
+      }, 5000);
+    }else{
+      setIsCanPlay(false)
+    }
   }, [Stream]);
   return (
     <>
