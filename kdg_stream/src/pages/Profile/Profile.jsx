@@ -17,6 +17,12 @@ import MainContainer from './MainContainer';
 import Modal from './Modal';
 import ModalBody from './ModalBody';
 
+const posImg = pos => ({
+  '--x': pos.x * -1 + '%',
+  '--y': pos.y * -1 + '%',
+  '--zoom': pos.zoom + '%',
+});
+
 const Profile = () => {
   const dispatch = useDispatch();
   const history = useHistory();
@@ -140,10 +146,6 @@ const Profile = () => {
     [uploadStatus, dispatch]
   );
 
-  // const fullScreenImage = useCallback(src => {
-  //   setFullScreen(src);
-  // }, []);
-
   const handleFollow = useCallback(async () => {
     if (uid) {
       const res = await callAPI.post('/follow?id=' + uid);
@@ -172,12 +174,6 @@ const Profile = () => {
     }
   }, [uid]);
 
-  const posImg = pos => ({
-    '--x': pos.x * -1 + '%',
-    '--y': pos.y * -1 + '%',
-    '--zoom': pos.zoom + '%',
-  });
-
   return (
     <div className='profile'>
       {FullScreen && (
@@ -189,7 +185,7 @@ const Profile = () => {
       <Modal
         visible={VisiblePickAvatar}
         onCancle={() => setVisiblePickAvatar(false)}
-        title={'Avatar'}
+        // title={'Avatar'}
         content={<ModalBody />}
       />
 
@@ -218,15 +214,6 @@ const Profile = () => {
               <span>Change Cover</span>
             </div>
           )}
-
-          {/* {user && user._id !== uid && (
-            <div className='profile__action'>
-              <button className='profile__action-button'>
-                <IoIcon.IoMdSettings className='icon' />
-                <span>{profile[language].edit}</span>
-              </button>
-            </div>
-          )} */}
 
           {user && user._id !== uid && (
             <div className='profile__action'>
