@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { NotificationContainer, NotificationManager } from 'react-notifications';
+import { useHistory } from 'react-router';
+import { toast } from 'react-toastify';
 import '../../assets/css/setup.css';
 import callAPI from '../../axios';
 import { useLanguageLayerValue } from '../../context/LanguageLayer';
@@ -9,6 +11,7 @@ import SetupLeft from './SetupLeft';
 import SetupRight from './SetupRight';
 
 const Setup = () => {
+  const history = useHistory()
   const [Stream, setStream] = useState({});
   const [{ language, setup }] = useLanguageLayerValue();
 
@@ -36,7 +39,7 @@ const Setup = () => {
         let url = window.URL.createObjectURL(videoBlob);
         input.nextElementSibling.setAttribute('src', url);
         input.nextElementSibling.style.display = 'inline';
-        input.nextElementSibling.style.borderRadius = '10px';
+        
       };
       reader.readAsArrayBuffer(input.files[0]);
     }
@@ -68,6 +71,8 @@ const Setup = () => {
 
   const handleStopStream = useCallback(async () => {
     await callAPI.post('/stop_stream?sid=' + Stream._id);
+    toast('Bạn vừa kết thúc buổi streaming, video của bạn sẽ được xử lý và đăng công khai. Bạn sẽ nhận được thông báo khi video sẵn sàn')
+    history.push('/')
   }, [Stream]);
 
   return (
