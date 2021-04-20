@@ -19,6 +19,8 @@ export default function MainContainer({ uid, user }) {
           </TabPane>
         </Tab>
       )}
+
+      {uid !== user?._id && <Personal />}
     </div>
   );
 }
