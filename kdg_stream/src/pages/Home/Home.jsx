@@ -63,7 +63,7 @@ const Home = () => {
   return (
     <>
       <div className='banner'>
-        <video muted autoPlay src={banner1} loop='infinite'></video>
+        <video loop muted autoPlay src={banner1}></video>
       </div>
 
       <Main

@@ -13,13 +13,13 @@ const Main = props => {
     minWidthLeftLarge = '400px',
   } = props;
 
-  const minWidthLeftSmall = useRef('327px');
-  const bannerHeight = useRef();
-
   const [width] = useWindowSize();
 
-  const [isShow, setIsShow] = useState(false);
+  const minWidthLeftSmall = useRef('327px');
+  const bannerHeight = useRef();
   const rightRef = useRef();
+
+  const [isShow, setIsShow] = useState(false);
 
   useEffect(() => {
     const bannerEle = document.querySelector('.banner');
