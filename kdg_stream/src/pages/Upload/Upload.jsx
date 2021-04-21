@@ -20,28 +20,31 @@ const Upload = () => {
 
   const [VideoTitle, setVideoTitle] = useState('');
   const [VideoDesc, setVideoDesc] = useState('');
+  const [VideoTag, setVideoTag] = useState('');
 
-  const readURL = useCallback(input => {
-    input.persist();
-    input = input.target;
+  const readURL = useCallback(
+    input => {
+      input.persist();
+      input = input.target;
 
-    if (input.files && input.files[0]) {
-      if(!VideoTitle)setVideoTitle(input.files[0].name);
-      if(!VideoDesc)setVideoDesc(input.files[0].name);
-      
+      if (input.files && input.files[0]) {
+        if (!VideoTitle) setVideoTitle(input.files[0].name);
+        if (!VideoDesc) setVideoDesc(input.files[0].name);
 
-      var reader = new FileReader();
+        var reader = new FileReader();
 
-      reader.onload = function (e) {
-        let buffer = e.target.result;
-        let videoBlob = new Blob([new Uint8Array(buffer)], { type: 'video/mp4' });
-        let url = window.URL.createObjectURL(videoBlob);
-        setVideoSrc(url);
-      };
+        reader.onload = function (e) {
+          let buffer = e.target.result;
+          let videoBlob = new Blob([new Uint8Array(buffer)], { type: 'video/mp4' });
+          let url = window.URL.createObjectURL(videoBlob);
+          setVideoSrc(url);
+        };
 
-      reader.readAsArrayBuffer(input.files[0]);
-    }
-  }, [VideoTitle,VideoDesc]);
+        reader.readAsArrayBuffer(input.files[0]);
+      }
+    },
+    [VideoTitle, VideoDesc]
+  );
 
   const handleUpload = useCallback(
     async e => {
@@ -162,6 +165,16 @@ const Upload = () => {
             value={VideoDesc}
             onChange={e => setVideoDesc(e.target.value)}
           ></textarea>
+        </div>
+
+        <div className='upload__form-inputBox mt-20'>
+          <input
+            name='tag'
+            type='text'
+            placeholder={upload[language].tag}
+            value={VideoTag}
+            onChange={e => setVideoTag(e.target.value)}
+          />
         </div>
 
         <label htmlFor='inputfile' className='upload__form-thumbnailBox mt-20'>

@@ -71,7 +71,7 @@ const Setup = () => {
   const handleStopStream = useCallback(async () => {
     await callAPI.post('/stop_stream?sid=' + Stream._id);
     toast(
-      'Bạn vừa kết thúc buổi streaming, video của bạn sẽ được xử lý và đăng công khai. Bạn sẽ nhận được thông báo khi video sẵn sàn'
+      'Bạn vừa kết thúc buổi streaming, video của bạn sẽ được xử lý và đăng công khai. Bạn sẽ nhận được thông báo khi video sẵn sàng'
     );
     history.push('/');
   }, [history, Stream]);

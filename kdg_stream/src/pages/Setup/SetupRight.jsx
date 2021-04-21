@@ -11,6 +11,8 @@ import { useLanguageLayerValue } from '../../context/LanguageLayer';
 const SetupRight = props => {
   const { Stream, readURL, handlePublicStream, handleStopStream, CopyToClipboard } = props;
 
+  console.log(Stream);
+
   const history = useHistory();
   const [{ language, setup }] = useLanguageLayerValue();
   const [isHideStreamKey, setIsHideStreamKey] = useState(false);
@@ -72,17 +74,33 @@ const SetupRight = props => {
 
         <TabPane name={setup[language].setup} key='2'>
           <form onSubmit={handlePublicStream} className='setup__tabSetup'>
-            { Stream.status === 0 && 
+            {Stream.status === 0 && (
               <>
-
                 <div className='setup__tabSetup-inputBox'>
-                  <input type='text' name='name' defaultValue={Stream.name} placeholder={setup[language].setup_title} />
+                  <input
+                    type='text'
+                    name='name'
+                    defaultValue={Stream.name}
+                    placeholder={setup[language].setup_title}
+                  />
                 </div>
 
                 <div className='setup__tabSetup-textareaBox mt-20'>
-                  <textarea defaultValue={Stream.description} name='description' placeholder={setup[language].setup_desc}></textarea>
+                  <textarea
+                    defaultValue={Stream.description}
+                    name='description'
+                    placeholder={setup[language].setup_desc}
+                  ></textarea>
                 </div>
 
+                <div className='setup__tabSetup-inputBox mt-20'>
+                  <input
+                    type='text'
+                    name='tag'
+                    // defaultValue={Stream.name}
+                    placeholder={setup[language].setup_tag}
+                  />
+                </div>
 
                 <div className='setup__tabSetup-note mt-30'>
                   <p>{setup[language].note}</p>
@@ -92,14 +110,18 @@ const SetupRight = props => {
 
                 <div className='setup__tabSetup-thumbnailBox mt-20'>
                   <input type='file' name='thumbnail' onChange={readURL} />
-                  <img src={STORAGE_DOMAIN + Stream?.thumbnail?.path} className={`${Stream?.thumbnail?.path ? 'show' : ''}`} alt='' />
+                  <img
+                    src={STORAGE_DOMAIN + Stream?.thumbnail?.path}
+                    className={`${Stream?.thumbnail?.path ? 'show' : ''}`}
+                    alt=''
+                  />
                   <GoIcon.GoCloudUpload className='icon' />
                   <p>{setup[language].thumb1}</p>
                   <p>{setup[language].thumb2}</p>
                 </div>
-
               </>
-            }
+            )}
+
             {/* <div className='setup__tabSetup-radioBox mt-20'>
               <div
                 className={`inputRadio mr-100 ${currentRadio === 0 ? 'active' : ''}`}
@@ -133,20 +155,28 @@ const SetupRight = props => {
             )}
 
             <div className='setup__tabSetup-action mt-20 mb-30'>
-              {Stream.status === 0 && Stream.connect_status === 1 && <button type='submit' className='button'>
-                {setup[language].start}
-              </button>}
-              {
-                Stream.status === 1 && Stream.connect_status === 0 && 
-                <>
-                <p>Stream của bạn đang tạm dừng, bạn hãy kết nối lại để tiếp tục hoặc bấm nút kết thúc để ngừng buổi stream này</p>
-                <button type='button' className='button' onClick={handleStopStream}>
-                  {setup[language].end}
+              {Stream.status === 0 && Stream.connect_status === 1 && (
+                <button type='submit' className='button'>
+                  {setup[language].start}
                 </button>
+              )}
+              {Stream.status === 1 && Stream.connect_status === 0 && (
+                <>
+                  <p>
+                    Stream của bạn đang tạm dừng, bạn hãy kết nối lại để tiếp tục hoặc bấm nút kết
+                    thúc để ngừng buổi stream này
+                  </p>
+                  <button type='button' className='button' onClick={handleStopStream}>
+                    {setup[language].end}
+                  </button>
                 </>
-              }
-              {Stream.status === 1 && Stream.connect_status === 1 && <p>Để kết thúc buổi streamming, bạn hãy ngắt kết nối trước</p>}
-              {Stream.status === 0 && Stream.connect_status === 0 && <p>Hãy kết nối để bắt đầu stream</p>}
+              )}
+              {Stream.status === 1 && Stream.connect_status === 1 && (
+                <p>Để kết thúc buổi streamming, bạn hãy ngắt kết nối trước</p>
+              )}
+              {Stream.status === 0 && Stream.connect_status === 0 && (
+                <p>Hãy kết nối để bắt đầu stream</p>
+              )}
             </div>
           </form>
         </TabPane>
