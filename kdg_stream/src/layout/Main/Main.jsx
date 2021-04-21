@@ -16,30 +16,32 @@ const Main = props => {
   const [width] = useWindowSize();
 
   const minWidthLeftSmall = useRef('327px');
-  const bannerHeight = useRef();
   const rightRef = useRef();
 
   const [isShow, setIsShow] = useState(false);
+  const [bannerHeight, setbannerHeight] = useState('0px');
 
-  const [Count,setCount] = useState(0)
-  useEffect(() => {
-    if(window.scrollY === 1) {
-      return
-    }
-    window.scrollTo(0,1)
-    setCount(Count + 1)
-  }, [Count]);
+  // const [Count,setCount] = useState(0)
+  // useEffect(() => {
+  //   if(window.scrollY === 1) {
+  //     return
+  //   }
+  //   window.scrollTo(0,1)
+  //   setCount(Count + 1)
+  // }, [Count]);
 
   useEffect(() => {
     const bannerEle = document.querySelector('.banner');
-    if (!bannerEle) return (bannerHeight.current = '0px');
+      console.log(bannerEle.clientHeight , 'bannerHeight');
+      if (!bannerEle) return setbannerHeight(0 + 'px')
 
-    bannerHeight.current = bannerEle.clientHeight + 'px';
+      setbannerHeight(bannerEle.clientHeight + 'px');
   });
 
   useEffect(() => {
     const handlePositionRight = () => {
-      if (!rightRef.current) return;
+      console.log(rightRef.current);
+      // if (!rightRef.current) return;
 
       const footerEle = document.querySelector('.footer');
       const headerEle = document.querySelector('.header');
@@ -48,11 +50,14 @@ const Main = props => {
       const totalHeight =
         footerEle.clientHeight +
         headerEle.clientHeight +
-        Number(bannerHeight.current.replace('px', '')) +
+        Number(bannerHeight.replace('px', '')) +
         20;
-
+      console.log(totalHeight , 'height');
+      console.log(footerEle.clientHeight , 'footerEle');
+      console.log(headerEle.clientHeight , 'headerEle');
       if (window.pageYOffset < totalHeight - headerEle.clientHeight) {
-        rightRef.current.style.top = totalHeight - window.pageYOffset + 'px';
+      console.log(rightRef.current , 123);
+      rightRef.current.style.top = totalHeight - window.pageYOffset + 'px';
         return;
       }
 
@@ -65,7 +70,7 @@ const Main = props => {
     return () => {
       window.removeEventListener('scroll', handlePositionRight);
     };
-  }, []);
+  }, [bannerHeight]);
 
   return (
     <div
@@ -74,7 +79,7 @@ const Main = props => {
         '--width-left': widthLeft,
         '--min-width-large': minWidthLeftLarge,
         '--min-width-extra-small': minWidthLeftSmall.current,
-        '--banner-height': bannerHeight.current,
+        '--banner-height': bannerHeight
       }}
     >
       <div className='main__left'>{left}</div>
