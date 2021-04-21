@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as MdIcon from 'react-icons/md';
 import '../../assets/css/main.css';
 import { BREAK_POINT_LARGE } from '../../constant';
@@ -36,7 +36,7 @@ const Main = props => {
       if (!bannerEle) return setbannerHeight(0 + 'px')
 
       setbannerHeight(bannerEle.clientHeight + 'px');
-  });
+  },[]);
 
   useEffect(() => {
     const handlePositionRight = () => {

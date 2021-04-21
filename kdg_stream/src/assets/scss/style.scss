@@ -182,8 +182,18 @@
 }
 
 .banner {
-  > * {
+  position: relative;
+  &::before { 
+    content:  "";
     display: block;
+    padding-top: 30.83228%;
+  }
+  video {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
+    height: 100%;
   }
 }
