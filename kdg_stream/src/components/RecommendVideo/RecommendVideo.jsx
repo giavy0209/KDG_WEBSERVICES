@@ -1,8 +1,11 @@
 import React from 'react';
 import { STORAGE_DOMAIN } from '../../constant';
+import { useLanguageLayerValue } from '../../context/LanguageLayer';
 
 const RecommendVideo = props => {
   const { type = 'watch', video, onClick } = props;
+
+  const [{ language, recommend }] = useLanguageLayerValue();
 
   const handleClick = () => onClick && onClick();
 
@@ -43,10 +46,14 @@ const RecommendVideo = props => {
           {video.user?.kyc.first_name} {video.user?.kyc.last_name}
         </p>
         {type === 'watch' && (
-          <div className='recommend__video-info-view'>{video.views} luot xem</div>
+          <div className='recommend__video-info-view'>
+            {video.views} {recommend[language].views}
+          </div>
         )}
         {type === 'live' && (
-          <div className='recommend__video-info-view'>• {video.views} dang xem</div>
+          <div className='recommend__video-info-view'>
+            • {video.views} {recommend[language].watching}
+          </div>
         )}
       </div>
     </div>

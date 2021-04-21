@@ -473,10 +473,14 @@ const recommend = {
   vi: {
     watchlive: 'Xem trực tiếp',
     recommend: 'Được đề xuất',
+    views: 'lượt xem',
+    watching: 'đang xem',
   },
   en: {
     watchlive: 'Watch live',
     recommend: 'Recommend',
+    views: 'views',
+    watching: 'watching',
   },
 };
 

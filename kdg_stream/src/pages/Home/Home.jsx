@@ -38,7 +38,7 @@ const Home = () => {
     }
 
     setRecommendList([...recommendList, ...res.data]);
-    isLoadingAPI.current = false
+    isLoadingAPI.current = false;
   }, [recommendList]);
 
   useEffect(() => {
@@ -49,7 +49,7 @@ const Home = () => {
       const isEnd = restHeight <= 500;
 
       if (isEnd && isLoadRef.current && !isLoadingAPI.current) {
-        isLoadingAPI.current = true
+        isLoadingAPI.current = true;
         setIsLoading(true);
         await getRecommend();
         setIsLoading(false);
