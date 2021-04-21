@@ -8,6 +8,7 @@ import banner1 from '../../assets/images/banner/banner1.mp4';
 
 const Home = () => {
   const isLoadRef = useRef(true);
+  const isLoadingAPI = useRef(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const [recommendList, setRecommendList] = useState([]);
@@ -37,6 +38,7 @@ const Home = () => {
     }
 
     setRecommendList([...recommendList, ...res.data]);
+    isLoadingAPI.current = false
   }, [recommendList]);
 
   useEffect(() => {
@@ -46,7 +48,8 @@ const Home = () => {
       const restHeight = totalHeight - scrolledHeight;
       const isEnd = restHeight <= 500;
 
-      if (isEnd && isLoadRef.current) {
+      if (isEnd && isLoadRef.current && !isLoadingAPI.current) {
+        isLoadingAPI.current = true
         setIsLoading(true);
         await getRecommend();
         setIsLoading(false);
