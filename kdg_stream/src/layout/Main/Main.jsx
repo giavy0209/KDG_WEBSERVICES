@@ -32,7 +32,6 @@ const Main = props => {
 
   useEffect(() => {
     const bannerEle = document.querySelector('.banner');
-      console.log(bannerEle.clientHeight , 'bannerHeight');
       if (!bannerEle) return setbannerHeight(0 + 'px')
 
       setbannerHeight(bannerEle.clientHeight + 'px');
