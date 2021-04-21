@@ -21,9 +21,14 @@ const Main = props => {
 
   const [isShow, setIsShow] = useState(false);
 
-  useMemo(() => {
-    window.scrollTo(0, 1);
-  }, []);
+  const [Count,setCount] = useState(0)
+  useEffect(() => {
+    if(window.scrollY === 1) {
+      return
+    }
+    window.scrollTo(0,1)
+    setCount(Count + 1)
+  }, [Count]);
 
   useEffect(() => {
     const bannerEle = document.querySelector('.banner');
@@ -53,6 +58,7 @@ const Main = props => {
 
       rightRef.current.style.top = top + headerEle.clientHeight + 20 + 'px';
     };
+    handlePositionRight()
 
     window.addEventListener('scroll', handlePositionRight);
 
