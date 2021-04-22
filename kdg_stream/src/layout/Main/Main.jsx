@@ -37,6 +37,8 @@ const Main = props => {
 
       const totalHeight = footerEle.clientHeight + headerEle.clientHeight + bannerHeight + 20;
 
+      if(!rightRef.current) return
+
       if (window.pageYOffset < totalHeight - headerEle.clientHeight) {
         rightRef.current.style.top = totalHeight - window.pageYOffset + 'px';
         return;

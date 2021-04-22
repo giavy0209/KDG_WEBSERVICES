@@ -301,6 +301,9 @@ const profile = {
     upload_img: 'Tải hình lên',
     change_avatar: 'Đổi Ảnh Đại Diện',
     change_cover: 'Đổi Ảnh Bìa',
+    title: 'Tiêu đề',
+    desc: 'Mô tả',
+    tags: 'Thẻ',
   },
   en: {
     edit: 'Edit',
@@ -329,6 +332,9 @@ const profile = {
     upload_img: 'Upload image',
     change_avatar: 'Change Avatar',
     change_cover: 'Change Cover',
+    title: 'Title',
+    desc: 'Description',
+    tags: 'Tags',
   },
 };
 

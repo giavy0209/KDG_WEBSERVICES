@@ -79,6 +79,18 @@ const callAPI = {
     }
     return res;
   },
+  delete: async (url, body, reget = true) => {
+    var res = (await create().delete(url, body)).data;
+    if (res.status === 401) {
+      if (reget) {
+        return await refreshToken('delete', url, body);
+      }
+      storage.clearRefresh();
+      storage.clearToken();
+      return { status: 0 };
+    }
+    return res;
+  },
 };
 
 export default callAPI;

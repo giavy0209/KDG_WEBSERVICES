@@ -169,7 +169,7 @@ const Upload = () => {
 
         <div className='upload__form-inputBox mt-20'>
           <input
-            name='tag'
+            name='tags'
             type='text'
             placeholder={upload[language].tag}
             value={VideoTag}
