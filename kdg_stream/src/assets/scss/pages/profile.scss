@@ -253,7 +253,50 @@
 
     position: relative;
 
-    @extend %hover-effect;
+    &-more {
+      padding: 10px;
+      position: absolute;
+      top: 0;
+      right: 0;
+      color: #888;
+      z-index: 9;
+      &:hover {
+        >svg {
+          color: #000;
+          pointer-events: none;
+        }
+      }
+      &.show {
+        .menu {
+          opacity: 1;
+          top: 100%;
+          pointer-events: all;
+        }
+      }
+      .menu {
+        top: calc(100% + 10px);
+        opacity: 0;
+        pointer-events: none;
+        transition: .3s;
+        z-index: 9;
+        position: absolute;
+        top: 100%;
+        border: 1px solid #ccc;
+        width: 150px;
+        right: 0;
+        padding: 10px;
+        .menu-item {
+          + .menu-item {
+            margin-top: 10px;
+          }
+        }
+      }
+    }
+    &:hover {
+
+    }
+
+    // @extend %hover-effect;
 
     &-thumbnail {
       width: 30%;

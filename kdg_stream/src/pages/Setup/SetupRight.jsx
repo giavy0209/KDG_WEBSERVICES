@@ -96,7 +96,7 @@ const SetupRight = props => {
                 <div className='setup__tabSetup-inputBox mt-20'>
                   <input
                     type='text'
-                    name='tag'
+                    name='tags'
                     // defaultValue={Stream.name}
                     placeholder={setup[language].setup_tag}
                   />

@@ -297,6 +297,9 @@ const profile = {
     quantity: 'Số lượng',
     gift: 'Loại quà',
     action: 'Hành động',
+    title: 'Tiêu đề',
+    desc: 'Mô tả',
+    tags: 'Thẻ',
   },
   en: {
     edit: 'Edit',
@@ -321,6 +324,9 @@ const profile = {
     quantity: 'Quantity',
     gift: 'Gift',
     action: 'Action',
+    title: 'Title',
+    desc: 'Description',
+    tags: 'Tags',
   },
 };
 
