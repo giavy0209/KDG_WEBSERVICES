@@ -90,8 +90,20 @@ export default function Personal() {
   },[Videos])
 
   const handleEdit = useCallback(async e => {
+    e.preventDefault();
+    const data = new FormData(e.target);
+    const submitData = {}
+    for (const iterator of data.entries()) {
+      submitData[iterator[0]] = iterator[1];
+    }
+    const res = await callAPI.put(`/video?id=${ShowEdit._id}` , submitData)
+    toast('Chỉnh sửa thành công')
 
-  },[])
+    const videoIndex = Videos.findIndex(o => o._id === ShowEdit._id)
+    Videos[videoIndex] = res.data
+    setVideos([...Videos])
+    ShowEdit(null)
+  },[ShowEdit, Videos])
   return (
     <>
       {ShowEdit && (
