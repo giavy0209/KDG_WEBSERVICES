@@ -162,20 +162,17 @@ const SetupRight = props => {
               )}
               {Stream.status === 1 && Stream.connect_status === 0 && (
                 <>
-                  <p>
-                    Stream của bạn đang tạm dừng, bạn hãy kết nối lại để tiếp tục hoặc bấm nút kết
-                    thúc để ngừng buổi stream này
-                  </p>
+                  <p className='setup__tabSetup-noti mb-20'>{setup[language].noti3}</p>
                   <button type='button' className='button' onClick={handleStopStream}>
                     {setup[language].end}
                   </button>
                 </>
               )}
               {Stream.status === 1 && Stream.connect_status === 1 && (
-                <p>Để kết thúc buổi streamming, bạn hãy ngắt kết nối trước</p>
+                <p className='setup__tabSetup-noti'>{setup[language].noti2}</p>
               )}
               {Stream.status === 0 && Stream.connect_status === 0 && (
-                <p>Hãy kết nối để bắt đầu stream</p>
+                <p className='setup__tabSetup-noti'>{setup[language].noti1}</p>
               )}
             </div>
           </form>

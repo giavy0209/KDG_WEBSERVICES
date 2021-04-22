@@ -385,6 +385,10 @@ const setup = {
     watch: 'Theo dõi livestream của bạn tại đây',
     start: 'Bắt đầu livestream',
     end: 'Kết thúc livestream',
+    noti1: 'Hãy kết nối để bắt đầu stream',
+    noti2: 'Để kết thúc buổi streaming, bạn hãy ngắt kết nối trước',
+    noti3:
+      'Stream của bạn đang tạm dừng, bạn hãy kết nối lại để tiếp tục hoặc bấm nút kết thúc để ngừng buổi stream này',
   },
   en: {
     copied: 'Copied',
@@ -411,6 +415,10 @@ const setup = {
     watch: 'Watch your livestream here',
     start: 'Start livestream',
     end: 'End livestream',
+    noti1: 'Please connect to start streaming',
+    noti2: 'To end the streaming session, disconnect first',
+    noti3:
+      'Your stream is paused, please reconnect to continue or click the link button to stop this stream',
   },
 };
 
@@ -427,16 +435,21 @@ const cropLang = {
 
 const live = {
   vi: {
+    sent_gift: 'Gửi quà thành công',
+    not_enough_money: 'Bạn không đủ tiền',
     chathere: 'Nhập để trò chuyện',
     showchat: 'Hiện trò chuyện',
     hidechat: 'Ẩn trò chuyện',
     sendgift: 'user_name đã gửi gift_name cho streamer',
+    balance: 'Số dư',
   },
   en: {
-    chathere: 'Chat here',
+    sent_gift: 'Sent gift successfully',
+    not_enough_money: "You don't have enough money",
     showchat: 'Show Chat',
     hidechat: 'Hide Chat',
     sendgift: 'user_name sent gift_name to streamer',
+    balance: 'Balance',
   },
 };
 
