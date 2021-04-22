@@ -297,6 +297,10 @@ const profile = {
     quantity: 'Số lượng',
     gift: 'Loại quà',
     action: 'Hành động',
+    choose_img: 'Chọn hình',
+    upload_img: 'Tải hình lên',
+    change_avatar: 'Đổi Ảnh Đại Diện',
+    change_cover: 'Đổi Ảnh Bìa',
   },
   en: {
     edit: 'Edit',
@@ -321,6 +325,10 @@ const profile = {
     quantity: 'Quantity',
     gift: 'Gift',
     action: 'Action',
+    choose_img: 'Choose image',
+    upload_img: 'Upload image',
+    change_avatar: 'Change Avatar',
+    change_cover: 'Change Cover',
   },
 };
 
@@ -420,10 +428,14 @@ const cropLang = {
   vi: {
     confirm: 'Xác nhận',
     cancel: 'Hủy',
+    change_success: 'Thành công',
+    change_fail: 'Thất bại. Vui lòng thử lại',
   },
   en: {
     confirm: 'Confirm',
     cancel: 'Cancel',
+    change_success: 'Successfully',
+    change_fail: 'Fail. Please try again',
   },
 };
 

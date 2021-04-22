@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import Cropper from 'react-easy-crop';
 import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 import '../../assets/css/crop.css';
 import callAPI from '../../axios';
 import { useLanguageLayerValue } from '../../context/LanguageLayer';
@@ -35,17 +36,29 @@ export default function Crop({ onCancel = () => {}, onFinish = () => {} }) {
     const type = label === 'avatar-input' ? 1 : 2;
 
     if (_id) {
-      callAPI.post(`/avatar?avatar=${_id}&type=${type}`);
+      try {
+        callAPI.post(`/avatar?avatar=${_id}&type=${type}`);
+        toast(cropLang[language].change_success);
+      } catch (error) {
+        console.log('change img', error);
+        toast(cropLang[language].change_fail);
+      }
     } else {
       const data = new FormData();
       data.append('file', document.getElementById(label).files[0]);
-      callAPI.post(`/avatar?type=${type}`, data);
+      try {
+        callAPI.post(`/avatar?type=${type}`, data);
+        toast(cropLang[language].change_success);
+      } catch (error) {
+        console.log('change img', error);
+        toast(cropLang[language].change_fail);
+      }
     }
 
     callAPI.post(`/avatar_pos?type=${type}`, imagePos);
     document.getElementById(label).value = null;
     onFinish(label);
-  }, [imagePos, label, _id, onFinish]);
+  }, [imagePos, label, _id, onFinish, cropLang, language]);
 
   return (
     <div className={`crop-container ${label === 'avatar-input' ? 'avatar-crop' : ''}`}>

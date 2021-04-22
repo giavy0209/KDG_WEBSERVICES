@@ -88,6 +88,8 @@ const Profile = () => {
         setCover(uploadStatus.image);
         setCoverPos(uploadStatus.imagePos);
       }
+
+      setVisiblePickAvatar(false);
     },
     [uploadStatus, dispatch]
   );
@@ -184,7 +186,11 @@ const Profile = () => {
       <Modal
         visible={VisiblePickAvatar}
         onCancle={() => setVisiblePickAvatar(false)}
-        // title={'Avatar'}
+        title={
+          uploadStatus.label === 'cover-input'
+            ? profile[language].change_cover
+            : profile[language].change_avatar
+        }
         content={<ModalBody />}
       />
 
@@ -210,7 +216,7 @@ const Profile = () => {
           {uid === user?._id && (
             <div onClick={handlePickCover} className='profile__IMGcover-button'>
               <FaIcon.FaCamera className='icon' />
-              <span>Change Cover</span>
+              <span>{profile[language].change_cover}</span>
             </div>
           )}
 

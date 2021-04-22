@@ -99,6 +99,7 @@ $tab-header-height: 50px;
       height: 100%;
       width: calc(100% / var(--item));
 
+      overflow-x: hidden;
       overflow-y: auto;
       @extend %custom-scrollbar;
     }

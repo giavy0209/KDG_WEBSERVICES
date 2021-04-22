@@ -57,6 +57,7 @@ export default function App() {
         name: profile[language].date,
         render: date => (
           <span
+            style={{ cursor: 'pointer' }}
             onClick={e => {
               const el = e.target;
               const current = el.getAttribute('data-current');
