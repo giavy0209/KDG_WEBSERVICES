@@ -104,10 +104,10 @@ const Live = () => {
   const handleSendGift = useCallback(
     async gift_id => {
       const res = await callAPI.post('/send_gift', { gift: gift_id, to: Stream.user._id });
-      if (res.status === 1) toast('Gửi quà thành công');
-      if (res.status === 101) toast('Bạn không đủ tiền');
+      if (res.status === 1) toast(live[language].sent_gift);
+      if (res.status === 101) toast(live[language].not_enough_money);
     },
-    [Stream]
+    [Stream, live, language]
   );
 
   return (
@@ -188,12 +188,11 @@ const Live = () => {
                             <span className='price'>{Math.ceil(o.price * 100) / 100} KDG</span>
                           </div>
                         ))}
-                        <span className='balance'>Số dư {Math.floor(balance * 100) / 100} KDG</span>
+                        <span className='balance'>
+                          {live[language].balance} {Math.floor(balance * 100) / 100} KDG
+                        </span>
                       </div>
-                      <div
-                        onClick={() => setIsShowGifts(!IsShowGifts)}
-                        className='icon-gift-button'
-                      >
+                      <div onClick={() => setIsShowGifts(x => !x)} className='icon-gift-button'>
                         <FaIcon.FaGift />
                       </div>
                     </div>
