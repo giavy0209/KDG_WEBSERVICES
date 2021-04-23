@@ -17,15 +17,16 @@ export default function App() {
   const [History, setHistory] = useState([]);
 
   const [IsMoreHistory, setIsMoreHistory] = useState(true);
+  const [HistoryActive, setHistoryActive] = useState(8);
 
   const getHistory = useCallback(async () => {
     /**
      * type : 7 = mua gift , 8 = bán gifts , 9 = donate , 10 = nhận donate
      */
-    const res = await callAPI.get(`/transactions?type=7,8,9,10&skip=${History.length}&limit=5`);
+    const res = await callAPI.get(`/transactions?type=${HistoryActive}&skip=${History.length}&limit=5`);
     setHistory([...History, ...res.data]);
     if (res.data.length < 5) setIsMoreHistory(false);
-  }, [History]);
+  }, [History,HistoryActive]);
 
   const renderType = useCallback(
     (type, { gift: { name }, gift_user }) => {
@@ -78,14 +79,14 @@ export default function App() {
         ),
       },
       {
-        key: 'value',
-        name: profile[language].amount,
-        render: useNumber,
+        key: 'gift',
+        name: profile[language].gift,
+        render: gift => gift.name,
       },
       {
-        key: 'type',
-        name: profile[language].note,
-        render: renderType,
+        key: 'value',
+        name: profile[language].amount,
+        render: value => Math.round(value * 1000) / 1000 ,
       },
     ];
   }, [language, profile, renderType]);
@@ -126,11 +127,11 @@ export default function App() {
   }, [language, profile, handleSellGift]);
 
   useEffect(() => {
-    callAPI.get(`/transactions?type=7,8,9,10&limit=5`).then(res => {
+    callAPI.get(`/transactions?type=${HistoryActive}&limit=5`).then(res => {
       setHistory([...res.data]);
       if (res.data.length < 5) setIsMoreHistory(false);
     });
-  }, []);
+  }, [HistoryActive]);
 
   // const [isShow, setIsShow] = useState(false);
   // const [type, setType] = useState('changes');
@@ -147,8 +148,17 @@ export default function App() {
           }`}
           onClick={() => setIsShowHistory(!isShowHistory)}
         >
-          <span>History</span>
+          <span>Transaction History</span>
           <TiIcon.TiArrowSortedDown className={`icon ${isShowHistory ? 'rotate' : ''}`} />
+        </div>
+
+        <div className="profile__boxManage-tabs">
+          <div className="item">
+            <div onClick={()=>setHistoryActive(8)} className={`tab ${HistoryActive === 8 ? 'active' : ''}`}>Trading History</div>
+          </div>
+          <div className="item">
+            <div onClick={()=>setHistoryActive(7)} className={`tab ${HistoryActive === 7 ? 'active' : ''}`}>Gift History</div>
+          </div>
         </div>
 
         <div className={`profile__history ${isShowHistory ? 'show' : ''}`}>

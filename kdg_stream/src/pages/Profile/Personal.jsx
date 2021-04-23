@@ -8,10 +8,11 @@ import { useLanguageLayerValue } from '../../context/LanguageLayer';
 import { convertDate, convertDateAgo } from '../../helpers';
 import useWindowSize from '../../hooks/useWindowSize';
 import { toast } from 'react-toastify';
+import { useSelector } from 'react-redux';
 
 export default function Personal() {
   const uid = new URLSearchParams(useLocation().search).get('uid');
-
+  const user = useSelector(state => state.user)
   const history = useHistory();
   const [{ language, profile }] = useLanguageLayerValue();
   const [width] = useWindowSize();
@@ -142,7 +143,7 @@ export default function Personal() {
                 onClick={() => history.push('/watch?v=' + o.short_id)}
               >
                 <div className='profile__video'>
-                  <span onClick={e => {
+                  {uid === user?._id && <span onClick={e => {
                     e.stopPropagation()
                     if(Array.from(e.target.classList).includes('show')){
                       e.target.classList.remove('show')
@@ -164,7 +165,7 @@ export default function Personal() {
                         Xóa
                       </div>
                     </div>
-                  </span>
+                  </span>}
                   <div className='profile__video-thumbnail'>
                     <img
                       onMouseOver={e => {
