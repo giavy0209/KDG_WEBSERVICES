@@ -292,9 +292,6 @@
         }
       }
     }
-    &:hover {
-
-    }
 
     // @extend %hover-effect;
 
@@ -459,9 +456,28 @@
     background-color: $background-white;
 
     margin-top: 30px;
+    &-tabs {
+      display: flex;
+      margin: 0 -20px;
+      .item {
+        padding: 0 20px;
+        .tab{
+          padding: 10px;
+          border-radius: 8px;
+          cursor: pointer;
+          &.active{
+            cursor: not-allowed;
+            background-color: #e41a7f;
+            color: #fff;
+          }
+        }
+      }
+    }
+
     &:last-child {
       margin-bottom: 30px;
     }
+    
 
     &-title {
       position: relative;
@@ -487,6 +503,8 @@
         margin-bottom: 0;
       }
     }
+
+    
   }
 
   &__convert {
