@@ -6,8 +6,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 import { Avatar } from '..';
 import '../../assets/css/header.css';
+import kdgCoin from '../../assets/images/kdg-coin.svg';
 import logo from '../../assets/images/logo.png';
 import logoText from '../../assets/images/logotext.png';
+import profileIcon from '../../assets/images/userinfo/profile.svg';
+import assetIcon from '../../assets/images/userinfo/asset.svg';
+import logoutIcon from '../../assets/images/userinfo/logout.svg';
 import callAPI from '../../axios';
 import {
   BREAK_POINT_992,
@@ -33,10 +37,12 @@ const Header = () => {
   const location = useLocation();
   const dispatch = useDispatch();
 
-  const user = useSelector(state => state.user);
   const unreadNoti = useSelector(state => state.unreadNoti);
   const noties = useSelector(state => state.noties);
+  const balanceKDG = useSelector(state => state.balanceKDG);
 
+  const user = useSelector(state => state.user);
+  const uid = user?._id;
   const email = user?.email;
   const first_name = user?.kyc.first_name;
   const last_name = user?.kyc.last_name;
@@ -153,8 +159,13 @@ const Header = () => {
         className={`popper popper--userinfo ${showInfo ? 'show' : ''}`}
         onClick={e => e.stopPropagation()}
       >
-        <div className='header__info bb'>
-          <div className='header__info-avatar'>
+        <div className='header__info'>
+          <div
+            onClick={() => {
+              history.push(`/profile?uid=${uid}`);
+              setShowInfo(false);
+            }}
+          >
             <Avatar
               src={user?.kyc.avatar ? STORAGE_DOMAIN + user?.kyc.avatar?.path : undefined}
               position={user?.kyc.avatar_pos}
@@ -167,9 +178,16 @@ const Header = () => {
             <p className='header__info-follow'>
               {followNumber} {header[language].followers}
             </p>
+            <div className='header__info-balance'>
+              <div>{balanceKDG}</div>
+              <div>
+                <img src={kdgCoin} alt='coin' />
+              </div>
+              <div>Nạp</div>
+            </div>
           </div>
         </div>
-        <div className='bb pt-20 pb-20'>
+        <div className='bt bb'>
           <div
             className='header__manage'
             onClick={() => {
@@ -177,7 +195,8 @@ const Header = () => {
               setShowInfo(false);
             }}
           >
-            {header[language].personalinfo}
+            <img className='icon' src={profileIcon} alt='' />
+            <span>{header[language].personalinfo}</span>
           </div>
           <div
             className='header__manage'
@@ -186,7 +205,8 @@ const Header = () => {
               setShowInfo(false);
             }}
           >
-            {header[language].assetmanagement}
+            <img className='icon' src={assetIcon} alt='' />
+            <span>{header[language].assetmanagement}</span>
           </div>
         </div>
         <div
@@ -198,7 +218,8 @@ const Header = () => {
             window.open('/home', '_self');
           }}
         >
-          {header[language].logout}
+          <img className='icon' src={logoutIcon} alt='' />
+          <span>{header[language].logout}</span>
         </div>
       </div>
 
