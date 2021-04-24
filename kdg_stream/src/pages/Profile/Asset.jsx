@@ -26,7 +26,7 @@ export default function App() {
     const res = await callAPI.get(`/transactions?type=${HistoryActive}&skip=${History.length}&limit=5`);
     setHistory([...History, ...res.data]);
     if (res.data.length < 5) setIsMoreHistory(false);
-  }, [History,HistoryActive]);
+  }, [History, HistoryActive]);
 
   const renderType = useCallback(
     (type, { gift: { name }, gift_user }) => {
@@ -86,22 +86,25 @@ export default function App() {
       {
         key: 'value',
         name: profile[language].amount,
-        render: value => Math.round(value * 1000) / 1000 ,
+        render: value => Math.round(value * 1000) / 1000,
       },
     ];
   }, [language, profile, renderType]);
 
-  const handleSellGift = useCallback(async (gift, quantity) => {
-    await callAPI.post('/sell_gift', { gift, quantity });
+  const handleSellGift = useCallback(async (e) => {
+    e.preventDefault();
+    console.log(e);
+    const data = new FormData(e.target);
+    const submitData = {}
+    for (const iterator of data.entries()) {
+      submitData[iterator[0]] = iterator[1];
+    }
+    await callAPI.post('/sell_gift', submitData);
     toast('Đã bán thành công');
   }, []);
 
   const storageHead = useMemo(() => {
     return [
-      {
-        key: 'quantity',
-        name: profile[language].quantity,
-      },
       {
         key: 'gift',
         name: profile[language].gift,
@@ -109,17 +112,25 @@ export default function App() {
         render: gift => <img src={gift.img} alt='' />,
       },
       {
+        key: 'quantity',
+        name: profile[language].quantity,
+      },
+      {
         key: 'gift',
         name: profile[language].action,
         width: '30%',
         render: (gift, obj) => (
           <>
-            <button onClick={() => handleSellGift(gift._id, 1)} className='button'>
-              Bán 1
-            </button>
-            <button onClick={() => handleSellGift(gift._id, obj.quantity)} className='button'>
-              Bán hết
-            </button>
+              <input onBlur={e => {
+                const value = Number(e.target.value)
+                if(value > obj.quantity ) e.target.value = obj.quantity 
+                if(value <= 0) e.target.value = 1
+              }} type="number" name="quantity" placeholder="Enter quantity gift"/>
+              <button style={{color : "#e41a7f" , backgroundColor : 'transparent', marginLeft : '10px' , cursor : 'pointer'}} 
+              onClick={e => {
+                e.target.previousElementSibling.value = obj.quantity
+              }}
+              >All</button>
           </>
         ),
       },
@@ -143,9 +154,25 @@ export default function App() {
 
       <div className='profile__boxManage'>
         <div
-          className={`profile__boxManage-title profile__historyTitle ${
-            !isShowHistory ? 'mb-0' : ''
-          }`}
+          className={`profile__boxManage-title profile__historyTitle ${!isShowHistory ? 'mb-0' : ''
+            }`}
+          onClick={() => setIsShowHistory(!isShowHistory)}
+        >
+          <span>Storage</span>
+          <TiIcon.TiArrowSortedDown className={`icon ${isShowHistory ? 'rotate' : ''}`} />
+        </div>
+
+        <div className={`profile__history ${isShowHistory ? 'show' : ''}`}>
+          <div style={{ overflowX: 'auto' }}>
+            <Table dataHead={storageHead} dataBody={GiftStorage || []} />
+          </div>
+        </div>
+      </div>
+
+      <div className='profile__boxManage'>
+        <div
+          className={`profile__boxManage-title profile__historyTitle ${!isShowHistory ? 'mb-0' : ''
+            }`}
           onClick={() => setIsShowHistory(!isShowHistory)}
         >
           <span>Transaction History</span>
@@ -154,10 +181,10 @@ export default function App() {
 
         <div className="profile__boxManage-tabs">
           <div className="item">
-            <div onClick={()=>setHistoryActive(8)} className={`tab ${HistoryActive === 8 ? 'active' : ''}`}>Trading History</div>
+            <div onClick={() => setHistoryActive(8)} className={`tab ${HistoryActive === 8 ? 'active' : ''}`}>Trading History</div>
           </div>
           <div className="item">
-            <div onClick={()=>setHistoryActive(7)} className={`tab ${HistoryActive === 7 ? 'active' : ''}`}>Gift History</div>
+            <div onClick={() => setHistoryActive(7)} className={`tab ${HistoryActive === 7 ? 'active' : ''}`}>Gift History</div>
           </div>
         </div>
 
@@ -173,23 +200,7 @@ export default function App() {
         </div>
       </div>
 
-      <div className='profile__boxManage'>
-        <div
-          className={`profile__boxManage-title profile__historyTitle ${
-            !isShowHistory ? 'mb-0' : ''
-          }`}
-          onClick={() => setIsShowHistory(!isShowHistory)}
-        >
-          <span>Storage</span>
-          <TiIcon.TiArrowSortedDown className={`icon ${isShowHistory ? 'rotate' : ''}`} />
-        </div>
 
-        <div className={`profile__history ${isShowHistory ? 'show' : ''}`}>
-          <div style={{ overflowX: 'auto' }}>
-            <Table dataHead={storageHead} dataBody={GiftStorage || []} />
-          </div>
-        </div>
-      </div>
 
       {/* <div className='profile__boxManage'>
         <div className='profile__boxManage-title'>Manage Donate</div>
