@@ -123,7 +123,7 @@ export default function Personal() {
             <div className='label'>{profile[language].desc}</div>
             <textarea name='description' defaultValue={ShowEdit?.description}></textarea>
 
-            <div className='label'>{profile[language].title}</div>
+            <div className='label'>{profile[language].tags}</div>
             <input type='text' name='tags' defaultValue={ShowEdit?.tags} />
 
             <button style={{ width: '100%' }} className='button'>
