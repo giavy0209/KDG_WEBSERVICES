@@ -1,18 +1,18 @@
 import { CircularProgress } from '@material-ui/core';
-import * as BiIcon from 'react-icons/bi';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import * as BiIcon from 'react-icons/bi';
+import { useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router';
+import { toast } from 'react-toastify';
 import callAPI from '../../axios';
 import { BREAK_POINT_MEDIUM, STORAGE_DOMAIN } from '../../constant';
 import { useLanguageLayerValue } from '../../context/LanguageLayer';
 import { convertDate, convertDateAgo } from '../../helpers';
 import useWindowSize from '../../hooks/useWindowSize';
-import { toast } from 'react-toastify';
-import { useSelector } from 'react-redux';
 
 export default function Personal() {
   const uid = new URLSearchParams(useLocation().search).get('uid');
-  const user = useSelector(state => state.user)
+  const user = useSelector(state => state.user);
   const history = useHistory();
   const [{ language, profile }] = useLanguageLayerValue();
   const [width] = useWindowSize();
@@ -40,13 +40,13 @@ export default function Personal() {
 
   useEffect(() => {
     const closeAll = () => {
-      document.querySelectorAll('.profile__video-more').forEach(el => el.classList.remove('show'))
-    }
-    window.addEventListener('click' , closeAll)
+      document.querySelectorAll('.profile__video-more').forEach(el => el.classList.remove('show'));
+    };
+    window.addEventListener('click', closeAll);
     return () => {
-      window.removeEventListener('click' , closeAll)
-    }
-  },[])
+      window.removeEventListener('click', closeAll);
+    };
+  }, []);
 
   useEffect(() => {
     const handleLoad = async () => {
@@ -77,34 +77,39 @@ export default function Personal() {
     };
   }, [getVideo, uid]);
 
+  const handleDeleteVideo = useCallback(
+    async e => {
+      const id = e.target.getAttribute('data-id');
+      const c = window.confirm('Xác nhận xóa video này');
+      if (c) {
+        await callAPI.delete(`/video?id=${id}`);
+        toast('Đã xóa video');
+        const index = Videos.findIndex(o => o._id === id);
+        Videos.splice(index, 1);
+        setVideos([...Videos]);
+      }
+    },
+    [Videos]
+  );
 
-  const handleDeleteVideo = useCallback(async e => {
-    const id = e.target.getAttribute('data-id')
-    const c = window.confirm('Xác nhận xóa video này')
-    if(c) {
-      await callAPI.delete(`/video?id=${id}`)
-      toast('Đã xóa video')
-      const index = Videos.findIndex(o => o._id === id)
-      Videos.splice(index , 1)
-      setVideos([...Videos])
-    }
-  },[Videos])
+  const handleEdit = useCallback(
+    async e => {
+      e.preventDefault();
+      const data = new FormData(e.target);
+      const submitData = {};
+      for (const iterator of data.entries()) {
+        submitData[iterator[0]] = iterator[1];
+      }
+      const res = await callAPI.put(`/video?id=${ShowEdit._id}`, submitData);
+      toast('Chỉnh sửa thành công');
 
-  const handleEdit = useCallback(async e => {
-    e.preventDefault();
-    const data = new FormData(e.target);
-    const submitData = {}
-    for (const iterator of data.entries()) {
-      submitData[iterator[0]] = iterator[1];
-    }
-    const res = await callAPI.put(`/video?id=${ShowEdit._id}` , submitData)
-    toast('Chỉnh sửa thành công')
-
-    const videoIndex = Videos.findIndex(o => o._id === ShowEdit._id)
-    Videos[videoIndex] = res.data
-    setVideos([...Videos])
-    ShowEdit(null)
-  },[ShowEdit, Videos])
+      const videoIndex = Videos.findIndex(o => o._id === ShowEdit._id);
+      Videos[videoIndex] = res.data;
+      setVideos([...Videos]);
+      ShowEdit(null);
+    },
+    [ShowEdit, Videos]
+  );
   return (
     <>
       {ShowEdit && (
@@ -127,13 +132,15 @@ export default function Personal() {
           </form>
         </div>
       )}
+
       {Videos.length > 0 && (
         <div className='profile__boxPersonal'>
           <div className='profile__boxPersonal-title'>{profile[language].playlist}</div>
 
           <div
-            className={`layoutFlex pl-10 pr-10 ${width > BREAK_POINT_MEDIUM ? 'layout-2' : 'layout-1'
-              }`}
+            className={`layoutFlex pl-10 pr-10 ${
+              width > BREAK_POINT_MEDIUM ? 'layout-2' : 'layout-1'
+            }`}
             style={{ '--gap-row': '40px', '--gap-column': '40px' }}
           >
             {Videos.map(o => (
@@ -143,29 +150,31 @@ export default function Personal() {
                 onClick={() => history.push('/watch?v=' + o.short_id)}
               >
                 <div className='profile__video'>
-                  {uid === user?._id && <span onClick={e => {
-                    e.stopPropagation()
-                    if(Array.from(e.target.classList).includes('show')){
-                      e.target.classList.remove('show')
-                    }else{
-                      e.target.classList.add('show')
-                    }
-                  }} className="profile__video-more">
-                    <BiIcon.BiDotsVerticalRounded className='menu-icon' />
-                    <div className="menu">
-                      <div onClick={()=>setShowEdit(o)} className='menu-item' >
-                        <BiIcon.BiEditAlt className='icon' />
-                        Sửa
+                  {uid === user?._id && (
+                    <span
+                      className='profile__video-more'
+                      onClick={e => {
+                        e.stopPropagation();
+                        if (Array.from(e.target.classList).includes('show')) {
+                          e.target.classList.remove('show');
+                        } else {
+                          e.target.classList.add('show');
+                        }
+                      }}
+                    >
+                      <BiIcon.BiDotsVerticalRounded className='menu-icon' />
+                      <div className='menu'>
+                        <div onClick={() => setShowEdit(o)} className='menu-item'>
+                          <BiIcon.BiEditAlt className='icon' />
+                          Sửa
+                        </div>
+                        <div data-id={o._id} onClick={handleDeleteVideo} className='menu-item'>
+                          <BiIcon.BiEditAlt className='icon' />
+                          Xóa
+                        </div>
                       </div>
-                      <div 
-                      data-id={o._id}
-                      onClick={handleDeleteVideo}
-                      className='menu-item'>
-                        <BiIcon.BiEditAlt className='icon' />
-                        Xóa
-                      </div>
-                    </div>
-                  </span>}
+                    </span>
+                  )}
                   <div className='profile__video-thumbnail'>
                     <img
                       onMouseOver={e => {

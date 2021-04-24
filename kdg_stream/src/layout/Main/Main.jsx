@@ -25,7 +25,6 @@ const Main = props => {
     const bannerEle = document.querySelector('.banner');
     if (!bannerEle) return;
 
-    console.log(bannerEle.clientHeight, 'bannerHeight');
     setBannerHeight(bannerEle.clientHeight);
   }, []);
 
@@ -37,7 +36,7 @@ const Main = props => {
 
       const totalHeight = footerEle.clientHeight + headerEle.clientHeight + bannerHeight + 20;
 
-      if(!rightRef.current) return
+      if (!rightRef.current) return;
 
       if (window.pageYOffset < totalHeight - headerEle.clientHeight) {
         rightRef.current.style.top = totalHeight - window.pageYOffset + 'px';

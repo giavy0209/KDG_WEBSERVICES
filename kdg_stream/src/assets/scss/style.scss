@@ -56,6 +56,14 @@
   }
 }
 
+.bt {
+  border-top: 1px solid $border-color;
+}
+
+.bb {
+  border-bottom: 1px solid $border-color;
+}
+
 .layoutFlex {
   display: flex;
   flex-wrap: nowrap;
@@ -197,5 +205,211 @@
 
     width: 100%;
     height: 100%;
+  }
+}
+
+.popupBox {
+  z-index: $z-index-popup;
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+
+  > .mask {
+    z-index: 1;
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    background-color: rgba($color: #000, $alpha: 0.5);
+  }
+
+  > .content {
+    z-index: 2;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    width: 600px;
+
+    @media (max-width: $break-point-small) {
+      width: 315px;
+    }
+
+    padding: 25px;
+
+    &.p-0 {
+      padding: 0;
+    }
+
+    border: $border-bottom;
+
+    box-shadow: $box-shadow-popper;
+
+    background-color: $background-white;
+  }
+
+  .label {
+    color: $title-color;
+    font-size: $size-3;
+    font-weight: 500;
+
+    margin-bottom: 5px;
+  }
+
+  input {
+    color: $text-color;
+    font-size: $size-5;
+
+    width: 100%;
+    height: 40px;
+    padding: 0 15px;
+    margin-bottom: 20px;
+
+    border-radius: 5px;
+    border: 1px solid $main-color;
+  }
+
+  textarea {
+    color: $text-color;
+    font-size: $size-5;
+
+    width: 100%;
+    padding: 15px;
+    min-height: 300px;
+    margin-bottom: 20px;
+
+    resize: none;
+    outline: none;
+
+    border-radius: 5px;
+    border: 1px solid $main-color;
+  }
+}
+
+.QR {
+  &__close {
+    cursor: pointer;
+
+    position: absolute;
+    top: 27px;
+    right: 27px;
+
+    > svg {
+      display: block;
+
+      font-size: 20px;
+    }
+  }
+
+  &__header {
+    color: $title-color;
+    font-size: $size-4;
+    font-weight: 600;
+    text-align: center;
+
+    padding: 26px 0;
+
+    background-color: $background-color-hover;
+  }
+
+  &__body {
+    > p:nth-child(1),
+    > p:nth-child(3) {
+      font-size: $size-6;
+
+      padding: 10px 0;
+    }
+
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+  }
+
+  &__frame {
+    position: relative;
+
+    &-top-left,
+    &-top-right,
+    &-bottom-left,
+    &-bottom-right {
+      position: absolute;
+
+      width: 30px;
+      height: 30px;
+
+      border: 2px solid $primary-color;
+    }
+
+    &-top-left {
+      top: 0;
+      left: 0;
+
+      border-right: none;
+      border-bottom: none;
+    }
+
+    &-top-right {
+      top: 0;
+      right: 0;
+
+      border-left: none;
+      border-bottom: none;
+    }
+
+    &-bottom-left {
+      bottom: 0;
+      left: 0;
+
+      border-top: none;
+      border-right: none;
+    }
+
+    &-bottom-right {
+      bottom: 0;
+      right: 0;
+
+      border-top: none;
+      border-left: none;
+    }
+
+    > img[alt='QR Code'] {
+      display: block;
+    }
+
+    > img[alt='coin'] {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+
+  &__wallet {
+    cursor: pointer;
+
+    padding-bottom: 15px;
+
+    display: flex;
+    align-items: center;
+
+    > span:nth-child(1) {
+      color: $title-color;
+
+      margin-right: 5px;
+
+      max-width: 450px;
+      word-break: break-all;
+
+      @media (max-width: $break-point-small) {
+        max-width: 270px;
+      }
+    }
   }
 }

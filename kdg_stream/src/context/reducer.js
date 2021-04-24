@@ -192,6 +192,10 @@ const formForgot = {
 
 const header = {
   vi: {
+    copied: 'Đã sao chép địa chỉ',
+    deposit: 'Nạp KDG',
+    scan_here: 'Scan tại đây để nạp',
+    or_copy: 'Hoặc sao chép địa chỉ tại đây',
     search: 'Tìm kiếm',
     notification: 'Thông báo',
     notihere: 'Thông báo của bạn ở đây',
@@ -210,6 +214,10 @@ const header = {
     noti105: 'data1 đang phát trực tiếp',
   },
   en: {
+    copied: 'Copied address',
+    deposit: 'Deposit KDG',
+    scan_here: 'Scan here to deposit',
+    or_copy: 'Or copy the address here',
     search: 'Search',
     notification: 'Notifications',
     notihere: 'Your notifications live here',

@@ -3,9 +3,10 @@ import { storage } from '../helpers';
 import { actChangeUnreadNoti } from './action';
 
 export const CHANGE_USER = 'CHANGE_USER';
-export const CHANGE_BALANCE = 'CHANGE_BALANCE';
-export const CHANGE_BALANCE_KDG = 'CHANGE_BALANCE_KDG';
 export const CHANGE_NOTIES = 'CHANGE_NOTIES';
+export const CHANGE_BALANCE = 'CHANGE_BALANCE';
+export const CHANGE_ADDRESS_KDG = 'CHANGE_ADDRESS_KDG';
+export const CHANGE_BALANCE_KDG = 'CHANGE_BALANCE_KDG';
 
 export function actChangeUser(user) {
   return {
@@ -36,12 +37,20 @@ export function actChangeBalanceKDG(balanceKDG) {
   };
 }
 
+export function actChangeAddressKDG(addressKDG) {
+  return {
+    type: CHANGE_ADDRESS_KDG,
+    payload: { addressKDG },
+  };
+}
+
 export function asyncGetBalances() {
   return async dispatch => {
     const res = await callAPI.get('/balances');
     dispatch(actChangeBalances(res.balances));
-    const balanceKDG = res.balances.find(o => o.coin.code === 'KDG')
-    dispatch(actChangeBalanceKDG(balanceKDG.balance))
+    const balance = res.balances.find(o => o.coin.code === 'KDG');
+    dispatch(actChangeBalanceKDG(balance.balance));
+    dispatch(actChangeAddressKDG(balance.wallet.address));
   };
 }
 
@@ -71,36 +80,35 @@ export function asyncGetNoties() {
 
 export const CHANGE_GIFTS = 'CHANGE_GIFTS';
 
-export function actChangeGifts (gifts) {
+export function actChangeGifts(gifts) {
   return {
     type: CHANGE_GIFTS,
     payload: { gifts },
-  }
+  };
 }
 
-export function asyncInitGifts () {
+export function asyncInitGifts() {
   return async dispatch => {
-    const res = await callAPI.get('/gifts')
-    dispatch(actChangeGifts(res.data))
-  }
+    const res = await callAPI.get('/gifts');
+    dispatch(actChangeGifts(res.data));
+  };
 }
 
 export const CHANGE_GIFTS_STORAGE = 'CHANGE_GIFTS_STORAGE';
 
-export function actChangeGiftStorage (giftStorage) {
+export function actChangeGiftStorage(giftStorage) {
   return {
     type: CHANGE_GIFTS_STORAGE,
     payload: { giftStorage },
-  }
+  };
 }
 
-export function asyncInitGiftStorage () {
+export function asyncInitGiftStorage() {
   return async dispatch => {
-    const res = await callAPI.get('/storage_gift')
-    dispatch(actChangeGiftStorage(res.data))
-  }
+    const res = await callAPI.get('/storage_gift');
+    dispatch(actChangeGiftStorage(res.data));
+  };
 }
-
 
 export function asyncInitAuth(_refresh, _jwt) {
   return async dispatch => {
@@ -123,7 +131,7 @@ export function asyncInitAuth(_refresh, _jwt) {
       dispatch(asyncGetBalances()),
       dispatch(asyncGetNoties()),
       dispatch(asyncInitGifts()),
-      dispatch(asyncInitGiftStorage())
+      dispatch(asyncInitGiftStorage()),
     ]);
   };
 }
