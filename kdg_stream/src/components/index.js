@@ -19,6 +19,7 @@ import Avatar from './Avatar';
 import Recommend from './Recommend';
 import VideoInfo from './VideoInfo';
 import RecommendVideo from './RecommendVideo';
+import AssetBox from './AssetBox';
 
 export {
   Footer,
@@ -42,4 +43,5 @@ export {
   Recommend,
   VideoInfo,
   RecommendVideo,
+  AssetBox,
 };

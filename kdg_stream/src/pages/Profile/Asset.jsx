@@ -3,12 +3,13 @@ import * as TiIcon from 'react-icons/ti';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import callAPI from '../../axios';
-import { Table } from '../../components';
+import { AssetBox, Table } from '../../components';
 import { useLanguageLayerValue } from '../../context/LanguageLayer';
 import { convertDate, convertDateAgo } from '../../helpers';
-import useNumber from '../../hooks/useNumber';
+import depositIcon from '../../assets/images/deposit.svg';
+import tradeIcon from '../../assets/images/trade.svg';
 
-export default function App() {
+export default function Asset() {
   const [{ language, profile }] = useLanguageLayerValue();
 
   const [isShowHistory, setIsShowHistory] = useState(true);
@@ -23,7 +24,9 @@ export default function App() {
     /**
      * type : 7 = mua gift , 8 = bán gifts , 9 = donate , 10 = nhận donate
      */
-    const res = await callAPI.get(`/transactions?type=${HistoryActive}&skip=${History.length}&limit=5`);
+    const res = await callAPI.get(
+      `/transactions?type=${HistoryActive}&skip=${History.length}&limit=5`
+    );
     setHistory([...History, ...res.data]);
     if (res.data.length < 5) setIsMoreHistory(false);
   }, [History, HistoryActive]);
@@ -91,11 +94,11 @@ export default function App() {
     ];
   }, [language, profile, renderType]);
 
-  const handleSellGift = useCallback(async (e) => {
+  const handleSellGift = useCallback(async e => {
     e.preventDefault();
     console.log(e);
     const data = new FormData(e.target);
-    const submitData = {}
+    const submitData = {};
     for (const iterator of data.entries()) {
       submitData[iterator[0]] = iterator[1];
     }
@@ -121,16 +124,29 @@ export default function App() {
         width: '30%',
         render: (gift, obj) => (
           <>
-              <input onBlur={e => {
-                const value = Number(e.target.value)
-                if(value > obj.quantity ) e.target.value = obj.quantity 
-                if(value <= 0) e.target.value = 1
-              }} type="number" name="quantity" placeholder="Enter quantity gift"/>
-              <button style={{color : "#e41a7f" , backgroundColor : 'transparent', marginLeft : '10px' , cursor : 'pointer'}} 
-              onClick={e => {
-                e.target.previousElementSibling.value = obj.quantity
+            <input
+              onBlur={e => {
+                const value = Number(e.target.value);
+                if (value > obj.quantity) e.target.value = obj.quantity;
+                if (value <= 0) e.target.value = 1;
               }}
-              >All</button>
+              type='number'
+              name='quantity'
+              placeholder='Enter quantity gift'
+            />
+            <button
+              style={{
+                color: '#e41a7f',
+                backgroundColor: 'transparent',
+                marginLeft: '10px',
+                cursor: 'pointer',
+              }}
+              onClick={e => {
+                e.target.previousElementSibling.value = obj.quantity;
+              }}
+            >
+              All
+            </button>
           </>
         ),
       },
@@ -152,10 +168,33 @@ export default function App() {
     <>
       {/* {isShow && <Popper1 type={type} pack={pack} />} */}
 
+      <AssetBox title='Balance'>
+        <div className='profile__balance'>
+          <div className='profile__balance-balance mr-30'>
+            <span>100,000,000</span>
+            <span>KDG</span>
+          </div>
+
+          <div className='profile__balance-deposit mr-30'>
+            <img src={depositIcon} alt='icon' />
+            <span>Deposit</span>
+          </div>
+
+          <div
+            className='profile__balance-trade'
+            onClick={() => window.open('https://www.mxc.com/trade/easy#KDG_USDT', '_blank')}
+          >
+            <img src={tradeIcon} alt='icon' />
+            <span>Trade</span>
+          </div>
+        </div>
+      </AssetBox>
+
       <div className='profile__boxManage'>
         <div
-          className={`profile__boxManage-title profile__historyTitle ${!isShowHistory ? 'mb-0' : ''
-            }`}
+          className={`profile__boxManage-title profile__historyTitle ${
+            !isShowHistory ? 'mb-0' : ''
+          }`}
           onClick={() => setIsShowHistory(!isShowHistory)}
         >
           <span>Storage</span>
@@ -171,20 +210,31 @@ export default function App() {
 
       <div className='profile__boxManage'>
         <div
-          className={`profile__boxManage-title profile__historyTitle ${!isShowHistory ? 'mb-0' : ''
-            }`}
+          className={`profile__boxManage-title profile__historyTitle ${
+            !isShowHistory ? 'mb-0' : ''
+          }`}
           onClick={() => setIsShowHistory(!isShowHistory)}
         >
           <span>Transaction History</span>
           <TiIcon.TiArrowSortedDown className={`icon ${isShowHistory ? 'rotate' : ''}`} />
         </div>
 
-        <div className="profile__boxManage-tabs">
-          <div className="item">
-            <div onClick={() => setHistoryActive(8)} className={`tab ${HistoryActive === 8 ? 'active' : ''}`}>Trading History</div>
+        <div className='profile__boxManage-tabs'>
+          <div className='item'>
+            <div
+              onClick={() => setHistoryActive(8)}
+              className={`tab ${HistoryActive === 8 ? 'active' : ''}`}
+            >
+              Trading History
+            </div>
           </div>
-          <div className="item">
-            <div onClick={() => setHistoryActive(7)} className={`tab ${HistoryActive === 7 ? 'active' : ''}`}>Gift History</div>
+          <div className='item'>
+            <div
+              onClick={() => setHistoryActive(7)}
+              className={`tab ${HistoryActive === 7 ? 'active' : ''}`}
+            >
+              Gift History
+            </div>
           </div>
         </div>
 
@@ -199,8 +249,6 @@ export default function App() {
           )}
         </div>
       </div>
-
-
 
       {/* <div className='profile__boxManage'>
         <div className='profile__boxManage-title'>Manage Donate</div>
