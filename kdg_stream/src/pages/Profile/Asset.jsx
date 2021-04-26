@@ -1,18 +1,16 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import * as TiIcon from 'react-icons/ti';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import callAPI from '../../axios';
-import { AssetBox, Table } from '../../components';
-import { useLanguageLayerValue } from '../../context/LanguageLayer';
-import { convertDate, convertDateAgo } from '../../helpers';
 import depositIcon from '../../assets/images/deposit.svg';
 import tradeIcon from '../../assets/images/trade.svg';
+import callAPI from '../../axios';
+import { AssetBox, PopupBox, QR, Table } from '../../components';
+import { useLanguageLayerValue } from '../../context/LanguageLayer';
+import { convertDate, convertDateAgo } from '../../helpers';
 
 export default function Asset() {
   const [{ language, profile }] = useLanguageLayerValue();
 
-  const [isShowHistory, setIsShowHistory] = useState(true);
   const GiftStorage = useSelector(state => state.giftStorage);
 
   const [History, setHistory] = useState([]);
@@ -164,18 +162,27 @@ export default function Asset() {
   // const [type, setType] = useState('changes');
   // const [pack, setPack] = useState(null);
 
+  const balanceKDG = useSelector(state => state.balanceKDG);
+  const [showDeposit, setShowDeposit] = useState(false);
+
   return (
     <>
       {/* {isShow && <Popper1 type={type} pack={pack} />} */}
 
+      {showDeposit && (
+        <PopupBox onCancel={setShowDeposit}>
+          <QR onCancel={setShowDeposit} />
+        </PopupBox>
+      )}
+
       <AssetBox title='Balance'>
         <div className='profile__balance'>
           <div className='profile__balance-balance mr-30'>
-            <span>100,000,000</span>
+            <span>{balanceKDG}</span>
             <span>KDG</span>
           </div>
 
-          <div className='profile__balance-deposit mr-30'>
+          <div className='profile__balance-deposit mr-30' onClick={() => setShowDeposit(true)}>
             <img src={depositIcon} alt='icon' />
             <span>Deposit</span>
           </div>
@@ -190,35 +197,13 @@ export default function Asset() {
         </div>
       </AssetBox>
 
-      <div className='profile__boxManage'>
-        <div
-          className={`profile__boxManage-title profile__historyTitle ${
-            !isShowHistory ? 'mb-0' : ''
-          }`}
-          onClick={() => setIsShowHistory(!isShowHistory)}
-        >
-          <span>Storage</span>
-          <TiIcon.TiArrowSortedDown className={`icon ${isShowHistory ? 'rotate' : ''}`} />
+      <AssetBox title='Storage'>
+        <div className='profile__table'>
+          <Table dataHead={storageHead} dataBody={GiftStorage || []} />
         </div>
+      </AssetBox>
 
-        <div className={`profile__history ${isShowHistory ? 'show' : ''}`}>
-          <div style={{ overflowX: 'auto' }}>
-            <Table dataHead={storageHead} dataBody={GiftStorage || []} />
-          </div>
-        </div>
-      </div>
-
-      <div className='profile__boxManage'>
-        <div
-          className={`profile__boxManage-title profile__historyTitle ${
-            !isShowHistory ? 'mb-0' : ''
-          }`}
-          onClick={() => setIsShowHistory(!isShowHistory)}
-        >
-          <span>Transaction History</span>
-          <TiIcon.TiArrowSortedDown className={`icon ${isShowHistory ? 'rotate' : ''}`} />
-        </div>
-
+      <AssetBox title='Transaction History'>
         <div className='profile__boxManage-tabs'>
           <div className='item'>
             <div
@@ -238,17 +223,16 @@ export default function Asset() {
           </div>
         </div>
 
-        <div className={`profile__history ${isShowHistory ? 'show' : ''}`}>
-          <div style={{ overflowX: 'auto' }}>
-            <Table dataHead={historyHead} dataBody={History} />
-          </div>
-          {IsMoreHistory && (
-            <div className='profile__link' onClick={getHistory}>
-              View More
-            </div>
-          )}
+        <div className='profile__table'>
+          <Table dataHead={historyHead} dataBody={History} />
         </div>
-      </div>
+
+        {IsMoreHistory && (
+          <div className='profile__link' onClick={getHistory}>
+            View More
+          </div>
+        )}
+      </AssetBox>
 
       {/* <div className='profile__boxManage'>
         <div className='profile__boxManage-title'>Manage Donate</div>

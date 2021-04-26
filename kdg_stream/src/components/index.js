@@ -20,6 +20,8 @@ import Recommend from './Recommend';
 import VideoInfo from './VideoInfo';
 import RecommendVideo from './RecommendVideo';
 import AssetBox from './AssetBox';
+import PopupBox from './PopupBox';
+import QR from './QR';
 
 export {
   Footer,
@@ -44,4 +46,6 @@ export {
   VideoInfo,
   RecommendVideo,
   AssetBox,
+  PopupBox,
+  QR,
 };

@@ -3,7 +3,7 @@ import * as BiIcon from 'react-icons/bi';
 import * as RiIcon from 'react-icons/ri';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { Avatar } from '..';
+import { Avatar, PopupBox } from '..';
 import '../../assets/css/video-info.css';
 import callAPI from '../../axios';
 import { BREAK_POINT_SMALL, STORAGE_DOMAIN } from '../../constant';
@@ -148,10 +148,8 @@ const VideoInfo = props => {
   return (
     <div className='videoInfo'>
       {showEdit && (
-        <div className='popupBox' onClick={e => e.stopPropagation()}>
-          <div className='mask' onClick={() => setShowEdit(false)}></div>
-
-          <form className='content' onSubmit={handleEdit}>
+        <PopupBox onCancel={setShowEdit}>
+          <form className='form-edit' onSubmit={handleEdit}>
             <div className='label'>{videoinfo[language].title}</div>
             <input type='text' name='title' defaultValue={video?.name} />
 
@@ -162,7 +160,7 @@ const VideoInfo = props => {
               {videoinfo[language].edit}
             </button>
           </form>
-        </div>
+        </PopupBox>
       )}
 
       <div className='videoInfo__title'>

@@ -1,19 +1,17 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import * as GoIcon from 'react-icons/go';
-import * as GrIcon from 'react-icons/gr';
 import * as IoIcon from 'react-icons/io';
 import * as VscIcon from 'react-icons/vsc';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
-import { Avatar } from '..';
+import { Avatar, PopupBox, QR } from '..';
 import '../../assets/css/header.css';
 import kdgCoin from '../../assets/images/kdg-coin.svg';
 import logo from '../../assets/images/logo.png';
 import logoText from '../../assets/images/logotext.png';
-import copyIcon from '../../assets/images/copy.svg';
-import profileIcon from '../../assets/images/userinfo/profile.svg';
 import assetIcon from '../../assets/images/userinfo/asset.svg';
 import logoutIcon from '../../assets/images/userinfo/logout.svg';
+import profileIcon from '../../assets/images/userinfo/profile.svg';
 import callAPI from '../../axios';
 import {
   BREAK_POINT_992,
@@ -26,7 +24,6 @@ import { convertDateAgo, storage } from '../../helpers';
 import useNumber from '../../hooks/useNumber';
 import useWindowSize from '../../hooks/useWindowSize';
 import { actChangeUnreadNoti } from '../../store/action';
-import { NotificationContainer, NotificationManager } from 'react-notifications';
 
 const handleShowPopper = (fnMain, ...fnSubs) => () => {
   fnMain(x => !x);
@@ -43,12 +40,10 @@ const Header = () => {
   const unreadNoti = useSelector(state => state.unreadNoti);
   const noties = useSelector(state => state.noties);
   const balanceKDG = useSelector(state => state.balanceKDG);
-  const addressKDG = useSelector(state => state.addressKDG);
 
   const user = useSelector(state => state.user);
   const uid = user?._id;
   const email = user?.email;
-  const QR_SECRET = user?.QR_SECRET;
   const last_name = user?.kyc.last_name;
   const first_name = user?.kyc.first_name;
   const followNumber = useNumber(user?.kinglive?.total_follower);
@@ -117,23 +112,8 @@ const Header = () => {
     };
   }, [showNoti, showInfo]);
 
-  const CopyToClipboard = useCallback(
-    value => {
-      var input = document.createElement('input');
-      document.querySelector('body').append(input);
-      input.value = value;
-      input.select();
-      document.execCommand('copy');
-      input.remove();
-      NotificationManager.success(header[language].copied, null, 1000);
-    },
-    [header, language]
-  );
-
   return (
     <div className='header'>
-      <NotificationContainer />
-
       {showSearch && (
         <div className='header__searchBarContainer'>
           <IoIcon.IoMdArrowBack
@@ -150,34 +130,9 @@ const Header = () => {
       )}
 
       {showDeposit && (
-        <div className='popupBox' onClick={e => e.stopPropagation()}>
-          <div className='mask' onClick={() => setShowDeposit(false)}></div>
-
-          <div className='content p-0'>
-            <div className='QR'>
-              <div className='QR__close' onClick={() => setShowDeposit(false)}>
-                <GrIcon.GrFormClose />
-              </div>
-              <div className='QR__header'>{header[language].deposit}</div>
-              <div className='QR__body'>
-                <p>{header[language].scan_here}</p>
-                <div className='QR__frame'>
-                  <div className='QR__frame-top-left'></div>
-                  <div className='QR__frame-top-right'></div>
-                  <div className='QR__frame-bottom-left'></div>
-                  <div className='QR__frame-bottom-right'></div>
-                  <img src={QR_SECRET} alt='QR Code' />
-                  <img src={kdgCoin} alt='coin' />
-                </div>
-                <p>{header[language].or_copy}</p>
-                <div className='QR__wallet' onClick={() => CopyToClipboard(addressKDG)}>
-                  <span>{addressKDG}</span>
-                  <img src={copyIcon} alt='icon' />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <PopupBox onCancel={setShowDeposit}>
+          <QR onCancel={setShowDeposit} />
+        </PopupBox>
       )}
 
       <div className={`popper ${showNoti ? 'show' : ''}`} onClick={e => e.stopPropagation()}>
