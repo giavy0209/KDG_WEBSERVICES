@@ -17,8 +17,12 @@ export default function TopDonate() {
     return [
       {
         key: 'from',
-        name: profile[language].gift,
+        name: profile[language].nickname,
         render: from => from.email,
+      },
+      {
+        key: 'value',
+        name: profile[language].total_kdg,
       },
     ];
   }, [language, profile]);

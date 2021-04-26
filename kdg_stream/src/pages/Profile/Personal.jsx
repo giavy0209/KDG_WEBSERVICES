@@ -116,6 +116,10 @@ export default function Personal() {
     callAPI.get('/video?sid=8ca0f7').then(res => setVideo(res.data));
   }, []);
 
+  const handleSetIntroduce = useCallback(async id => {
+    await callAPI.post('/set_introduce', { video: id });
+  }, []);
+
   return (
     <>
       {/* {ShowEdit && (
@@ -202,6 +206,10 @@ export default function Personal() {
                     >
                       <BiIcon.BiDotsVerticalRounded className='menu-icon' />
                       <div className='menu'>
+                        <div onClick={() => handleSetIntroduce(o._id)} className='menu-item'>
+                          <BiIcon.BiEditAlt className='icon' />
+                          Đặt làm video giới thiệu
+                        </div>
                         <div onClick={() => setShowEdit(o)} className='menu-item'>
                           <BiIcon.BiEditAlt className='icon' />
                           Sửa
