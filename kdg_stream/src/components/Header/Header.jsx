@@ -136,7 +136,7 @@ const Header = () => {
       )}
 
       <div className={`popper ${showNoti ? 'show' : ''}`} onClick={e => e.stopPropagation()}>
-        <div className='main__title right pl-25 pr-25'>
+        <div className='main__title main__title--right pl-25 pr-25'>
           <p>{header[language].notification}</p>
         </div>
 

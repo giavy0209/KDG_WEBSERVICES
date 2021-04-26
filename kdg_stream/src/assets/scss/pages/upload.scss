@@ -7,7 +7,7 @@
 
   height: calc(100vh - #{$footer-height} - #{$header-height});
 
-  background-color: $background-color-main;
+  background-color: $background-color-body;
 
   &__progress-bar {
     width: 100%;

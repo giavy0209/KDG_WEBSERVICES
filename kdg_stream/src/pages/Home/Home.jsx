@@ -7,7 +7,7 @@ import HomeRight from './HomeRight';
 import banner1 from '../../assets/images/banner/banner1.mp4';
 
 const Home = () => {
-  const isLoadRef = useRef(true);
+  const isLoadMore = useRef(true);
   const isLoadingAPI = useRef(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -31,14 +31,16 @@ const Home = () => {
 
   const getRecommend = useCallback(async () => {
     const ids = recommendList.map(o => o._id);
+    console.log(ids);
     const res = await callAPI.get(`/recommend?ids=${ids}`);
 
     if (res.data.length === 0) {
-      return (isLoadRef.current = false);
+      isLoadMore.current = false;
+      setRecommendList([...recommendList, ...res.data]);
+      return;
     }
 
     setRecommendList([...recommendList, ...res.data]);
-    isLoadingAPI.current = false;
   }, [recommendList]);
 
   useEffect(() => {
@@ -48,11 +50,12 @@ const Home = () => {
       const restHeight = totalHeight - scrolledHeight;
       const isEnd = restHeight <= 500;
 
-      if (isEnd && isLoadRef.current && !isLoadingAPI.current) {
+      if (isEnd && isLoadMore.current && !isLoadingAPI.current) {
         isLoadingAPI.current = true;
         setIsLoading(true);
         await getRecommend();
         setIsLoading(false);
+        isLoadingAPI.current = false;
       }
     };
 

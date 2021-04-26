@@ -22,7 +22,7 @@ const SetupLeft = props => {
 
   return (
     <>
-      <div className='main__title'>
+      <div className='main__title main__title--left'>
         <p>{setup[language].preview}</p>
       </div>
 

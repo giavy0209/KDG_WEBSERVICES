@@ -10,11 +10,11 @@ import { useLanguageLayerValue } from '../../context/LanguageLayer';
 import { convertDate, convertDateAgo } from '../../helpers';
 import useWindowSize from '../../hooks/useWindowSize';
 
-export default function Personal({UserOwner}) {
+export default function Personal({ UserOwner }) {
   const uid = new URLSearchParams(useLocation().search).get('uid');
   const user = useSelector(state => state.user);
 
-  const video = useMemo(() => UserOwner?.kinglive?.introduce , [UserOwner])
+  const video = useMemo(() => UserOwner?.kinglive?.introduce, [UserOwner]);
 
   const history = useHistory();
   const [{ language, profile }] = useLanguageLayerValue();
@@ -23,32 +23,25 @@ export default function Personal({UserOwner}) {
   const [ShowEdit, setShowEdit] = useState(null);
   const [Videos, setVideos] = useState([]);
 
-  const isLoadRef = useRef(true);
+  const isLoadMore = useRef(true);
   const isLoadingAPI = useRef(false);
-
   const isLoadFirst = useRef(true);
 
   const getVideo = useCallback(async () => {
+    const limit = 10;
+
     const res = await callAPI.get(
-      `/videos?user=${uid}&limit=10&last=${Videos[Videos.length - 1]?._id}`
+      `/videos?user=${uid}&limit=${limit}&last=${Videos[Videos.length - 1]?._id}`
     );
 
-    if (res.data?.length === 0) {
-      return (isLoadRef.current = false);
+    if (res.data.length <= limit) {
+      isLoadMore.current = false;
+      setVideos([...Videos, ...res.data]);
+      return;
     }
 
     setVideos([...Videos, ...res.data]);
   }, [Videos, uid]);
-
-  useEffect(() => {
-    const closeAll = () => {
-      document.querySelectorAll('.profile__video-more').forEach(el => el.classList.remove('show'));
-    };
-    window.addEventListener('click', closeAll);
-    return () => {
-      window.removeEventListener('click', closeAll);
-    };
-  }, []);
 
   useEffect(() => {
     const handleLoad = async () => {
@@ -57,13 +50,12 @@ export default function Personal({UserOwner}) {
       const restHeight = totalHeight - scrolledHeight;
       const isEnd = restHeight <= 500;
 
-      if (isEnd && isLoadRef.current && !isLoadingAPI.current) {
+      if (isEnd && isLoadMore.current && !isLoadingAPI.current) {
         isLoadingAPI.current = true;
         setIsLoading(true);
         await getVideo();
         setIsLoading(false);
         isLoadingAPI.current = false;
-        console.log('call1');
       }
     };
 
@@ -78,6 +70,16 @@ export default function Personal({UserOwner}) {
       window.removeEventListener('scroll', handleLoad);
     };
   }, [getVideo, uid]);
+
+  useEffect(() => {
+    const closeAll = () => {
+      document.querySelectorAll('.profile__video-more').forEach(el => el.classList.remove('show'));
+    };
+    window.addEventListener('click', closeAll);
+    return () => {
+      window.removeEventListener('click', closeAll);
+    };
+  }, []);
 
   const handleDeleteVideo = useCallback(
     async e => {
@@ -113,7 +115,6 @@ export default function Personal({UserOwner}) {
     [ShowEdit, Videos]
   );
 
-
   const handleSetIntroduce = useCallback(async id => {
     await callAPI.post('/set_introduce', { video: id });
   }, []);
@@ -139,7 +140,6 @@ export default function Personal({UserOwner}) {
             </button>
           </form>
         </div>
-
       )}
 
       {video && (
@@ -149,23 +149,19 @@ export default function Personal({UserOwner}) {
               title='video'
               loading='lazy'
               allowFullScreen={true}
-              src={`https://iframe.mediadelivery.net/embed/1536/${video?.guid}?autoplay=true`}
+              src={`https://iframe.mediadelivery.net/embed/1536/${video.guid}?autoplay=true`}
               allow='accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;'
             ></iframe>
           </div>
 
           <div className='video-pinned__videoInfoBox'>
-            <div className='video-pinned__videoInfoBox-title'>
-              {video.name}
-            </div>
+            <div className='video-pinned__videoInfoBox-title'>{video.name}</div>
             <div className='video-pinned__videoInfoBox-view'>
               <span>{video.views} views</span>
               <span> • </span>
               <span>{convertDateAgo(video.create_date)}</span>
             </div>
-            <div className='video-pinned__videoInfoBox-description'>
-              {video.description}
-            </div>
+            <div className='video-pinned__videoInfoBox-description'>{video.description}</div>
           </div>
         </div>
       )}

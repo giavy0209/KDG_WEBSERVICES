@@ -170,23 +170,6 @@ const VideoInfo = props => {
         <span>{video?.name}</span>
 
         {user?._id === video?.user._id && (
-          // <div className='menuBox' onClick={() => setShowMenu(x => !x)}>
-          //   <div className='rippleBox' onClick={rippleEffect}></div>
-
-          //   <BiIcon.BiDotsVerticalRounded className='menuBox__icon' />
-
-          //   <div className={`menuBox__menuList ${showMenu ? 'show' : ''}`}>
-          //     <div className='menuBox__menuItem' onClick={() => setShowEdit(true)}>
-          //       <BiIcon.BiEditAlt className='icon' />
-          //       {videoinfo[language].edit}
-          //     </div>
-          //     <div className='menuBox__menuItem'>
-          //       <BiIcon.BiEditAlt className='icon' />
-          //       {videoinfo[language].delete}
-          //     </div>
-          //   </div>
-          // </div>
-
           <MenuBox>
             <div className='menuBox__menuItem' onClick={() => setShowEdit(true)}>
               <BiIcon.BiEditAlt className='icon' />
