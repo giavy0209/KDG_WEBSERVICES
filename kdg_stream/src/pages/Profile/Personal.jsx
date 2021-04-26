@@ -1,5 +1,5 @@
 import { CircularProgress } from '@material-ui/core';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState, useMemo } from 'react';
 import * as BiIcon from 'react-icons/bi';
 import { useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router';
@@ -112,12 +112,18 @@ export default function Personal() {
     [ShowEdit, Videos]
   );
 
-  const handleSetIntroduce = useCallback(async(id) => {
-    await callAPI.post('/set_introduce' , {video : id})
-  },[])
+  const [video, setVideo] = useState(null);
+  useMemo(() => {
+    callAPI.get('/video?sid=8ca0f7').then(res => setVideo(res.data));
+  }, []);
+
+  const handleSetIntroduce = useCallback(async id => {
+    await callAPI.post('/set_introduce', { video: id });
+  }, []);
+
   return (
     <>
-      {ShowEdit && (
+      {/* {ShowEdit && (
         <div className='popupBox' onClick={e => e.stopPropagation()}>
           <div className='mask' onClick={() => setShowEdit(null)}></div>
 
@@ -135,6 +141,38 @@ export default function Personal() {
               {profile[language].edit}
             </button>
           </form>
+        </div>
+
+        user.kinglive.introduce
+      )} */}
+
+      {video && (
+        <div className='video-pinned'>
+          <div className='video-pinned__videoBox'>
+            <iframe
+              title='video'
+              loading='lazy'
+              allowFullScreen={true}
+              src={`https://iframe.mediadelivery.net/embed/1536/${video?.guid}?autoplay=true`}
+              allow='accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;'
+            ></iframe>
+          </div>
+
+          <div className='video-pinned__videoInfoBox'>
+            <div className='video-pinned__videoInfoBox-title'>
+              Epic Riddles Marathon Only Bravest Detectives Can Pass
+            </div>
+            <div className='video-pinned__videoInfoBox-view'>
+              <span>39 views</span>
+              <span> • </span>
+              <span>8 days ago</span>
+            </div>
+            <div className='video-pinned__videoInfoBox-description'>
+              Are you a fan of solving different puzzles, sudoku or crosswords? Here's a fresh set
+              of riddles to entertain and train your brain. Let's see how many you can crack and
+              share your number down...
+            </div>
+          </div>
         </div>
       )}
 

@@ -549,6 +549,7 @@ const videoinfo = {
     delete: 'Xoá',
     title: 'Tiêu đề',
     desc: 'Mô tả',
+    tags: 'Tags',
   },
   en: {
     views: 'views',
@@ -564,6 +565,7 @@ const videoinfo = {
     delete: 'Delete',
     title: 'Title',
     desc: 'Description',
+    tags: 'Tags',
   },
 };
 

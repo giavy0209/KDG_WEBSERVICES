@@ -14,10 +14,13 @@ const AssetBox = props => {
 
   return (
     <div className='profile__assetBox'>
-      {collapse && <div className='profile__assetBox-header' onClick={() => setIsShowBody(x => !x)}>
-        <div>{title}</div>
-        <TiIcon.TiArrowSortedDown className={`icon ${isShowBody ? 'rotate' : ''}`} />
-      </div>}
+      {collapse && (
+        <div className='profile__assetBox-header' onClick={() => setIsShowBody(x => !x)}>
+          <div>{title}</div>
+          <TiIcon.TiArrowSortedDown className={`icon ${isShowBody ? 'rotate' : ''}`} />
+        </div>
+      )}
+
       {isShowBody && <div className='profile__assetBox-body'>{children}</div>}
     </div>
   );

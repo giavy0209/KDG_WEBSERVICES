@@ -3,12 +3,12 @@ import * as BiIcon from 'react-icons/bi';
 import * as RiIcon from 'react-icons/ri';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { Avatar, PopupBox } from '..';
+import { Avatar, MenuBox, PopupBox } from '..';
 import '../../assets/css/video-info.css';
 import callAPI from '../../axios';
 import { BREAK_POINT_SMALL, STORAGE_DOMAIN } from '../../constant';
 import { useLanguageLayerValue } from '../../context/LanguageLayer';
-import { convertDate, convertDateAgo, rippleEffect } from '../../helpers';
+import { convertDate, convertDateAgo } from '../../helpers';
 import useNumber from '../../hooks/useNumber';
 import useWindowSize from '../../hooks/useWindowSize';
 
@@ -156,6 +156,9 @@ const VideoInfo = props => {
             <div className='label'>{videoinfo[language].desc}</div>
             <textarea name='description' defaultValue={video?.description}></textarea>
 
+            <div className='label'>{videoinfo[language].tags}</div>
+            <input type='text' name='tags' defaultValue={video?.tags} />
+
             <button style={{ width: '100%' }} className='button'>
               {videoinfo[language].edit}
             </button>
@@ -167,22 +170,33 @@ const VideoInfo = props => {
         <span>{video?.name}</span>
 
         {user?._id === video?.user._id && (
-          <div className='videoInfo__menuBox' onClick={() => setShowMenu(x => !x)}>
-            <div className='rippleBox' onClick={rippleEffect}></div>
+          // <div className='menuBox' onClick={() => setShowMenu(x => !x)}>
+          //   <div className='rippleBox' onClick={rippleEffect}></div>
 
-            <BiIcon.BiDotsVerticalRounded className='menu-icon' />
+          //   <BiIcon.BiDotsVerticalRounded className='menuBox__icon' />
 
-            <div className={`menu ${showMenu ? 'show' : ''}`}>
-              <div className='menu-item' onClick={() => setShowEdit(true)}>
-                <BiIcon.BiEditAlt className='icon' />
-                {videoinfo[language].edit}
-              </div>
-              <div className='menu-item'>
-                <BiIcon.BiEditAlt className='icon' />
-                {videoinfo[language].delete}
-              </div>
+          //   <div className={`menuBox__menuList ${showMenu ? 'show' : ''}`}>
+          //     <div className='menuBox__menuItem' onClick={() => setShowEdit(true)}>
+          //       <BiIcon.BiEditAlt className='icon' />
+          //       {videoinfo[language].edit}
+          //     </div>
+          //     <div className='menuBox__menuItem'>
+          //       <BiIcon.BiEditAlt className='icon' />
+          //       {videoinfo[language].delete}
+          //     </div>
+          //   </div>
+          // </div>
+
+          <MenuBox>
+            <div className='menuBox__menuItem' onClick={() => setShowEdit(true)}>
+              <BiIcon.BiEditAlt className='icon' />
+              {videoinfo[language].edit}
             </div>
-          </div>
+            <div className='menuBox__menuItem'>
+              <BiIcon.BiEditAlt className='icon' />
+              {videoinfo[language].delete}
+            </div>
+          </MenuBox>
         )}
       </div>
 
