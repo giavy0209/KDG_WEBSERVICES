@@ -10,17 +10,18 @@ import { useLanguageLayerValue } from '../../context/LanguageLayer';
 import { convertDate, convertDateAgo } from '../../helpers';
 import useWindowSize from '../../hooks/useWindowSize';
 
-export default function Personal() {
+export default function Personal({UserOwner}) {
   const uid = new URLSearchParams(useLocation().search).get('uid');
   const user = useSelector(state => state.user);
+
+  const video = useMemo(() => UserOwner?.kinglive?.introduce , [UserOwner])
 
   const history = useHistory();
   const [{ language, profile }] = useLanguageLayerValue();
   const [width] = useWindowSize();
-
-  const [Videos, setVideos] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [ShowEdit, setShowEdit] = useState(null);
+  const [Videos, setVideos] = useState([]);
 
   const isLoadRef = useRef(true);
   const isLoadingAPI = useRef(false);
@@ -112,10 +113,6 @@ export default function Personal() {
     [ShowEdit, Videos]
   );
 
-  const [video, setVideo] = useState(null);
-  useMemo(() => {
-    callAPI.get('/video?sid=8ca0f7').then(res => setVideo(res.data));
-  }, []);
 
   const handleSetIntroduce = useCallback(async id => {
     await callAPI.post('/set_introduce', { video: id });
@@ -123,7 +120,7 @@ export default function Personal() {
 
   return (
     <>
-      {/* {ShowEdit && (
+      {ShowEdit && (
         <div className='popupBox' onClick={e => e.stopPropagation()}>
           <div className='mask' onClick={() => setShowEdit(null)}></div>
 
@@ -143,8 +140,7 @@ export default function Personal() {
           </form>
         </div>
 
-        user.kinglive.introduce
-      )} */}
+      )}
 
       {video && (
         <div className='video-pinned'>
@@ -160,17 +156,15 @@ export default function Personal() {
 
           <div className='video-pinned__videoInfoBox'>
             <div className='video-pinned__videoInfoBox-title'>
-              Epic Riddles Marathon Only Bravest Detectives Can Pass
+              {video.name}
             </div>
             <div className='video-pinned__videoInfoBox-view'>
-              <span>39 views</span>
+              <span>{video.views} views</span>
               <span> • </span>
-              <span>8 days ago</span>
+              <span>{convertDateAgo(video.create_date)}</span>
             </div>
             <div className='video-pinned__videoInfoBox-description'>
-              Are you a fan of solving different puzzles, sudoku or crosswords? Here's a fresh set
-              of riddles to entertain and train your brain. Let's see how many you can crack and
-              share your number down...
+              {video.description}
             </div>
           </div>
         </div>

@@ -279,7 +279,7 @@ const Profile = () => {
         </div>
       </div>
 
-      <MainContainer uid={uid} user={user} />
+      <MainContainer UserOwner={UserOwner} uid={uid} user={user} />
     </div>
   );
 };
