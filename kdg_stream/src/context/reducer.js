@@ -190,12 +190,23 @@ const formForgot = {
   },
 };
 
-const header = {
+const qr = {
   vi: {
     copied: 'Đã sao chép địa chỉ',
     deposit: 'Nạp KDG',
     scan_here: 'Scan tại đây để nạp',
     or_copy: 'Hoặc sao chép địa chỉ tại đây',
+  },
+  en: {
+    copied: 'Copied address',
+    deposit: 'Deposit KDG',
+    scan_here: 'Scan here to deposit',
+    or_copy: 'Or copy the address here',
+  },
+};
+
+const header = {
+  vi: {
     search: 'Tìm kiếm',
     notification: 'Thông báo',
     notihere: 'Thông báo của bạn ở đây',
@@ -214,10 +225,6 @@ const header = {
     noti105: 'data1 đang phát trực tiếp',
   },
   en: {
-    copied: 'Copied address',
-    deposit: 'Deposit KDG',
-    scan_here: 'Scan here to deposit',
-    or_copy: 'Or copy the address here',
     search: 'Search',
     notification: 'Notifications',
     notihere: 'Your notifications live here',
@@ -565,6 +572,7 @@ export const initialState = {
   formRegister,
   formForgot,
   header,
+  qr,
   hooksNumber,
   cover,
   home,

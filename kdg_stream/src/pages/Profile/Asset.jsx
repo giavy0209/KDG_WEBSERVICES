@@ -2,12 +2,12 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import * as TiIcon from 'react-icons/ti';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import callAPI from '../../axios';
-import { AssetBox, Table } from '../../components';
-import { useLanguageLayerValue } from '../../context/LanguageLayer';
-import { convertDate, convertDateAgo } from '../../helpers';
 import depositIcon from '../../assets/images/deposit.svg';
 import tradeIcon from '../../assets/images/trade.svg';
+import callAPI from '../../axios';
+import { AssetBox, PopupBox, QR, Table } from '../../components';
+import { useLanguageLayerValue } from '../../context/LanguageLayer';
+import { convertDate, convertDateAgo } from '../../helpers';
 
 export default function Asset() {
   const [{ language, profile }] = useLanguageLayerValue();
@@ -164,18 +164,27 @@ export default function Asset() {
   // const [type, setType] = useState('changes');
   // const [pack, setPack] = useState(null);
 
+  const balanceKDG = useSelector(state => state.balanceKDG);
+  const [showDeposit, setShowDeposit] = useState(false);
+
   return (
     <>
       {/* {isShow && <Popper1 type={type} pack={pack} />} */}
 
+      {showDeposit && (
+        <PopupBox onCancel={setShowDeposit}>
+          <QR onCancel={setShowDeposit} />
+        </PopupBox>
+      )}
+
       <AssetBox title='Balance'>
         <div className='profile__balance'>
           <div className='profile__balance-balance mr-30'>
-            <span>100,000,000</span>
+            <span>{balanceKDG}</span>
             <span>KDG</span>
           </div>
 
-          <div className='profile__balance-deposit mr-30'>
+          <div className='profile__balance-deposit mr-30' onClick={() => setShowDeposit(true)}>
             <img src={depositIcon} alt='icon' />
             <span>Deposit</span>
           </div>
