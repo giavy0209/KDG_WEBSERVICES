@@ -13,6 +13,7 @@ import useWindowSize from '../../hooks/useWindowSize';
 export default function Personal() {
   const uid = new URLSearchParams(useLocation().search).get('uid');
   const user = useSelector(state => state.user);
+
   const history = useHistory();
   const [{ language, profile }] = useLanguageLayerValue();
   const [width] = useWindowSize();
