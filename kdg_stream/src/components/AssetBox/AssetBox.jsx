@@ -8,7 +8,7 @@ const assetBody = (
 );
 
 const AssetBox = props => {
-  const { title = 'Asset Title', children = assetBody ,collapse = true} = props;
+  const { title = 'Asset Title', children = assetBody, collapse = true } = props;
 
   const [isShowBody, setIsShowBody] = useState(true);
 
