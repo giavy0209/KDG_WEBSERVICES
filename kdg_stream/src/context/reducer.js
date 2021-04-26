@@ -290,6 +290,8 @@ const home = {
 
 const profile = {
   vi: {
+    nickname: 'nickname',
+    total_kdg: 'Tổng KDG',
     edit: 'Chỉnh sửa',
     follow: 'Theo dõi',
     unfollow: 'Bỏ theo dõi',
@@ -321,6 +323,8 @@ const profile = {
     tags: 'Thẻ',
   },
   en: {
+    nickname: 'nickname',
+    total_kdg: 'Total KDG',
     edit: 'Edit',
     follow: 'Follow',
     unfollow: 'Unfollow',

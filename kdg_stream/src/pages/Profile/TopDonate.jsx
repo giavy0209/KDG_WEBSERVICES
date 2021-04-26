@@ -15,11 +15,15 @@ export default function TopDonate () {
 
     const storageHead = useMemo(() => {
         return [
-          {
-            key: 'from',
-            name: profile[language].gift,
-            render: from => from.email
-          },
+            {
+              key: 'from',
+              name: profile[language].nickname,
+              render: from => from.email
+            },
+            {
+              key: 'value',
+              name: profile[language].total_kdg,
+            },
         ];
       }, [language, profile]);
     return (
