@@ -612,6 +612,12 @@
     }
   }
 
+  &__table {
+    overflow-x: auto;
+
+    margin-top: 30px;
+  }
+
   &__link {
     cursor: pointer;
     user-select: none;
@@ -624,43 +630,6 @@
 
     &:hover {
       text-decoration: underline;
-    }
-  }
-
-  &__historyTitle {
-    cursor: pointer;
-    user-select: none;
-    position: relative;
-
-    &:hover::before {
-      content: '';
-      z-index: 1;
-      pointer-events: none;
-      position: absolute;
-      top: -10px;
-      left: -10px;
-      right: -10px;
-      bottom: -10px;
-      border-radius: 5px;
-      background-color: $background-color-hover;
-    }
-
-    span {
-      position: relative;
-      z-index: 2;
-    }
-
-    svg {
-      z-index: 2;
-    }
-  }
-
-  &__history {
-    transition: 0.3s;
-
-    display: none;
-    &.show {
-      display: block;
     }
   }
 
