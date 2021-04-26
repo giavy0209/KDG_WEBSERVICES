@@ -8,15 +8,15 @@ const assetBody = (
 );
 
 const AssetBox = props => {
-  const { title = 'Asset Title', children = assetBody } = props;
+  const { title = 'Asset Title', children = assetBody ,collapse = true} = props;
 
   const [isShowBody, setIsShowBody] = useState(true);
 
   return (
     <div className='profile__assetBox'>
-      <div className='profile__assetBox-header' onClick={() => setIsShowBody(x => !x)}>
+      <div className='profile__assetBox-header' onClick={() => collapse && setIsShowBody(x => !x)}>
         <div>{title}</div>
-        <TiIcon.TiArrowSortedDown className={`icon ${isShowBody ? 'rotate' : ''}`} />
+        {collapse && <TiIcon.TiArrowSortedDown className={`icon ${isShowBody ? 'rotate' : ''}`} />}
       </div>
       {isShowBody && <div className='profile__assetBox-body'>{children}</div>}
     </div>
