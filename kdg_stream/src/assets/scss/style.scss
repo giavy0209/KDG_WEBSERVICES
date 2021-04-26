@@ -248,3 +248,62 @@
     border: 1px solid $main-color;
   }
 }
+
+.video-pinned {
+  display: flex;
+  align-items: flex-start;
+
+  margin-top: 20px;
+
+  &__videoBox {
+    width: 45%;
+
+    position: relative;
+
+    background-color: #000;
+
+    &::before {
+      content: '';
+      display: block;
+      padding-top: 55%;
+    }
+
+    > iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+
+      width: 100%;
+      height: 100%;
+
+      border: none;
+    }
+  }
+
+  &__videoInfoBox {
+    flex: 1;
+
+    padding-left: 20px;
+    padding-right: 20%;
+
+    line-height: 1.5;
+
+    &-title {
+      color: $title-color;
+
+      margin-bottom: 5px;
+    }
+
+    &-view {
+      font-size: $size-7;
+
+      margin-bottom: 15px;
+    }
+
+    &-description {
+      font-size: $size-7;
+
+      @include hidden-text(5);
+    }
+  }
+}

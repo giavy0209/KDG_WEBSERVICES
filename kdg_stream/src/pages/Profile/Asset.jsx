@@ -198,44 +198,42 @@ export default function Asset() {
       </AssetBox>
 
       <AssetBox title='Storage'>
-        <div className='profile__table'>
+        <div className='profile__table pt-20 pb-20 pl-30 pr-30'>
           <Table dataHead={storageHead} dataBody={GiftStorage || []} />
         </div>
       </AssetBox>
 
       <AssetBox title='Transaction History'>
-        <div className='profile__boxManage-tabs'>
-          <div className='item'>
+        <div className='pt-20 pb-20 pl-30 pr-30'>
+          <div className='profile__tabs'>
             <div
               onClick={() => setHistoryActive(8)}
-              className={`tab ${HistoryActive === 8 ? 'active' : ''}`}
+              className={`profile__tabs-tab ${HistoryActive === 8 ? 'active' : ''}`}
             >
-              Trading History
+              Swap History
             </div>
-          </div>
-          <div className='item'>
+
             <div
               onClick={() => setHistoryActive(7)}
-              className={`tab ${HistoryActive === 7 ? 'active' : ''}`}
+              className={`profile__tabs-tab ${HistoryActive === 7 ? 'active' : ''}`}
             >
               Gift History
             </div>
           </div>
-        </div>
 
-        <div className='profile__table'>
-          <Table dataHead={historyHead} dataBody={History} />
-        </div>
-
-        {IsMoreHistory && (
-          <div className='profile__link' onClick={getHistory}>
-            View More
+          <div className='profile__table mt-30'>
+            <Table dataHead={historyHead} dataBody={History} />
           </div>
-        )}
+
+          {IsMoreHistory && (
+            <div className='profile__link' onClick={getHistory}>
+              View More
+            </div>
+          )}
+        </div>
       </AssetBox>
 
-      {/* <div className='profile__boxManage'>
-        <div className='profile__boxManage-title'>Manage Donate</div>
+      {/* <AssetBox title='Package Donate'>
         <div
           className={`layoutFlex layout-8`}
           style={{ '--gap-column': '60px', '--gap-row': '30px' }}
@@ -267,7 +265,7 @@ export default function Asset() {
             <HiIcon.HiPlus className='icon' />
           </div>
         </div>
-      </div> */}
+      </AssetBox> */}
     </>
   );
 }
