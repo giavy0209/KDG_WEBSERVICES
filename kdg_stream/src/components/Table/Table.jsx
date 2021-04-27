@@ -25,7 +25,7 @@ const Table = ({ dataHead, dataBody }) => {
                 }
                 key={o.key}
               >
-                {typeof o.render === 'function' ? o.render(obj[o.key], obj, dataBody) : obj[o.key]}
+                {typeof o.render === 'function' ? o.render(obj[o.key], obj, dataBody , i) : obj[o.key]}
               </td>
             ))}
           </tr>

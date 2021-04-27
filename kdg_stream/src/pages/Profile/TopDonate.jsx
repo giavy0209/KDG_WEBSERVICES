@@ -16,6 +16,11 @@ export default function TopDonate() {
   const storageHead = useMemo(() => {
     return [
       {
+        key: '_id',
+        name: "No",
+        render: (_id , obj , array , index) => index,
+      },
+      {
         key: 'from',
         name: profile[language].nickname,
         render: from => from.email,
