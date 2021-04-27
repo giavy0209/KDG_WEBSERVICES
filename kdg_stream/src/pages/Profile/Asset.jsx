@@ -168,6 +168,9 @@ export default function Asset() {
       {
         key: 'create_date',
         name: profile[language].date,
+        style: {
+          width: '35%',
+        },
         render: date => (
           <span
             style={{ cursor: 'pointer' }}
@@ -193,15 +196,21 @@ export default function Asset() {
       {
         key: 'gift',
         name: profile[language].gift,
+        style: {
+          width: '25%',
+        },
         render: gift => gift.name,
       },
       {
         key: 'value',
         name: profile[language].amount,
+        style: {
+          width: '40%',
+        },
         render: value => (
           <div>
             {Math.round(value * 1000) / 1000}{' '}
-            <span style={{ color: '#303030', fontWeight: 500 }}> KDG</span>
+            <span style={{ color: '#303030', fontWeight: 500 }}>KDG</span>
           </div>
         ),
       },

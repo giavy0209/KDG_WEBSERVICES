@@ -149,7 +149,7 @@ export default function Personal({ UserOwner }) {
               title='video'
               loading='lazy'
               allowFullScreen={true}
-              src={`https://iframe.mediadelivery.net/embed/1536/${video.guid}?autoplay=true`}
+              src={`https://iframe.mediadelivery.net/embed/1536/${video.guid}?autoplay=false`}
               allow='accelerometer; gyroscope; encrypted-media; picture-in-picture;'
             ></iframe>
           </div>
