@@ -2,8 +2,6 @@ import React from 'react';
 import '../../assets/css/table.css';
 
 const Table = ({ dataHead, dataBody }) => {
-  // console.log(dataHead);
-
   return (
     <table className='table'>
       <thead>
@@ -19,13 +17,15 @@ const Table = ({ dataHead, dataBody }) => {
           <tr key={i}>
             {dataHead.map(o => (
               <td
-                style={o.width ? { width: o.width } : {}}
+                key={o.key}
+                style={o.style || {}}
                 onClick={
                   typeof o.onClick === 'function' ? o.onClick(obj[o.key], obj, dataBody) : () => {}
                 }
-                key={o.key}
               >
-                {typeof o.render === 'function' ? o.render(obj[o.key], obj, dataBody , i) : obj[o.key]}
+                {typeof o.render === 'function'
+                  ? o.render(obj[o.key], obj, dataBody, i)
+                  : obj[o.key]}
               </td>
             ))}
           </tr>

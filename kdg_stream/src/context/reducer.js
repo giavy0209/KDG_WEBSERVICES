@@ -290,9 +290,9 @@ const home = {
 
 const profile = {
   vi: {
-    nickname: 'nickname',
+    sell_success: 'Bán thành công',
+    nickname: 'Nickname',
     total_kdg: 'Tổng KDG',
-    edit: 'Chỉnh sửa',
     follow: 'Theo dõi',
     unfollow: 'Bỏ theo dõi',
     followers: 'Người theo dõi',
@@ -312,6 +312,7 @@ const profile = {
     type9: 'Donate cho user_name',
     type10: 'Nhận donate từ user_name',
     quantity: 'Số lượng',
+    enter_quantity: 'Nhập số lượng quà',
     gift: 'Loại quà',
     action: 'Hành động',
     choose_img: 'Chọn hình',
@@ -323,9 +324,9 @@ const profile = {
     tags: 'Thẻ',
   },
   en: {
-    nickname: 'nickname',
+    sell_success: 'Sell successfully',
+    nickname: 'Nickname',
     total_kdg: 'Total KDG',
-    edit: 'Edit',
     follow: 'Follow',
     unfollow: 'Unfollow',
     followers: 'Followers',
@@ -346,7 +347,8 @@ const profile = {
     type10: 'Receive donate from user_name',
     quantity: 'Quantity',
     gift: 'Gift',
-    action: 'Action',
+    enter_quantity: 'Enter quantity gift',
+    action: 'Action (Sell)',
     choose_img: 'Choose image',
     upload_img: 'Upload image',
     change_avatar: 'Change Avatar',

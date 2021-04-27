@@ -20,9 +20,8 @@ import {
   STORAGE_DOMAIN,
 } from '../../constant';
 import { useLanguageLayerValue } from '../../context/LanguageLayer';
-import { convertDateAgo, storage } from '../../helpers';
-import useNumber from '../../hooks/useNumber';
-import useWindowSize from '../../hooks/useWindowSize';
+import { convertBalance, convertDateAgo, storage } from '../../helpers';
+import { useNumber, useWindowSize } from '../../hooks';
 import { actChangeUnreadNoti } from '../../store/action';
 
 const handleShowPopper = (fnMain, ...fnSubs) => () => {
@@ -39,7 +38,7 @@ const Header = () => {
 
   const unreadNoti = useSelector(state => state.unreadNoti);
   const noties = useSelector(state => state.noties);
-  const balanceKDG = useSelector(state => state.balanceKDG);
+  const balanceKDG = convertBalance(useSelector(state => state.balanceKDG));
 
   const user = useSelector(state => state.user);
   const uid = user?._id;

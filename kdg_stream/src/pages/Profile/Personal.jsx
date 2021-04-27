@@ -150,7 +150,7 @@ export default function Personal({ UserOwner }) {
               loading='lazy'
               allowFullScreen={true}
               src={`https://iframe.mediadelivery.net/embed/1536/${video.guid}?autoplay=true`}
-              allow='accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;'
+              allow='accelerometer; gyroscope; encrypted-media; picture-in-picture;'
             ></iframe>
           </div>
 

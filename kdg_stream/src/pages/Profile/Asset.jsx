@@ -6,12 +6,13 @@ import tradeIcon from '../../assets/images/trade.svg';
 import callAPI from '../../axios';
 import { AssetBox, PopupBox, QR, Table } from '../../components';
 import { useLanguageLayerValue } from '../../context/LanguageLayer';
-import { convertDate, convertDateAgo } from '../../helpers';
+import { convertBalance, convertDate, convertDateAgo } from '../../helpers';
 
 export default function Asset() {
   const [{ language, profile }] = useLanguageLayerValue();
 
   const GiftStorage = useSelector(state => state.giftStorage);
+  console.log(GiftStorage);
 
   const [History, setHistory] = useState([]);
 
@@ -22,35 +23,145 @@ export default function Asset() {
     /**
      * type : 7 = mua gift , 8 = bán gifts , 9 = donate , 10 = nhận donate
      */
+
+    const limit = 5;
+
     const res = await callAPI.get(
-      `/transactions?type=${HistoryActive}&skip=${History.length}&limit=5`
+      `/transactions?type=${HistoryActive}&skip=${History.length}&limit=${limit}`
     );
     setHistory([...History, ...res.data]);
-    if (res.data.length < 5) setIsMoreHistory(false);
+    if (res.data.length < limit) setIsMoreHistory(false);
   }, [History, HistoryActive]);
 
-  const renderType = useCallback(
-    (type, { gift: { name }, gift_user }) => {
-      const { kyc } = gift_user || {};
-      const { first_name, last_name } = kyc || {};
-      if (type === 7)
-        return profile[language].type7
-          .replace('user_name', `${first_name ? first_name : ''} ${last_name ? last_name : ''}`)
-          .replace('gift_name', name ? name : 'gift');
-      if (type === 8) return profile[language].type8.replace('gift_name', name);
-      if (type === 9)
-        return profile[language].type9.replace(
-          'user_name',
-          `${first_name ? first_name : ''} ${last_name ? last_name : ''}`
-        );
-      if (type === 10)
-        return profile[language].type10.replace(
-          'user_name',
-          `${first_name ? first_name : ''} ${last_name ? last_name : ''}`
-        );
+  // const renderType = useCallback(
+  //   (type, { gift: { name }, gift_user }) => {
+  //     const { kyc } = gift_user || {};
+  //     const { first_name, last_name } = kyc || {};
+  //     if (type === 7)
+  //       return profile[language].type7
+  //         .replace('user_name', `${first_name ? first_name : ''} ${last_name ? last_name : ''}`)
+  //         .replace('gift_name', name ? name : 'gift');
+  //     if (type === 8) return profile[language].type8.replace('gift_name', name);
+  //     if (type === 9)
+  //       return profile[language].type9.replace(
+  //         'user_name',
+  //         `${first_name ? first_name : ''} ${last_name ? last_name : ''}`
+  //       );
+  //     if (type === 10)
+  //       return profile[language].type10.replace(
+  //         'user_name',
+  //         `${first_name ? first_name : ''} ${last_name ? last_name : ''}`
+  //       );
+  //   },
+  //   [language, profile]
+  // );
+
+  const handleSellGift = useCallback(
+    async e => {
+      e.preventDefault();
+
+      const data = new FormData(e.target);
+      const submitData = {};
+      for (const iterator of data.entries()) {
+        submitData[iterator[0]] = iterator[1];
+      }
+      console.log(submitData);
+
+      await callAPI.post('/sell_gift', submitData);
+      toast(profile[language].sell_success);
     },
-    [language, profile]
+    [profile, language]
   );
+
+  const storageHead = useMemo(() => {
+    return [
+      {
+        key: 'gift',
+        name: profile[language].gift,
+        style: {
+          width: '35%',
+        },
+        render: gift => (
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <img style={{ width: '18%' }} src={gift.img} alt='' />
+            <span>{gift.name}</span>
+          </div>
+        ),
+      },
+      {
+        key: 'quantity',
+        name: profile[language].quantity,
+        style: {
+          width: '25%',
+        },
+      },
+      {
+        key: 'gift',
+        name: profile[language].action,
+        style: {
+          width: '40%',
+        },
+        render: (gift, obj) => (
+          <>
+            <form
+              onSubmit={handleSellGift}
+              style={{
+                backgroundColor: '#F7F7F7',
+                display: 'flex',
+                height: '33px',
+                borderRadius: '999px',
+                overflow: 'hidden',
+              }}
+            >
+              <input name='gift' type='text' style={{ display: 'none' }} defaultValue={gift._id} />
+              <input
+                onBlur={e => {
+                  const value = Number(e.target.value);
+                  if (value > obj.quantity) e.target.value = obj.quantity;
+                  if (value <= 0) e.target.value = 1;
+                }}
+                type='number'
+                name='quantity'
+                placeholder={profile[language].enter_quantity}
+                style={{
+                  backgroundColor: '#F7F7F7',
+                  flex: 1,
+                  paddingLeft: '10px',
+                }}
+              />
+              <button
+                type='button'
+                style={{
+                  cursor: 'pointer',
+                  color: '#f52871',
+                  backgroundColor: '#eaeaea',
+                  padding: '0 10px',
+                  fontSize: '16px',
+                }}
+                onClick={e => {
+                  e.target.previousElementSibling.value = obj.quantity;
+                }}
+              >
+                All
+              </button>
+              <button
+                type='submit'
+                style={{
+                  cursor: 'pointer',
+                  color: '#fff',
+                  backgroundColor: '#f52871',
+                  padding: '0 10px',
+                  fontSize: '16px',
+                }}
+              >
+                Sell
+              </button>
+            </form>
+          </>
+        ),
+      },
+    ];
+  }, [language, profile, handleSellGift]);
 
   const historyHead = useMemo(() => {
     return [
@@ -87,79 +198,22 @@ export default function Asset() {
       {
         key: 'value',
         name: profile[language].amount,
-        render: value => Math.round(value * 1000) / 1000,
-      },
-    ];
-  }, [language, profile, renderType]);
-
-  const handleSellGift = useCallback(async e => {
-    e.preventDefault();
-    const data = new FormData(e.target);
-    const submitData = {};
-    for (const iterator of data.entries()) {
-      submitData[iterator[0]] = iterator[1];
-    }
-    console.log(submitData);
-    await callAPI.post('/sell_gift',submitData);
-    toast('Đã bán thành công');
-  }, []);
-
-  const storageHead = useMemo(() => {
-    return [
-      {
-        key: 'gift',
-        name: profile[language].gift,
-        width: '30%',
-        render: gift => <img src={gift.img} alt='' />,
-      },
-      {
-        key: 'quantity',
-        name: profile[language].quantity,
-      },
-      {
-        key: 'gift',
-        name: profile[language].action,
-        width: '30%',
-        render: (gift, obj) => (
-          <>
-          <form onSubmit={handleSellGift} action="">
-            <input name="gift" type="text" style={{display : 'none'}} defaultValue={gift._id}/>
-            <input
-              onBlur={e => {
-                const value = Number(e.target.value);
-                if (value > obj.quantity) e.target.value = obj.quantity;
-                if (value <= 0) e.target.value = 1;
-              }}
-              type='number'
-              name='quantity'
-              placeholder='Enter quantity gift'
-            />
-            <button type="submit">Sell</button>
-            <button
-              type="button"
-              style={{
-                color: '#e41a7f',
-                backgroundColor: 'transparent',
-                marginLeft: '10px',
-                cursor: 'pointer',
-              }}
-              onClick={e => {
-                e.target.previousElementSibling.value = obj.quantity;
-              }}
-            >
-              All
-            </button>
-          </form>
-          </>
+        render: value => (
+          <div>
+            {Math.round(value * 1000) / 1000}{' '}
+            <span style={{ color: '#303030', fontWeight: 500 }}> KDG</span>
+          </div>
         ),
       },
     ];
-  }, [language, profile, handleSellGift]);
+  }, [language, profile]);
 
   useEffect(() => {
-    callAPI.get(`/transactions?type=${HistoryActive}&limit=5`).then(res => {
+    const limit = 5;
+
+    callAPI.get(`/transactions?type=${HistoryActive}&limit=${limit}`).then(res => {
       setHistory([...res.data]);
-      if (res.data.length < 5) setIsMoreHistory(false);
+      if (res.data.length < limit) setIsMoreHistory(false);
     });
   }, [HistoryActive]);
 
@@ -167,7 +221,7 @@ export default function Asset() {
   // const [type, setType] = useState('changes');
   // const [pack, setPack] = useState(null);
 
-  const balanceKDG = useSelector(state => state.balanceKDG);
+  const balanceKDG = convertBalance(useSelector(state => state.balanceKDG));
   const [showDeposit, setShowDeposit] = useState(false);
 
   return (
