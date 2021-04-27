@@ -94,13 +94,13 @@ export default function Asset() {
 
   const handleSellGift = useCallback(async e => {
     e.preventDefault();
-    console.log(e);
     const data = new FormData(e.target);
     const submitData = {};
     for (const iterator of data.entries()) {
       submitData[iterator[0]] = iterator[1];
     }
-    await callAPI.post('/sell_gift', submitData);
+    console.log(submitData);
+    await callAPI.post('/sell_gift',submitData);
     toast('Đã bán thành công');
   }, []);
 
@@ -122,6 +122,8 @@ export default function Asset() {
         width: '30%',
         render: (gift, obj) => (
           <>
+          <form onSubmit={handleSellGift} action="">
+            <input name="gift" type="text" style={{display : 'none'}} defaultValue={gift._id}/>
             <input
               onBlur={e => {
                 const value = Number(e.target.value);
@@ -132,7 +134,9 @@ export default function Asset() {
               name='quantity'
               placeholder='Enter quantity gift'
             />
+            <button type="submit">Sell</button>
             <button
+              type="button"
               style={{
                 color: '#e41a7f',
                 backgroundColor: 'transparent',
@@ -145,6 +149,7 @@ export default function Asset() {
             >
               All
             </button>
+          </form>
           </>
         ),
       },
