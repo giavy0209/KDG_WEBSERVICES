@@ -1,26 +1,32 @@
 import { CircularProgress } from '@material-ui/core';
-import { useCallback, useEffect, useRef, useState, useMemo } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import * as BiIcon from 'react-icons/bi';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router';
 import { toast } from 'react-toastify';
 import callAPI from '../../axios';
+import { CreateDate, MenuBox, PopupBox } from '../../components';
 import { BREAK_POINT_MEDIUM, STORAGE_DOMAIN } from '../../constant';
 import { useLanguageLayerValue } from '../../context/LanguageLayer';
-import { convertDate, convertDateAgo } from '../../helpers';
 import useWindowSize from '../../hooks/useWindowSize';
+import { actChangeVideoEditing } from '../../store/action';
 
 export default function Personal({ UserOwner }) {
   const uid = new URLSearchParams(useLocation().search).get('uid');
   const user = useSelector(state => state.user);
+  const videoEditting = useSelector(state => state.videoEditting);
+  console.log(videoEditting);
 
-  const video = useMemo(() => UserOwner?.kinglive?.introduce, [UserOwner]);
+  // const videoPinned = useMemo(() => UserOwner?.kinglive?.introduce, [UserOwner]);
+
+  const [videoPinned, setVideoPinned] = useState(UserOwner?.kinglive?.introduce);
+  useEffect(() => setVideoPinned(UserOwner?.kinglive?.introduce), [UserOwner]);
 
   const history = useHistory();
+  const dispatch = useDispatch();
   const [{ language, profile }] = useLanguageLayerValue();
   const [width] = useWindowSize();
   const [isLoading, setIsLoading] = useState(false);
-  const [ShowEdit, setShowEdit] = useState(null);
   const [Videos, setVideos] = useState([]);
 
   const isLoadMore = useRef(true);
@@ -34,7 +40,7 @@ export default function Personal({ UserOwner }) {
       `/videos?user=${uid}&limit=${limit}&last=${Videos[Videos.length - 1]?._id}`
     );
 
-    if (res.data.length <= limit) {
+    if (res.data.length === 0) {
       isLoadMore.current = false;
       setVideos([...Videos, ...res.data]);
       return;
@@ -96,7 +102,7 @@ export default function Personal({ UserOwner }) {
     [Videos]
   );
 
-  const handleEdit = useCallback(
+  const handleEditVideo = useCallback(
     async e => {
       e.preventDefault();
       const data = new FormData(e.target);
@@ -104,28 +110,47 @@ export default function Personal({ UserOwner }) {
       for (const iterator of data.entries()) {
         submitData[iterator[0]] = iterator[1];
       }
-      const res = await callAPI.put(`/video?id=${ShowEdit._id}`, submitData);
-      toast('Chỉnh sửa thành công');
 
-      const videoIndex = Videos.findIndex(o => o._id === ShowEdit._id);
-      Videos[videoIndex] = res.data;
-      setVideos([...Videos]);
-      ShowEdit(null);
+      try {
+        const res = await callAPI.put(`/video?id=${videoEditting._id}`, submitData);
+
+        if (videoEditting === videoPinned) {
+          setVideoPinned(res.data);
+        }
+
+        const videoIndex = Videos.findIndex(o => o._id === videoEditting._id);
+        Videos[videoIndex] = res.data;
+        setVideos([...Videos]);
+
+        setShowPopup(false);
+        toast(profile[language].edit_success);
+      } catch (error) {
+        console.log('Error edit video', error);
+        toast(profile[language].edit_fail);
+      }
     },
-    [ShowEdit, Videos]
+    [videoEditting, Videos, profile, language]
   );
 
   const handleSetIntroduce = useCallback(async id => {
     await callAPI.post('/set_introduce', { video: id });
   }, []);
 
+  const [showPopup, setShowPopup] = useState(false);
+
+  const MODE = {
+    edit: 'edit',
+    delete: 'delete',
+  };
+  const [mode, setMode] = useState(MODE.edit);
+
   return (
     <>
-      {ShowEdit && (
+      {/* {ShowEdit && (
         <div className='popupBox' onClick={e => e.stopPropagation()}>
           <div className='mask' onClick={() => setShowEdit(null)}></div>
 
-          <form className='content' onSubmit={handleEdit}>
+          <form className='content' onSubmit={handleEditVideo}>
             <div className='label'>{profile[language].title}</div>
             <input type='text' name='name' defaultValue={ShowEdit?.name} />
 
@@ -140,28 +165,75 @@ export default function Personal({ UserOwner }) {
             </button>
           </form>
         </div>
+      )} */}
+
+      {showPopup && (
+        <PopupBox onCancel={setShowPopup}>
+          {mode === MODE.edit && (
+            <form className='form-edit' onSubmit={handleEditVideo}>
+              <div className='label'>Title</div>
+              <input type='text' name='name' defaultValue={videoEditting?.name} />
+
+              <div className='label'>Description</div>
+              <textarea name='description' defaultValue={videoEditting?.description}></textarea>
+
+              <div className='label'>Tags</div>
+              <input type='text' name='tags' defaultValue={videoEditting?.tags.join()} />
+
+              <button style={{ width: '100%' }} className='button'>
+                Edit
+              </button>
+            </form>
+          )}
+        </PopupBox>
       )}
 
-      {video && (
-        <div className='video-pinned'>
+      {videoPinned && (
+        <div
+          className='video-pinned'
+          onClick={() => {
+            window.scrollTo(0, 0);
+            history.push('/watch?v=' + videoPinned.short_id);
+          }}
+        >
+          <MenuBox>
+            <div
+              className='menuBox__menuItem'
+              onClick={() => {
+                dispatch(actChangeVideoEditing(videoPinned));
+                setMode(MODE.edit);
+                setShowPopup(true);
+              }}
+            >
+              <BiIcon.BiEditAlt className='icon' />
+              {profile[language].edit}
+            </div>
+            <div className='menuBox__menuItem'>
+              <BiIcon.BiEditAlt className='icon' />
+              {profile[language].delete}
+            </div>
+          </MenuBox>
+
           <div className='video-pinned__videoBox'>
             <iframe
               title='video'
               loading='lazy'
               allowFullScreen={true}
-              src={`https://iframe.mediadelivery.net/embed/1536/${video.guid}?autoplay=false`}
+              src={`https://iframe.mediadelivery.net/embed/1536/${videoPinned.guid}?autoplay=false`}
               allow='accelerometer; gyroscope; encrypted-media; picture-in-picture;'
             ></iframe>
           </div>
 
           <div className='video-pinned__videoInfoBox'>
-            <div className='video-pinned__videoInfoBox-title'>{video.name}</div>
+            <div className='video-pinned__videoInfoBox-title'>{videoPinned.name}</div>
             <div className='video-pinned__videoInfoBox-view'>
-              <span>{video.views} views</span>
+              <span>
+                {videoPinned.views} {profile[language].views}
+              </span>
               <span> • </span>
-              <span>{convertDateAgo(video.create_date)}</span>
+              <CreateDate create_date={videoPinned.create_date} />
             </div>
-            <div className='video-pinned__videoInfoBox-description'>{video.description}</div>
+            <div className='video-pinned__videoInfoBox-description'>{videoPinned.description}</div>
           </div>
         </div>
       )}
@@ -183,7 +255,7 @@ export default function Personal({ UserOwner }) {
                 onClick={() => history.push('/watch?v=' + o.short_id)}
               >
                 <div className='profile__video'>
-                  {uid === user?._id && (
+                  {/* {uid === user?._id && (
                     <span
                       className='profile__video-more'
                       onClick={e => {
@@ -211,7 +283,32 @@ export default function Personal({ UserOwner }) {
                         </div>
                       </div>
                     </span>
+                  )} */}
+
+                  {uid === user?._id && (
+                    <MenuBox>
+                      <div
+                        className='menuBox__menuItem'
+                        onClick={() => {
+                          dispatch(actChangeVideoEditing(o));
+                          setMode(MODE.edit);
+                          setShowPopup(true);
+                        }}
+                      >
+                        <BiIcon.BiEditAlt className='icon' />
+                        {profile[language].edit}
+                      </div>
+                      <div className='menuBox__menuItem' onClick={() => handleSetIntroduce(o._id)}>
+                        <BiIcon.BiEditAlt className='icon' />
+                        Đặt làm video giới thiệu
+                      </div>
+                      <div className='menuBox__menuItem'>
+                        <BiIcon.BiEditAlt className='icon' />
+                        {profile[language].delete}
+                      </div>
+                    </MenuBox>
                   )}
+
                   <div className='profile__video-thumbnail'>
                     <img
                       onMouseOver={e => {
@@ -244,25 +341,7 @@ export default function Personal({ UserOwner }) {
                         {o.views} {profile[language].views}
                       </span>
                       <span> • </span>
-                      <span
-                        data-date={convertDate(o.create_date)}
-                        data-ago={convertDateAgo(o.create_date)}
-                        data-current='ago'
-                        onClick={e => {
-                          e.stopPropagation();
-                          const el = e.target;
-                          const current = el.getAttribute('data-current');
-                          if (current === 'ago') {
-                            el.setAttribute('data-current', 'date');
-                            el.innerText = el.getAttribute('data-date');
-                          } else {
-                            el.setAttribute('data-current', 'ago');
-                            el.innerText = el.getAttribute('data-ago');
-                          }
-                        }}
-                      >
-                        {convertDateAgo(o.create_date)}
-                      </span>
+                      <CreateDate create_date={o.create_date} />
                     </div>
                     {/* <p className='profile__video-info-tag'></p> */}
                     <p className='profile__video-info-desc'>{o.description}</p>

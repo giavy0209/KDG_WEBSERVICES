@@ -23,6 +23,7 @@ import AssetBox from './AssetBox';
 import PopupBox from './PopupBox';
 import QR from './QR';
 import MenuBox from './MenuBox';
+import CreateDate from './CreateDate';
 
 export {
   Footer,
@@ -50,4 +51,5 @@ export {
   PopupBox,
   QR,
   MenuBox,
+  CreateDate,
 };

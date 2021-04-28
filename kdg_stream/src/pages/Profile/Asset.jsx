@@ -29,8 +29,10 @@ export default function Asset() {
     const res = await callAPI.get(
       `/transactions?type=${HistoryActive}&skip=${History.length}&limit=${limit}`
     );
+
     setHistory([...History, ...res.data]);
-    if (res.data.length < limit) setIsMoreHistory(false);
+
+    if (res.data.length === 0) setIsMoreHistory(false);
   }, [History, HistoryActive]);
 
   // const renderType = useCallback(
@@ -83,7 +85,7 @@ export default function Asset() {
         },
         render: gift => (
           <div style={{ display: 'flex', alignItems: 'center' }}>
-            <img style={{ width: '18%' }} src={gift.img} alt='' />
+            <img style={{ width: '18%', marginRight: '5px' }} src={gift.img} alt='' />
             <span>{gift.name}</span>
           </div>
         ),
@@ -222,7 +224,7 @@ export default function Asset() {
 
     callAPI.get(`/transactions?type=${HistoryActive}&limit=${limit}`).then(res => {
       setHistory([...res.data]);
-      if (res.data.length < limit) setIsMoreHistory(false);
+      if (res.data.length === 0) setIsMoreHistory(false);
     });
   }, [HistoryActive]);
 
@@ -245,12 +247,12 @@ export default function Asset() {
 
       <AssetBox title='Balance'>
         <div className='profile__balance'>
-          <div className='profile__balance-balance mr-30'>
+          <div className='profile__balance-balance'>
             <span>{balanceKDG}</span>
             <span>KDG</span>
           </div>
 
-          <div className='profile__balance-deposit mr-30' onClick={() => setShowDeposit(true)}>
+          <div className='profile__balance-deposit' onClick={() => setShowDeposit(true)}>
             <img src={depositIcon} alt='icon' />
             <span>Deposit</span>
           </div>

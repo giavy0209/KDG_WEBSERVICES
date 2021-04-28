@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import * as BiIcon from 'react-icons/bi';
-import { rippleEffect } from '../../helpers';
 import '../../assets/css/menu-box.css';
+import { rippleEffect } from '../../helpers';
 
 const menuItem = (
   <div className='menuBox__menuItem'>
@@ -15,8 +15,22 @@ const MenuBox = props => {
 
   const [showMenu, setShowMenu] = useState(false);
 
+  useEffect(() => {
+    const hideMenu = () => setShowMenu(false);
+
+    window.addEventListener('click', hideMenu);
+
+    return () => window.removeEventListener('click', hideMenu);
+  }, []);
+
   return (
-    <div className='menuBox' onClick={() => setShowMenu(x => !x)}>
+    <div
+      className='menuBox'
+      onClick={e => {
+        e.stopPropagation();
+        setShowMenu(x => !x);
+      }}
+    >
       <div className='rippleBox' onClick={rippleEffect}></div>
 
       <BiIcon.BiDotsVerticalRounded className='menuBox__icon' />

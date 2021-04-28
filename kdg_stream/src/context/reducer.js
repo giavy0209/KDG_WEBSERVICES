@@ -290,6 +290,8 @@ const home = {
 
 const profile = {
   vi: {
+    edit_fail: 'Chỉnh sửa thất bại. Vui lòng thử lại!',
+    edit_success: 'Chỉnh sửa thành công',
     sell_success: 'Bán thành công',
     nickname: 'Nickname',
     total_kdg: 'Tổng KDG',
@@ -322,8 +324,12 @@ const profile = {
     title: 'Tiêu đề',
     desc: 'Mô tả',
     tags: 'Thẻ',
+    edit: 'Chỉnh sửa',
+    delete: 'Xoá',
   },
   en: {
+    edit_fail: 'Failed to edit. Please try again!',
+    edit_success: 'Edit successfully',
     sell_success: 'Sell successfully',
     nickname: 'Nickname',
     total_kdg: 'Total KDG',
@@ -348,7 +354,7 @@ const profile = {
     quantity: 'Quantity',
     gift: 'Gift',
     enter_quantity: 'Enter quantity gift',
-    action: 'Action (Sell)',
+    action: 'Action',
     choose_img: 'Choose image',
     upload_img: 'Upload image',
     change_avatar: 'Change Avatar',
@@ -356,6 +362,8 @@ const profile = {
     title: 'Title',
     desc: 'Description',
     tags: 'Tags',
+    edit: 'Edit',
+    delete: 'Delete',
   },
 };
 

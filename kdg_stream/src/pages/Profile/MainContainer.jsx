@@ -4,7 +4,7 @@ import Asset from './Asset';
 import Personal from './Personal';
 import TopDonate from './TopDonate';
 
-export default function MainContainer({ uid, user , UserOwner}) {
+export default function MainContainer({ uid, user, UserOwner }) {
   const [{ language, profile }] = useLanguageLayerValue();
 
   return (
@@ -25,7 +25,7 @@ export default function MainContainer({ uid, user , UserOwner}) {
         </Tab>
       )}
 
-      {uid !== user?._id && <Personal />}
+      {uid !== user?._id && <Personal UserOwner={UserOwner} />}
     </div>
   );
 }

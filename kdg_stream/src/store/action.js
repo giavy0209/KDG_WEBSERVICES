@@ -15,3 +15,12 @@ export function actChangeUnreadNoti(unreadNoti) {
     payload: { unreadNoti },
   };
 }
+
+export const CHANGE_VIDEO_EDITING = 'CHANGE_VIDEO_EDITING';
+
+export function actChangeVideoEditing(videoEditting) {
+  return {
+    type: CHANGE_VIDEO_EDITING,
+    payload: { videoEditting },
+  };
+}

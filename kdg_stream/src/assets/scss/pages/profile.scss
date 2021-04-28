@@ -255,67 +255,26 @@
 
     position: relative;
 
-    &-more {
-      padding: 10px;
-      position: absolute;
-      top: 0;
-      right: 0;
-      color: #888;
-      z-index: 9;
-      &:hover {
-        > svg {
-          color: #000;
-          pointer-events: none;
-        }
-      }
-      &.show {
-        .menu {
-          opacity: 1;
-          top: 100%;
-          pointer-events: all;
-        }
-      }
-      .menu {
-        top: calc(100% + 10px);
-        opacity: 0;
-        pointer-events: none;
-        transition: 0.3s;
-        z-index: 9;
-        position: absolute;
-        top: 100%;
-        border: 1px solid #ccc;
-        width: 150px;
-        right: 0;
-        padding: 10px;
-        .menu-item {
-          + .menu-item {
-            margin-top: 10px;
-          }
-        }
-      }
-    }
-
     // @extend %hover-effect;
 
     &-thumbnail {
       width: 30%;
 
-      z-index: 2;
+      // z-index: 2;
       position: relative;
 
       &::before {
         content: '';
-
         display: block;
         padding-top: 55%;
       }
 
       > img {
-        display: block;
-
         position: absolute;
         top: 0;
         left: 0;
+
+        display: block;
         width: 100%;
         height: 100%;
 
@@ -324,11 +283,12 @@
     }
 
     &-info {
-      z-index: 2;
-      position: relative;
+      // z-index: 2;
+      // position: relative;
 
-      width: calc(100% - 30%);
+      width: 70%;
       padding-left: 10px;
+      padding-right: 34px;
 
       &-title {
         color: $sub-title-color;
@@ -452,7 +412,7 @@
   &__tabs {
     display: flex;
 
-    > div:not(:last-child) {
+    > *:not(:last-child) {
       margin-right: 20px;
     }
 
@@ -534,6 +494,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
+
+    > *:not(:last-child) {
+      margin-right: 20px;
+    }
 
     &-balance {
       display: flex;
