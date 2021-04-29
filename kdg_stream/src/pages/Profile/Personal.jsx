@@ -129,7 +129,7 @@ export default function Personal({ UserOwner }) {
         toast(profile[language].edit_fail);
       }
     },
-    [videoEditting, Videos, profile, language]
+    [videoEditting, Videos, profile, language, videoPinned]
   );
 
   const handleSetIntroduce = useCallback(async id => {
@@ -196,23 +196,25 @@ export default function Personal({ UserOwner }) {
             history.push('/watch?v=' + videoPinned.short_id);
           }}
         >
-          <MenuBox>
-            <div
-              className='menuBox__menuItem'
-              onClick={() => {
-                dispatch(actChangeVideoEditing(videoPinned));
-                setMode(MODE.edit);
-                setShowPopup(true);
-              }}
-            >
-              <BiIcon.BiEditAlt className='icon' />
-              {profile[language].edit}
-            </div>
-            <div className='menuBox__menuItem'>
-              <BiIcon.BiEditAlt className='icon' />
-              {profile[language].delete}
-            </div>
-          </MenuBox>
+          {uid === user?._id && (
+            <MenuBox>
+              <div
+                className='menuBox__menuItem'
+                onClick={() => {
+                  dispatch(actChangeVideoEditing(videoPinned));
+                  setMode(MODE.edit);
+                  setShowPopup(true);
+                }}
+              >
+                <BiIcon.BiEditAlt className='icon' />
+                {profile[language].edit}
+              </div>
+              <div className='menuBox__menuItem'>
+                <BiIcon.BiEditAlt className='icon' />
+                {profile[language].delete}
+              </div>
+            </MenuBox>
+          )}
 
           <div className='video-pinned__videoBox'>
             <iframe
