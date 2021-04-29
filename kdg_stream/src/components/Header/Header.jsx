@@ -219,7 +219,7 @@ const Header = () => {
             }}
           >
             <img className='icon' src={assetIcon} alt='' />
-            <span>{header[language].assetmanagement}</span>
+            <span>{header[language].asset}</span>
           </div>
         </div>
         <div

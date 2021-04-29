@@ -15,7 +15,7 @@ export default function MainContainer({ uid, user, UserOwner }) {
             <Personal UserOwner={UserOwner} />
           </TabPane>
 
-          <TabPane name={profile[language].manage} key='2'>
+          <TabPane name={profile[language].asset} key='2'>
             <Asset />
           </TabPane>
 
