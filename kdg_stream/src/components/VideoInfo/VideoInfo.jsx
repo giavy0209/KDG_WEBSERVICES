@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import * as AiIcon from 'react-icons/ai';
 import * as BiIcon from 'react-icons/bi';
 import * as RiIcon from 'react-icons/ri';
 import { useSelector } from 'react-redux';
@@ -177,7 +178,7 @@ const VideoInfo = props => {
               {videoinfo[language].edit}
             </div>
             <div className='menuBox__menuItem'>
-              <BiIcon.BiEditAlt className='icon' />
+              <AiIcon.AiOutlineDelete className='icon' />
               {videoinfo[language].delete}
             </div>
           </MenuBox>

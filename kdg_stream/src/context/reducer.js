@@ -291,6 +291,7 @@ const home = {
 const profile = {
   vi: {
     fail: 'Đã xảy ra lỗi. Vui lòng thử lại!',
+    delete_success: 'Xoá thành công',
     set_introduce_success: 'Đặt làm video giới thiệu thành công',
     edit_success: 'Chỉnh sửa thành công',
     sell_success: 'Bán thành công',
@@ -331,6 +332,7 @@ const profile = {
   },
   en: {
     fail: 'An error occurred. Please try again later!',
+    delete_success: 'Delete successfully',
     set_introduce_success: 'Set as an introduction video successfully',
     edit_success: 'Edit successfully',
     sell_success: 'Sell successfully',

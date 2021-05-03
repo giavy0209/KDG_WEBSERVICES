@@ -124,21 +124,11 @@ export default function Personal({ UserOwner }) {
 
   const handleDeleteVideo = useCallback(
     async e => {
-      // const id = e.target.getAttribute('data-id');
-      // const c = window.confirm('Xác nhận xóa video này');
-      // if (c) {
-      //   await callAPI.delete(`/video?id=${id}`);
-      //   toast('Đã xóa video');
-      //   const index = Videos.findIndex(o => o._id === id);
-      //   Videos.splice(index, 1);
-      //   setVideos([...Videos]);
-      // }
       e.preventDefault();
       console.log('handleDeleteVideo');
 
       try {
         const res = await callAPI.delete(`/video?id=${videoDeleting._id}`);
-        console.log(res);
 
         if (videoDeleting === videoPinned) {
           setVideoPinned(null);
@@ -148,7 +138,7 @@ export default function Personal({ UserOwner }) {
         setVideos(newVideos);
 
         setShowPopup(false);
-        toast('Đã xóa video');
+        toast(profile[language].delete_success);
       } catch (error) {
         console.log('Error delete video', error);
         toast(profile[language].fail);
@@ -324,6 +314,10 @@ export default function Personal({ UserOwner }) {
                   <div className='profile__video-info'>
                     {uid === user?._id && (
                       <MenuBox>
+                        <div className='menuBox__menuItem' onClick={() => handleSetIntroduce(o)}>
+                          <AiIcon.AiOutlinePushpin className='icon' />
+                          {profile[language].set_introduce}
+                        </div>
                         <div
                           className='menuBox__menuItem'
                           onClick={() => {
@@ -334,10 +328,6 @@ export default function Personal({ UserOwner }) {
                         >
                           <BiIcon.BiEditAlt className='icon' />
                           {profile[language].edit}
-                        </div>
-                        <div className='menuBox__menuItem' onClick={() => handleSetIntroduce(o)}>
-                          <BiIcon.BiEditAlt className='icon' />
-                          {profile[language].set_introduce}
                         </div>
                         <div
                           className='menuBox__menuItem'
