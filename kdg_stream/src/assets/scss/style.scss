@@ -299,8 +299,6 @@
 }
 
 .video-pinned {
-  cursor: pointer;
-
   display: flex;
   align-items: flex-start;
 
@@ -344,6 +342,8 @@
     line-height: 1.5;
 
     &-title {
+      cursor: pointer;
+
       color: $title-color;
 
       margin-bottom: 5px;

@@ -191,13 +191,7 @@ export default function Personal({ UserOwner }) {
       )}
 
       {videoPinned && (
-        <div
-          className='video-pinned'
-          onClick={() => {
-            window.scrollTo(0, 0);
-            history.push('/watch?v=' + videoPinned.short_id);
-          }}
-        >
+        <div className='video-pinned'>
           <div className='video-pinned__videoBox'>
             <iframe
               title='video'
@@ -236,7 +230,15 @@ export default function Personal({ UserOwner }) {
               </MenuBox>
             )}
 
-            <div className='video-pinned__videoInfoBox-title'>{videoPinned.name}</div>
+            <div
+              className='video-pinned__videoInfoBox-title'
+              onClick={() => {
+                window.scrollTo(0, 0);
+                history.push('/watch?v=' + videoPinned.short_id);
+              }}
+            >
+              {videoPinned.name}
+            </div>
             <div className='video-pinned__videoInfoBox-view'>
               <span>
                 {videoPinned.views} {profile[language].views}
