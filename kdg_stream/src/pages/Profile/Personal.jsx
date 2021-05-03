@@ -123,7 +123,15 @@ export default function Personal({ UserOwner }) {
   );
 
   const handleSetIntroduce = useCallback(async id => {
-    await callAPI.post('/set_introduce', { video: id });
+    try {
+      const res = await callAPI.post('/set_introduce', { video: id });
+      console.log(res);
+
+      toast('set intro success');
+    } catch (error) {
+      console.log('Error set intro', error);
+      toast('set intro error');
+    }
   }, []);
 
   const [showPopup, setShowPopup] = useState(false);
