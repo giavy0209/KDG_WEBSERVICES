@@ -10,6 +10,7 @@ import { BREAK_POINT_SMALL, BREAK_POINT_EXTRA_EXTRA_SMALL, STORAGE_DOMAIN } from
 import { useLanguageLayerValue } from '../../context/LanguageLayer';
 import useWindowSize from '../../hooks/useWindowSize';
 import { actChangeVideoEditing } from '../../store/action';
+import { asyncGetUser } from '../../store/authAction';
 
 export default function Personal({ UserOwner }) {
   const uid = new URLSearchParams(useLocation().search).get('uid');
@@ -116,23 +117,26 @@ export default function Personal({ UserOwner }) {
         toast(profile[language].edit_success);
       } catch (error) {
         console.log('Error edit video', error);
-        toast(profile[language].edit_fail);
+        toast(profile[language].fail);
       }
     },
     [videoEditting, Videos, profile, language, videoPinned]
   );
 
-  const handleSetIntroduce = useCallback(async id => {
-    try {
-      const res = await callAPI.post('/set_introduce', { video: id });
-      console.log(res);
+  const handleSetIntroduce = useCallback(
+    async o => {
+      try {
+        await callAPI.post('/set_introduce', { video: o._id });
+        setVideoPinned(o);
 
-      toast('set intro success');
-    } catch (error) {
-      console.log('Error set intro', error);
-      toast('set intro error');
-    }
-  }, []);
+        toast(profile[language].set_introduce_success);
+      } catch (error) {
+        console.log('Error set intro', error);
+        toast(profile[language].fail);
+      }
+    },
+    [dispatch, profile, language]
+  );
 
   const [showPopup, setShowPopup] = useState(false);
 
@@ -236,7 +240,7 @@ export default function Personal({ UserOwner }) {
                 key={o._id}
                 className='layoutFlex-item'
                 onClick={() => history.push('/watch?v=' + o.short_id)}
-                onMouseEnter={function (e) {
+                onMouseEnter={e => {
                   let target = e.target;
                   while (true) {
                     if (Array.from(target.classList).includes('layoutFlex-item')) {
@@ -293,12 +297,9 @@ export default function Personal({ UserOwner }) {
                           <BiIcon.BiEditAlt className='icon' />
                           {profile[language].edit}
                         </div>
-                        <div
-                          className='menuBox__menuItem'
-                          onClick={() => handleSetIntroduce(o._id)}
-                        >
+                        <div className='menuBox__menuItem' onClick={() => handleSetIntroduce(o)}>
                           <BiIcon.BiEditAlt className='icon' />
-                          Đặt làm video giới thiệu
+                          {profile[language].set_introduce}
                         </div>
                         <div className='menuBox__menuItem'>
                           <BiIcon.BiEditAlt className='icon' />
