@@ -45,6 +45,7 @@
 
   &__left {
     width: calc(var(--width-left) - 10px);
+    min-height: 100vh;
     padding: 0 25px;
     margin-top: $gap-header-main;
 

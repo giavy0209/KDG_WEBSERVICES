@@ -1,5 +1,6 @@
 import { CircularProgress } from '@material-ui/core';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import * as AiIcon from 'react-icons/ai';
 import * as BiIcon from 'react-icons/bi';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router';
@@ -9,16 +10,14 @@ import { CreateDate, MenuBox, PopupBox } from '../../components';
 import { BREAK_POINT_SMALL, BREAK_POINT_EXTRA_EXTRA_SMALL, STORAGE_DOMAIN } from '../../constant';
 import { useLanguageLayerValue } from '../../context/LanguageLayer';
 import useWindowSize from '../../hooks/useWindowSize';
-import { actChangeVideoEditing } from '../../store/action';
-import { asyncGetUser } from '../../store/authAction';
+import { actChangeVideoEditing, actChangeVideoDeleting } from '../../store/action';
 
 export default function Personal({ UserOwner }) {
   const uid = new URLSearchParams(useLocation().search).get('uid');
   const user = useSelector(state => state.user);
   const videoEditting = useSelector(state => state.videoEditting);
-  console.log(videoEditting);
-
-  // const videoPinned = useMemo(() => UserOwner?.kinglive?.introduce, [UserOwner]);
+  const videoDeleting = useSelector(state => state.videoDeleting);
+  console.log({ videoDeleting });
 
   const [videoPinned, setVideoPinned] = useState(UserOwner?.kinglive?.introduce);
   useEffect(() => setVideoPinned(UserOwner?.kinglive?.introduce), [UserOwner]);
@@ -78,21 +77,6 @@ export default function Personal({ UserOwner }) {
     };
   }, [getVideo, uid]);
 
-  const handleDeleteVideo = useCallback(
-    async e => {
-      const id = e.target.getAttribute('data-id');
-      const c = window.confirm('Xác nhận xóa video này');
-      if (c) {
-        await callAPI.delete(`/video?id=${id}`);
-        toast('Đã xóa video');
-        const index = Videos.findIndex(o => o._id === id);
-        Videos.splice(index, 1);
-        setVideos([...Videos]);
-      }
-    },
-    [Videos]
-  );
-
   const handleEditVideo = useCallback(
     async e => {
       e.preventDefault();
@@ -135,15 +119,46 @@ export default function Personal({ UserOwner }) {
         toast(profile[language].fail);
       }
     },
-    [dispatch, profile, language]
+    [profile, language]
+  );
+
+  const handleDeleteVideo = useCallback(
+    async e => {
+      // const id = e.target.getAttribute('data-id');
+      // const c = window.confirm('Xác nhận xóa video này');
+      // if (c) {
+      //   await callAPI.delete(`/video?id=${id}`);
+      //   toast('Đã xóa video');
+      //   const index = Videos.findIndex(o => o._id === id);
+      //   Videos.splice(index, 1);
+      //   setVideos([...Videos]);
+      // }
+      e.preventDefault();
+      console.log('handleDeleteVideo');
+
+      try {
+        const res = await callAPI.delete(`/video?id=${videoDeleting._id}`);
+        console.log(res);
+
+        if (videoDeleting === videoPinned) {
+          setVideoPinned(null);
+        }
+
+        const newVideos = Videos.filter(video => video._id !== videoDeleting._id);
+        setVideos(newVideos);
+
+        setShowPopup(false);
+        toast('Đã xóa video');
+      } catch (error) {
+        console.log('Error delete video', error);
+        toast(profile[language].fail);
+      }
+    },
+    [Videos, videoDeleting, videoPinned, profile, language]
   );
 
   const [showPopup, setShowPopup] = useState(false);
-
-  const MODE = {
-    edit: 'edit',
-    delete: 'delete',
-  };
+  const MODE = { edit: 'edit', delete: 'delete' };
   const [mode, setMode] = useState(MODE.edit);
 
   return (
@@ -164,6 +179,22 @@ export default function Personal({ UserOwner }) {
               <button style={{ width: '100%' }} className='button'>
                 Edit
               </button>
+            </form>
+          )}
+
+          {mode === MODE.delete && (
+            <form className='form-delete' onSubmit={handleDeleteVideo}>
+              <div className='message'>
+                Are you sure want to delete video <span>{videoDeleting.name}</span>?
+              </div>
+              <div className='action'>
+                <button type='submit' className='mr-20' onClick={handleDeleteVideo}>
+                  Confirm
+                </button>
+                <button type='button' onClick={() => setShowPopup(false)}>
+                  Cancel
+                </button>
+              </div>
             </form>
           )}
         </PopupBox>
@@ -201,8 +232,15 @@ export default function Personal({ UserOwner }) {
                   <BiIcon.BiEditAlt className='icon' />
                   {profile[language].edit}
                 </div>
-                <div className='menuBox__menuItem'>
-                  <BiIcon.BiEditAlt className='icon' />
+                <div
+                  className='menuBox__menuItem'
+                  onClick={() => {
+                    dispatch(actChangeVideoDeleting(videoPinned));
+                    setMode(MODE.delete);
+                    setShowPopup(true);
+                  }}
+                >
+                  <AiIcon.AiOutlineDelete className='icon' />
                   {profile[language].delete}
                 </div>
               </MenuBox>
@@ -301,8 +339,15 @@ export default function Personal({ UserOwner }) {
                           <BiIcon.BiEditAlt className='icon' />
                           {profile[language].set_introduce}
                         </div>
-                        <div className='menuBox__menuItem'>
-                          <BiIcon.BiEditAlt className='icon' />
+                        <div
+                          className='menuBox__menuItem'
+                          onClick={() => {
+                            dispatch(actChangeVideoDeleting(o));
+                            setMode(MODE.delete);
+                            setShowPopup(true);
+                          }}
+                        >
+                          <AiIcon.AiOutlineDelete className='icon' />
                           {profile[language].delete}
                         </div>
                       </MenuBox>

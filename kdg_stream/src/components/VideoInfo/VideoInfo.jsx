@@ -3,12 +3,11 @@ import * as BiIcon from 'react-icons/bi';
 import * as RiIcon from 'react-icons/ri';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { Avatar, MenuBox, PopupBox } from '..';
+import { Avatar, CreateDate, MenuBox, PopupBox } from '..';
 import '../../assets/css/video-info.css';
 import callAPI from '../../axios';
 import { BREAK_POINT_SMALL, STORAGE_DOMAIN } from '../../constant';
 import { useLanguageLayerValue } from '../../context/LanguageLayer';
-import { convertDate, convertDateAgo } from '../../helpers';
 import useNumber from '../../hooks/useNumber';
 import useWindowSize from '../../hooks/useWindowSize';
 
@@ -22,7 +21,6 @@ const VideoInfo = props => {
 
   const [showMenu, setShowMenu] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
-  const [convert, setConvert] = useState(true);
   const [showMore, setShowMore] = useState(true);
 
   const [video, setVideo] = useState(null);
@@ -189,16 +187,8 @@ const VideoInfo = props => {
           {type === 'live' && `${views} ${videoinfo[language].watching}`}
         </span>
         <span> • </span>
-        {type === 'watch' && (
-          <span onClick={() => setConvert(x => !x)}>
-            {convert ? convertDateAgo(video?.create_date) : convertDate(video?.create_date)}
-          </span>
-        )}
-        {type === 'live' && (
-          <span onClick={() => setConvert(x => !x)}>
-            {convert ? convertDateAgo(video?.start_date) : convertDate(video?.start_date)}
-          </span>
-        )}
+        {type === 'watch' && <CreateDate create_date={video?.create_date} />}
+        {type === 'live' && <CreateDate create_date={video?.start_date} />}
       </div>
 
       <div className='videoInfo__info'>
@@ -296,26 +286,7 @@ const VideoInfo = props => {
                       {o.user.kyc.first_name} {o.user.kyc.last_name}
                     </span>
                     <span> • </span>
-                    <span
-                      data-current='ago'
-                      data-ago={convertDateAgo(o.create_date)}
-                      data-date={convertDate(o.create_date)}
-                      onClick={e => {
-                        const el = e.target;
-                        const dataCurrent = el.getAttribute('data-current');
-                        const dataDate = el.getAttribute('data-date');
-                        const dataAgo = el.getAttribute('data-ago');
-                        if (dataCurrent === 'ago') {
-                          el.setAttribute('data-current', 'date');
-                          el.innerText = dataDate;
-                        } else {
-                          el.setAttribute('data-current', 'ago');
-                          el.innerText = dataAgo;
-                        }
-                      }}
-                    >
-                      {convertDateAgo(o.create_date)}
-                    </span>
+                    <CreateDate create_date={o.create_date} />
                   </div>
                   <div className='content'>{o.comment}</div>
                 </div>

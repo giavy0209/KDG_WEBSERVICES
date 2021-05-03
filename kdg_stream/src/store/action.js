@@ -24,3 +24,12 @@ export function actChangeVideoEditing(videoEditting) {
     payload: { videoEditting },
   };
 }
+
+export const CHANGE_VIDEO_DELETING = 'CHANGE_VIDEO_DELETING';
+
+export function actChangeVideoDeleting(videoDeleting) {
+  return {
+    type: CHANGE_VIDEO_DELETING,
+    payload: { videoDeleting },
+  };
+}
