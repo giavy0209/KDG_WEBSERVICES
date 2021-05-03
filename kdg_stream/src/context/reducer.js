@@ -290,7 +290,8 @@ const home = {
 
 const profile = {
   vi: {
-    edit_fail: 'Chỉnh sửa thất bại. Vui lòng thử lại!',
+    fail: 'Đã xảy ra lỗi. Vui lòng thử lại!',
+    set_introduce_success: 'Đặt làm video giới thiệu thành công',
     edit_success: 'Chỉnh sửa thành công',
     sell_success: 'Bán thành công',
     nickname: 'Nickname',
@@ -326,9 +327,11 @@ const profile = {
     tags: 'Thẻ',
     edit: 'Chỉnh sửa',
     delete: 'Xoá',
+    set_introduce: 'Đặt làm video giới thiệu',
   },
   en: {
-    edit_fail: 'Failed to edit. Please try again!',
+    fail: 'An error occurred. Please try again later!',
+    set_introduce_success: 'Set as an introduction video successfully',
     edit_success: 'Edit successfully',
     sell_success: 'Sell successfully',
     nickname: 'Nickname',
@@ -364,6 +367,7 @@ const profile = {
     tags: 'Tags',
     edit: 'Edit',
     delete: 'Delete',
+    set_introduce: 'Set as an introduction video',
   },
 };
 

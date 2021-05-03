@@ -6,7 +6,7 @@ import tradeIcon from '../../assets/images/trade.svg';
 import callAPI from '../../axios';
 import { AssetBox, PopupBox, QR, Table } from '../../components';
 import { useLanguageLayerValue } from '../../context/LanguageLayer';
-import { convertBalance, convertDate, convertDateAgo } from '../../helpers';
+import { convertDate, convertDateAgo } from '../../helpers';
 
 export default function Asset() {
   const [{ language, profile }] = useLanguageLayerValue();
