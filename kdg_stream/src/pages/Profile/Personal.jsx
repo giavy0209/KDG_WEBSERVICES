@@ -6,7 +6,7 @@ import { useHistory, useLocation } from 'react-router';
 import { toast } from 'react-toastify';
 import callAPI from '../../axios';
 import { CreateDate, MenuBox, PopupBox } from '../../components';
-import { BREAK_POINT_MEDIUM, STORAGE_DOMAIN } from '../../constant';
+import { BREAK_POINT_SMALL, BREAK_POINT_EXTRA_EXTRA_SMALL, STORAGE_DOMAIN } from '../../constant';
 import { useLanguageLayerValue } from '../../context/LanguageLayer';
 import useWindowSize from '../../hooks/useWindowSize';
 import { actChangeVideoEditing } from '../../store/action';
@@ -77,16 +77,6 @@ export default function Personal({ UserOwner }) {
     };
   }, [getVideo, uid]);
 
-  useEffect(() => {
-    const closeAll = () => {
-      document.querySelectorAll('.profile__video-more').forEach(el => el.classList.remove('show'));
-    };
-    window.addEventListener('click', closeAll);
-    return () => {
-      window.removeEventListener('click', closeAll);
-    };
-  }, []);
-
   const handleDeleteVideo = useCallback(
     async e => {
       const id = e.target.getAttribute('data-id');
@@ -146,27 +136,6 @@ export default function Personal({ UserOwner }) {
 
   return (
     <>
-      {/* {ShowEdit && (
-        <div className='popupBox' onClick={e => e.stopPropagation()}>
-          <div className='mask' onClick={() => setShowEdit(null)}></div>
-
-          <form className='content' onSubmit={handleEditVideo}>
-            <div className='label'>{profile[language].title}</div>
-            <input type='text' name='name' defaultValue={ShowEdit?.name} />
-
-            <div className='label'>{profile[language].desc}</div>
-            <textarea name='description' defaultValue={ShowEdit?.description}></textarea>
-
-            <div className='label'>{profile[language].tags}</div>
-            <input type='text' name='tags' defaultValue={ShowEdit?.tags} />
-
-            <button style={{ width: '100%' }} className='button'>
-              {profile[language].edit}
-            </button>
-          </form>
-        </div>
-      )} */}
-
       {showPopup && (
         <PopupBox onCancel={setShowPopup}>
           {mode === MODE.edit && (
@@ -196,26 +165,6 @@ export default function Personal({ UserOwner }) {
             history.push('/watch?v=' + videoPinned.short_id);
           }}
         >
-          {uid === user?._id && (
-            <MenuBox>
-              <div
-                className='menuBox__menuItem'
-                onClick={() => {
-                  dispatch(actChangeVideoEditing(videoPinned));
-                  setMode(MODE.edit);
-                  setShowPopup(true);
-                }}
-              >
-                <BiIcon.BiEditAlt className='icon' />
-                {profile[language].edit}
-              </div>
-              <div className='menuBox__menuItem'>
-                <BiIcon.BiEditAlt className='icon' />
-                {profile[language].delete}
-              </div>
-            </MenuBox>
-          )}
-
           <div className='video-pinned__videoBox'>
             <iframe
               title='video'
@@ -227,6 +176,26 @@ export default function Personal({ UserOwner }) {
           </div>
 
           <div className='video-pinned__videoInfoBox'>
+            {uid === user?._id && (
+              <MenuBox>
+                <div
+                  className='menuBox__menuItem'
+                  onClick={() => {
+                    dispatch(actChangeVideoEditing(videoPinned));
+                    setMode(MODE.edit);
+                    setShowPopup(true);
+                  }}
+                >
+                  <BiIcon.BiEditAlt className='icon' />
+                  {profile[language].edit}
+                </div>
+                <div className='menuBox__menuItem'>
+                  <BiIcon.BiEditAlt className='icon' />
+                  {profile[language].delete}
+                </div>
+              </MenuBox>
+            )}
+
             <div className='video-pinned__videoInfoBox-title'>{videoPinned.name}</div>
             <div className='video-pinned__videoInfoBox-view'>
               <span>
@@ -241,14 +210,18 @@ export default function Personal({ UserOwner }) {
       )}
 
       {Videos.length > 0 && (
-        <div className='profile__boxPersonal'>
-          <div className='profile__boxPersonal-title'>{profile[language].playlist}</div>
+        <div className='profile__personalBox'>
+          <div className='profile__personalBox-title'>Video tải lên</div>
 
           <div
-            className={`layoutFlex pl-10 pr-10 ${
-              width > BREAK_POINT_MEDIUM ? 'layout-2' : 'layout-1'
+            className={`layoutFlex ${
+              width > BREAK_POINT_SMALL
+                ? 'layout-3'
+                : width > BREAK_POINT_EXTRA_EXTRA_SMALL
+                ? 'layout-2'
+                : 'layout-1'
             }`}
-            style={{ '--gap-row': '40px', '--gap-column': '40px' }}
+            style={{ '--gap-row': '15px', '--gap-column': '15px' }}
           >
             {Videos.map(o => (
               <div
@@ -257,60 +230,6 @@ export default function Personal({ UserOwner }) {
                 onClick={() => history.push('/watch?v=' + o.short_id)}
               >
                 <div className='profile__video'>
-                  {/* {uid === user?._id && (
-                    <span
-                      className='profile__video-more'
-                      onClick={e => {
-                        e.stopPropagation();
-                        if (Array.from(e.target.classList).includes('show')) {
-                          e.target.classList.remove('show');
-                        } else {
-                          e.target.classList.add('show');
-                        }
-                      }}
-                    >
-                      <BiIcon.BiDotsVerticalRounded className='menu-icon' />
-                      <div className='menu'>
-                        <div onClick={() => handleSetIntroduce(o._id)} className='menu-item'>
-                          <BiIcon.BiEditAlt className='icon' />
-                          Đặt làm video giới thiệu
-                        </div>
-                        <div onClick={() => setShowEdit(o)} className='menu-item'>
-                          <BiIcon.BiEditAlt className='icon' />
-                          Sửa
-                        </div>
-                        <div data-id={o._id} onClick={handleDeleteVideo} className='menu-item'>
-                          <BiIcon.BiEditAlt className='icon' />
-                          Xóa
-                        </div>
-                      </div>
-                    </span>
-                  )} */}
-
-                  {uid === user?._id && (
-                    <MenuBox>
-                      <div
-                        className='menuBox__menuItem'
-                        onClick={() => {
-                          dispatch(actChangeVideoEditing(o));
-                          setMode(MODE.edit);
-                          setShowPopup(true);
-                        }}
-                      >
-                        <BiIcon.BiEditAlt className='icon' />
-                        {profile[language].edit}
-                      </div>
-                      <div className='menuBox__menuItem' onClick={() => handleSetIntroduce(o._id)}>
-                        <BiIcon.BiEditAlt className='icon' />
-                        Đặt làm video giới thiệu
-                      </div>
-                      <div className='menuBox__menuItem'>
-                        <BiIcon.BiEditAlt className='icon' />
-                        {profile[language].delete}
-                      </div>
-                    </MenuBox>
-                  )}
-
                   <div className='profile__video-thumbnail'>
                     <img
                       onMouseOver={e => {
@@ -337,7 +256,34 @@ export default function Personal({ UserOwner }) {
                   </div>
 
                   <div className='profile__video-info'>
-                    <p className='profile__video-info-title'>{o.name}</p>
+                    {uid === user?._id && (
+                      <MenuBox>
+                        <div
+                          className='menuBox__menuItem'
+                          onClick={() => {
+                            dispatch(actChangeVideoEditing(o));
+                            setMode(MODE.edit);
+                            setShowPopup(true);
+                          }}
+                        >
+                          <BiIcon.BiEditAlt className='icon' />
+                          {profile[language].edit}
+                        </div>
+                        <div
+                          className='menuBox__menuItem'
+                          onClick={() => handleSetIntroduce(o._id)}
+                        >
+                          <BiIcon.BiEditAlt className='icon' />
+                          Đặt làm video giới thiệu
+                        </div>
+                        <div className='menuBox__menuItem'>
+                          <BiIcon.BiEditAlt className='icon' />
+                          {profile[language].delete}
+                        </div>
+                      </MenuBox>
+                    )}
+
+                    <div className='profile__video-info-title'>{o.name}</div>
                     <div className='profile__video-info-view'>
                       <span>
                         {o.views} {profile[language].views}
@@ -345,8 +291,6 @@ export default function Personal({ UserOwner }) {
                       <span> • </span>
                       <CreateDate create_date={o.create_date} />
                     </div>
-                    {/* <p className='profile__video-info-tag'></p> */}
-                    <p className='profile__video-info-desc'>{o.description}</p>
                   </div>
                 </div>
               </div>

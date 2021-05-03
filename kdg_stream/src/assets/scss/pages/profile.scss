@@ -143,7 +143,7 @@
     }
 
     @media (max-width: $break-point-extra-small) {
-      width: 300px;
+      width: 334px;
     }
 
     border-radius: 5px;
@@ -247,21 +247,15 @@
     cursor: pointer;
     user-select: none;
 
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-
     height: 100%;
 
-    position: relative;
-
-    // @extend %hover-effect;
+    background-color: #fff;
+    box-shadow: 0px 10px 20px 8px rgba(24, 25, 29, 0.15);
 
     &-thumbnail {
-      width: 30%;
-
-      // z-index: 2;
       position: relative;
+
+      background-color: #000;
 
       &::before {
         content: '';
@@ -274,7 +268,6 @@
         top: 0;
         left: 0;
 
-        display: block;
         width: 100%;
         height: 100%;
 
@@ -283,56 +276,22 @@
     }
 
     &-info {
-      // z-index: 2;
-      // position: relative;
+      position: relative;
 
-      width: 70%;
-      padding-left: 10px;
+      padding: 7px;
       padding-right: 34px;
 
       &-title {
-        color: $sub-title-color;
+        color: $title-color;
         font-size: $size-6;
-        font-weight: 500;
+
+        margin-bottom: 5px;
+
+        @include hidden-text(2);
       }
 
       &-view {
         font-size: $size-7;
-        font-weight: 500;
-      }
-
-      // &-tag {
-      //   color: #bababa;
-      //   font-size: 18px;
-      // }
-
-      &-desc {
-        font-size: $size-7;
-
-        @include hidden-text(2);
-      }
-    }
-
-    @media (max-width: $break-point-extra-small) {
-      display: block;
-
-      &-thumbnail {
-        width: 100%;
-        margin-bottom: 10px;
-      }
-
-      &-info {
-        width: 100%;
-        padding-left: 0;
-
-        &-view {
-          display: flex;
-          flex-direction: column;
-
-          > span:nth-child(1) {
-            margin-right: 0;
-          }
-        }
       }
     }
   }
@@ -385,7 +344,7 @@
     }
   }
 
-  &__boxPersonal {
+  &__personalBox {
     margin-top: 30px;
 
     &:last-child {
@@ -394,26 +353,27 @@
 
     &-title {
       padding: 10px 0;
-      margin-bottom: 15px;
 
       color: $title-color;
       font-size: $size-5;
-      font-weight: 600;
-      text-transform: capitalize;
-
-      // border-bottom: $border-bottom;
-
-      &.mb-0 {
-        margin-bottom: 0;
-      }
     }
   }
 
   &__tabs {
     display: flex;
+    align-items: flex-start;
 
     > *:not(:last-child) {
       margin-right: 20px;
+    }
+
+    @media (max-width: $break-point-extra-small) {
+      flex-flow: column;
+
+      > *:not(:last-child) {
+        margin-right: 0;
+        margin-bottom: 10px;
+      }
     }
 
     &-tab {
@@ -517,6 +477,11 @@
       }
     }
 
+    &-action {
+      display: flex;
+      align-items: center;
+    }
+
     &-deposit,
     &-trade {
       cursor: pointer;
@@ -544,6 +509,15 @@
     &-trade {
       background-color: $background-white;
       color: $primary-color;
+    }
+
+    @media (max-width: $break-point-small) {
+      flex-flow: column;
+
+      > *:not(:last-child) {
+        margin-right: 0;
+        margin-bottom: 5px;
+      }
     }
   }
 

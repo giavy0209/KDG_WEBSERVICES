@@ -232,7 +232,7 @@ export default function Asset() {
   // const [type, setType] = useState('changes');
   // const [pack, setPack] = useState(null);
 
-  const balanceKDG = convertBalance(useSelector(state => state.balanceKDG));
+  const balanceKDG = useSelector(state => state.balanceKDG);
   const [showDeposit, setShowDeposit] = useState(false);
 
   return (
@@ -252,24 +252,28 @@ export default function Asset() {
             <span>KDG</span>
           </div>
 
-          <div className='profile__balance-deposit' onClick={() => setShowDeposit(true)}>
-            <img src={depositIcon} alt='icon' />
-            <span>Deposit</span>
-          </div>
+          <div className='profile__balance-action'>
+            <div className='profile__balance-deposit mr-20' onClick={() => setShowDeposit(true)}>
+              <img src={depositIcon} alt='icon' />
+              <span>Deposit</span>
+            </div>
 
-          <div
-            className='profile__balance-trade'
-            onClick={() => window.open('https://www.mxc.com/trade/easy#KDG_USDT', '_blank')}
-          >
-            <img src={tradeIcon} alt='icon' />
-            <span>Trade</span>
+            <div
+              className='profile__balance-trade'
+              onClick={() => window.open('https://www.mxc.com/trade/easy#KDG_USDT', '_blank')}
+            >
+              <img src={tradeIcon} alt='icon' />
+              <span>Trade</span>
+            </div>
           </div>
         </div>
       </AssetBox>
 
       <AssetBox title='Storage'>
-        <div className='profile__table pt-20 pb-20 pl-30 pr-30'>
-          <Table dataHead={storageHead} dataBody={GiftStorage || []} />
+        <div className='pt-20 pb-20 pl-30 pr-30'>
+          <div className='profile__table'>
+            <Table dataHead={storageHead} dataBody={GiftStorage || []} />
+          </div>
         </div>
       </AssetBox>
 

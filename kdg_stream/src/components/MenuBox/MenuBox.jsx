@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import * as BiIcon from 'react-icons/bi';
 import '../../assets/css/menu-box.css';
-import { rippleEffect } from '../../helpers';
+// import { rippleEffect } from '../../helpers';
 
 const menuItem = (
   <div className='menuBox__menuItem'>
@@ -31,7 +31,7 @@ const MenuBox = props => {
         setShowMenu(x => !x);
       }}
     >
-      <div className='rippleBox' onClick={rippleEffect}></div>
+      {/* <div className='rippleBox' onClick={rippleEffect}></div> */}
 
       <BiIcon.BiDotsVerticalRounded className='menuBox__icon' />
 

@@ -52,8 +52,10 @@ export default function TopDonate() {
   return (
     <>
       <AssetBox collapse={false}>
-        <div className='profile__table pt-20 pb-20 pl-30 pr-30'>
-          <Table dataHead={topDonateHead} dataBody={TopDonateBody} />
+        <div className='pt-20 pb-20 pl-30 pr-30'>
+          <div className='profile__table'>
+            <Table dataHead={topDonateHead} dataBody={TopDonateBody} />
+          </div>
         </div>
       </AssetBox>
     </>
