@@ -236,16 +236,16 @@ export default function Personal({ UserOwner }) {
                 key={o._id}
                 className='layoutFlex-item'
                 onClick={() => history.push('/watch?v=' + o.short_id)}
-                onMouseEnter={function (e){
+                onMouseEnter={function (e) {
                   let target = e.target;
-                  while(true) {
-                    if(Array.from(target.classList).includes('layoutFlex-item')){
-                      break
-                    }else{
-                      target = target.parentElement
+                  while (true) {
+                    if (Array.from(target.classList).includes('layoutFlex-item')) {
+                      break;
+                    } else {
+                      target = target.parentElement;
                     }
                   }
-                  const targat = target.querySelector('img')
+                  const targat = target.querySelector('img');
                   targat.setAttribute(
                     'src',
                     `https://vz-3f44931c-ed0.b-cdn.net/${o.guid}/preview.webp`
@@ -253,14 +253,14 @@ export default function Personal({ UserOwner }) {
                 }}
                 onMouseLeave={e => {
                   let target = e.target;
-                  while(true) {
-                    if(Array.from(target.classList).includes('layoutFlex-item')){
-                      break
-                    }else{
-                      target = target.parentElement
+                  while (true) {
+                    if (Array.from(target.classList).includes('layoutFlex-item')) {
+                      break;
+                    } else {
+                      target = target.parentElement;
                     }
                   }
-                  const targat = target.querySelector('img')
+                  const targat = target.querySelector('img');
                   targat.setAttribute(
                     'src',
                     `https://vz-3f44931c-ed0.b-cdn.net/${o.guid}/thumbnail.jpg`
@@ -270,7 +270,6 @@ export default function Personal({ UserOwner }) {
                 <div className='profile__video'>
                   <div className='profile__video-thumbnail'>
                     <img
-                      
                       src={
                         o.thumbnail
                           ? STORAGE_DOMAIN + o.thumbnail.path
