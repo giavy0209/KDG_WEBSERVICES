@@ -92,11 +92,10 @@ const VideoInfo = props => {
           setVideo(res.data);
           setIsFollowed(res.is_followed);
           setTotalFollow(res.data.user?.kinglive?.total_follower);
-          callAPI.get(`/comment?video=${res.data._id}&next=`)
-          .then(resComment => {
-            setComments([...resComment.data])
+          callAPI.get(`/comment?video=${res.data._id}&next=`).then(resComment => {
+            setComments([...resComment.data]);
             setTotalComment(resComment.total);
-          })
+          });
         });
       } else {
         callAPI.get('/streamming?id=' + id).then(res => {
@@ -106,7 +105,7 @@ const VideoInfo = props => {
         });
       }
     }
-  }, [id, type, handleGetComment]);
+  }, [id, type]);
 
   useEffect(() => {
     const hideMenu1 = () => {

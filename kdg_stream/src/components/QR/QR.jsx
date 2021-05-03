@@ -2,23 +2,23 @@ import React, { useCallback, useMemo, useState } from 'react';
 import '../../assets/css/qr.css';
 import { useLanguageLayerValue } from '../../context/LanguageLayer';
 import * as GrIcon from 'react-icons/gr';
-import kdgCoin from '../../assets/images/kdg-coin.svg';
+// import kdgCoin from '../../assets/images/kdg-coin.svg';
 import copyIcon from '../../assets/images/copy.svg';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import QRCode from 'qrcode';
 
 const QR = props => {
-  const [QR_SECRET , setQR_SECRET]=useState(null)
+  const [QR_SECRET, setQR_SECRET] = useState(null);
   const { onCancel = () => {} } = props;
 
   const [{ language, qr }] = useLanguageLayerValue();
   const addressKDG = useSelector(state => state.addressKDG);
 
   useMemo(async () => {
-    const qr = await QRCode.toDataURL(addressKDG)
-    setQR_SECRET(qr)
-  },[addressKDG])
+    const qr = await QRCode.toDataURL(addressKDG);
+    setQR_SECRET(qr);
+  }, [addressKDG]);
 
   const CopyToClipboard = useCallback(
     value => {
