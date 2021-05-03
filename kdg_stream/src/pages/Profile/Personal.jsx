@@ -236,24 +236,41 @@ export default function Personal({ UserOwner }) {
                 key={o._id}
                 className='layoutFlex-item'
                 onClick={() => history.push('/watch?v=' + o.short_id)}
+                onMouseEnter={function (e){
+                  let target = e.target;
+                  while(true) {
+                    if(Array.from(target.classList).includes('layoutFlex-item')){
+                      break
+                    }else{
+                      target = target.parentElement
+                    }
+                  }
+                  const targat = target.querySelector('img')
+                  targat.setAttribute(
+                    'src',
+                    `https://vz-3f44931c-ed0.b-cdn.net/${o.guid}/preview.webp`
+                  );
+                }}
+                onMouseLeave={e => {
+                  let target = e.target;
+                  while(true) {
+                    if(Array.from(target.classList).includes('layoutFlex-item')){
+                      break
+                    }else{
+                      target = target.parentElement
+                    }
+                  }
+                  const targat = target.querySelector('img')
+                  targat.setAttribute(
+                    'src',
+                    `https://vz-3f44931c-ed0.b-cdn.net/${o.guid}/thumbnail.jpg`
+                  );
+                }}
               >
                 <div className='profile__video'>
                   <div className='profile__video-thumbnail'>
                     <img
-                      onMouseOver={e => {
-                        var targat = e.target;
-                        targat.setAttribute(
-                          'src',
-                          `https://vz-3f44931c-ed0.b-cdn.net/${o.guid}/preview.webp`
-                        );
-                      }}
-                      onMouseOut={e => {
-                        var targat = e.target;
-                        targat.setAttribute(
-                          'src',
-                          `https://vz-3f44931c-ed0.b-cdn.net/${o.guid}/thumbnail.jpg`
-                        );
-                      }}
+                      
                       src={
                         o.thumbnail
                           ? STORAGE_DOMAIN + o.thumbnail.path
