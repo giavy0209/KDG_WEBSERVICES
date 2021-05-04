@@ -249,8 +249,8 @@
   }
 }
 
-.form-delete {
-  padding: 25px;
+.form-confirm {
+  padding: 50px 25px;
 
   .message {
     color: $title-color;
@@ -370,6 +370,10 @@
     }
 
     &__videoInfoBox {
+      width: 100%;
+
+      flex: auto;
+
       padding-left: 0;
       padding-right: 34px;
       margin-top: 10px;

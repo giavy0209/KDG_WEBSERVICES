@@ -18,7 +18,7 @@ export default function TopDonate() {
     return [
       {
         key: '_id',
-        name: 'No',
+        name: profile[language].no,
         style: {
           width: '25%',
         },
@@ -26,7 +26,7 @@ export default function TopDonate() {
       },
       {
         key: 'from',
-        name: profile[language].nickname,
+        name: 'Email',
         style: {
           width: '40%',
         },

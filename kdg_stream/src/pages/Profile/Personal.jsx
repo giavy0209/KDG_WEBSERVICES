@@ -17,7 +17,6 @@ export default function Personal({ UserOwner }) {
   const user = useSelector(state => state.user);
   const videoEditting = useSelector(state => state.videoEditting);
   const videoDeleting = useSelector(state => state.videoDeleting);
-  console.log({ videoDeleting });
 
   const [videoPinned, setVideoPinned] = useState(UserOwner?.kinglive?.introduce);
   useEffect(() => setVideoPinned(UserOwner?.kinglive?.introduce), [UserOwner]);
@@ -125,10 +124,9 @@ export default function Personal({ UserOwner }) {
   const handleDeleteVideo = useCallback(
     async e => {
       e.preventDefault();
-      console.log('handleDeleteVideo');
 
       try {
-        const res = await callAPI.delete(`/video?id=${videoDeleting._id}`);
+        await callAPI.delete(`/video?id=${videoDeleting._id}`);
 
         if (videoDeleting === videoPinned) {
           setVideoPinned(null);
@@ -157,32 +155,32 @@ export default function Personal({ UserOwner }) {
         <PopupBox onCancel={setShowPopup}>
           {mode === MODE.edit && (
             <form className='form-edit' onSubmit={handleEditVideo}>
-              <div className='label'>Title</div>
+              <div className='label'>{profile[language].title}</div>
               <input type='text' name='name' defaultValue={videoEditting?.name} />
 
-              <div className='label'>Description</div>
+              <div className='label'>{profile[language].desc}</div>
               <textarea name='description' defaultValue={videoEditting?.description}></textarea>
 
-              <div className='label'>Tags</div>
+              <div className='label'>{profile[language].tags}</div>
               <input type='text' name='tags' defaultValue={videoEditting?.tags.join()} />
 
               <button style={{ width: '100%' }} className='button'>
-                Edit
+                {profile[language].edit}
               </button>
             </form>
           )}
 
           {mode === MODE.delete && (
-            <form className='form-delete' onSubmit={handleDeleteVideo}>
+            <form className='form-confirm' onSubmit={handleDeleteVideo}>
               <div className='message'>
-                Are you sure want to delete video <span>{videoDeleting.name}</span>?
+                {profile[language].are_you_sure_delete} <span>{videoDeleting.name}</span>?
               </div>
               <div className='action'>
-                <button type='submit' className='mr-20' onClick={handleDeleteVideo}>
-                  Confirm
+                <button type='submit' className='mr-20'>
+                  {profile[language].confirm}
                 </button>
                 <button type='button' onClick={() => setShowPopup(false)}>
-                  Cancel
+                  {profile[language].cancel}
                 </button>
               </div>
             </form>
@@ -253,7 +251,7 @@ export default function Personal({ UserOwner }) {
 
       {Videos.length > 0 && (
         <div className='profile__personalBox'>
-          <div className='profile__personalBox-title'>Video tải lên</div>
+          <div className='profile__personalBox-title'>{profile[language].video_upload}</div>
 
           <div
             className={`layoutFlex ${

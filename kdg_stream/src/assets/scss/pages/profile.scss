@@ -37,6 +37,10 @@
 
     max-width: 940px;
     margin: 0 auto 200px;
+
+    @media (max-width: $break-point-extra-small) {
+      margin: 0 auto 220px;
+    }
   }
 
   &__IMGcover {
@@ -514,9 +518,17 @@
     @media (max-width: $break-point-small) {
       flex-flow: column;
 
+      padding: 20px;
+
       > *:not(:last-child) {
         margin-right: 0;
         margin-bottom: 5px;
+      }
+
+      &-balance {
+        > span:nth-child(1) {
+          font-size: $size-5;
+        }
       }
     }
   }

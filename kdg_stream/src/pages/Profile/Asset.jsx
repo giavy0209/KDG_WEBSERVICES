@@ -4,20 +4,24 @@ import { toast } from 'react-toastify';
 import depositIcon from '../../assets/images/deposit.svg';
 import tradeIcon from '../../assets/images/trade.svg';
 import callAPI from '../../axios';
-import { AssetBox, PopupBox, QR, Table } from '../../components';
+import { AssetBox, CreateDate, PopupBox, QR, Table } from '../../components';
 import { useLanguageLayerValue } from '../../context/LanguageLayer';
-import { convertDate, convertDateAgo } from '../../helpers';
 
 export default function Asset() {
   const [{ language, profile }] = useLanguageLayerValue();
 
   const GiftStorage = useSelector(state => state.giftStorage);
-  console.log(GiftStorage);
 
   const [History, setHistory] = useState([]);
 
   const [IsMoreHistory, setIsMoreHistory] = useState(true);
   const [HistoryActive, setHistoryActive] = useState(8);
+
+  const balanceKDG = useSelector(state => state.balanceKDG);
+  const [showPopup, setShowPopup] = useState(false);
+  const MODE = { deposit: 'deposit', sell: 'sell' };
+  const [mode, setMode] = useState(MODE.deposit);
+  const [sellData, setSellData] = useState({});
 
   const getHistory = useCallback(async () => {
     /**
@@ -59,20 +63,41 @@ export default function Asset() {
   // );
 
   const handleSellGift = useCallback(
+    async _sellData => {
+      delete _sellData.name;
+
+      try {
+        await callAPI.post('/sell_gift', _sellData);
+
+        setShowPopup(false);
+        toast(profile[language].sell_success);
+      } catch (error) {
+        console.log('Error sell gift', error);
+        toast(profile[language].fail);
+      }
+    },
+    [profile, language]
+  );
+
+  const handleConfirmSellGift = useCallback(
     async e => {
       e.preventDefault();
 
-      const data = new FormData(e.target);
+      const formData = new FormData(e.target);
       const submitData = {};
-      for (const iterator of data.entries()) {
+      for (const iterator of formData.entries()) {
         submitData[iterator[0]] = iterator[1];
       }
-      console.log(submitData);
 
-      await callAPI.post('/sell_gift', submitData);
-      toast(profile[language].sell_success);
+      if (!submitData.quantity) {
+        submitData.quantity = 1;
+      }
+
+      setMode(MODE.sell);
+      setSellData(submitData);
+      setShowPopup(true);
     },
-    [profile, language]
+    [MODE.sell]
   );
 
   const storageHead = useMemo(() => {
@@ -106,7 +131,7 @@ export default function Asset() {
         render: (gift, obj) => (
           <>
             <form
-              onSubmit={handleSellGift}
+              onSubmit={handleConfirmSellGift}
               style={{
                 backgroundColor: '#F7F7F7',
                 display: 'flex',
@@ -116,6 +141,7 @@ export default function Asset() {
               }}
             >
               <input name='gift' type='text' style={{ display: 'none' }} defaultValue={gift._id} />
+              <input name='name' type='text' style={{ display: 'none' }} defaultValue={gift.name} />
               <input
                 onBlur={e => {
                   const value = Number(e.target.value);
@@ -144,7 +170,7 @@ export default function Asset() {
                   e.target.previousElementSibling.value = obj.quantity;
                 }}
               >
-                All
+                {profile[language].all}
               </button>
               <button
                 type='submit'
@@ -156,14 +182,14 @@ export default function Asset() {
                   fontSize: '16px',
                 }}
               >
-                Sell
+                {profile[language].sell}
               </button>
             </form>
           </>
         ),
       },
     ];
-  }, [language, profile, handleSellGift]);
+  }, [language, profile, handleConfirmSellGift]);
 
   const historyHead = useMemo(() => {
     return [
@@ -173,27 +199,7 @@ export default function Asset() {
         style: {
           width: '35%',
         },
-        render: date => (
-          <span
-            style={{ cursor: 'pointer' }}
-            onClick={e => {
-              const el = e.target;
-              const current = el.getAttribute('data-current');
-              if (current === 'ago') {
-                el.setAttribute('data-current', 'date');
-                el.innerText = el.getAttribute('data-date');
-              } else {
-                el.setAttribute('data-current', 'ago');
-                el.innerText = el.getAttribute('data-ago');
-              }
-            }}
-            data-date={convertDate(date)}
-            data-ago={convertDateAgo(date)}
-            data-current='ago'
-          >
-            {convertDateAgo(date)}
-          </span>
-        ),
+        render: date => <CreateDate create_date={date} />,
       },
       {
         key: 'gift',
@@ -205,7 +211,7 @@ export default function Asset() {
       },
       {
         key: 'value',
-        name: profile[language].amount,
+        name: profile[language].value,
         style: {
           width: '40%',
         },
@@ -232,20 +238,43 @@ export default function Asset() {
   // const [type, setType] = useState('changes');
   // const [pack, setPack] = useState(null);
 
-  const balanceKDG = useSelector(state => state.balanceKDG);
-  const [showDeposit, setShowDeposit] = useState(false);
-
   return (
     <>
       {/* {isShow && <Popper1 type={type} pack={pack} />} */}
 
-      {showDeposit && (
-        <PopupBox onCancel={setShowDeposit}>
-          <QR onCancel={setShowDeposit} />
+      {showPopup && (
+        <PopupBox onCancel={setShowPopup}>
+          {mode === MODE.deposit && <QR onCancel={setShowPopup} />}
+
+          {mode === MODE.sell && (
+            <form
+              className='form-confirm'
+              onSubmit={e => {
+                e.preventDefault();
+                handleSellGift(sellData);
+              }}
+            >
+              <div className='message'>
+                {profile[language].are_you_sure_sell}{' '}
+                <span>
+                  {sellData.quantity} {sellData.name}
+                </span>
+                ?
+              </div>
+              <div className='action'>
+                <button type='submit' className='mr-20'>
+                  {profile[language].confirm}
+                </button>
+                <button type='button' onClick={() => setShowPopup(false)}>
+                  {profile[language].cancel}
+                </button>
+              </div>
+            </form>
+          )}
         </PopupBox>
       )}
 
-      <AssetBox title='Balance'>
+      <AssetBox title={profile[language].balance}>
         <div className='profile__balance'>
           <div className='profile__balance-balance'>
             <span>{balanceKDG}</span>
@@ -253,9 +282,15 @@ export default function Asset() {
           </div>
 
           <div className='profile__balance-action'>
-            <div className='profile__balance-deposit mr-20' onClick={() => setShowDeposit(true)}>
+            <div
+              className='profile__balance-deposit mr-20'
+              onClick={() => {
+                setMode(MODE.deposit);
+                setShowPopup(true);
+              }}
+            >
               <img src={depositIcon} alt='icon' />
-              <span>Deposit</span>
+              <span>{profile[language].deposit}</span>
             </div>
 
             <div
@@ -263,13 +298,13 @@ export default function Asset() {
               onClick={() => window.open('https://www.mxc.com/trade/easy#KDG_USDT', '_blank')}
             >
               <img src={tradeIcon} alt='icon' />
-              <span>Trade</span>
+              <span>{profile[language].trade}</span>
             </div>
           </div>
         </div>
       </AssetBox>
 
-      <AssetBox title='Storage'>
+      <AssetBox title={profile[language].storage}>
         <div className='pt-20 pb-20 pl-30 pr-30'>
           <div className='profile__table'>
             <Table dataHead={storageHead} dataBody={GiftStorage || []} />
@@ -277,21 +312,21 @@ export default function Asset() {
         </div>
       </AssetBox>
 
-      <AssetBox title='Transaction History'>
+      <AssetBox title={profile[language].transaction_history}>
         <div className='pt-20 pb-20 pl-30 pr-30'>
           <div className='profile__tabs'>
             <div
               onClick={() => setHistoryActive(8)}
               className={`profile__tabs-tab ${HistoryActive === 8 ? 'active' : ''}`}
             >
-              Swap History
+              {profile[language].swap_history}
             </div>
 
             <div
               onClick={() => setHistoryActive(7)}
               className={`profile__tabs-tab ${HistoryActive === 7 ? 'active' : ''}`}
             >
-              Gift History
+              {profile[language].gift_history}
             </div>
           </div>
 
@@ -301,7 +336,7 @@ export default function Asset() {
 
           {IsMoreHistory && (
             <div className='profile__link' onClick={getHistory}>
-              View More
+              {profile[language].view_more}
             </div>
           )}
         </div>
