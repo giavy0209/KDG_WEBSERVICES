@@ -56,6 +56,7 @@ export default function Crop({ onCancel = () => {}, onFinish = () => {} }) {
     }
 
     callAPI.post(`/avatar_pos?type=${type}`, imagePos);
+    console.log(label);
     document.getElementById(label).value = null;
     onFinish(label);
   }, [imagePos, label, _id, onFinish, cropLang, language]);
