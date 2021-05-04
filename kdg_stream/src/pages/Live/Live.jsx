@@ -54,14 +54,12 @@ const Live = () => {
         return [..._listGift, gift];
       });
     };
-
     socket.on('gift', handleReceiveGift);
 
     const handleListGift = listGift => {
       console.log(listGift);
       dispatch(actChangeGifts(listGift));
     };
-
     socket.on('list_gift', handleListGift);
 
     const handleStream = stream => {
