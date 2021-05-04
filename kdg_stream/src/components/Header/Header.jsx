@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import * as FaIcon from 'react-icons/fa';
 import * as GoIcon from 'react-icons/go';
 import * as IoIcon from 'react-icons/io';
 import * as VscIcon from 'react-icons/vsc';

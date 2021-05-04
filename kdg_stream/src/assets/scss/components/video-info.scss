@@ -29,13 +29,7 @@
   &__title {
     color: $sub-title-color;
     font-size: $size-3;
-    line-height: 34px;
     font-weight: 700;
-
-    min-height: 34px;
-    padding-right: 34px;
-
-    position: relative;
   }
 
   &__descTitle {
@@ -60,21 +54,6 @@
     color: $title-color;
     font-size: $size-6;
     font-weight: 500;
-  }
-
-  &__date {
-    cursor: pointer;
-    user-select: none;
-
-    color: $text-color;
-    font-size: $size-6;
-    font-weight: 600;
-
-    margin-bottom: 10px;
-
-    &:hover {
-      text-decoration: underline;
-    }
   }
 
   &__followers {

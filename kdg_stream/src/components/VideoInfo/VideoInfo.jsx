@@ -1,10 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import * as AiIcon from 'react-icons/ai';
-import * as BiIcon from 'react-icons/bi';
 import * as RiIcon from 'react-icons/ri';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { Avatar, CreateDate, MenuBox, PopupBox } from '..';
+import { Avatar, CreateDate } from '..';
 import '../../assets/css/video-info.css';
 import callAPI from '../../axios';
 import { BREAK_POINT_SMALL, STORAGE_DOMAIN } from '../../constant';
@@ -15,13 +13,10 @@ import useWindowSize from '../../hooks/useWindowSize';
 const VideoInfo = props => {
   const { id, type = 'watch' } = props;
 
+  const [{ videoinfo, language }] = useLanguage();
   const history = useHistory();
   const [width] = useWindowSize();
   const user = useSelector(state => state.user);
-  const [{ videoinfo, language }] = useLanguage();
-
-  const [showMenu, setShowMenu] = useState(false);
-  const [showEdit, setShowEdit] = useState(false);
   const [showMore, setShowMore] = useState(true);
 
   const [video, setVideo] = useState(null);
@@ -35,24 +30,10 @@ const VideoInfo = props => {
   const [totalFollow, setTotalFollow] = useState(0);
   const [isFollowed, setIsFollowed] = useState(false);
 
-  const handleEdit = useCallback(e => {
-    e.preventDefault();
-
-    const formData = new FormData(e.target);
-
-    const data = {};
-    for (const x of formData) {
-      data[x[0]] = x[1];
-    }
-
-    console.log(data);
-  }, []);
-
   const handleFollow = useCallback(async () => {
-    const res = await callAPI.post('follow?id=' + video?.user._id);
-    if (res.status === 1) {
-      setIsFollowed(x => !x);
-    }
+    const res = await callAPI.post(`follow?id=${video?.user._id}`);
+
+    if (res.status === 1) setIsFollowed(x => !x);
   }, [video]);
 
   const handleComment = useCallback(
@@ -64,12 +45,8 @@ const VideoInfo = props => {
         const res = await callAPI.post(`/comment?video=${video._id}`, {
           comment: data.get('comment'),
         });
-        console.log(res);
 
-        setComments(comments => {
-          console.log(comments);
-          return [res.data, ...comments];
-        });
+        setComments(comments => [res.data, ...comments]);
 
         e.target.reset();
       }
@@ -108,26 +85,6 @@ const VideoInfo = props => {
     }
   }, [id, type]);
 
-  useEffect(() => {
-    const hideMenu1 = () => {
-      showMenu && setShowMenu(false);
-    };
-
-    const hideMenu2 = e => {
-      if (e.keyCode !== 27) return;
-      showMenu && setShowMenu(false);
-      showEdit && setShowEdit(false);
-    };
-
-    window.addEventListener('click', hideMenu1);
-    window.addEventListener('keyup', hideMenu2);
-
-    return () => {
-      window.removeEventListener('click', hideMenu1);
-      window.removeEventListener('keyup', hideMenu2);
-    };
-  }, [showMenu, showEdit]);
-
   const descRef = useRef();
   const [showMoreBTN, setShowMoreBTN] = useState(true);
   const firstRunRef = useRef(true);
@@ -149,40 +106,8 @@ const VideoInfo = props => {
 
   return (
     <div className='videoInfo'>
-      {showEdit && (
-        <PopupBox onCancel={setShowEdit}>
-          <form className='form-edit' onSubmit={handleEdit}>
-            <div className='label'>{videoinfo[language].title}</div>
-            <input type='text' name='title' defaultValue={video?.name} />
-
-            <div className='label'>{videoinfo[language].desc}</div>
-            <textarea name='description' defaultValue={video?.description}></textarea>
-
-            <div className='label'>{videoinfo[language].tags}</div>
-            <input type='text' name='tags' defaultValue={video?.tags} />
-
-            <button style={{ width: '100%' }} className='button'>
-              {videoinfo[language].edit}
-            </button>
-          </form>
-        </PopupBox>
-      )}
-
       <div className='videoInfo__title'>
         <span>{video?.name}</span>
-
-        {user?._id === video?.user._id && (
-          <MenuBox>
-            <div className='menuBox__menuItem' onClick={() => setShowEdit(true)}>
-              <BiIcon.BiEditAlt className='icon' />
-              {videoinfo[language].edit}
-            </div>
-            <div className='menuBox__menuItem'>
-              <AiIcon.AiOutlineDelete className='icon' />
-              {videoinfo[language].delete}
-            </div>
-          </MenuBox>
-        )}
       </div>
 
       <div className='videoInfo__descTitle'>
@@ -198,7 +123,10 @@ const VideoInfo = props => {
       <div className='videoInfo__info'>
         <div
           className='videoInfo__avatar'
-          onClick={() => history.push('/profile?uid=' + video?.user._id)}
+          onClick={() => {
+            window.scrollTo(0, 0);
+            history.push('/profile?uid=' + video?.user._id);
+          }}
         >
           <Avatar
             src={

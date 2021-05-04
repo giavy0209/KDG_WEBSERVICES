@@ -76,6 +76,21 @@ export default function Personal({ UserOwner }) {
     };
   }, [getVideo, uid]);
 
+  const handleSetIntroduce = useCallback(
+    async o => {
+      try {
+        await callAPI.post('/set_introduce', { video: o._id });
+        setVideoPinned(o);
+
+        toast(profile[language].set_introduce_success);
+      } catch (error) {
+        console.log('Error set intro', error);
+        toast(profile[language].fail);
+      }
+    },
+    [profile, language]
+  );
+
   const handleEditVideo = useCallback(
     async e => {
       e.preventDefault();
@@ -88,7 +103,7 @@ export default function Personal({ UserOwner }) {
       try {
         const res = await callAPI.put(`/video?id=${videoEditting._id}`, submitData);
 
-        if (videoEditting === videoPinned) {
+        if (videoEditting._id === videoPinned._id) {
           setVideoPinned(res.data);
         }
 
@@ -106,21 +121,6 @@ export default function Personal({ UserOwner }) {
     [videoEditting, Videos, profile, language, videoPinned]
   );
 
-  const handleSetIntroduce = useCallback(
-    async o => {
-      try {
-        await callAPI.post('/set_introduce', { video: o._id });
-        setVideoPinned(o);
-
-        toast(profile[language].set_introduce_success);
-      } catch (error) {
-        console.log('Error set intro', error);
-        toast(profile[language].fail);
-      }
-    },
-    [profile, language]
-  );
-
   const handleDeleteVideo = useCallback(
     async e => {
       e.preventDefault();
@@ -128,7 +128,7 @@ export default function Personal({ UserOwner }) {
       try {
         await callAPI.delete(`/video?id=${videoDeleting._id}`);
 
-        if (videoDeleting === videoPinned) {
+        if (videoDeleting._id === videoPinned._id) {
           setVideoPinned(null);
         }
 

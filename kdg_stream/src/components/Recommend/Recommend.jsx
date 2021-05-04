@@ -96,8 +96,8 @@ const Recommend = ({ id }) => {
                 type='live'
                 video={el}
                 onClick={() => {
-                  history.push('/live?s=' + el._id);
                   window.scrollTo(0, 0);
+                  history.push('/live?s=' + el._id);
                 }}
               />
             </div>
@@ -130,10 +130,11 @@ const Recommend = ({ id }) => {
           {recommendList.map(el => (
             <div key={el._id} className='layoutFlex-item'>
               <RecommendVideo
+                type='watch'
                 video={el}
                 onClick={() => {
-                  history.push('/watch?v=' + el.short_id);
                   window.scrollTo(0, 0);
+                  history.push('/watch?v=' + el.short_id);
                 }}
               />
             </div>
