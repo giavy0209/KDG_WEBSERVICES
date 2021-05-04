@@ -27,6 +27,12 @@ async function compress(type) {
     try {
         execSync('npm run build', {cwd : path.join(__dirname , type) })
         console.log('builded ' + type);
+        if(type === 'kdg_stream') {
+            const fs = require('fs')
+            let html = fs.readFileSync(path.join(__dirname , type , 'build/index.html') , 'utf8')
+            html = html.replace('</head>' , `<meta name="title" content="<%=pageData.meta_title%>"><meta name="description" content="<%=pageData.metades%>"><meta property="og:type" content="website"><meta property="og:image" content="<%=pageData.meta_og_img%>"><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="<%=pageData.slug%>"><meta property="twitter:title" content="<%=pageData.meta_title%>"><meta property="twitter:description" content="<%=pageData.metades%>"><meta property="twitter:image" content="<%=pageData.meta_og_img%>"></head>`)
+            fs.writeFileSync(path.join(__dirname , type , 'build/index.ejs'), html)
+        }
         const res = await compressing.zip.compressDir(path.join(__dirname ,type, 'build'), path.join(__dirname,'file.zip'))
         console.log('compressed  ' + type);
         if(type === 'kdg_stream') type = 'kinglive'
@@ -49,6 +55,7 @@ async function main () {
         if(!acceptType.includes(type)) {
             throw new Error(`Arg  ${type} is not allow`)
         }
+        
         await compress(type)
 
         console.log('deployed ' + type);        
