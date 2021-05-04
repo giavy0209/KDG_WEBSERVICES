@@ -60,6 +60,7 @@ const Profile = () => {
           _id: null,
         })
       );
+      document.getElementById(label).value = null;
       if (label === 'avatar-input') {
         setImage(uploadStatus.currentImage);
       }
@@ -156,9 +157,10 @@ const Profile = () => {
     }
   }, [uid]);
 
-  useMemo(() => {
+  useEffect(() => {
     if (uid) {
       callAPI.get('/user?uid=' + uid).then(res => {
+        document.title = res.data.kyc ? `${res.data.kyc.first_name} ${res.data.kyc.last_name}` : res.data.email
         setUserOwner(res.data);
         setIsFollowed(res.data.isFollowed);
         setImage(
@@ -203,11 +205,7 @@ const Profile = () => {
           </form>
         )}
 
-        {uid === user?._id && (
-          <form style={{ display: 'none' }} id='avatar'>
-            <input onChange={readURLAvatar} type='file' name='file' id='avatar-input' />
-          </form>
-        )}
+        
 
         <div className='profile__IMGcover'>
           <img onClick={() => setFullScreen(Cover)} style={posImg(CoverPos)} src={Cover} alt='' />
@@ -236,6 +234,12 @@ const Profile = () => {
             </div>
           )}
         </div>
+
+        {uid === user?._id && (
+          <form style={{ display: 'none' }} id='avatar'>
+            <input onChange={readURLAvatar} type='file' name='file' id='avatar-input' />
+          </form>
+        )}
 
         <div className='profile__infoBox'>
           <div className='profile__IMGavatarBox'>

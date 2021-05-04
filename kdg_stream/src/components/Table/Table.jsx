@@ -18,7 +18,7 @@ const Table = ({ dataHead, dataBody }) => {
       {dataBody.length > 0 && (
         <tbody>
           {dataBody.map((obj, i) => (
-            <tr key={i}>
+            <tr key={obj._id}>
               {dataHead.map(o => (
                 <td
                   key={o.key}

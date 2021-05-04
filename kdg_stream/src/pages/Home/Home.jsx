@@ -15,6 +15,10 @@ const Home = () => {
   const [streammingsList, setStreammingsList] = useState([]);
   const [Ranking, setRanking] = useState({ follows: [], views: [] });
 
+  useEffect(() => {
+    document.title = 'Kinglive TV'
+  },[])
+
   useMemo(() => {
     callAPI.get('/recommend').then(res => {
       setRecommendList([...res.data]);

@@ -32,6 +32,7 @@ const Live = () => {
   useEffect(() => {
     let streamId;
     callAPI.get('/streamming?id=' + id).then(res => {
+      document.title = res.data.name
       if (res.data.status === 2) {
         history.push('/');
       }

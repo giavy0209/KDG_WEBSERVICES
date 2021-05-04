@@ -11,7 +11,10 @@ const Watch = () => {
 
   useMemo(() => {
     if (id) {
-      callAPI.get('/video?sid=' + id).then(res => setVideo(res.data));
+      callAPI.get('/video?sid=' + id).then(res => {
+        document.title = res.data.name
+        setVideo(res.data)
+      });
     }
   }, [id]);
 

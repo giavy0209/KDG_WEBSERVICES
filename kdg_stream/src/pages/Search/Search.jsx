@@ -12,6 +12,10 @@ const Search = () => {
 
   const [SearchList, setSearchList] = useState([]);
 
+  useEffect(() => {
+    document.title = `Search ${search}`
+  },[search])
+
   useMemo(() => {
     callAPI.get(`/search?s=${search}`).then(res => {
       setSearchList([...res.data]);

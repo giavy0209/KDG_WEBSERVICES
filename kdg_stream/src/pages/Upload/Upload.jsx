@@ -22,6 +22,7 @@ const Upload = () => {
   const [VideoDesc, setVideoDesc] = useState('');
   const [VideoTag, setVideoTag] = useState('');
 
+  
   const readURL = useCallback(
     input => {
       input.persist();
@@ -90,24 +91,29 @@ const Upload = () => {
       switch (status) {
         case 1:
           setStatus(upload[language].processing);
+          document.title = upload[language].processing
           setProgress('91%');
           break;
         case 2:
           setStatus(upload[language].encoding);
+          document.title = upload[language].encoding
           setProgress('95%');
           break;
         case 4:
           setStatus(upload[language].video99);
+          document.title = upload[language].video99
           setProgress('99%');
           setIsUploading(false);
           setStatusCode(4);
           break;
         case 3:
           setStatus(upload[language].video100);
+          document.title = upload[language].video100
           setProgress('100%');
           break;
         case 5:
           setStatus(upload[language].error);
+          document.title = upload[language].error
           break;
         default:
           break;
