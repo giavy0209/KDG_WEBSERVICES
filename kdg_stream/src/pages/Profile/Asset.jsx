@@ -64,6 +64,7 @@ export default function Asset() {
 
   const handleSellGift = useCallback(
     async _sellData => {
+      console.log({_sellData});
       delete _sellData.name;
 
       try {
@@ -82,7 +83,7 @@ export default function Asset() {
   const handleConfirmSellGift = useCallback(
     async e => {
       e.preventDefault();
-
+      console.log(e.target);
       const formData = new FormData(e.target);
       const submitData = {};
       for (const iterator of formData.entries()) {
@@ -92,7 +93,7 @@ export default function Asset() {
       if (!submitData.quantity) {
         submitData.quantity = 1;
       }
-
+      console.log({submitData});
       setMode(MODE.sell);
       setSellData(submitData);
       setShowPopup(true);
@@ -123,12 +124,12 @@ export default function Asset() {
         },
       },
       {
-        key: 'gift',
+        key: '_id',
         name: profile[language].action,
         style: {
           width: '40%',
         },
-        render: (gift, obj) => (
+        render: (_id, obj) => (
           <>
             <form
               onSubmit={handleConfirmSellGift}
@@ -140,8 +141,8 @@ export default function Asset() {
                 overflow: 'hidden',
               }}
             >
-              <input name='gift' type='text' style={{ display: 'none' }} defaultValue={gift._id} />
-              <input name='name' type='text' style={{ display: 'none' }} defaultValue={gift.name} />
+              <input name='gift' type='text' style={{ display: 'none' }} defaultValue={obj.gift._id} />
+              <input name='name' type='text' style={{ display: 'none' }} defaultValue={obj.gift.name} />
               <input
                 onBlur={e => {
                   const value = Number(e.target.value);
