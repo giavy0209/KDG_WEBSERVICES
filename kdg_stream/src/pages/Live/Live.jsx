@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import * as FaIcon from 'react-icons/fa';
 import * as RiIcon from 'react-icons/ri';
 import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import '../../assets/css/live.css';
 import callAPI from '../../axios';
@@ -16,6 +17,7 @@ const Live = () => {
   const [{ language, live }] = useLanguageLayerValue();
 
   const dispatch = useDispatch();
+  const history = useHistory();
   const balance = useSelector(state => state.balanceKDG);
   const user = useSelector(state => state.user);
   const chatRef = useRef();
@@ -30,6 +32,10 @@ const Live = () => {
   useEffect(() => {
     let streamId;
     callAPI.get('/streamming?id=' + id).then(res => {
+      if (res.data.status === 2) {
+        history.push('/');
+      }
+
       socket.emit('join_stream', res.data._id);
       streamId = res.data._id;
       setStream(res.data);
@@ -63,7 +69,13 @@ const Live = () => {
         setTimeout(() => {
           setIsCanPlay(true);
         }, 5000);
-      } else setIsCanPlay(false);
+      } else if (stream.connect_status === 0) {
+        setIsCanPlay(false);
+      }
+
+      if (stream.status === 2) {
+        history.push('/');
+      }
     };
     socket.on('stream', handleStream);
 
@@ -75,7 +87,7 @@ const Live = () => {
       socket.removeEventListener('list_gift', handleListGift);
       socket.removeEventListener('stream', handleStream);
     };
-  }, [dispatch, id]);
+  }, [dispatch, id, history]);
 
   useEffect(() => {
     document.querySelectorAll('.live__chatBox-top').forEach(el => {

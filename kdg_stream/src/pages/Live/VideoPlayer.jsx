@@ -468,6 +468,8 @@ export default function VideoPlayer({
     }, currentGift.duration + 300);
   }, [ListGift, CurrentGift, setListGift]);
 
+  useEffect(() => {}, [Stream.status]);
+
   return (
     <>
       <div
@@ -601,6 +603,7 @@ export default function VideoPlayer({
           className={`live__videoCtn-controls ${
             isMouseDownVolume || isMouseDownPlayback ? 'show' : ''
           }`}
+          style={{ display: Stream && IsCanPlay ? 'flex' : 'none' }}
         >
           <div className='live__videoCtn-controls-top' onClick={() => setIsPlay(x => !x)}></div>
 
