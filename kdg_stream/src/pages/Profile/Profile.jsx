@@ -156,9 +156,10 @@ const Profile = () => {
     }
   }, [uid]);
 
-  useMemo(() => {
+  useEffect(() => {
     if (uid) {
       callAPI.get('/user?uid=' + uid).then(res => {
+        document.title = res.data.kyc ? `${res.data.kyc.first_name} ${res.data.kyc.last_name}` : res.data.email
         setUserOwner(res.data);
         setIsFollowed(res.data.isFollowed);
         setImage(

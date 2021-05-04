@@ -45,6 +45,7 @@ const Setup = () => {
   }, []);
 
   useEffect(() => {
+    document.title = 'Kinglive TV'
     callAPI.get('/stream').then(res => {
       setStream(res.data);
     });

@@ -30,7 +30,7 @@ async function compress(type) {
         if(type === 'kdg_stream') {
             const fs = require('fs')
             let html = fs.readFileSync(path.join(__dirname , type , 'build/index.html') , 'utf8')
-            html = html.replace('</head>' , `<meta name="title" content="<%=pageData.meta_title%>"><meta name="description" content="<%=pageData.metades%>"><meta property="og:type" content="website"><meta property="og:image" content="<%=pageData.meta_og_img%>"><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="<%=pageData.slug%>"><meta property="twitter:title" content="<%=pageData.meta_title%>"><meta property="twitter:description" content="<%=pageData.metades%>"><meta property="twitter:image" content="<%=pageData.meta_og_img%>"></head>`)
+            html = html.replace('</head>' , `<title><%=pageData.meta_title%></title><meta name="title" content="<%=pageData.meta_title%>"><meta name="description" content="<%=pageData.metades%>"><meta property="og:type" content="website"><meta property="og:image" content="<%=pageData.meta_og_img%>"><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="<%=pageData.slug%>"><meta property="twitter:title" content="<%=pageData.meta_title%>"><meta property="twitter:description" content="<%=pageData.metades%>"><meta property="twitter:image" content="<%=pageData.meta_og_img%>"></head>`)
             fs.writeFileSync(path.join(__dirname , type , 'build/index.ejs'), html)
         }
         const res = await compressing.zip.compressDir(path.join(__dirname ,type, 'build'), path.join(__dirname,'file.zip'))
