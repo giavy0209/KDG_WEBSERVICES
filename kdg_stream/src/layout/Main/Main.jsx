@@ -16,6 +16,8 @@ const Main = props => {
   const [width] = useWindowSize();
 
   const minWidthLeftSmall = useRef('327px');
+  const gapHeader = useRef(20);
+
   const rightRef = useRef();
 
   const [isShow, setIsShow] = useState(false);
@@ -30,20 +32,17 @@ const Main = props => {
 
   useEffect(() => {
     const handlePositionRight = () => {
-      const footerEle = document.querySelector('.footer');
-      const headerEle = document.querySelector('.header');
-      const { top } = headerEle.getBoundingClientRect();
-
-      const totalHeight = footerEle.clientHeight + headerEle.clientHeight + bannerHeight + 20;
-
       if (!rightRef.current) return;
+
+      const headerEle = document.querySelector('.header');
+      const totalHeight = headerEle.clientHeight + bannerHeight + gapHeader.current;
 
       if (window.pageYOffset < totalHeight - headerEle.clientHeight) {
         rightRef.current.style.top = totalHeight - window.pageYOffset + 'px';
         return;
       }
 
-      rightRef.current.style.top = top + headerEle.clientHeight + 20 + 'px';
+      rightRef.current.style.top = headerEle.clientHeight + gapHeader.current + 'px';
     };
     handlePositionRight();
 
@@ -62,6 +61,7 @@ const Main = props => {
         '--min-width-large': minWidthLeftLarge,
         '--min-width-extra-small': minWidthLeftSmall.current,
         '--banner-height': `${bannerHeight}px`,
+        '--gap-header': `${gapHeader.current}px`,
       }}
     >
       <div className='main__left'>{left}</div>

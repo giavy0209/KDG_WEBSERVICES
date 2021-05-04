@@ -9,9 +9,10 @@ import '../../assets/css/header.css';
 import kdgCoin from '../../assets/images/kdg-coin.svg';
 import logo from '../../assets/images/logo.png';
 import logoText from '../../assets/images/logotext.png';
-import assetIcon from '../../assets/images/userinfo/asset.svg';
-import logoutIcon from '../../assets/images/userinfo/logout.svg';
 import profileIcon from '../../assets/images/userinfo/profile.svg';
+import assetIcon from '../../assets/images/userinfo/asset.svg';
+import languageIcon from '../../assets/images/userinfo/language.svg';
+import logoutIcon from '../../assets/images/userinfo/logout.svg';
 import callAPI from '../../axios';
 import {
   BREAK_POINT_992,
@@ -195,7 +196,7 @@ const Header = () => {
                   setShowInfo(false);
                 }}
               >
-                Nạp
+                {header[language].deposit}
               </div>
             </div>
           </div>
@@ -211,15 +212,21 @@ const Header = () => {
             <img className='icon' src={profileIcon} alt='' />
             <span>{header[language].personalinfo}</span>
           </div>
+
           <div
             className='header__manage'
             onClick={() => {
-              handleNavigation('/profile');
+              history.push('/profile?uid=' + user?._id);
               setShowInfo(false);
             }}
           >
             <img className='icon' src={assetIcon} alt='' />
             <span>{header[language].asset}</span>
+          </div>
+
+          <div className='header__manage'>
+            <img className='icon' src={languageIcon} alt='' />
+            <span>{header[language].language}</span>
           </div>
         </div>
         <div

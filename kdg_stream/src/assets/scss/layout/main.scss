@@ -47,7 +47,7 @@
     width: calc(var(--width-left) - 10px);
     min-height: 100vh;
     padding: 0 25px;
-    margin-top: $gap-header-main;
+    margin-top: var(--gap-header);
 
     background-color: $background-color-main;
 
@@ -71,7 +71,7 @@
 
   &__right {
     width: calc(100% - var(--width-left));
-    height: calc(100vh - #{$footer-height} - #{$header-height} - #{$gap-header-main});
+    height: calc(100vh - #{$header-height} - var(--gap-header));
 
     background-color: $background-color-main;
 
@@ -81,7 +81,7 @@
 
     z-index: $z-index-right;
     position: fixed;
-    top: calc(#{$footer-height} + #{$header-height} + var(--banner-height) + #{$gap-header-main});
+    top: calc(#{$header-height} + var(--banner-height) + var(--gap-header));
     right: 0;
 
     transition: 0.3s;

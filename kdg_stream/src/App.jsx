@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { Redirect, Route, Switch, useHistory, useLocation } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { Footer, Header, ScrollButton } from './components';
+import { Header, ScrollButton } from './components';
 import { useLanguageLayerValue } from './context/LanguageLayer';
 import { storage } from './helpers';
 import { Home, Live, Login, Profile, Search, Setup, Upload, Watch } from './pages';
@@ -95,7 +95,6 @@ const App = () => {
     <>
       <ToastContainer />
       <ScrollButton />
-      <Footer />
       <Header />
       <Switch>
         <Redirect from='/' to='/home' exact />
