@@ -4,14 +4,14 @@ import * as MdIcon from 'react-icons/md';
 import { useHistory } from 'react-router-dom';
 import '../../assets/css/cover.css';
 import coverDefault from '../../assets/images/coverDefault.png';
-import { useLanguageLayerValue } from '../../context/LanguageLayer';
+import { useLanguage } from '../../context/LanguageLayer';
 import { smoothscroll } from '../../helpers/';
 import useNumber from '../../hooks/useNumber';
 
 const itemCover = 3;
 
 const Cover = () => {
-  const [{ language, cover }] = useLanguageLayerValue();
+  const [{ language, cover }] = useLanguage();
   const history = useHistory();
   const viewers = useNumber(11000);
   const [activeIndex, setActiveIndex] = useState(0);

@@ -6,7 +6,7 @@ import * as RiIcon from 'react-icons/ri';
 import { useHistory } from 'react-router-dom';
 import { Tab, TabPane } from '../../components';
 import { RTMP_DOMAIN, STORAGE_DOMAIN } from '../../constant';
-import { useLanguageLayerValue } from '../../context/LanguageLayer';
+import { useLanguage } from '../../context/LanguageLayer';
 
 const SetupRight = props => {
   const { Stream, readURL, handlePublicStream, handleStopStream, CopyToClipboard } = props;
@@ -14,7 +14,7 @@ const SetupRight = props => {
   console.log(Stream);
 
   const history = useHistory();
-  const [{ language, setup }] = useLanguageLayerValue();
+  const [{ language, setup }] = useLanguage();
   const [isHideStreamKey, setIsHideStreamKey] = useState(false);
 
   return (

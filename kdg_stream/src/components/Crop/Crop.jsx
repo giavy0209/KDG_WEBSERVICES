@@ -4,14 +4,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import '../../assets/css/crop.css';
 import callAPI from '../../axios';
-import { useLanguageLayerValue } from '../../context/LanguageLayer';
+import { useLanguage } from '../../context/LanguageLayer';
 import { actChangeUploadStatus } from '../../store/action';
 
 export default function Crop({ onCancel = () => {}, onFinish = () => {} }) {
   const dispatch = useDispatch();
   const uploadStatus = useSelector(state => state.uploadStatus);
   const { image, imagePos, label, _id } = uploadStatus || {};
-  const [{ language, cropLang }] = useLanguageLayerValue();
+  const [{ language, cropLang }] = useLanguage();
 
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1000);

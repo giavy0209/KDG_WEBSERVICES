@@ -13,11 +13,10 @@ const Home = () => {
 
   const [recommendList, setRecommendList] = useState([]);
   const [streammingsList, setStreammingsList] = useState([]);
-  const [Ranking, setRanking] = useState({ follows: [], views: [] });
 
   useEffect(() => {
-    document.title = 'Kinglive TV'
-  },[])
+    document.title = 'Kinglive TV';
+  }, []);
 
   useMemo(() => {
     callAPI.get('/recommend').then(res => {
@@ -27,15 +26,10 @@ const Home = () => {
     callAPI.get('/streammings').then(res => {
       setStreammingsList(res.data);
     });
-
-    callAPI.get('/ranking').then(res => {
-      setRanking(res.data);
-    });
   }, []);
 
   const getRecommend = useCallback(async () => {
     const ids = recommendList.map(o => o._id);
-    console.log(ids);
     const res = await callAPI.get(`/recommend?ids=${ids}`);
 
     if (res.data.length === 0) {
@@ -85,7 +79,7 @@ const Home = () => {
             isLoading={isLoading}
           />
         }
-        right={<HomeRight Ranking={Ranking} />}
+        right={<HomeRight />}
       />
     </>
   );

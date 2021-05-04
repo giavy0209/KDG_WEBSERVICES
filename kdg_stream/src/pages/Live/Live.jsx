@@ -8,13 +8,13 @@ import '../../assets/css/live.css';
 import callAPI from '../../axios';
 import { Avatar, Recommend, VideoInfo } from '../../components';
 import { STORAGE_DOMAIN } from '../../constant';
-import { useLanguageLayerValue } from '../../context/LanguageLayer';
+import { useLanguage } from '../../context/LanguageLayer';
 import socket from '../../socket';
 import { actChangeGifts } from '../../store/authAction';
 import VideoPlayer from './VideoPlayer';
 
 const Live = () => {
-  const [{ language, live }] = useLanguageLayerValue();
+  const [{ language, live }] = useLanguage();
 
   const dispatch = useDispatch();
   const history = useHistory();
@@ -32,7 +32,7 @@ const Live = () => {
   useEffect(() => {
     let streamId;
     callAPI.get('/streamming?id=' + id).then(res => {
-      document.title = res.data.name
+      document.title = res.data.name;
       if (res.data.status === 2) {
         history.push('/');
       }

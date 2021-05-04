@@ -5,7 +5,7 @@ import { Redirect, Route, Switch, useHistory, useLocation } from 'react-router-d
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Header, ScrollButton } from './components';
-import { useLanguageLayerValue } from './context/LanguageLayer';
+import { useLanguage } from './context/LanguageLayer';
 import { storage } from './helpers';
 import { Home, Live, Login, Profile, Search, Setup, Upload, Watch } from './pages';
 import socket from './socket';
@@ -21,7 +21,7 @@ import {
 } from './store/authAction';
 
 const App = () => {
-  const [{ language, header }] = useLanguageLayerValue();
+  const [{ language, header }] = useLanguage();
   const location = useLocation();
   const history = useHistory();
   const dispatch = useDispatch();

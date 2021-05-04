@@ -4,7 +4,7 @@ import * as CgIcon from 'react-icons/cg';
 import * as ImIcon from 'react-icons/im';
 import '../../assets/css/footer.css';
 import { Language } from '../../components';
-import { useLanguageLayerValue } from '../../context/LanguageLayer';
+import { useLanguage } from '../../context/LanguageLayer';
 import { CHANGE_LANGUAGE } from '../../context/reducer';
 
 const socialList = [
@@ -32,7 +32,7 @@ const socialList = [
 
 const Footer = () => {
   const [isShowSidebar, setIsShowSidebar] = useState(false);
-  const [{ language, footer, listLanguage }, dispatch] = useLanguageLayerValue();
+  const [{ language, footer, listLanguage }, dispatch] = useLanguage();
 
   const showSidebar = () => setIsShowSidebar(true);
   const hideSidebar = () => setIsShowSidebar(false);

@@ -3,6 +3,7 @@ import { useLocation } from 'react-router';
 import '../../assets/css/home.css';
 import callAPI from '../../axios';
 import { Main } from '../../layout';
+import HomeRight from '../Home/HomeRight';
 import SearchLeft from './SearchLeft';
 
 const Search = () => {
@@ -13,8 +14,8 @@ const Search = () => {
   const [SearchList, setSearchList] = useState([]);
 
   useEffect(() => {
-    document.title = `Search ${search}`
-  },[search])
+    document.title = `Search ${search}`;
+  }, [search]);
 
   useMemo(() => {
     callAPI.get(`/search?s=${search}`).then(res => {
@@ -55,7 +56,11 @@ const Search = () => {
   }, [getSearch]);
 
   return (
-    <Main className='search' left={<SearchLeft SearchList={SearchList} isLoading={isLoading} />} />
+    <Main
+      className='search'
+      left={<SearchLeft SearchList={SearchList} isLoading={isLoading} />}
+      right={<HomeRight />}
+    />
   );
 };
 

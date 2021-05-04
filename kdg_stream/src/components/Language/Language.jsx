@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react';
 import * as MdIcon from 'react-icons/md';
 import '../../assets/css/language.css';
 import arrowDown from '../../assets/images/language/arrow-down.svg';
-import { useLanguageLayerValue } from '../../context/LanguageLayer';
+import { useLanguage } from '../../context/LanguageLayer';
 import { CHANGE_LANGUAGE } from '../../context/reducer';
 import useWindowSize from '../../hooks/useWindowSize';
 
 const Language = () => {
-  const [{ language, listLanguage }, dispatch] = useLanguageLayerValue();
+  const [{ language, listLanguage }, dispatch] = useLanguage();
   const [width] = useWindowSize();
   const [isShow, setIsShow] = useState(false);
 

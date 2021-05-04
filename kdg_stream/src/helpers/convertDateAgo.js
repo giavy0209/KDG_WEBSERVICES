@@ -1,4 +1,4 @@
-import { useLanguageLayerValue } from '../context/LanguageLayer';
+import { useLanguage } from '../context/LanguageLayer';
 
 const ONE_SECOND = 1000;
 const ONE_MINUTE = ONE_SECOND * 60;
@@ -10,7 +10,7 @@ const ONE_YEAR = ONE_MONTH * 12;
 // const another_time = 1617179475756;
 
 export default function useConvertDateAgo(created_date) {
-  const [{ language, convert_date_ago }] = useLanguageLayerValue();
+  const [{ language, convert_date_ago }] = useLanguage();
 
   const now = new Date().getTime();
 

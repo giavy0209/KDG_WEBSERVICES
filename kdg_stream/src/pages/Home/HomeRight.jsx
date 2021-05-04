@@ -1,15 +1,21 @@
-import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import callAPI from '../../axios';
 import { Card, Tab, TabPane } from '../../components';
 import { STORAGE_DOMAIN } from '../../constant';
-import { useLanguageLayerValue } from '../../context/LanguageLayer';
+import { useLanguage } from '../../context/LanguageLayer';
 
-const HomeRight = props => {
-  const { Ranking } = props;
+const HomeRight = () => {
+  const [Ranking, setRanking] = useState({ follows: [], views: [] });
+
+  useMemo(() => {
+    callAPI.get('/ranking').then(res => {
+      setRanking(res.data);
+    });
+  }, []);
 
   const history = useHistory();
-  const [{ language, home }] = useLanguageLayerValue();
+  const [{ language, home }] = useLanguage();
 
   return (
     <>
@@ -67,10 +73,6 @@ const HomeRight = props => {
       </div>
     </>
   );
-};
-
-HomeRight.propTypes = {
-  Ranking: PropTypes.object.isRequired,
 };
 
 export default HomeRight;

@@ -295,7 +295,7 @@
 
     $avatar-width: 50px;
 
-    > div:nth-child(1) {
+    > *:nth-child(1) {
       cursor: pointer;
 
       position: relative;
@@ -304,13 +304,9 @@
       height: $avatar-width;
 
       align-self: flex-start;
-
-      // overflow: hidden;
-
-      // border-radius: 50%;
     }
 
-    > div:nth-child(2) {
+    > *:nth-child(2) {
       padding-left: 20px;
       width: calc(100% - #{$avatar-width});
     }
@@ -368,6 +364,15 @@
     }
   }
 
+  &__language {
+    padding: 20px;
+
+    color: $title-color;
+    font-size: $size-3;
+    font-weight: 600;
+    text-align: center;
+  }
+
   &__manage {
     cursor: pointer;
 
@@ -381,6 +386,8 @@
     align-items: center;
 
     > .icon {
+      color: $text-color;
+
       margin-right: 15px;
     }
 

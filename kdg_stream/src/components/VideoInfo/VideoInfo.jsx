@@ -8,7 +8,7 @@ import { Avatar, CreateDate, MenuBox, PopupBox } from '..';
 import '../../assets/css/video-info.css';
 import callAPI from '../../axios';
 import { BREAK_POINT_SMALL, STORAGE_DOMAIN } from '../../constant';
-import { useLanguageLayerValue } from '../../context/LanguageLayer';
+import { useLanguage } from '../../context/LanguageLayer';
 import useNumber from '../../hooks/useNumber';
 import useWindowSize from '../../hooks/useWindowSize';
 
@@ -18,7 +18,7 @@ const VideoInfo = props => {
   const history = useHistory();
   const [width] = useWindowSize();
   const user = useSelector(state => state.user);
-  const [{ videoinfo, language }] = useLanguageLayerValue();
+  const [{ videoinfo, language }] = useLanguage();
 
   const [showMenu, setShowMenu] = useState(false);
   const [showEdit, setShowEdit] = useState(false);

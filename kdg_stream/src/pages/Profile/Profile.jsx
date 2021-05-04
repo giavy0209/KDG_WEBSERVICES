@@ -9,7 +9,7 @@ import coverDefault from '../../assets/images/coverDefault.png';
 import callAPI from '../../axios';
 import { Crop } from '../../components';
 import { STORAGE_DOMAIN } from '../../constant';
-import { useLanguageLayerValue } from '../../context/LanguageLayer';
+import { useLanguage } from '../../context/LanguageLayer';
 import useNumber from '../../hooks/useNumber';
 import { actChangeUploadStatus } from '../../store/action';
 import MainContainer from './MainContainer';
@@ -29,7 +29,7 @@ const Profile = () => {
   const user = useSelector(state => state.user);
 
   const uploadStatus = useSelector(state => state.uploadStatus);
-  const [{ language, profile }] = useLanguageLayerValue();
+  const [{ language, profile }] = useLanguage();
 
   const [IsFollowed, setIsFollowed] = useState(false);
   const [UserOwner, setUserOwner] = useState({});
@@ -160,7 +160,9 @@ const Profile = () => {
   useEffect(() => {
     if (uid) {
       callAPI.get('/user?uid=' + uid).then(res => {
-        document.title = res.data.kyc ? `${res.data.kyc.first_name} ${res.data.kyc.last_name}` : res.data.email
+        document.title = res.data.kyc
+          ? `${res.data.kyc.first_name} ${res.data.kyc.last_name}`
+          : res.data.email;
         setUserOwner(res.data);
         setIsFollowed(res.data.isFollowed);
         setImage(
@@ -204,8 +206,6 @@ const Profile = () => {
             <input onChange={readURLAvatar} type='file' name='file' id='cover-input' />
           </form>
         )}
-
-        
 
         <div className='profile__IMGcover'>
           <img onClick={() => setFullScreen(Cover)} style={posImg(CoverPos)} src={Cover} alt='' />

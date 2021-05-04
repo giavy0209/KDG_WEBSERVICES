@@ -1,11 +1,11 @@
 import { useMemo, useState } from 'react';
 import callAPI from '../../axios';
 import { AssetBox, Table } from '../../components';
-import { useLanguageLayerValue } from '../../context/LanguageLayer';
+import { useLanguage } from '../../context/LanguageLayer';
 import { convertBalance } from '../../helpers';
 
 export default function TopDonate() {
-  const [{ language, profile }] = useLanguageLayerValue();
+  const [{ language, profile }] = useLanguage();
   const [TopDonateBody, setTopDonateBody] = useState([]);
 
   useMemo(() => {

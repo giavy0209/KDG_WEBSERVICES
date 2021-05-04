@@ -8,7 +8,7 @@ import { toast } from 'react-toastify';
 import callAPI from '../../axios';
 import { CreateDate, MenuBox, PopupBox } from '../../components';
 import { BREAK_POINT_SMALL, BREAK_POINT_EXTRA_EXTRA_SMALL, STORAGE_DOMAIN } from '../../constant';
-import { useLanguageLayerValue } from '../../context/LanguageLayer';
+import { useLanguage } from '../../context/LanguageLayer';
 import useWindowSize from '../../hooks/useWindowSize';
 import { actChangeVideoEditing, actChangeVideoDeleting } from '../../store/action';
 
@@ -23,7 +23,7 @@ export default function Personal({ UserOwner }) {
 
   const history = useHistory();
   const dispatch = useDispatch();
-  const [{ language, profile }] = useLanguageLayerValue();
+  const [{ language, profile }] = useLanguage();
   const [width] = useWindowSize();
   const [isLoading, setIsLoading] = useState(false);
   const [Videos, setVideos] = useState([]);

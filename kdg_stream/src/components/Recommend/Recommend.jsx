@@ -6,14 +6,14 @@ import { RecommendVideo } from '..';
 import '../../assets/css/recommend.css';
 import callAPI from '../../axios';
 import { BREAK_POINT_MEDIUM } from '../../constant';
-import { useLanguageLayerValue } from '../../context/LanguageLayer';
+import { useLanguage } from '../../context/LanguageLayer';
 import useWindowSize from '../../hooks/useWindowSize';
 
-const Recommend = ({id}) => {
+const Recommend = ({ id }) => {
   const history = useHistory();
 
   const [width] = useWindowSize();
-  const [{ recommend, language }] = useLanguageLayerValue();
+  const [{ recommend, language }] = useLanguage();
 
   const isLoadRef = useRef(true);
   const [isLoading, setIsLoading] = useState(false);
@@ -43,7 +43,7 @@ const Recommend = ({id}) => {
     }
 
     setRecommendList([...recommendList, ...res.data]);
-  }, [recommendList , id]);
+  }, [recommendList, id]);
 
   useEffect(() => {
     const handleLoad = async () => {

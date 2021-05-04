@@ -5,10 +5,10 @@ import depositIcon from '../../assets/images/deposit.svg';
 import tradeIcon from '../../assets/images/trade.svg';
 import callAPI from '../../axios';
 import { AssetBox, CreateDate, PopupBox, QR, Table } from '../../components';
-import { useLanguageLayerValue } from '../../context/LanguageLayer';
+import { useLanguage } from '../../context/LanguageLayer';
 
 export default function Asset() {
-  const [{ language, profile }] = useLanguageLayerValue();
+  const [{ language, profile }] = useLanguage();
 
   const GiftStorage = useSelector(state => state.giftStorage);
 
@@ -64,7 +64,7 @@ export default function Asset() {
 
   const handleSellGift = useCallback(
     async _sellData => {
-      console.log({_sellData});
+      console.log({ _sellData });
       delete _sellData.name;
 
       try {
@@ -93,7 +93,7 @@ export default function Asset() {
       if (!submitData.quantity) {
         submitData.quantity = 1;
       }
-      console.log({submitData});
+      console.log({ submitData });
       setMode(MODE.sell);
       setSellData(submitData);
       setShowPopup(true);
@@ -141,8 +141,18 @@ export default function Asset() {
                 overflow: 'hidden',
               }}
             >
-              <input name='gift' type='text' style={{ display: 'none' }} defaultValue={obj.gift._id} />
-              <input name='name' type='text' style={{ display: 'none' }} defaultValue={obj.gift.name} />
+              <input
+                name='gift'
+                type='text'
+                style={{ display: 'none' }}
+                defaultValue={obj.gift._id}
+              />
+              <input
+                name='name'
+                type='text'
+                style={{ display: 'none' }}
+                defaultValue={obj.gift.name}
+              />
               <input
                 onBlur={e => {
                   const value = Number(e.target.value);

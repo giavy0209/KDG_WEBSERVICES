@@ -1,11 +1,11 @@
 import { Tab, TabPane } from '../../components';
-import { useLanguageLayerValue } from '../../context/LanguageLayer';
+import { useLanguage } from '../../context/LanguageLayer';
 import Asset from './Asset';
 import Personal from './Personal';
 import TopDonate from './TopDonate';
 
 export default function MainContainer({ uid, user, UserOwner }) {
-  const [{ language, profile }] = useLanguageLayerValue();
+  const [{ language, profile }] = useLanguage();
 
   return (
     <div className='container'>

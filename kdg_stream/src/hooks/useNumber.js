@@ -1,7 +1,7 @@
-import { useLanguageLayerValue } from '../context/LanguageLayer';
+import { useLanguage } from '../context/LanguageLayer';
 
 export default function useNumber(number) {
-  const [{ language, hooksNumber }] = useLanguageLayerValue();
+  const [{ language, hooksNumber }] = useLanguage();
 
   if (isNaN(Number(number))) {
     return '0';

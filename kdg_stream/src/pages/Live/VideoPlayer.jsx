@@ -10,7 +10,7 @@ import { useSelector } from 'react-redux';
 import pause from '../../assets/images/banner/pause.jpg';
 import { Avatar } from '../../components';
 import { PLAY_STREAM, STORAGE_DOMAIN } from '../../constant';
-import { useLanguageLayerValue } from '../../context/LanguageLayer';
+import { useLanguage } from '../../context/LanguageLayer';
 import { convertTime } from '../../helpers';
 
 export default function VideoPlayer({
@@ -23,7 +23,7 @@ export default function VideoPlayer({
   chatRef,
   IsCanPlay,
 }) {
-  const [{ language, live }] = useLanguageLayerValue();
+  const [{ language, live }] = useLanguage();
   const user = useSelector(state => state.user);
 
   const videoRef = useRef();

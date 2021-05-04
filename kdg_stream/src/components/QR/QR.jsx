@@ -6,13 +6,13 @@ import { toast } from 'react-toastify';
 import '../../assets/css/qr.css';
 // import kdgCoin from '../../assets/images/kdg-coin.svg';
 import copyIcon from '../../assets/images/copy.svg';
-import { useLanguageLayerValue } from '../../context/LanguageLayer';
+import { useLanguage } from '../../context/LanguageLayer';
 
 const QR = props => {
   const [QR_SECRET, setQR_SECRET] = useState(null);
   const { onCancel = () => {} } = props;
 
-  const [{ language, qr }] = useLanguageLayerValue();
+  const [{ language, qr }] = useLanguage();
   const addressKDG = useSelector(state => state.addressKDG);
 
   useMemo(async () => {

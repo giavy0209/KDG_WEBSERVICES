@@ -4,7 +4,7 @@ import { useHistory } from 'react-router';
 import { toast } from 'react-toastify';
 import '../../assets/css/setup.css';
 import callAPI from '../../axios';
-import { useLanguageLayerValue } from '../../context/LanguageLayer';
+import { useLanguage } from '../../context/LanguageLayer';
 import { Main } from '../../layout';
 import socket from '../../socket';
 import SetupLeft from './SetupLeft';
@@ -13,7 +13,7 @@ import SetupRight from './SetupRight';
 const Setup = () => {
   const history = useHistory();
   const [Stream, setStream] = useState({});
-  const [{ language, setup }] = useLanguageLayerValue();
+  const [{ language, setup }] = useLanguage();
 
   const CopyToClipboard = useCallback(
     ref => {
@@ -45,7 +45,7 @@ const Setup = () => {
   }, []);
 
   useEffect(() => {
-    document.title = 'Kinglive TV'
+    document.title = 'Kinglive TV';
     callAPI.get('/stream').then(res => {
       setStream(res.data);
     });

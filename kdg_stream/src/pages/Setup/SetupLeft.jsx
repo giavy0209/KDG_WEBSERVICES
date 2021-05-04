@@ -3,11 +3,11 @@ import React, { useEffect, useState } from 'react';
 import ReactHlsPlayer from 'react-hls-player';
 import coverDefault from '../../assets/images/coverDefault.png';
 import { PLAY_STREAM } from '../../constant';
-import { useLanguageLayerValue } from '../../context/LanguageLayer';
+import { useLanguage } from '../../context/LanguageLayer';
 
 const SetupLeft = props => {
   const { Stream } = props;
-  const [{ language, setup }] = useLanguageLayerValue();
+  const [{ language, setup }] = useLanguage();
   const [IsCanPlay, setIsCanPlay] = useState(false);
 
   useEffect(() => {

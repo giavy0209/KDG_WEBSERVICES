@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import * as FaIcon from 'react-icons/fa';
 import * as GoIcon from 'react-icons/go';
 import * as IoIcon from 'react-icons/io';
 import * as VscIcon from 'react-icons/vsc';
@@ -9,10 +10,9 @@ import '../../assets/css/header.css';
 import kdgCoin from '../../assets/images/kdg-coin.svg';
 import logo from '../../assets/images/logo.png';
 import logoText from '../../assets/images/logotext.png';
-import profileIcon from '../../assets/images/userinfo/profile.svg';
-import assetIcon from '../../assets/images/userinfo/asset.svg';
 import languageIcon from '../../assets/images/userinfo/language.svg';
 import logoutIcon from '../../assets/images/userinfo/logout.svg';
+import profileIcon from '../../assets/images/userinfo/profile.svg';
 import callAPI from '../../axios';
 import {
   BREAK_POINT_992,
@@ -20,7 +20,8 @@ import {
   BREAK_POINT_SMALL,
   STORAGE_DOMAIN,
 } from '../../constant';
-import { useLanguageLayerValue } from '../../context/LanguageLayer';
+import { useLanguage } from '../../context/LanguageLayer';
+import { CHANGE_LANGUAGE } from '../../context/reducer';
 import { convertBalance, convertDateAgo, storage } from '../../helpers';
 import { useNumber, useWindowSize } from '../../hooks';
 import { actChangeUnreadNoti } from '../../store/action';
@@ -31,7 +32,8 @@ const handleShowPopper = (fnMain, ...fnSubs) => () => {
 };
 
 const Header = () => {
-  const [{ language, header }] = useLanguageLayerValue();
+  const [{ listLanguage, flag, header, language }, dispatchLanguage] = useLanguage();
+
   const [width] = useWindowSize();
   const history = useHistory();
   const location = useLocation();
@@ -52,6 +54,7 @@ const Header = () => {
   const [showNoti, setShowNoti] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
   const [showDeposit, setShowDeposit] = useState(false);
+  const [showLanguage, setShowLanguage] = useState(false);
 
   const handleNavigation = useCallback(
     pathname => {
@@ -93,14 +96,16 @@ const Header = () => {
 
   useEffect(() => {
     const handleHidePopper1 = () => {
-      showNoti && setShowNoti(x => !x);
-      showInfo && setShowInfo(x => !x);
+      showNoti && setShowNoti(false);
+      showInfo && setShowInfo(false);
+      showLanguage && setShowLanguage(false);
     };
 
     const handleHidePopper2 = e => {
       if (e.keyCode !== 27) return;
-      showNoti && setShowNoti(x => !x);
-      showInfo && setShowInfo(x => !x);
+      showNoti && setShowNoti(false);
+      showInfo && setShowInfo(false);
+      showLanguage && setShowLanguage(false);
     };
 
     document.addEventListener('click', handleHidePopper1);
@@ -110,7 +115,7 @@ const Header = () => {
       document.removeEventListener('click', handleHidePopper1);
       window.removeEventListener('keyup', handleHidePopper2);
     };
-  }, [showNoti, showInfo]);
+  }, [showNoti, showInfo, showLanguage]);
 
   return (
     <div className='header'>
@@ -160,6 +165,28 @@ const Header = () => {
             </div>
           ))
         )}
+      </div>
+
+      <div
+        className={`popper popper--userinfo ${showLanguage ? 'show' : ''}`}
+        onClick={e => e.stopPropagation()}
+      >
+        <div className='header__language'>{header[language].language}</div>
+        <div className='bt bb'>
+          {Object.keys(listLanguage).map(lan => (
+            <div
+              key={lan}
+              className='header__manage'
+              onClick={() => {
+                dispatchLanguage({ type: CHANGE_LANGUAGE, payload: lan });
+                setShowLanguage(false);
+              }}
+            >
+              <img className='icon' src={flag[lan]} alt='' />
+              <span>{listLanguage[lan]}</span>
+            </div>
+          ))}
+        </div>
       </div>
 
       <div
@@ -216,15 +243,10 @@ const Header = () => {
           <div
             className='header__manage'
             onClick={() => {
-              history.push('/profile?uid=' + user?._id);
               setShowInfo(false);
+              setShowLanguage(true);
             }}
           >
-            <img className='icon' src={assetIcon} alt='' />
-            <span>{header[language].asset}</span>
-          </div>
-
-          <div className='header__manage'>
             <img className='icon' src={languageIcon} alt='' />
             <span>{header[language].language}</span>
           </div>

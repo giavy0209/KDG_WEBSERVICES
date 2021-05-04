@@ -2,11 +2,11 @@ import * as GoIcon from 'react-icons/go';
 import { useSelector } from 'react-redux';
 import '../../assets/css/profile.css';
 import { Tab, TabPane } from '../../components';
-import { useLanguageLayerValue } from '../../context/LanguageLayer';
+import { useLanguage } from '../../context/LanguageLayer';
 import ListImages from './ListImages';
 
 export default function ModalBody() {
-  const [{ profile, language }] = useLanguageLayerValue();
+  const [{ profile, language }] = useLanguage();
 
   const uploadStatus = useSelector(state => state.uploadStatus);
 

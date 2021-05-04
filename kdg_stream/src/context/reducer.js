@@ -1,6 +1,14 @@
+import viFlag from '../assets/images/userinfo/vi-flag.svg';
+import enFlag from '../assets/images/userinfo/en-flag.svg';
+
 const listLanguage = {
   vi: 'Việt Nam',
   en: 'English',
+};
+
+const flag = {
+  vi: viFlag,
+  en: enFlag,
 };
 
 const footer = {
@@ -221,7 +229,6 @@ const header = {
     followers: 'người theo dõi',
     deposit: 'Nạp',
     personalinfo: 'Thông tin cá nhân',
-    asset: 'Tài sản',
     language: 'Ngôn ngữ',
     logout: 'Đăng xuất',
     login: 'Đăng nhập',
@@ -242,7 +249,6 @@ const header = {
     followers: 'followers',
     deposit: 'Deposit',
     personalinfo: 'Profile',
-    asset: 'Asset',
     language: 'Language',
     logout: 'Log out',
     login: 'Sign in',
@@ -615,8 +621,20 @@ const videoinfo = {
   },
 };
 
+const search = {
+  vi: {
+    result: 'Kết quả',
+    not_found: 'Không tìm thấy video nào liên quan',
+  },
+  en: {
+    result: 'Result',
+    not_found: 'No related videos found',
+  },
+};
+
 export const initialState = {
   language: 'en',
+  flag,
   listLanguage,
   footer,
   login,
@@ -636,6 +654,7 @@ export const initialState = {
   convert_date_ago,
   recommend,
   videoinfo,
+  search,
 };
 
 export const CHANGE_LANGUAGE = 'CHANGE_LANGUAGE';

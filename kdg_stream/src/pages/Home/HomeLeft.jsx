@@ -4,7 +4,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { Video } from '../../components';
 import { STORAGE_DOMAIN } from '../../constant';
-import { useLanguageLayerValue } from '../../context/LanguageLayer';
+import { useLanguage } from '../../context/LanguageLayer';
 import useWindowSize from '../../hooks/useWindowSize';
 
 const HomeLeft = props => {
@@ -12,7 +12,7 @@ const HomeLeft = props => {
 
   const history = useHistory();
   const [width] = useWindowSize();
-  const [{ language, home }] = useLanguageLayerValue();
+  const [{ language, home }] = useLanguage();
 
   return (
     <>

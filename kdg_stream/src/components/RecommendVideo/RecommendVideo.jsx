@@ -1,11 +1,11 @@
 import React from 'react';
 import { STORAGE_DOMAIN } from '../../constant';
-import { useLanguageLayerValue } from '../../context/LanguageLayer';
+import { useLanguage } from '../../context/LanguageLayer';
 
 const RecommendVideo = props => {
   const { type = 'watch', video, onClick } = props;
 
-  const [{ language, recommend }] = useLanguageLayerValue();
+  const [{ language, recommend }] = useLanguage();
 
   const handleClick = () => onClick && onClick();
 

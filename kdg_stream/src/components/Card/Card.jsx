@@ -4,7 +4,7 @@ import '../../assets/css/card.css';
 import rank1 from '../../assets/images/card/rank1.svg';
 import rank2 from '../../assets/images/card/rank2.svg';
 import rank3 from '../../assets/images/card/rank3.svg';
-import { useLanguageLayerValue } from '../../context/LanguageLayer';
+import { useLanguage } from '../../context/LanguageLayer';
 import useNumber from '../../hooks/useNumber';
 
 const rank = [rank1, rank2, rank3];
@@ -20,7 +20,7 @@ const Card = props => {
     onClick = null,
   } = props;
 
-  const [{ language, home }] = useLanguageLayerValue();
+  const [{ language, home }] = useLanguage();
 
   const handleClick = () => onClick && onClick();
 
