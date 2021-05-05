@@ -24,6 +24,7 @@ const VideoInfo = props => {
 
   const [comments, setComments] = useState([]);
   const [totalComment, setTotalComment] = useState(0);
+  const [isShowLoadmore, setIsShowLoadmore] = useState(true);
 
   const _totalComment = useNumber(totalComment);
 
@@ -54,13 +55,16 @@ const VideoInfo = props => {
     [video]
   );
 
-  const [isShowLoadmore, setIsShowLoadmore] = useState(true);
   const handleGetComment = useCallback(async (videoId, next) => {
     const res = await callAPI.get(`/comment?video=${videoId}&next=${next}`);
     setComments(comment => [...comment, ...res.data]);
     setTotalComment(res.total);
 
-    if (res.data.length <= 10) setIsShowLoadmore(false);
+    if (res.data.length === 10) {
+      setIsShowLoadmore(true);
+    } else {
+      setIsShowLoadmore(false);
+    }
   }, []);
 
   useMemo(() => {
@@ -73,6 +77,11 @@ const VideoInfo = props => {
           callAPI.get(`/comment?video=${res.data._id}&next=`).then(resComment => {
             setComments([...resComment.data]);
             setTotalComment(resComment.total);
+            if (resComment.data.length === 10) {
+              setIsShowLoadmore(true);
+            } else {
+              setIsShowLoadmore(false);
+            }
           });
         });
       } else {

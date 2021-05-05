@@ -12,8 +12,8 @@ const Watch = () => {
   useMemo(() => {
     if (id) {
       callAPI.get('/video?sid=' + id).then(res => {
-        document.title = res.data.name
-        setVideo(res.data)
+        document.title = res.data.name;
+        setVideo(res.data);
       });
     }
   }, [id]);
@@ -37,7 +37,7 @@ const Watch = () => {
       </div>
 
       <div className='watch__right'>
-        <Recommend id={id}/>
+        <Recommend id={id} />
       </div>
     </div>
   );
