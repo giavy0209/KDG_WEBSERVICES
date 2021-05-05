@@ -11,7 +11,7 @@ import { useLanguage } from '../../context/LanguageLayer';
 const SetupRight = props => {
   const { Stream, readURL, handlePublicStream, handleStopStream, CopyToClipboard } = props;
 
-  console.log(Stream);
+  console.log({ Stream });
 
   const history = useHistory();
   const [{ language, setup }] = useLanguage();
@@ -78,17 +78,16 @@ const SetupRight = props => {
               <>
                 <div className='setup__tabSetup-inputBox'>
                   <input
-                    type='text'
                     name='name'
-                    defaultValue={Stream.name}
+                    // defaultValue={Stream.name}
                     placeholder={setup[language].setup_title}
                   />
                 </div>
 
                 <div className='setup__tabSetup-textareaBox mt-20'>
                   <textarea
-                    defaultValue={Stream.description}
                     name='description'
+                    // defaultValue={Stream.description}
                     placeholder={setup[language].setup_desc}
                   ></textarea>
                 </div>
@@ -97,7 +96,7 @@ const SetupRight = props => {
                   <input
                     type='text'
                     name='tags'
-                    // defaultValue={Stream.name}
+                    // defaultValue={Stream.tags.join(', ')}
                     placeholder={setup[language].setup_tag}
                   />
                 </div>

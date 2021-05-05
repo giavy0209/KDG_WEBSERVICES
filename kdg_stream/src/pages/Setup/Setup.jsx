@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { NotificationContainer, NotificationManager } from 'react-notifications';
 import { useHistory } from 'react-router';
 import { toast } from 'react-toastify';
 import '../../assets/css/setup.css';
@@ -23,7 +22,7 @@ const Setup = () => {
       input.select();
       document.execCommand('copy');
       input.remove();
-      NotificationManager.success(setup[language].copied, null, 1000);
+      toast(setup[language].copied);
     },
     [setup, language]
   );
@@ -50,9 +49,7 @@ const Setup = () => {
       setStream(res.data);
     });
 
-    const handleStream = function (data) {
-      setStream(data);
-    };
+    const handleStream = data => setStream(data);
     socket.on('stream', handleStream);
 
     return () => {
@@ -63,8 +60,23 @@ const Setup = () => {
   const handlePublicStream = useCallback(
     async e => {
       e.preventDefault();
-      const data = new FormData(e.target);
-      await callAPI.post('/public_stream?sid=' + Stream._id, data);
+
+      const formData = new FormData(e.target);
+      const submitData = {};
+      for (const x of formData) {
+        submitData[x[0]] = x[1];
+      }
+      console.log({ submitData });
+
+      try {
+        const res = await callAPI.post('/public_stream?sid=' + Stream._id, submitData);
+        console.log({ res });
+
+        toast('success');
+      } catch (error) {
+        console.log({ error });
+        toast('error');
+      }
     },
     [Stream]
   );
@@ -79,8 +91,6 @@ const Setup = () => {
 
   return (
     <>
-      <NotificationContainer />
-
       <Main
         className='setup'
         left={<SetupLeft Stream={Stream} />}
