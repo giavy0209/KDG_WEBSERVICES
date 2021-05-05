@@ -160,7 +160,7 @@ const VideoInfo = props => {
           )}
         </div>
 
-        {user?._id !== video?.user._id && (
+        {user && user?._id !== video?.user._id && (
           <div className='videoInfo__action'>
             <button onClick={handleFollow} className={`button ${isFollowed ? 'active' : ''}`}>
               {isFollowed ? (
@@ -178,7 +178,7 @@ const VideoInfo = props => {
         )}
       </div>
 
-      {type === 'watch' && (
+      {user && type === 'watch' && (
         <div className='videoInfo__comment'>
           <div className='videoInfo__comment-total'>
             {_totalComment} {videoinfo[language].comment}
