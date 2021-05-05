@@ -873,9 +873,9 @@ $width-volumeBar: 80px;
                 overflow-y: scroll;
 
                 .balance {
-                  position: absolute;
-                  bottom: 10px;
-                  right: 10px;
+                  position: sticky;
+                  bottom: -45px;
+                  left: 10px;
 
                   font-size: 16px;
                   color: #bababa;

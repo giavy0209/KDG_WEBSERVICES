@@ -139,34 +139,34 @@ const Live = () => {
       </div>
 
       <div className='live__right'>
-        <div className='live__chat'>
-          <div className={`live__chatBox ${isHideChat ? 'd-none' : ''}`}>
-            <div className='live__chatBox-top'>
-              {Chat.map((o, i) => (
-                <div className='live__chatBox-top-ctn' key={i}>
-                  <div className='live__chatBox-top-ctn-avatar'>
-                    <Avatar
-                      src={
-                        o.user?.kyc.avatar?.path
-                          ? STORAGE_DOMAIN + o.user?.kyc.avatar?.path
-                          : undefined
-                      }
-                      position={o.user?.kyc.avatar_pos}
-                    />
-                  </div>
-
-                  <div>
-                    <div className='live__chatBox-top-ctn-name'>
-                      {o.user?.kyc.first_name} {o.user?.kyc.last_name}
-                      {':'}
+        {user && (
+          <div className='live__chat'>
+            <div className={`live__chatBox ${isHideChat ? 'd-none' : ''}`}>
+              <div className='live__chatBox-top'>
+                {Chat.map((o, i) => (
+                  <div className='live__chatBox-top-ctn' key={i}>
+                    <div className='live__chatBox-top-ctn-avatar'>
+                      <Avatar
+                        src={
+                          o.user?.kyc.avatar?.path
+                            ? STORAGE_DOMAIN + o.user?.kyc.avatar?.path
+                            : undefined
+                        }
+                        position={o.user?.kyc.avatar_pos}
+                      />
                     </div>
-                    <div className='live__chatBox-top-ctn-text'>{o.chat}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
 
-            {user && (
+                    <div>
+                      <div className='live__chatBox-top-ctn-name'>
+                        {o.user?.kyc.first_name} {o.user?.kyc.last_name}
+                        {':'}
+                      </div>
+                      <div className='live__chatBox-top-ctn-text'>{o.chat}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
               <div className='live__chatBox-bottom'>
                 <div className='live__chatBox-bottom-chat'>
                   <div className='live__chatBox-bottom-chat-avatar'>
@@ -210,13 +210,13 @@ const Live = () => {
                   </form>
                 </div>
               </div>
-            )}
-          </div>
+            </div>
 
-          <div className='live__chatBtn' onClick={() => setIsHideChat(x => !x)}>
-            {isHideChat ? live[language].showchat : live[language].hidechat}
+            <div className='live__chatBtn' onClick={() => setIsHideChat(x => !x)}>
+              {isHideChat ? live[language].showchat : live[language].hidechat}
+            </div>
           </div>
-        </div>
+        )}
 
         <Recommend />
       </div>
