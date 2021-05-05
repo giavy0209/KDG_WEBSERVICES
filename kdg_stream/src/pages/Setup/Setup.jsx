@@ -62,14 +62,9 @@ const Setup = () => {
       e.preventDefault();
 
       const formData = new FormData(e.target);
-      const submitData = {};
-      for (const x of formData) {
-        submitData[x[0]] = x[1];
-      }
-      console.log({ submitData });
 
       try {
-        const res = await callAPI.post('/public_stream?sid=' + Stream._id, submitData);
+        const res = await callAPI.post('/public_stream?sid=' + Stream._id, formData);
         console.log({ res });
 
         toast('success');
