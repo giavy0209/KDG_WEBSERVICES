@@ -218,7 +218,7 @@ const Live = () => {
           </div>
         )}
 
-        <Recommend />
+        <Recommend id={id} />
       </div>
     </div>
   );
