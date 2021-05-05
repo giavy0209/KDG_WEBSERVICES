@@ -34,7 +34,7 @@ export default function ListImages() {
   );
 
   return (
-    <div className='kdg-row kdg-column-3 mt-30 mb-10'>
+    <div className='kdg-row kdg-column-3 mt-30 mb-10' style={{ maxHeight: '400px' }}>
       {Avatars.map(o => (
         <div
           key={o._id}
