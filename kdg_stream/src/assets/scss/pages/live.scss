@@ -41,6 +41,8 @@ $width-volumeBar: 80px;
   }
 
   &__chatfullscreen {
+    display: none;
+
     z-index: var(--z-index-chat);
     position: fixed;
     top: 50%;
