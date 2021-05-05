@@ -121,23 +121,6 @@ const SetupRight = props => {
               </>
             )}
 
-            {/* <div className='setup__tabSetup-radioBox mt-20'>
-              <div
-                className={`inputRadio mr-100 ${currentRadio === 0 ? 'active' : ''}`}
-                onClick={() => setCurrentRadio(0)}
-              >
-                <div className='circle mr-10'></div>
-                <div className='text'>Public</div>
-              </div>
-              <div
-                className={`inputRadio ${currentRadio === 1 ? 'active' : ''}`}
-                onClick={() => setCurrentRadio(1)}
-              >
-                <div className='circle mr-10'></div>
-                <div className='text'>Only me</div>
-              </div>
-            </div> */}
-
             {Stream.status === 1 && (
               <div
                 style={{
