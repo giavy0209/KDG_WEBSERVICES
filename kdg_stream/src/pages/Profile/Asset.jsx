@@ -14,7 +14,7 @@ export default function Asset() {
 
   const [History, setHistory] = useState([]);
 
-  const [IsMoreHistory, setIsMoreHistory] = useState(true);
+  const [IsMoreHistory, setIsMoreHistory] = useState(false);
   const [HistoryActive, setHistoryActive] = useState(8);
 
   const balanceKDG = useSelector(state => state.balanceKDG);
@@ -22,22 +22,6 @@ export default function Asset() {
   const MODE = { deposit: 'deposit', sell: 'sell' };
   const [mode, setMode] = useState(MODE.deposit);
   const [sellData, setSellData] = useState({});
-
-  const getHistory = useCallback(async () => {
-    /**
-     * type : 7 = mua gift , 8 = bán gifts , 9 = donate , 10 = nhận donate
-     */
-
-    const limit = 5;
-
-    const res = await callAPI.get(
-      `/transactions?type=${HistoryActive}&skip=${History.length}&limit=${limit}`
-    );
-
-    setHistory([...History, ...res.data]);
-
-    if (res.data.length === 0) setIsMoreHistory(false);
-  }, [History, HistoryActive]);
 
   // const renderType = useCallback(
   //   (type, { gift: { name }, gift_user }) => {
@@ -64,7 +48,6 @@ export default function Asset() {
 
   const handleSellGift = useCallback(
     async _sellData => {
-      console.log({ _sellData });
       delete _sellData.name;
 
       try {
@@ -83,7 +66,7 @@ export default function Asset() {
   const handleConfirmSellGift = useCallback(
     async e => {
       e.preventDefault();
-      console.log(e.target);
+
       const formData = new FormData(e.target);
       const submitData = {};
       for (const iterator of formData.entries()) {
@@ -93,7 +76,7 @@ export default function Asset() {
       if (!submitData.quantity) {
         submitData.quantity = 1;
       }
-      console.log({ submitData });
+
       setMode(MODE.sell);
       setSellData(submitData);
       setShowPopup(true);
@@ -236,12 +219,35 @@ export default function Asset() {
     ];
   }, [language, profile]);
 
+  const getHistory = useCallback(async () => {
+    /**
+     * type : 7 = mua gift , 8 = bán gifts , 9 = donate , 10 = nhận donate
+     */
+
+    const limit = 5;
+    const res = await callAPI.get(
+      `/transactions?type=${HistoryActive}&skip=${History.length}&limit=${limit}`
+    );
+    setHistory([...History, ...res.data]);
+
+    if (res.data.length === limit) {
+      setIsMoreHistory(true);
+    } else {
+      setIsMoreHistory(false);
+    }
+  }, [History, HistoryActive]);
+
   useEffect(() => {
     const limit = 5;
 
     callAPI.get(`/transactions?type=${HistoryActive}&limit=${limit}`).then(res => {
       setHistory([...res.data]);
-      if (res.data.length === 0) setIsMoreHistory(false);
+
+      if (res.data.length === limit) {
+        setIsMoreHistory(true);
+      } else {
+        setIsMoreHistory(false);
+      }
     });
   }, [HistoryActive]);
 
