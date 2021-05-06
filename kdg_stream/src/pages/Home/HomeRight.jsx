@@ -50,7 +50,10 @@ const HomeRight = () => {
                 name={o.kyc ? `${o.kyc.first_name} ${o.kyc.last_name}` : ''}
                 avatar={o.kyc.avatar?.path ? STORAGE_DOMAIN + o.kyc.avatar?.path : undefined}
                 avatarPos={o.kyc.avatar_pos}
-                onClick={() => history.push('/profile?uid=' + o._id)}
+                onClick={() => {
+                  window.scrollTo(0, 0);
+                  history.push('/profile?uid=' + o._id);
+                }}
               />
             ))}
           </TabPane>
@@ -65,7 +68,10 @@ const HomeRight = () => {
                 name={o.kyc ? `${o.kyc.first_name} ${o.kyc.last_name}` : ''}
                 avatar={o.kyc.avatar?.path ? STORAGE_DOMAIN + o.kyc.avatar?.path : undefined}
                 avatarPos={o.kyc.avatar_pos}
-                onClick={() => history.push('/profile?uid=' + o._id)}
+                onClick={() => {
+                  window.scrollTo(0, 0);
+                  history.push('/profile?uid=' + o._id);
+                }}
               />
             ))}
           </TabPane>

@@ -4,7 +4,7 @@ import Asset from './Asset';
 import Personal from './Personal';
 import TopDonate from './TopDonate';
 
-export default function MainContainer({ uid, user, UserOwner }) {
+export default function MainContainer({ uid, user, UserOwner, videoStreamming }) {
   const [{ language, profile }] = useLanguage();
 
   return (
@@ -12,7 +12,7 @@ export default function MainContainer({ uid, user, UserOwner }) {
       {uid === user?._id && (
         <Tab>
           <TabPane name={profile[language].personal} key='1'>
-            <Personal UserOwner={UserOwner} />
+            <Personal UserOwner={UserOwner} videoStreamming={videoStreamming} />
           </TabPane>
 
           <TabPane name={profile[language].asset} key='2'>

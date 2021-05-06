@@ -43,8 +43,8 @@ const HomeLeft = props => {
                   description={el.description}
                   avataPos={el.user?.kyc.avatar_pos}
                   onClick={() => {
-                    history.push('/live?s=' + el._id);
                     window.scrollTo(0, 0);
+                    history.push('/live?s=' + el._id);
                   }}
                   avatar={
                     el.user?.kyc.avatar?.path ? STORAGE_DOMAIN + el.user.kyc.avatar.path : undefined

@@ -3,6 +3,7 @@ import * as FaIcon from 'react-icons/fa';
 import * as RiIcon from 'react-icons/ri';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import '../../assets/css/profile.css';
 import avatarDefault from '../../assets/images/avatarDefault.svg';
 import coverDefault from '../../assets/images/coverDefault.png';
@@ -44,6 +45,8 @@ const Profile = () => {
 
   const [Cover, setCover] = useState('');
   const [CoverPos, setCoverPos] = useState({ zoom: 100, x: 0, y: 0 });
+
+  const [videoStreamming, setVideoStreamming] = useState({});
 
   useEffect(() => {
     if (uid || !user) return;
@@ -150,12 +153,16 @@ const Profile = () => {
 
   const handleFollow = useCallback(async () => {
     if (uid) {
-      const res = await callAPI.post('/follow?id=' + uid);
-      if (res.status === 1) {
-        setIsFollowed(x => !x);
+      try {
+        const res = await callAPI.post('/follow?id=' + uid);
+
+        if (res.status === 1) setIsFollowed(x => !x);
+      } catch (error) {
+        console.log({ error });
+        toast(profile[language].fail);
       }
     }
-  }, [uid]);
+  }, [uid, profile, language]);
 
   useEffect(() => {
     if (uid) {
@@ -175,6 +182,11 @@ const Profile = () => {
           res.data.kyc.cover?.path ? STORAGE_DOMAIN + res.data.kyc.cover?.path : coverDefault
         );
         setCoverPos(res.data?.kyc?.cover_pos ? res.data.kyc.cover_pos : { x: 0, y: 0, zoom: 100 });
+      });
+
+      callAPI.get('/streammings?uid=' + uid).then(res => {
+        console.log('streammings?uid', res);
+        setVideoStreamming(res.data);
       });
     }
   }, [uid]);
@@ -283,7 +295,12 @@ const Profile = () => {
         </div>
       </div>
 
-      <MainContainer UserOwner={UserOwner} uid={uid} user={user} />
+      <MainContainer
+        UserOwner={UserOwner}
+        uid={uid}
+        user={user}
+        videoStreamming={videoStreamming}
+      />
     </div>
   );
 };

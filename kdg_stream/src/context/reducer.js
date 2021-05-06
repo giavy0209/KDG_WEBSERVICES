@@ -314,6 +314,7 @@ const profile = {
     asset: 'Tài sản',
     topDonate: 'Đóng góp nhiều nhất',
     views: 'lượt xem',
+    streamming: 'Đang trực tiếp',
     video_upload: 'Video tải lên',
     type: 'Loại',
     date: 'Ngày',

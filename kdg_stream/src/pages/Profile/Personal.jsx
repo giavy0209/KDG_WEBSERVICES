@@ -12,7 +12,7 @@ import { useLanguage } from '../../context/LanguageLayer';
 import useWindowSize from '../../hooks/useWindowSize';
 import { actChangeVideoEditing, actChangeVideoDeleting } from '../../store/action';
 
-export default function Personal({ UserOwner }) {
+export default function Personal({ UserOwner, videoStreamming }) {
   const uid = new URLSearchParams(useLocation().search).get('uid');
   const user = useSelector(state => state.user);
   const videoEditting = useSelector(state => state.videoEditting);
@@ -245,6 +245,48 @@ export default function Personal({ UserOwner }) {
               <CreateDate create_date={videoPinned.create_date} />
             </div>
             <div className='video-pinned__videoInfoBox-description'>{videoPinned.description}</div>
+          </div>
+        </div>
+      )}
+
+      {videoStreamming && (
+        <div className='profile__personalBox'>
+          <div className='profile__personalBox-title'>Stream</div>
+
+          <div
+            className={`layoutFlex ${
+              width > BREAK_POINT_SMALL
+                ? 'layout-3'
+                : width > BREAK_POINT_EXTRA_EXTRA_SMALL
+                ? 'layout-2'
+                : 'layout-1'
+            }`}
+            style={{ '--gap-row': '15px', '--gap-column': '15px' }}
+          >
+            <div
+              className='layoutFlex-item'
+              onClick={() => {
+                window.scrollTo(0, 0);
+                history.push('/live?s=' + videoStreamming._id);
+              }}
+            >
+              <div className='profile__video'>
+                <div className='profile__video-thumbnail'>
+                  <img src={`${STORAGE_DOMAIN}${videoStreamming.thumbnail.path}`} alt='' />
+                </div>
+
+                <div className='profile__video-info'>
+                  <div className='profile__video-info-title'>{videoStreamming.name}</div>
+                  <div className='profile__video-info-view'>
+                    <span>
+                      {videoStreamming.views} {profile[language].views}
+                    </span>
+                    <span> • </span>
+                    <CreateDate create_date={videoStreamming.start_date} />
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       )}

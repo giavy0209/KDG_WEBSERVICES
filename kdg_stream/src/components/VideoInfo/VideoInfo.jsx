@@ -121,8 +121,7 @@ const VideoInfo = props => {
 
       <div className='videoInfo__descTitle'>
         <span>
-          {type === 'watch' && `${views} ${videoinfo[language].views}`}
-          {type === 'live' && `${views} ${videoinfo[language].watching}`}
+          {views} {videoinfo[language].views}
         </span>
         <span> • </span>
         {type === 'watch' && <CreateDate create_date={video?.create_date} />}

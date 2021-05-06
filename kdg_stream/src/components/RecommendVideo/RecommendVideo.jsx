@@ -45,16 +45,9 @@ const RecommendVideo = props => {
         <p className='recommend__video-info-author'>
           {video.user?.kyc.first_name} {video.user?.kyc.last_name}
         </p>
-        {type === 'watch' && (
-          <div className='recommend__video-info-view'>
-            {video.views} {recommend[language].views}
-          </div>
-        )}
-        {type === 'live' && (
-          <div className='recommend__video-info-view'>
-            • {video.views} {recommend[language].watching}
-          </div>
-        )}
+        <div className='recommend__video-info-view'>
+          {video.views} {recommend[language].views}
+        </div>
       </div>
     </div>
   );
