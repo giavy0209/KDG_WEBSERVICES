@@ -68,7 +68,7 @@ export default function ListCoin() {
         dispatch(actChangeLoading(true));
         const res = await callAPI.post('/withdraw', data);
         dispatch(actChangeLoading(false));
-
+        setVisibleWithdraw(false)
         if (res.status === 1) {
           message.success(WalletPageLanguage[language].withdraw_success);
         }
