@@ -103,7 +103,7 @@ export default function Personal({ UserOwner }) {
       try {
         const res = await callAPI.put(`/video?id=${videoEditting._id}`, submitData);
 
-        if (videoEditting._id === videoPinned._id) {
+        if (videoPinned && videoPinned._id === videoEditting._id) {
           setVideoPinned(res.data);
         }
 
@@ -128,7 +128,7 @@ export default function Personal({ UserOwner }) {
       try {
         await callAPI.delete(`/video?id=${videoDeleting._id}`);
 
-        if (videoDeleting._id === videoPinned._id) {
+        if (videoPinned && videoPinned._id === videoDeleting._id) {
           setVideoPinned(null);
         }
 
