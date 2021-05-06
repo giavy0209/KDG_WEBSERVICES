@@ -232,10 +232,7 @@ const Profile = () => {
 
           {user && user._id !== uid && (
             <div className='profile__action'>
-              <button
-                onClick={handleFollow}
-                className={`profile__action-button ${IsFollowed ? 'active' : ''}`}
-              >
+              <button onClick={handleFollow} className={`button-new ${IsFollowed ? 'active' : ''}`}>
                 {IsFollowed ? (
                   <RiIcon.RiUserUnfollowLine className='icon' />
                 ) : (

@@ -170,17 +170,13 @@ const VideoInfo = props => {
 
         {user && user?._id !== video?.user._id && (
           <div className='videoInfo__action'>
-            <button onClick={handleFollow} className={`button ${isFollowed ? 'active' : ''}`}>
+            <button onClick={handleFollow} className={`button-new ${isFollowed ? 'active' : ''}`}>
               {isFollowed ? (
                 <RiIcon.RiUserUnfollowLine className='icon' />
               ) : (
                 <RiIcon.RiUserFollowLine className='icon' />
               )}
-              {width > BREAK_POINT_SMALL && (
-                <span>
-                  {isFollowed ? videoinfo[language].unfollow : videoinfo[language].follow}
-                </span>
-              )}
+              <span>{isFollowed ? videoinfo[language].unfollow : videoinfo[language].follow}</span>
             </button>
           </div>
         )}

@@ -189,6 +189,46 @@
   }
 }
 
+.button-new {
+  cursor: pointer;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  > .icon {
+    margin-right: 5px;
+  }
+
+  padding: 10px 20px;
+
+  color: $primary-color;
+  font-size: $size-6;
+  background-color: $background-white;
+
+  border: 2px solid $primary-color;
+  border-radius: 5px;
+
+  transition: 0.3s;
+
+  &.active {
+    color: $background-white;
+    background-color: $primary-color;
+  }
+
+  @media (max-width: $break-point-small) {
+    > .icon {
+      margin-right: 0;
+    }
+
+    padding: 10px;
+
+    > span {
+      display: none;
+    }
+  }
+}
+
 .banner {
   position: relative;
 
