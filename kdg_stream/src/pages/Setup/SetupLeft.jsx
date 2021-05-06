@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import ReactHlsPlayer from 'react-hls-player';
-import coverDefault from '../../assets/images/coverDefault.png';
+import coverDefault from '../../assets/images/coverDefault.jpg';
 import { PLAY_STREAM } from '../../constant';
 import { useLanguage } from '../../context/LanguageLayer';
 

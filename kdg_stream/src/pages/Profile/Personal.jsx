@@ -272,7 +272,7 @@ export default function Personal({ UserOwner, videoStreamming }) {
             >
               <div className='profile__video'>
                 <div className='profile__video-thumbnail'>
-                  <img src={`${STORAGE_DOMAIN}${videoStreamming.thumbnail.path}`} alt='' />
+                  <img src={`${STORAGE_DOMAIN}${videoStreamming.thumbnail?.path}`} alt='' />
                 </div>
 
                 <div className='profile__video-info'>

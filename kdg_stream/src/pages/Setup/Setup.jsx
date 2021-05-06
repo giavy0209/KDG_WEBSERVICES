@@ -64,25 +64,28 @@ const Setup = () => {
       const formData = new FormData(e.target);
 
       try {
-        const res = await callAPI.post('/public_stream?sid=' + Stream._id, formData);
-        console.log({ res });
+        await callAPI.post('/public_stream?sid=' + Stream._id, formData);
 
-        toast('success');
+        toast(setup[language].public_stream);
       } catch (error) {
         console.log({ error });
-        toast('error');
+        toast(setup[language].fail);
       }
     },
-    [Stream]
+    [Stream, setup, language]
   );
 
   const handleStopStream = useCallback(async () => {
-    await callAPI.post('/stop_stream?sid=' + Stream._id);
-    toast(
-      'Bạn vừa kết thúc buổi streaming, video của bạn sẽ được xử lý và đăng công khai. Bạn sẽ nhận được thông báo khi video sẵn sàng'
-    );
-    history.push('/');
-  }, [history, Stream]);
+    try {
+      await callAPI.post('/stop_stream?sid=' + Stream._id);
+
+      toast(setup[language].stop_stream);
+      history.push('/');
+    } catch (error) {
+      console.log({ error });
+      toast(setup[language].fail);
+    }
+  }, [history, Stream, setup, language]);
 
   return (
     <>

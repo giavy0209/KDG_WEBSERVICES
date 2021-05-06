@@ -6,7 +6,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import '../../assets/css/profile.css';
 import avatarDefault from '../../assets/images/avatarDefault.svg';
-import coverDefault from '../../assets/images/coverDefault.png';
+import coverDefault from '../../assets/images/coverDefault.jpg';
 import callAPI from '../../axios';
 import { Crop } from '../../components';
 import { STORAGE_DOMAIN } from '../../constant';

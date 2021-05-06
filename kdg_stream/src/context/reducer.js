@@ -442,6 +442,10 @@ const upload = {
 const setup = {
   vi: {
     copied: 'Đã sao chép',
+    fail: 'Đã xảy ra lỗi. Vui lòng thử lại!',
+    public_stream: 'Phát trực tiếp thành công',
+    stop_stream:
+      'Bạn vừa kết thúc buổi streaming, video của bạn sẽ được xử lý và đăng công khai. Bạn sẽ nhận được thông báo khi video sẵn sàng',
     preview: 'Xem trước',
     connect: 'Kết nối',
     setup: 'Thiết lập',
@@ -472,6 +476,10 @@ const setup = {
   },
   en: {
     copied: 'Copied',
+    fail: 'An error occurred. Please try again later!',
+    public_stream: 'Stream successfully',
+    stop_stream:
+      'You have just finished the streaming session, your video will be processed and posted publicly. You will receive a notification when the video is ready',
     preview: 'Preview',
     connect: 'Connect',
     setup: 'Setup',
