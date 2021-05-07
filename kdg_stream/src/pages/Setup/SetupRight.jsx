@@ -11,8 +11,6 @@ import { useLanguage } from '../../context/LanguageLayer';
 const SetupRight = props => {
   const { Stream, readURL, handlePublicStream, handleStopStream, CopyToClipboard } = props;
 
-  console.log({ Stream });
-
   const history = useHistory();
   const [{ language, setup }] = useLanguage();
   const [isHideStreamKey, setIsHideStreamKey] = useState(false);

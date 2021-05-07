@@ -64,7 +64,12 @@ const Setup = () => {
       const formData = new FormData(e.target);
 
       try {
-        await callAPI.post('/public_stream?sid=' + Stream._id, formData);
+        const res = await callAPI.post('/public_stream?sid=' + Stream._id, formData);
+
+        if (res.status === 100) {
+          toast(setup[language].choose_thumbnail);
+          return;
+        }
 
         toast(setup[language].public_stream);
       } catch (error) {
