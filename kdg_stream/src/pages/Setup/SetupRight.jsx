@@ -137,11 +137,20 @@ const SetupRight = props => {
             )}
 
             <div className='setup__tabSetup-action mt-20 mb-30'>
+              {Stream.status === 0 && Stream.connect_status === 0 && (
+                <p className='setup__tabSetup-noti'>{setup[language].noti1}</p>
+              )}
+
               {Stream.status === 0 && Stream.connect_status === 1 && (
                 <button type='submit' className='button'>
                   {setup[language].start}
                 </button>
               )}
+
+              {Stream.status === 1 && Stream.connect_status === 1 && (
+                <p className='setup__tabSetup-noti'>{setup[language].noti2}</p>
+              )}
+
               {Stream.status === 1 && Stream.connect_status === 0 && (
                 <>
                   <p className='setup__tabSetup-noti mb-20'>{setup[language].noti3}</p>
@@ -149,12 +158,6 @@ const SetupRight = props => {
                     {setup[language].end}
                   </button>
                 </>
-              )}
-              {Stream.status === 1 && Stream.connect_status === 1 && (
-                <p className='setup__tabSetup-noti'>{setup[language].noti2}</p>
-              )}
-              {Stream.status === 0 && Stream.connect_status === 0 && (
-                <p className='setup__tabSetup-noti'>{setup[language].noti1}</p>
               )}
             </div>
           </form>

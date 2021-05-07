@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import * as GoIcon from 'react-icons/go';
 import { useHistory } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import '../../assets/css/upload.css';
 import callAPI from '../../axios';
 import { useLanguage } from '../../context/LanguageLayer';
@@ -49,6 +50,7 @@ const Upload = () => {
   const handleUpload = useCallback(
     async e => {
       e.preventDefault();
+
       if (IsUploading) return;
       setIsUploading(true);
 
@@ -66,10 +68,17 @@ const Upload = () => {
             let percent = Math.round((e.loaded / e.total) * 100);
             if (percent > 90) percent = 90;
             setProgress(percent + '%');
-            console.log(e.loaded + ' ' + e.total);
+            // console.log(e.loaded + ' ' + e.total);
           }
         },
       });
+
+      if (res.status === 100) {
+        toast(upload[language].choose_video);
+        setProgress(null);
+        setStatus(null);
+        return;
+      }
 
       if (res.status === 1) {
         setStatus(upload[language].success);

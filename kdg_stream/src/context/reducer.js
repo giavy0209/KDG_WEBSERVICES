@@ -412,6 +412,7 @@ const profile = {
 
 const upload = {
   vi: {
+    choose_video: 'Hãy chọn một Video để tải lên',
     upload: 'Tải lên',
     title: 'Tiêu đề Video',
     desc: 'Mô tả về Video',
@@ -425,6 +426,7 @@ const upload = {
     video100: 'Đã xử lý xong video với chất lượng tốt nhất, xem ngay',
   },
   en: {
+    choose_video: 'Please choose the Video to upload',
     upload: 'Upload',
     title: 'Title for Video',
     desc: 'Description about this Video',
