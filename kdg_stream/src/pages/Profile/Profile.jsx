@@ -8,7 +8,7 @@ import '../../assets/css/profile.css';
 import avatarDefault from '../../assets/images/avatarDefault.svg';
 import coverDefault from '../../assets/images/coverDefault.jpg';
 import callAPI from '../../axios';
-import { Crop } from '../../components';
+import { Crop, PopupBox } from '../../components';
 import { STORAGE_DOMAIN } from '../../constant';
 import { useLanguage } from '../../context/LanguageLayer';
 import useNumber from '../../hooks/useNumber';
@@ -30,9 +30,9 @@ const Profile = () => {
   const user = useSelector(state => state.user);
 
   const uploadStatus = useSelector(state => state.uploadStatus);
-  const [{ language, profile }] = useLanguage();
+  const [{ language, profile, videoinfo }] = useLanguage();
 
-  const [IsFollowed, setIsFollowed] = useState(false);
+  const [isFollowed, setIsFollowed] = useState(false);
   const [UserOwner, setUserOwner] = useState({});
   const kinglive = useMemo(() => UserOwner.kinglive, [UserOwner]);
 
@@ -47,6 +47,10 @@ const Profile = () => {
   const [CoverPos, setCoverPos] = useState({ zoom: 100, x: 0, y: 0 });
 
   const [videoStreamming, setVideoStreamming] = useState({});
+
+  const MODE = { handleFollow: 'handleFollow' };
+  const [mode, setMode] = useState(null);
+  const [showPopup, setShowPopup] = useState(false);
 
   useEffect(() => {
     if (uid || !user) return;
@@ -152,17 +156,37 @@ const Profile = () => {
   );
 
   const handleFollow = useCallback(async () => {
-    if (uid) {
-      try {
-        const res = await callAPI.post('/follow?id=' + uid);
+    try {
+      const res = await callAPI.post('/follow?id=' + uid);
 
-        if (res.status === 1) setIsFollowed(x => !x);
-      } catch (error) {
-        console.log({ error });
-        toast(profile[language].fail);
+      if (res.status === 1) {
+        if (isFollowed) toast(videoinfo[language].unfollow_success);
+        if (!isFollowed) toast(videoinfo[language].follow_success);
+
+        setIsFollowed(x => !x);
       }
+    } catch (error) {
+      console.log('Error follow', error);
+      toast(videoinfo[language].fail);
     }
-  }, [uid, profile, language]);
+  }, [uid, isFollowed, videoinfo, language]);
+
+  const handleConfirmUnfollow = useCallback(() => {
+    setMode(MODE.handleFollow);
+    setShowPopup(true);
+  }, [MODE.handleFollow]);
+
+  const handleSubmitUnfollow = useCallback(
+    e => {
+      e.preventDefault();
+
+      setMode(null);
+      setShowPopup(false);
+
+      handleFollow();
+    },
+    [handleFollow]
+  );
 
   useEffect(() => {
     if (uid) {
@@ -199,6 +223,32 @@ const Profile = () => {
         </div>
       )}
 
+      {showPopup && (
+        <PopupBox onCancel={setShowPopup}>
+          {mode === MODE.handleFollow && (
+            <form className='form-confirm' onSubmit={handleSubmitUnfollow}>
+              <div className='message'>
+                {videoinfo[language].unfollow}{' '}
+                <span className='name'>
+                  {UserOwner.kyc?.first_name} {UserOwner.kyc?.last_name}
+                </span>
+                <span>?</span>
+                <br />
+                <span className='text'>{videoinfo[language].message_unfollow}</span>
+              </div>
+              <div className='action'>
+                <button type='submit' className='mr-20'>
+                  {videoinfo[language].confirm}
+                </button>
+                <button type='button' onClick={() => setShowPopup(false)}>
+                  {videoinfo[language].cancel}
+                </button>
+              </div>
+            </form>
+          )}
+        </PopupBox>
+      )}
+
       <Modal
         visible={VisiblePickAvatar}
         onCancle={() => setVisiblePickAvatar(false)}
@@ -232,13 +282,19 @@ const Profile = () => {
 
           {user && user._id !== uid && (
             <div className='profile__action'>
-              <button onClick={handleFollow} className={`button-new ${IsFollowed ? 'active' : ''}`}>
-                {IsFollowed ? (
+              <button
+                onClick={isFollowed ? handleConfirmUnfollow : handleFollow}
+                className={`button-new ${isFollowed ? 'active' : ''}`}
+              >
+                {isFollowed ? (
                   <RiIcon.RiUserUnfollowLine className='icon' />
                 ) : (
                   <RiIcon.RiUserFollowLine className='icon' />
                 )}
-                <span>{IsFollowed ? profile[language].unfollow : profile[language].follow}</span>
+                <span className='button-new__text'>
+                  {isFollowed ? profile[language].following : profile[language].follow}
+                </span>
+                <span className='button-new__hiddenText'>{profile[language].unfollow}</span>
               </button>
             </div>
           )}
