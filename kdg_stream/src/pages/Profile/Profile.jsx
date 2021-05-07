@@ -209,7 +209,6 @@ const Profile = () => {
       });
 
       callAPI.get('/streammings?uid=' + uid).then(res => {
-        console.log('streammings?uid', res);
         setVideoStreamming(res.data);
       });
     }
