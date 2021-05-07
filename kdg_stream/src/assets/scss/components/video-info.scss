@@ -169,6 +169,9 @@
         margin-top: 30px;
 
         .left {
+          cursor: pointer;
+          user-select: none;
+
           position: relative;
 
           width: $avatar-width;
@@ -185,6 +188,11 @@
             font-weight: 600;
 
             margin-bottom: 5px;
+
+            > span:nth-child(1) {
+              cursor: pointer;
+              user-select: none;
+            }
 
             > span:nth-child(2),
             > span:nth-child(3) {

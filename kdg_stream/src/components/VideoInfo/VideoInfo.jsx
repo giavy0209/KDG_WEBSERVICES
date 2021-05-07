@@ -268,7 +268,13 @@ const VideoInfo = props => {
           <div className='videoInfo__comment-list'>
             {comments.map(o => (
               <div className='comment' key={o._id}>
-                <div className='left'>
+                <div
+                  className='left'
+                  onClick={() => {
+                    window.scrollTo(0, 0);
+                    history.push(`/profile?uid=${o.user?._id}`);
+                  }}
+                >
                   <Avatar
                     src={
                       o?.user?.kyc.avatar?.path
@@ -281,7 +287,12 @@ const VideoInfo = props => {
 
                 <div className='right'>
                   <div className='name'>
-                    <span>
+                    <span
+                      onClick={() => {
+                        window.scrollTo(0, 0);
+                        history.push(`/profile?uid=${o.user?._id}`);
+                      }}
+                    >
                       {o.user.kyc.first_name} {o.user.kyc.last_name}
                     </span>
                     <span> • </span>
