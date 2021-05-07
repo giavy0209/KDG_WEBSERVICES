@@ -2,21 +2,21 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import * as RiIcon from 'react-icons/ri';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { Avatar, CreateDate } from '..';
+import { toast } from 'react-toastify';
+import { Avatar, CreateDate, PopupBox } from '..';
 import '../../assets/css/video-info.css';
 import callAPI from '../../axios';
-import { BREAK_POINT_SMALL, STORAGE_DOMAIN } from '../../constant';
+import { STORAGE_DOMAIN } from '../../constant';
 import { useLanguage } from '../../context/LanguageLayer';
 import useNumber from '../../hooks/useNumber';
-import useWindowSize from '../../hooks/useWindowSize';
 
 const VideoInfo = props => {
   const { id, type = 'watch' } = props;
 
   const [{ videoinfo, language }] = useLanguage();
   const history = useHistory();
-  const [width] = useWindowSize();
   const user = useSelector(state => state.user);
+
   const [showMore, setShowMore] = useState(true);
 
   const [video, setVideo] = useState(null);
@@ -31,11 +31,42 @@ const VideoInfo = props => {
   const [totalFollow, setTotalFollow] = useState(0);
   const [isFollowed, setIsFollowed] = useState(false);
 
-  const handleFollow = useCallback(async () => {
-    const res = await callAPI.post(`follow?id=${video?.user._id}`);
+  const MODE = { handleFollow: 'handleFollow' };
+  const [mode, setMode] = useState(null);
+  const [showPopup, setShowPopup] = useState(false);
 
-    if (res.status === 1) setIsFollowed(x => !x);
-  }, [video]);
+  const handleFollow = useCallback(async () => {
+    try {
+      const res = await callAPI.post(`follow?id=${video?.user._id}`);
+
+      if (res.status === 1) {
+        if (isFollowed) toast(videoinfo[language].unfollow_success);
+        if (!isFollowed) toast(videoinfo[language].follow_success);
+
+        setIsFollowed(x => !x);
+      }
+    } catch (error) {
+      console.log('Error follow', error);
+      toast(videoinfo[language].fail);
+    }
+  }, [video, isFollowed, videoinfo, language]);
+
+  const handleConfirmUnfollow = useCallback(() => {
+    setMode(MODE.handleFollow);
+    setShowPopup(true);
+  }, [MODE.handleFollow]);
+
+  const handleSubmitUnfollow = useCallback(
+    e => {
+      e.preventDefault();
+
+      setMode(null);
+      setShowPopup(false);
+
+      handleFollow();
+    },
+    [handleFollow]
+  );
 
   const handleComment = useCallback(
     async e => {
@@ -115,6 +146,32 @@ const VideoInfo = props => {
 
   return (
     <div className='videoInfo'>
+      {showPopup && (
+        <PopupBox onCancel={setShowPopup}>
+          {mode === MODE.handleFollow && (
+            <form className='form-confirm' onSubmit={handleSubmitUnfollow}>
+              <div className='message'>
+                {videoinfo[language].unfollow}{' '}
+                <span className='name'>
+                  {video?.user?.kyc.first_name} {video?.user?.kyc.last_name}
+                </span>
+                <span>?</span>
+                <br />
+                <span className='text'>{videoinfo[language].message_unfollow}</span>
+              </div>
+              <div className='action'>
+                <button type='submit' className='mr-20'>
+                  {videoinfo[language].confirm}
+                </button>
+                <button type='button' onClick={() => setShowPopup(false)}>
+                  {videoinfo[language].cancel}
+                </button>
+              </div>
+            </form>
+          )}
+        </PopupBox>
+      )}
+
       <div className='videoInfo__title'>
         <span>{video?.name}</span>
       </div>
@@ -170,13 +227,19 @@ const VideoInfo = props => {
 
         {user && user?._id !== video?.user._id && (
           <div className='videoInfo__action'>
-            <button onClick={handleFollow} className={`button-new ${isFollowed ? 'active' : ''}`}>
+            <button
+              onClick={isFollowed ? handleConfirmUnfollow : handleFollow}
+              className={`button-new ${isFollowed ? 'active' : ''}`}
+            >
               {isFollowed ? (
                 <RiIcon.RiUserUnfollowLine className='icon' />
               ) : (
                 <RiIcon.RiUserFollowLine className='icon' />
               )}
-              <span>{isFollowed ? videoinfo[language].unfollow : videoinfo[language].follow}</span>
+              <span className='button-new__text'>
+                {isFollowed ? videoinfo[language].following : videoinfo[language].follow}
+              </span>
+              <span className='button-new__hiddenText'>{videoinfo[language].unfollow}</span>
             </button>
           </div>
         )}

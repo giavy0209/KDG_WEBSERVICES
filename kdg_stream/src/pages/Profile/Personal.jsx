@@ -249,7 +249,7 @@ export default function Personal({ UserOwner, videoStreamming }) {
         </div>
       )}
 
-      {videoStreamming && (
+      {videoStreamming?.[0] && (
         <div className='profile__personalBox'>
           <div className='profile__personalBox-title'>Stream</div>
 

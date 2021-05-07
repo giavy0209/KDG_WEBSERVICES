@@ -191,42 +191,72 @@
 
 .button-new {
   cursor: pointer;
+  user-select: none;
 
   display: flex;
   justify-content: center;
   align-items: center;
 
   > .icon {
+    display: none;
+
     margin-right: 5px;
   }
 
-  padding: 10px 20px;
+  height: 36px;
+  padding: 0 20px;
+
+  font-size: $size-6;
+  font-weight: 500;
 
   color: $primary-color;
-  font-size: $size-6;
-  background-color: $background-white;
+  background-color: transparent;
 
-  border: 2px solid $primary-color;
-  border-radius: 5px;
+  border: 1px solid $primary-color;
+  border-radius: 999px;
 
   transition: 0.3s;
+
+  &:hover {
+    background-color: $background-white;
+  }
 
   &.active {
     color: $background-white;
     background-color: $primary-color;
+
+    border: none;
+
+    &:hover {
+      background-color: #6a6a6d;
+
+      > span.button-new__text {
+        display: none;
+      }
+
+      > span.button-new__hiddenText {
+        display: block;
+      }
+    }
   }
 
-  @media (max-width: $break-point-small) {
-    > .icon {
-      margin-right: 0;
-    }
-
-    padding: 10px;
-
-    > span {
-      display: none;
-    }
+  &__hiddenText {
+    display: none;
   }
+
+  // @media (max-width: $break-point-small) {
+  //   > .icon {
+  //     display: block;
+
+  //     margin-right: 0;
+  //   }
+
+  //   padding: 10px;
+
+  //   > span {
+  //     display: none !important;
+  //   }
+  // }
 }
 
 .banner {
@@ -298,10 +328,18 @@
     font-weight: 500;
     text-align: center;
 
-    > span {
+    > .name {
       color: $primary-color;
 
       word-break: break-all;
+    }
+
+    > .text {
+      color: $text-color;
+      font-size: $size-6;
+      font-weight: 400;
+
+      margin-top: 10px;
     }
 
     margin-bottom: 20px;

@@ -92,26 +92,26 @@
     }
   }
 
-  &__action {
-    > button:not(:last-child) {
-      margin-bottom: 10px;
-    }
+  // &__action {
+  //   > button:not(:last-child) {
+  //     margin-bottom: 10px;
+  //   }
 
-    @media (max-width: $break-point-small) {
-      > button {
-        > .icon {
-          margin-right: 0;
-        }
-      }
-    }
+  //   @media (max-width: $break-point-small) {
+  //     > button {
+  //       > .icon {
+  //         margin-right: 0;
+  //       }
+  //     }
+  //   }
 
-    @media (max-width: $break-point-extra-small) {
-      > button {
-        padding: 0 5px;
-        border-radius: 999px;
-      }
-    }
-  }
+  //   @media (max-width: $break-point-extra-small) {
+  //     > button {
+  //       padding: 0 5px;
+  //       border-radius: 999px;
+  //     }
+  //   }
+  // }
 
   &__comment {
     padding-top: 35px;
