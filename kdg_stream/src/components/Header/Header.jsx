@@ -257,6 +257,7 @@ const Header = () => {
             storage.clearRefresh();
             storage.clearToken();
             window.open('/home', '_self');
+            window.open('https://login.kingdomgame.org/logout', '_blank');
           }}
         >
           <img className='icon' src={logoutIcon} alt='' />
