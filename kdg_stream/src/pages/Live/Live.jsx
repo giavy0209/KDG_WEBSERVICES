@@ -133,6 +133,18 @@ const Live = () => {
     [Stream, live, language]
   );
 
+  useEffect(() => {
+    const hideGift = () => {
+      IsShowGifts && setIsShowGifts(false);
+    };
+
+    window.addEventListener('click', hideGift);
+
+    return () => {
+      window.removeEventListener('click', hideGift);
+    };
+  }, [IsShowGifts]);
+
   return (
     <div className='live'>
       <div className='live__left'>
