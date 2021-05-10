@@ -46,8 +46,6 @@ const Live = () => {
     });
 
     const handleReceiveChat = function (chatData) {
-      console.log(chatData);
-
       setChat(_chat => {
         return [..._chat, chatData];
       });
