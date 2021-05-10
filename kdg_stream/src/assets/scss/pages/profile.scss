@@ -444,10 +444,15 @@
     &-action {
       display: flex;
       align-items: center;
+
+      > *:not(:last-child) {
+        margin-right: 20px;
+      }
     }
 
     &-deposit,
-    &-trade {
+    &-trade,
+    &-withdraw {
       cursor: pointer;
       user-select: none;
 
@@ -470,7 +475,8 @@
       color: $background-white;
     }
 
-    &-trade {
+    &-trade,
+    &-withdraw {
       background-color: $background-white;
       color: $primary-color;
     }

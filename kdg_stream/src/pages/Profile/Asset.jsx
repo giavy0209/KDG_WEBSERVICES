@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import depositIcon from '../../assets/images/deposit.svg';
+import withdrawIcon from '../../assets/images/withdraw.svg';
 import tradeIcon from '../../assets/images/trade.svg';
 import callAPI from '../../axios';
 import { AssetBox, CreateDate, PopupBox, QR, Table } from '../../components';
@@ -300,7 +301,7 @@ export default function Asset() {
 
           <div className='profile__balance-action'>
             <div
-              className='profile__balance-deposit mr-20'
+              className='profile__balance-deposit'
               onClick={() => {
                 setMode(MODE.deposit);
                 setShowPopup(true);
@@ -308,6 +309,14 @@ export default function Asset() {
             >
               <img src={depositIcon} alt='icon' />
               <span>{profile[language].deposit}</span>
+            </div>
+
+            <div
+              className='profile__balance-withdraw'
+              onClick={() => window.open('https://www.mxc.com/trade/easy#KDG_USDT', '_blank')}
+            >
+              <img src={withdrawIcon} alt='icon' />
+              <span>{profile[language].withdraw}</span>
             </div>
 
             <div
