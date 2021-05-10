@@ -46,6 +46,8 @@ const Live = () => {
     });
 
     const handleReceiveChat = function (chatData) {
+      console.log(chatData);
+
       setChat(_chat => {
         return [..._chat, chatData];
       });
@@ -160,7 +162,9 @@ const Live = () => {
 
                     <div>
                       <div className='live__chatBox-top-ctn-name'>
-                        {o.user?.kyc.first_name} {o.user?.kyc.last_name}
+                        {o.user?.kyc.first_name || o.user?.kyc.last_name
+                          ? `${o.user?.kyc.first_name} ${o.user?.kyc.last_name}`
+                          : `User ${o.user?._id}`}
                         {':'}
                       </div>
                       <div className='live__chatBox-top-ctn-text'>{o.chat}</div>
