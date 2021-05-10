@@ -46,7 +46,6 @@ const Live = () => {
     });
 
     const handleReceiveChat = function (chatData) {
-      
       setChat(_chat => {
         return [..._chat, chatData];
       });
@@ -55,12 +54,15 @@ const Live = () => {
 
     const handleReceiveGift = gift => {
       setChat(_chat => [
-        ..._chat ,
+        ..._chat,
         {
-          type : 2 , 
-          chat :live[language].receive_gift.replace('username' , gift.user_name).replace('gift_name' , gift.name)
-        }
-      ])
+          type: 2,
+          chat: live[language].receive_gift
+            .replace('username', gift.user_name)
+            .replace('gift_name', gift.gift_name),
+        },
+      ]);
+
       setListGift(_listGift => {
         return [..._listGift, gift];
       });
@@ -96,7 +98,7 @@ const Live = () => {
       socket.removeEventListener('list_gift', handleListGift);
       socket.removeEventListener('stream', handleStream);
     };
-  }, [dispatch, id, history ,language, live ]);
+  }, [dispatch, id, history, language, live]);
 
   useEffect(() => {
     document.querySelectorAll('.live__chatBox-top').forEach(el => {
@@ -153,33 +155,36 @@ const Live = () => {
           <div className='live__chat'>
             <div className={`live__chatBox ${isHideChat ? 'd-none' : ''}`}>
               <div className='live__chatBox-top'>
-                {Chat.map((o, i) => o.type === 2 ? 
-                (<span>{o.chat}</span>)
-                :
-                (
-                  <div className='live__chatBox-top-ctn' key={i}>
-                    <div className='live__chatBox-top-ctn-avatar'>
-                      <Avatar
-                        src={
-                          o.user?.kyc.avatar?.path
-                            ? STORAGE_DOMAIN + o.user?.kyc.avatar?.path
-                            : undefined
-                        }
-                        position={o.user?.kyc.avatar_pos}
-                      />
+                {Chat.map((o, i) =>
+                  o.type === 2 ? (
+                    <div style={{ color: '#f52871', fontSize: '22px', fontWeight: '500' }}>
+                      {o.chat}
                     </div>
-
-                    <div>
-                      <div className='live__chatBox-top-ctn-name'>
-                        {o.user?.kyc.first_name || o.user?.kyc.last_name
-                          ? `${o.user?.kyc.first_name} ${o.user?.kyc.last_name}`
-                          : `User ${o.user?._id}`}
-                        {':'}
+                  ) : (
+                    <div className='live__chatBox-top-ctn' key={i}>
+                      <div className='live__chatBox-top-ctn-avatar'>
+                        <Avatar
+                          src={
+                            o.user?.kyc.avatar?.path
+                              ? STORAGE_DOMAIN + o.user?.kyc.avatar?.path
+                              : undefined
+                          }
+                          position={o.user?.kyc.avatar_pos}
+                        />
                       </div>
-                      <div className='live__chatBox-top-ctn-text'>{o.chat}</div>
+
+                      <div>
+                        <div className='live__chatBox-top-ctn-name'>
+                          {o.user?.kyc.first_name || o.user?.kyc.last_name
+                            ? `${o.user?.kyc.first_name} ${o.user?.kyc.last_name}`
+                            : `User ${o.user?._id}`}
+                          {':'}
+                        </div>
+                        <div className='live__chatBox-top-ctn-text'>{o.chat}</div>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  )
+                )}
               </div>
 
               <div className='live__chatBox-bottom'>

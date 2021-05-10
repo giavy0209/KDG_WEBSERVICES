@@ -540,7 +540,7 @@ const live = {
     hidechat: 'Ẩn trò chuyện',
     sendgift: 'user_name đã gửi gift_name cho streamer',
     balance: 'Số dư',
-    receive_gift : 'username tặng bạn gift_name'
+    receive_gift: 'username tặng bạn gift_name',
   },
   en: {
     sent_gift: 'Sent gift successfully',
@@ -549,7 +549,7 @@ const live = {
     hidechat: 'Hide Chat',
     sendgift: 'user_name sent gift_name to streamer',
     balance: 'Balance',
-    receive_gift : 'username send you gift_name'
+    receive_gift: 'username sent you gift_name',
   },
 };
 
