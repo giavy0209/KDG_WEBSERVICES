@@ -49,15 +49,24 @@
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
 
-    &-button {
-      > .icon {
-        margin-right: 5px;
-      }
+    &-container1 {
+      z-index: 2;
+      position: absolute;
+      top: 20px;
+      left: 20px;
+    }
 
+    &-container2 {
       z-index: 2;
       position: absolute;
       top: 20px;
       right: 20px;
+    }
+
+    &-button {
+      > .icon {
+        margin-right: 5px;
+      }
 
       display: flex;
       justify-content: center;
@@ -161,7 +170,7 @@
     font-weight: 700;
     text-align: center;
 
-    margin-top: 5px;
+    margin-top: 10px;
 
     @include hidden-text(1);
 
@@ -198,13 +207,6 @@
         font-size: $size-6;
       }
     }
-  }
-
-  &__action {
-    z-index: 2;
-    position: absolute;
-    top: 20px;
-    left: 20px;
   }
 
   &__video {

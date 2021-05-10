@@ -11,6 +11,7 @@ import callAPI from '../../axios';
 import { Crop, PopupBox } from '../../components';
 import { STORAGE_DOMAIN } from '../../constant';
 import { useLanguage } from '../../context/LanguageLayer';
+import { storage } from '../../helpers';
 import useNumber from '../../hooks/useNumber';
 import { actChangeUploadStatus } from '../../store/action';
 import MainContainer from './MainContainer';
@@ -273,14 +274,16 @@ const Profile = () => {
           <span></span>
 
           {uid === user?._id && (
-            <div onClick={handlePickCover} className='profile__IMGcover-button'>
-              <FaIcon.FaCamera className='icon' />
-              <span>{profile[language].change_cover}</span>
+            <div className='profile__IMGcover-container2'>
+              <div onClick={handlePickCover} className='profile__IMGcover-button'>
+                <FaIcon.FaCamera className='icon' />
+                <span>{profile[language].change_cover}</span>
+              </div>
             </div>
           )}
 
           {user && user._id !== uid && (
-            <div className='profile__action'>
+            <div className='profile__IMGcover-container1'>
               <button
                 onClick={isFollowed ? handleConfirmUnfollow : handleFollow}
                 className={`button-new ${isFollowed ? 'active' : ''}`}
@@ -295,6 +298,24 @@ const Profile = () => {
                 </span>
                 <span className='button-new__hiddenText'>{profile[language].unfollow}</span>
               </button>
+            </div>
+          )}
+
+          {user && user._id === uid && (
+            <div className='profile__IMGcover-container1'>
+              <div
+                className='profile__IMGcover-button'
+                onClick={() => {
+                  const refresh = storage.getRefresh();
+                  window.open(
+                    `https://wallet.kingdomgame.org/account?refresh=${refresh}`,
+                    '_blank'
+                  );
+                }}
+              >
+                <RiIcon.RiUserSettingsLine className='icon' />
+                <span>{profile[language].edit}</span>
+              </div>
             </div>
           )}
         </div>
@@ -328,7 +349,7 @@ const Profile = () => {
             {UserOwner.kyc?.first_name} {UserOwner.kyc?.last_name}
           </div>
 
-          <div className='layoutFlex layout-3' style={{ '--gap-column': '10px' }}>
+          <div className='layoutFlex layout-3 mt-5' style={{ '--gap-column': '10px' }}>
             <div className='layoutFlex-item profile__info'>
               <p>{profile[language].followers}</p>
               <p>{useNumber(kinglive?.total_follower)}</p>
