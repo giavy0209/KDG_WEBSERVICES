@@ -77,6 +77,7 @@ const Upload = () => {
         toast(upload[language].choose_video);
         setProgress(null);
         setStatus(null);
+        setIsUploading(false);
         return;
       }
 
@@ -121,6 +122,7 @@ const Upload = () => {
           break;
         case 5:
           setStatus(upload[language].error);
+          //xu ly loi
           document.title = upload[language].error;
           break;
         default:
