@@ -2,11 +2,12 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import depositIcon from '../../assets/images/deposit.svg';
-import withdrawIcon from '../../assets/images/withdraw.svg';
 import tradeIcon from '../../assets/images/trade.svg';
+import withdrawIcon from '../../assets/images/withdraw.svg';
 import callAPI from '../../axios';
 import { AssetBox, CreateDate, PopupBox, QR, Table } from '../../components';
 import { useLanguage } from '../../context/LanguageLayer';
+import { storage } from '../../helpers';
 
 export default function Asset() {
   const [{ language, profile }] = useLanguage();
@@ -313,7 +314,10 @@ export default function Asset() {
 
             <div
               className='profile__balance-withdraw'
-              onClick={() => window.open('https://www.mxc.com/trade/easy#KDG_USDT', '_blank')}
+              onClick={() => {
+                const refresh = storage.getRefresh();
+                window.open(`https://wallet.kingdomgame.org/wallet?refresh=${refresh}`, '_blank');
+              }}
             >
               <img src={withdrawIcon} alt='icon' />
               <span>{profile[language].withdraw}</span>

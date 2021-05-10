@@ -481,7 +481,7 @@
       color: $primary-color;
     }
 
-    @media (max-width: $break-point-small) {
+    @media (max-width: $break-point-992) {
       flex-flow: column;
 
       padding: 20px;
@@ -494,6 +494,17 @@
       &-balance {
         > span:nth-child(1) {
           font-size: $size-5;
+        }
+      }
+    }
+
+    @media (max-width: $break-point-extra-small) {
+      &-action {
+        flex-flow: column;
+
+        > *:not(:last-child) {
+          margin-right: 0;
+          margin-bottom: 5px;
         }
       }
     }
