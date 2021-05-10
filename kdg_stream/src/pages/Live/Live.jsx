@@ -46,6 +46,7 @@ const Live = () => {
     });
 
     const handleReceiveChat = function (chatData) {
+      
       setChat(_chat => {
         return [..._chat, chatData];
       });
@@ -53,6 +54,13 @@ const Live = () => {
     socket.on('chat', handleReceiveChat);
 
     const handleReceiveGift = gift => {
+      setChat(_chat => [
+        ..._chat ,
+        {
+          type : 2 , 
+          chat :live[language].receive_gift.replace('username' , gift.user_name).replace('gift_name' , gift.name)
+        }
+      ])
       setListGift(_listGift => {
         return [..._listGift, gift];
       });
@@ -88,7 +96,7 @@ const Live = () => {
       socket.removeEventListener('list_gift', handleListGift);
       socket.removeEventListener('stream', handleStream);
     };
-  }, [dispatch, id, history]);
+  }, [dispatch, id, history ,language, live ]);
 
   useEffect(() => {
     document.querySelectorAll('.live__chatBox-top').forEach(el => {
@@ -145,7 +153,10 @@ const Live = () => {
           <div className='live__chat'>
             <div className={`live__chatBox ${isHideChat ? 'd-none' : ''}`}>
               <div className='live__chatBox-top'>
-                {Chat.map((o, i) => (
+                {Chat.map((o, i) => o.type === 2 ? 
+                (<span>{o.chat}</span>)
+                :
+                (
                   <div className='live__chatBox-top-ctn' key={i}>
                     <div className='live__chatBox-top-ctn-avatar'>
                       <Avatar
