@@ -10,6 +10,7 @@ import kdgCoin from '../../assets/images/kdg-coin.svg';
 import logo from '../../assets/images/logo.png';
 import logoText from '../../assets/images/logotext.png';
 import languageIcon from '../../assets/images/userinfo/language.svg';
+import tutorialIcon from '../../assets/images/userinfo/tutorial.svg';
 import logoutIcon from '../../assets/images/userinfo/logout.svg';
 import profileIcon from '../../assets/images/userinfo/profile.svg';
 import callAPI from '../../axios';
@@ -257,7 +258,7 @@ const Header = () => {
               window.open('/tutorial.pdf', '_blank');
             }}
           >
-            <img className='icon' src={languageIcon} alt='' />
+            <img className='icon' src={tutorialIcon} alt='' />
             <span>{header[language].tutorial}</span>
           </div>
         </div>
