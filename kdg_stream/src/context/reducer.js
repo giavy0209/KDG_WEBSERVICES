@@ -449,8 +449,7 @@ const setup = {
     fail: 'Đã xảy ra lỗi. Vui lòng thử lại!',
     choose_thumbnail: 'Chọn ảnh thumbnail',
     public_stream: 'Phát trực tiếp thành công',
-    stop_stream:
-      'Bạn vừa kết thúc buổi streaming, video của bạn sẽ được xử lý và đăng công khai. Bạn sẽ nhận được thông báo khi video sẵn sàng',
+    stop_stream: 'Bạn vừa kết thúc buổi streaming',
     preview: 'Xem trước',
     connect: 'Kết nối',
     setup: 'Thiết lập',
@@ -484,8 +483,7 @@ const setup = {
     fail: 'An error occurred. Please try again later!',
     choose_thumbnail: 'Please choose the thumbnail',
     public_stream: 'Stream successfully',
-    stop_stream:
-      'You have just finished the streaming session, your video will be processed and posted publicly. You will receive a notification when the video is ready',
+    stop_stream: 'You have just finished the streaming session',
     preview: 'Preview',
     connect: 'Connect',
     setup: 'Setup',
