@@ -196,16 +196,34 @@ const Live = () => {
 
                     <div className='icon icon-gift'>
                       <div className={`popup-gift ${IsShowGifts ? 'show' : ''}`}>
-                        {Gifts?.map(o => (
-                          <div key={o._id} onClick={() => handleSendGift(o._id)} className='item'>
-                            <img src={o.img} alt='' />
-                            <span className='name'>{o.name}</span>
-                            <span className='price'>{Math.ceil(o.price * 100) / 100} KDG</span>
-                          </div>
-                        ))}
-                        <span className='balance'>
+                        <span className='popup-gift__balance'>
                           {live[language].balance} {Math.floor(balance * 100) / 100} KDG
                         </span>
+
+                        <div
+                          className='layoutFlex layout-3 popup-gift__gift'
+                          style={{
+                            '--gap-column': '0px',
+                            '--gap-row': '10px',
+                            maxHeight: '500px',
+                            overflowY: 'auto',
+                            padding: '10px',
+                          }}
+                        >
+                          {Gifts?.map(o => (
+                            <div className='layoutFlex-item'>
+                              <div
+                                key={o._id}
+                                onClick={() => handleSendGift(o._id)}
+                                className='item'
+                              >
+                                <img src={o.img} alt='' />
+                                <span className='name'>{o.name}</span>
+                                <span className='price'>{Math.ceil(o.price * 100) / 100} KDG</span>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
                       </div>
                       <div onClick={() => setIsShowGifts(x => !x)} className='icon-gift-button'>
                         <FaIcon.FaGift />
