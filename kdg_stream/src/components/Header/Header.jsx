@@ -249,6 +249,17 @@ const Header = () => {
             <img className='icon' src={languageIcon} alt='' />
             <span>{header[language].language}</span>
           </div>
+
+          <div
+            className='header__manage'
+            onClick={() => {
+              setShowInfo(false);
+              window.open('/tutorial.pdf', '_blank');
+            }}
+          >
+            <img className='icon' src={languageIcon} alt='' />
+            <span>{header[language].tutorial}</span>
+          </div>
         </div>
         <div
           className='header__manage'

@@ -114,7 +114,7 @@ export function asyncInitAuth(_refresh, _jwt) {
   return async dispatch => {
     if (!_refresh) {
       const refresh = storage.getRefresh();
-      // console.log(refresh);
+      console.log(refresh);
       if (!refresh) return;
       const resToken = await callAPI.post('/refresh', { refresh_token: refresh });
       if (resToken.status === 1) {
@@ -122,10 +122,12 @@ export function asyncInitAuth(_refresh, _jwt) {
         storage.setRefresh(resToken.refreshToken);
       }
     }
+
     if (_refresh && _jwt) {
       storage.setToken(_jwt);
       storage.setRefresh(_refresh);
     }
+
     await Promise.all([
       dispatch(asyncGetUser()),
       dispatch(asyncGetBalances()),
