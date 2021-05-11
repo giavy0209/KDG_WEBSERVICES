@@ -10,6 +10,7 @@ export default function Form({ onSubmit, children, ...prop }) {
         submitData[pair[0]] = pair[1];
       }
       onSubmit(submitData);
+      e.target.reset()
     },
     [onSubmit]
   );
