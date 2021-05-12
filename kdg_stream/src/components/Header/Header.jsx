@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import * as RiIcon from 'react-icons/ri';
 import * as GoIcon from 'react-icons/go';
 import * as IoIcon from 'react-icons/io';
 import * as VscIcon from 'react-icons/vsc';
@@ -321,7 +322,7 @@ const Header = () => {
               {width > BREAK_POINT_992 ? (
                 header[language].setup
               ) : (
-                <IoIcon.IoMdSettings className='icon' />
+                <RiIcon.RiLiveLine className='icon' />
               )}
             </button>
 
