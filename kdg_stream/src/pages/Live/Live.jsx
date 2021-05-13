@@ -47,7 +47,7 @@ const Live = () => {
 
     callAPI.get('/chats?stream=' + id).then(res => {
       setChat([...res.data]);
-    })
+    });
 
     const handleReceiveChat = function (chatData) {
       setChat(_chat => {
@@ -149,9 +149,9 @@ const Live = () => {
     };
   }, [IsShowGifts]);
 
-  const handlePin = useCallback(async (chat_id) => {
-    await callAPI.post('/pin' , {chat_id})
-  },[])
+  // const handlePin = useCallback(async (chat_id) => {
+  //   await callAPI.post('/pin' , {chat_id})
+  // },[])
 
   return (
     <div className='live'>
