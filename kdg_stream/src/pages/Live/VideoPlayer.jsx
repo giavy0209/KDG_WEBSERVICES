@@ -27,20 +27,18 @@ export default function VideoPlayer({
   const user = useSelector(state => state.user);
 
   const videoRef = useRef();
-
   const controlsRef = useRef();
   const animationRef = useRef();
-  const chatFullscreenRef = useRef();
   const currentVolumeRef = useRef(1);
+  const chatFullscreenRef = useRef();
   const isShowGift = useRef(false);
 
-  const [isPlay, setIsPlay] = useState(true);
   const [isMouseDownPlayback, setIsMouseDownPlayback] = useState(false);
-
   const [isMouseDownVolume, setIsMouseDownVolume] = useState(false);
 
+  const [isPlay, setIsPlay] = useState(false);
   const [currentTime, setCurrentTime] = useState('0:00');
-  const [currentVolume, setCurrentVolume] = useState(0);
+  const [currentVolume, setCurrentVolume] = useState(1);
   const [playbackPercent, setPlaybackPercent] = useState(0);
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [isHideFullscreenChat, setIsHideFullscreenChat] = useState(false);
@@ -111,8 +109,7 @@ export default function VideoPlayer({
   const handleMuteVideo = useCallback(() => {
     if (!videoRef.current) return;
 
-    if (videoRef.current.muted) {
-      videoRef.current.muted = false;
+    if (currentVolume === 0) {
       setCurrentVolume(currentVolumeRef.current);
 
       animationRef.current && animationRef.current.classList.add('volume');
@@ -120,7 +117,6 @@ export default function VideoPlayer({
         animationRef.current && animationRef.current.classList.remove('volume');
       }, 600);
     } else {
-      videoRef.current.muted = true;
       currentVolumeRef.current = currentVolume;
       setCurrentVolume(0);
 
@@ -560,9 +556,9 @@ export default function VideoPlayer({
         {Stream && IsCanPlay ? (
           <ReactHlsPlayer
             src={`${PLAY_STREAM}${Stream.key}/index.m3u8`}
-            autoPlay={true}
+            autoPlay={false}
+            muted={false}
             controls={false}
-            muted
             width='100%'
             height='auto'
             playerRef={videoRef}
