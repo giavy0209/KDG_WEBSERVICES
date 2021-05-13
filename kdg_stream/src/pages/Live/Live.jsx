@@ -149,6 +149,10 @@ const Live = () => {
     };
   }, [IsShowGifts]);
 
+  const handlePin = useCallback(async (chat_id) => {
+    await callAPI.post('/pin' , {chat_id})
+  },[])
+
   return (
     <div className='live'>
       <div className='live__left'>
