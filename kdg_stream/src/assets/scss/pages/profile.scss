@@ -241,6 +241,16 @@
       }
     }
 
+    &-duration {
+      position: absolute;
+      right: 4px;
+      bottom: 4px;
+      padding: 3px 4px;
+      background-color: rgba(0, 0, 0, 0.8);
+      color: #fff;
+      font-size: 12px;
+    }
+
     &-info {
       position: relative;
 

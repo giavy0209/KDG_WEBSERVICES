@@ -36,6 +36,7 @@
       object-fit: cover;
     }
   }
+
   &__duration {
     position: absolute;
     right: 4px;
@@ -45,6 +46,7 @@
     color: #fff;
     font-size: 12px;
   }
+
   &__info {
     z-index: 2;
     position: relative;

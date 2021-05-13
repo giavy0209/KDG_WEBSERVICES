@@ -9,6 +9,7 @@ import callAPI from '../../axios';
 import { CreateDate, MenuBox, PopupBox } from '../../components';
 import { BREAK_POINT_SMALL, BREAK_POINT_EXTRA_EXTRA_SMALL, STORAGE_DOMAIN } from '../../constant';
 import { useLanguage } from '../../context/LanguageLayer';
+import { convertTime } from '../../helpers';
 import useWindowSize from '../../hooks/useWindowSize';
 import { actChangeVideoEditing, actChangeVideoDeleting } from '../../store/action';
 
@@ -351,6 +352,7 @@ export default function Personal({ UserOwner, videoStreamming }) {
                       }
                       alt=''
                     />
+                    <span className='profile__video-duration'>{convertTime(o.duration)}</span>
                   </div>
 
                   <div className='profile__video-info'>
