@@ -66,8 +66,7 @@ const Upload = () => {
         onUploadProgress: e => {
           if (e.lengthComputable) {
             let percent = Math.round((e.loaded / e.total) * 100);
-            if (percent > 90) percent = 90;
-            setProgress(percent + '%');
+            setProgress(Math.round(percent * 90 / 100) + '%');
             // console.log(e.loaded + ' ' + e.total);
           }
         },
