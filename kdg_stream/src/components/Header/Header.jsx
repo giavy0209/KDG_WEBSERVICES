@@ -269,7 +269,7 @@ const Header = () => {
             setShowInfo(false);
             storage.clearRefresh();
             storage.clearToken();
-            window.open('/home', '_self');
+            history.replace('/home');
             window.open('https://login.kingdomgame.org/logout', '_blank');
           }}
         >

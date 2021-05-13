@@ -19,14 +19,9 @@ socket.on('connect_error', r => {
   console.log("socket.on 'connect_error'", r);
 });
 
-socket.on('test', () => {
-  console.log("socket.on 'test'");
-});
-
 socket.on('disconnect', r => {
-  console.log(r);
-
   if (r === 'io server disconnect') {
+    console.log({r});
     setTimeout(async () => {
       await refreshToken();
       const token = await storage.getToken();
