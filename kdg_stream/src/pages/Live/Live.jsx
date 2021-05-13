@@ -45,6 +45,10 @@ const Live = () => {
       if (res.data.connect_status === 1) setIsCanPlay(true);
     });
 
+    callAPI.get('/chats?stream=' + id).then(res => {
+      setChat([...res.data]);
+    })
+
     const handleReceiveChat = function (chatData) {
       setChat(_chat => {
         return [..._chat, chatData];
