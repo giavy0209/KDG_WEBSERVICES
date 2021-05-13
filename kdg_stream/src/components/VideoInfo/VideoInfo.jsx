@@ -194,7 +194,7 @@ const VideoInfo = props => {
               {
                 display: 'popup',
                 method: 'share',
-                href: `http://localhost:3000/live?s=${id}`,
+                href: `https://kinglive.tv/live?s=${id}`,
               },
               res => {
                 console.log({ res });
