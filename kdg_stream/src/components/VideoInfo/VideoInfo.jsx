@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import * as BiIcon from 'react-icons/bi';
 import * as RiIcon from 'react-icons/ri';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
@@ -183,6 +184,24 @@ const VideoInfo = props => {
         <span> • </span>
         {type === 'watch' && <CreateDate create_date={video?.create_date} />}
         {type === 'live' && <CreateDate create_date={video?.start_date} />}
+      </div>
+
+      <div className='videoInfo__share'>
+        <BiIcon.BiShare
+          className='icon button-shareFb'
+          onClick={() => {
+            window.FB.ui(
+              {
+                display: 'popup',
+                method: 'share',
+                href: `http://localhost:3000/live?s=${id}`,
+              },
+              res => {
+                console.log({ res });
+              }
+            );
+          }}
+        />
       </div>
 
       <div className='videoInfo__info'>

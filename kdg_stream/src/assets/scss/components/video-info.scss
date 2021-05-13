@@ -37,6 +37,19 @@
     font-size: $size-6;
   }
 
+  &__share {
+    display: flex;
+    justify-content: flex-end;
+
+    > .icon {
+      display: block;
+
+      cursor: pointer;
+
+      color: $primary-color;
+    }
+  }
+
   &__avatar {
     cursor: pointer;
     user-select: none;
