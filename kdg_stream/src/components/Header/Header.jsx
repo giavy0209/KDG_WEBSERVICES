@@ -44,6 +44,7 @@ const Header = () => {
 
   const unreadNoti = useSelector(state => state.unreadNoti);
   const noties = useSelector(state => state.noties);
+  console.log({ noties });
   const balanceKDG = convertBalance(useSelector(state => state.balanceKDG));
 
   const user = useSelector(state => state.user);
@@ -316,7 +317,7 @@ const Header = () => {
             </button>
 
             <button
-              className={`button header__button ${
+              className={`button header__button ${width > BREAK_POINT_992 ? 'active' : ''} ${
                 width <= BREAK_POINT_EXTRA_SMALL ? 'mr-20' : 'mr-40'
               }`}
               onClick={() => history.push('/setup')}

@@ -15,8 +15,6 @@ const Video = props => {
     type = 'video',
   } = props;
 
-  console.log({ video });
-
   const handleClick = () => onClick && onClick();
 
   return (
@@ -64,7 +62,6 @@ const Video = props => {
           <p className='video__info-text-name'>
             {video.user.kyc.first_name} {video.user.kyc.last_name}
           </p>
-          {/* <p className='video__info-text-desc'>{description}</p> */}
         </div>
       </div>
     </div>

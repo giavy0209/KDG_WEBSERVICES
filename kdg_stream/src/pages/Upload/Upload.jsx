@@ -4,12 +4,15 @@ import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import '../../assets/css/upload.css';
 import callAPI from '../../axios';
+import { BREAK_POINT_EXTRA_EXTRA_SMALL } from '../../constant';
 import { useLanguage } from '../../context/LanguageLayer';
+import { useWindowSize } from '../../hooks';
 import socket from '../../socket';
 
 const Upload = () => {
   const history = useHistory();
   const [{ language, upload }] = useLanguage();
+  const [width] = useWindowSize();
 
   const [Guid, setGuid] = useState(null);
   const [ShortId, setShortId] = useState(null);
@@ -66,7 +69,7 @@ const Upload = () => {
         onUploadProgress: e => {
           if (e.lengthComputable) {
             let percent = Math.round((e.loaded / e.total) * 100);
-            setProgress(Math.round(percent * 90 / 100) + '%');
+            setProgress(Math.round((percent * 90) / 100) + '%');
             // console.log(e.loaded + ' ' + e.total);
           }
         },
@@ -138,11 +141,13 @@ const Upload = () => {
   return (
     <div className='upload'>
       <form onSubmit={handleUpload} className='upload__form'>
-        <div className='upload__title'>{upload[language].upload}</div>
+        <div className='upload__title upload__title--left'>
+          <p>{upload[language].upload}</p>
+        </div>
 
         {Status && (
           <>
-            <div style={{ '--progress': Progress }} className='upload__progress-bar'>
+            <div style={{ '--progress': Progress }} className='upload__progress-bar mt-30'>
               <span>
                 <span>{Progress}</span>
               </span>
@@ -164,47 +169,72 @@ const Upload = () => {
         )}
 
         <div className='upload__form-inputBox mt-20'>
+          <label className='upload__form-label' htmlFor='upload__form-name'>
+            {upload[language].title}
+          </label>
           <input
+            id='upload__form-name'
             name='name'
             type='text'
-            placeholder={upload[language].title}
+            placeholder={upload[language].placeholder_title}
             value={VideoTitle}
             onChange={e => setVideoTitle(e.target.value)}
           />
         </div>
 
         <div className='upload__form-textareaBox mt-20'>
+          <label className='upload__form-label' htmlFor='upload__form-desc'>
+            {upload[language].desc}
+          </label>
           <textarea
+            id='upload__form-desc'
             name='description'
-            placeholder={upload[language].desc}
+            placeholder={upload[language].placeholder_desc}
             value={VideoDesc}
             onChange={e => setVideoDesc(e.target.value)}
           ></textarea>
         </div>
 
         <div className='upload__form-inputBox mt-20'>
+          <label className='upload__form-label' htmlFor='upload__form-tags'>
+            {upload[language].tags}
+          </label>
           <input
+            id='upload__form-tags'
             name='tags'
             type='text'
-            placeholder={upload[language].tag}
+            placeholder={upload[language].placeholder_tags}
             value={VideoTag}
             onChange={e => setVideoTag(e.target.value)}
           />
         </div>
 
-        <label htmlFor='inputfile' className='upload__form-thumbnailBox mt-20'>
-          <input name='video' onChange={readURL} id='inputfile' type='file' />
-          <GoIcon.GoCloudUpload className='icon' />
-          {VideoSrc && <video autoPlay muted src={VideoSrc}></video>}
-        </label>
+        <div className='mt-20'>
+          <div className='upload__form-label'>Video</div>
+          <label htmlFor='inputfile' className='upload__form-thumbnailBox mt-30'>
+            <input name='video' onChange={readURL} id='inputfile' type='file' />
+            <GoIcon.GoCloudUpload className='icon' />
+            {VideoSrc && <video autoPlay muted src={VideoSrc}></video>}
+          </label>
+        </div>
 
-        <button
-          type='submit'
-          className='button mt-20'
-          style={{ width: '100%', pointerEvents: IsUploading ? 'none' : 'all' }}
-        >
-          {upload[language].upload}
-        </button>
+        <div className='mt-50' style={{ textAlign: 'right' }}>
+          <div
+            style={{
+              display: width > BREAK_POINT_EXTRA_EXTRA_SMALL ? 'inline-block' : 'block',
+              position: 'relative',
+            }}
+          >
+            <button
+              type='submit'
+              className={`button-new-new ${IsUploading ? 'disabled' : ''}`}
+              style={{ width: width > BREAK_POINT_EXTRA_EXTRA_SMALL ? 'auto' : '100%' }}
+            >
+              {IsUploading ? upload[language].uploading : upload[language].upload}
+            </button>
+            <span className='disabled'></span>
+          </div>
+        </div>
       </form>
     </div>
   );
