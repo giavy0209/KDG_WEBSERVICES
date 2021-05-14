@@ -91,16 +91,25 @@
         font-size: $size-6;
         font-weight: 600;
 
-        @include hidden-text(2);
-      }
-
-      &-desc {
-        color: $text-color;
-        font-size: $size-7;
-        font-weight: 500;
+        @media (max-width: $break-point-extra-extra-small) {
+          font-weight: 500;
+        }
 
         @include hidden-text(2);
       }
+
+      &-date,
+      &-name {
+        font-size: 14px;
+      }
+
+      // &-desc {
+      //   color: $text-color;
+      //   font-size: $size-7;
+      //   font-weight: 500;
+
+      //   @include hidden-text(2);
+      // }
     }
   }
 }

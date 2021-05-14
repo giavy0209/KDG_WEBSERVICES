@@ -27,10 +27,12 @@ import { convertBalance, convertDateAgo, storage } from '../../helpers';
 import { useNumber, useWindowSize } from '../../hooks';
 import { actChangeUnreadNoti } from '../../store/action';
 
-const handleShowPopper = (fnMain, ...fnSubs) => () => {
-  fnMain(x => !x);
-  fnSubs.forEach(fnSub => fnSub());
-};
+const handleShowPopper =
+  (fnMain, ...fnSubs) =>
+  () => {
+    fnMain(x => !x);
+    fnSubs.forEach(fnSub => fnSub());
+  };
 
 const Header = () => {
   const [{ listLanguage, flag, header, language }, dispatchLanguage] = useLanguage();
@@ -314,7 +316,7 @@ const Header = () => {
             </button>
 
             <button
-              className={`button active header__button ${
+              className={`button header__button ${
                 width <= BREAK_POINT_EXTRA_SMALL ? 'mr-20' : 'mr-40'
               }`}
               onClick={() => history.push('/setup')}

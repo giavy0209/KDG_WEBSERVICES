@@ -15,6 +15,11 @@
 
     border-bottom: $border-bottom;
 
+    @media (max-width: $break-point-extra-extra-small) {
+      font-size: $size-4;
+      font-weight: 500;
+    }
+
     &--left {
       > p {
         position: relative;
