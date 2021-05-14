@@ -10,8 +10,6 @@ export default function TopDonate() {
 
   useMemo(() => {
     callAPI.get('/top_donate').then(res => {
-      console.log({ TopDonateBody: res.data });
-
       setTopDonateBody([...res.data]);
     });
   }, []);
