@@ -10,6 +10,8 @@ export default function TopDonate() {
 
   useMemo(() => {
     callAPI.get('/top_donate').then(res => {
+      console.log({ TopDonateBody: res.data });
+
       setTopDonateBody([...res.data]);
     });
   }, []);
@@ -26,11 +28,11 @@ export default function TopDonate() {
       },
       {
         key: 'from',
-        name: 'Email',
+        name: 'Nickname',
         style: {
           width: '40%',
         },
-        render: from => from.email,
+        render: from => `${from.kyc.first_name} ${from.kyc.last_name}`,
       },
       {
         key: 'value',
