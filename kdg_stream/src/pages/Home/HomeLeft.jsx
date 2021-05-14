@@ -23,7 +23,7 @@ const HomeLeft = props => {
           </div>
 
           <div
-            className={`pl-10 pr-10 layoutFlex ${
+            className={`layoutFlex ${
               width > 1080
                 ? 'layout-4'
                 : width > 815
@@ -63,7 +63,7 @@ const HomeLeft = props => {
           </div>
 
           <div
-            className={`pl-10 pr-10 layoutFlex ${
+            className={`layoutFlex ${
               width > 1080
                 ? 'layout-4'
                 : width > 815
