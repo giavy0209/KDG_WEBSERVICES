@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import * as GoIcon from 'react-icons/go';
 import * as MdIcon from 'react-icons/md';
 import * as RiIcon from 'react-icons/ri';
+import * as IoIcon from 'react-icons/io';
 import { useHistory } from 'react-router-dom';
 import { Tab, TabPane } from '../../components';
 import { RTMP_DOMAIN, STORAGE_DOMAIN } from '../../constant';
@@ -21,7 +22,27 @@ const SetupRight = props => {
         <TabPane name={setup[language].connect} key='1'>
           <div className='setup__tabConnect'>
             <div className='setup__tabConnect-title'>{setup[language].connect_title}</div>
-            <div className='setup__tabConnect-desc mb-20'>{setup[language].connect_desc}</div>
+            <div className='setup__tabConnect-desc'>{setup[language].connect_desc}</div>
+
+            <div style={{ textAlign: 'right' }}>
+              <div
+                className='setup__tabConnect-hidecode'
+                onClick={() => setIsHideStreamKey(x => !x)}
+              >
+                {isHideStreamKey && (
+                  <>
+                    <IoIcon.IoIosEye className='icon' />
+                    <span>{setup[language].show}</span>
+                  </>
+                )}
+                {!isHideStreamKey && (
+                  <>
+                    <IoIcon.IoIosEyeOff className='icon' />
+                    <span>{setup[language].hide}</span>
+                  </>
+                )}
+              </div>
+            </div>
 
             <div className='setup__tabConnect-info mb-40'>
               <div>
@@ -48,15 +69,6 @@ const SetupRight = props => {
                     <MdIcon.MdContentCopy className='icon' />
                   </div>
                 )}
-              </div>
-            </div>
-
-            <div className='setup__tabConnect-buttonBox mb-40'>
-              <div
-                className='setup__tabConnect-buttonBox-button'
-                onClick={() => setIsHideStreamKey(x => !x)}
-              >
-                {isHideStreamKey ? setup[language].show : setup[language].hide}
               </div>
             </div>
 
