@@ -19,7 +19,7 @@ export default function Asset() {
   const [IsMoreHistory, setIsMoreHistory] = useState(false);
   const [HistoryActive, setHistoryActive] = useState(8);
 
-  const balanceKDG = useSelector(state => state.balanceKDG);
+  const balanceKDG = useSelector(state => state.balanceKDG) || 0;
   const [showPopup, setShowPopup] = useState(false);
   const MODE = { deposit: 'deposit', sell: 'sell' };
   const [mode, setMode] = useState(MODE.deposit);
