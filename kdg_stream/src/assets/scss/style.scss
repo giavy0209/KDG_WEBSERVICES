@@ -106,39 +106,6 @@
   }
 }
 
-.label-container {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  z-index: 1;
-  display: flex;
-  pointer-events: none;
-
-  .label {
-    color: #fff;
-    font-size: 20px;
-    font-weight: 500;
-    border-radius: 20px;
-    text-transform: uppercase;
-    backdrop-filter: blur(30px) brightness(115%);
-    height: 50px;
-    padding: 0 20px;
-    min-width: 130px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    &:not(:last-child) {
-      margin-right: 20px;
-    }
-
-    .icon {
-      font-size: 24px;
-      margin-right: 10px;
-    }
-  }
-}
-
 .button {
   cursor: pointer;
   user-select: none;

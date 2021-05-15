@@ -1,5 +1,4 @@
 import { CircularProgress } from '@material-ui/core';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { Video } from '../../components';
@@ -110,12 +109,6 @@ const HomeLeft = props => {
       )}
     </>
   );
-};
-
-HomeLeft.propTypes = {
-  recommendList: PropTypes.array.isRequired,
-  streammingsList: PropTypes.array.isRequired,
-  isLoading: PropTypes.bool.isRequired,
 };
 
 export default HomeLeft;
