@@ -21,8 +21,7 @@ const SetupRight = props => {
         <TabPane name={setup[language].connect} key='1'>
           <div className='setup__tabConnect'>
             <div className='setup__tabConnect-title'>{setup[language].connect_title}</div>
-            <div className='setup__tabConnect-desc'>{setup[language].connect_desc1}</div>
-            <div className='setup__tabConnect-desc mb-20'>{setup[language].connect_desc2}</div>
+            <div className='setup__tabConnect-desc mb-20'>{setup[language].connect_desc}</div>
 
             <div className='setup__tabConnect-info mb-40'>
               <div>

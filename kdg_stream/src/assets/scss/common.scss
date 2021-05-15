@@ -37,7 +37,6 @@ $size-7: 14px;
 // --------------------------COLOR---------------------------- //
 
 $primary-color: #f52871;
-$main-color: #e41a7f;
 
 $title-color: #303030;
 $sub-title-color: #272727;
@@ -174,7 +173,7 @@ $z-index-modal: 30000;
 
     transition: all 0.3s ease-out;
 
-    background-color: $main-color;
+    background-color: $primary-color;
 
     height: 2px;
   }
@@ -231,7 +230,7 @@ $z-index-modal: 30000;
   }
 
   &::-webkit-scrollbar-thumb {
-    background-color: $main-color;
+    background-color: $primary-color;
     background-clip: content-box;
 
     border: 4px solid transparent;
@@ -241,7 +240,7 @@ $z-index-modal: 30000;
     //   inset -2px -2px 2px rgba(0, 0, 0, 0.25);
 
     &:hover {
-      background-color: rgba($color: $main-color, $alpha: 0.7);
+      background-color: rgba($color: $primary-color, $alpha: 0.7);
     }
   }
 

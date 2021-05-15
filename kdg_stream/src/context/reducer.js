@@ -462,8 +462,8 @@ const setup = {
     connect: 'Kết nối',
     setup: 'Thiết lập',
     connect_title: 'Kết nối các luồng trực tiếp của bạn với API trực tiếp',
-    connect_desc1: 'Phần mềm phát trực tiếp của người dùng hoặc phần cứng',
-    connect_desc2: 'Nhập thông tin bên dưới vào cài đặt phần mềm của bạn:',
+    connect_desc:
+      'Phần mềm phát trực tiếp của người dùng hoặc phần cứng. Nhập thông tin bên dưới vào cài đặt phần mềm của bạn:',
     show: 'Hiện mã',
     hide: 'Ẩn mã',
     reset: 'Tạo lại mã',
@@ -495,9 +495,9 @@ const setup = {
     preview: 'Preview',
     connect: 'Connect',
     setup: 'Setup',
-    connect_title: 'Connect Your Live Streams To The Live API',
-    connect_desc1: 'User live streaming software or a hardware',
-    connect_desc2: "Enter the information below into your software's setting:",
+    connect_title: 'Connect Your Livestream To The Live API',
+    connect_desc:
+      "User live streaming software or a hardware. Enter the information below into your software's setting:",
     show: 'Show code',
     hide: 'Hide code',
     reset: 'Reset code',

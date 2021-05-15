@@ -44,6 +44,7 @@ const Header = () => {
 
   const unreadNoti = useSelector(state => state.unreadNoti);
   const noties = useSelector(state => state.noties);
+  console.log({ noties });
   const balanceKDG = convertBalance(useSelector(state => state.balanceKDG));
 
   const user = useSelector(state => state.user);
@@ -161,10 +162,10 @@ const Header = () => {
                 handleClickNoti(o);
                 setShowNoti(false);
               }}
-              className='header__notiItem'
+              className={`header__notiItem ${o.status === 0 ? 'header__notiItem--unread' : ''}`}
             >
               <p>{handleType(o)}</p>
-              <p className='header__notiItem-date'>{convertDateAgo(o.last_update)}</p>
+              <p className='date'>{convertDateAgo(o.last_update)}</p>
             </div>
           ))
         )}

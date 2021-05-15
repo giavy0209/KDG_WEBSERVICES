@@ -7,13 +7,13 @@ label.upload-avatar {
 
   text-align: center;
 
-  border: 5px dashed $main-color;
+  border: 5px dashed $primary-color;
   border-radius: 15px;
 
   cursor: pointer;
 
   .icon {
-    color: $main-color;
+    color: $primary-color;
     font-size: 130px;
   }
 }
