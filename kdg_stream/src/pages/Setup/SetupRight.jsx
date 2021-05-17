@@ -44,37 +44,43 @@ const SetupRight = props => {
               </div>
             </div>
 
-            <div className='setup__tabConnect-info mb-40'>
-              <div>
-                <p>Server URL</p>
-                {Stream?.key && <p>{isHideStreamKey ? '*****' : RTMP_DOMAIN}</p>}
+            <div className='setup__tabConnect-info'>
+              <div className='setup__tabConnect-info-label'>Server URL</div>
+              <div className='setup__tabConnect-info-key'>
                 {Stream?.key && (
-                  <div
-                    className='setup__tabConnect-info-button'
-                    onClick={() => CopyToClipboard(RTMP_DOMAIN)}
-                  >
-                    <MdIcon.MdContentCopy className='icon' />
-                  </div>
+                  <>
+                    <p>{isHideStreamKey ? '*****' : RTMP_DOMAIN}</p>
+                    <div
+                      className='setup__tabConnect-info-button'
+                      onClick={() => CopyToClipboard(RTMP_DOMAIN)}
+                    >
+                      <MdIcon.MdContentCopy className='icon' />
+                    </div>
+                  </>
                 )}
               </div>
+            </div>
 
-              <div>
-                <p>Stream Key</p>
-                {Stream?.key && <p>{isHideStreamKey ? '*****' : Stream?.key}</p>}
+            <div className='setup__tabConnect-info'>
+              <div className='setup__tabConnect-info-label'>Stream Key</div>
+              <div className='setup__tabConnect-info-key'>
                 {Stream?.key && (
-                  <div
-                    className='setup__tabConnect-info-button'
-                    onClick={() => CopyToClipboard(Stream?.key)}
-                  >
-                    <MdIcon.MdContentCopy className='icon' />
-                  </div>
+                  <>
+                    <p>{isHideStreamKey ? '*****' : Stream?.key}</p>
+                    <div
+                      className='setup__tabConnect-info-button'
+                      onClick={() => CopyToClipboard(Stream?.key)}
+                    >
+                      <MdIcon.MdContentCopy className='icon' />
+                    </div>
+                  </>
                 )}
               </div>
             </div>
 
             <div className='setup__tabConnect-warning'>
               <div className='setup__tabConnect-warning-iconBox'>
-                <RiIcon.RiErrorWarningLine className='icon' />
+                <RiIcon.RiErrorWarningFill className='icon' />
               </div>
               <div className='setup__tabConnect-warning-text'>{setup[language].warning}</div>
             </div>

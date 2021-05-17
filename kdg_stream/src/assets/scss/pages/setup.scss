@@ -324,29 +324,30 @@
     }
 
     &-info {
-      > div {
-        padding-right: 50px;
-        min-height: 43px;
+      margin-bottom: 20px;
 
-        text-align: center;
+      &-label {
+        color: $title-color;
+        font-size: $size-4;
+        font-weight: 500;
 
-        background-color: $background-color-footer;
+        margin-bottom: 5px;
+      }
 
+      &-key {
         position: relative;
 
-        &:not(:last-child) {
-          margin-bottom: 10px;
-        }
+        display: flex;
+        align-items: center;
+
+        padding-right: 60px;
+        padding-left: 10px;
+        min-height: 43px;
+
+        background-color: #f1f3f4;
+        border-radius: 5px;
 
         > p:nth-child(1) {
-          color: $text-color;
-          font-size: $size-4;
-          font-weight: 500;
-
-          @include hidden-text(1);
-        }
-
-        > p:nth-child(2) {
           color: $text-color;
           font-size: $size-5;
 
@@ -365,9 +366,9 @@
         right: 0;
         bottom: 0;
 
-        color: #fff;
-        background-color: rgba(228, 26, 127, 0.6);
-        border-radius: 4px;
+        color: $background-white;
+        background-color: $primary-color;
+        border-radius: 5px;
 
         transition: 0.3s;
 
@@ -378,10 +379,6 @@
         .icon {
           font-size: 26px;
         }
-
-        &:hover {
-          background-color: rgba(228, 26, 127, 1);
-        }
       }
     }
 
@@ -389,6 +386,8 @@
       display: flex;
 
       color: $primary-color;
+
+      margin-bottom: 30px;
 
       &-iconBox {
         width: 30px;
@@ -398,14 +397,15 @@
         align-items: flex-start;
 
         .icon {
-          font-size: 20px;
+          font-size: 25px;
         }
       }
 
       &-text {
         width: calc(100% - 30px);
+
         color: $primary-color;
-        font-size: $size-5;
+        font-size: $size-4;
       }
     }
   }

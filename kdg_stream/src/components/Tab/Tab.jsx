@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import '../../assets/css/tab.css';
-
 import smoothscroll from '../../helpers/smoothscroll';
 import useWindowSize from '../../hooks/useWindowSize';
 
@@ -74,7 +73,9 @@ const Tab = props => {
         {tabHeader?.map(name => (
           <div key={name} className='layoutFlex-item'>
             <div
-              onClick={() => changeTab(name)}
+              onClick={() => {
+                changeTab(name);
+              }}
               className={`tab__header-child ${name === active ? 'active' : ''}`}
             >
               <p>{name}</p>

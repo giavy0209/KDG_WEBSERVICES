@@ -44,7 +44,6 @@ const Header = () => {
 
   const unreadNoti = useSelector(state => state.unreadNoti);
   const noties = useSelector(state => state.noties);
-  console.log({ noties });
   const balanceKDG = convertBalance(useSelector(state => state.balanceKDG));
 
   const user = useSelector(state => state.user);
