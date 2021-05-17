@@ -5,6 +5,7 @@ import { Route, Switch, useLocation } from 'react-router-dom';
 import Footer from './Components/Footer';
 import Loading from './Components/Loading';
 import Menu from './Components/Menu';
+import Popup from './Components/Popup';
 import { useLang } from './context/LanguageLayer';
 import { CHANGE_LANGUAGE } from './context/reducer';
 import { storage } from './helpers';
@@ -30,7 +31,7 @@ export default function App() {
     } else {
       const old_refresh = storage.getRefresh();
       if (!old_refresh) {
-        window.open('https://login.kingdomgame.org', '_self')
+        window.open('https://login.kingdomgame.org', '_self');
       } else {
         dispatch(asyncInitAuth());
       }
@@ -57,6 +58,7 @@ export default function App() {
     <>
       {isLoading && <Loading />}
       <Menu />
+      <Popup />
       <Switch>
         <Route exact={true} path={`/`}>
           <Home />

@@ -23,7 +23,9 @@ export default function Home() {
   const [{ language, HomePageLanguage }] = useLang();
 
   const loadedList = useCallback(() => {
-    var listTitle = document.querySelectorAll('.highline-function.bottom .list-something .something .title');
+    var listTitle = document.querySelectorAll(
+      '.highline-function.bottom .list-something .something .title'
+    );
     var heightest = 0;
     listTitle.forEach(el => {
       if (el.offsetHeight > heightest) heightest = el.offsetHeight;
@@ -94,10 +96,16 @@ export default function Home() {
                 <li>{HomePageLanguage[language].desc3}</li>
               </ul>
               <div className='store'>
-                <img onClick={() => window.open('https://kingdomgame.org/download-ios')} alt='' src={appstore} />
+                <img
+                  onClick={() => window.open('https://kingdomgame.org/download-ios')}
+                  alt=''
+                  src={appstore}
+                />
                 <img
                   onClick={() =>
-                    window.open('https://play.google.com/store/apps/details?id=kingwallet.kingdomgame.org')
+                    window.open(
+                      'https://play.google.com/store/apps/details?id=kingwallet.kingdomgame.org'
+                    )
                   }
                   alt=''
                   src={chplay}
