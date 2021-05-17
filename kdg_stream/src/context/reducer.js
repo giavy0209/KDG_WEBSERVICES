@@ -468,7 +468,7 @@ const setup = {
     hide: 'Ẩn mã',
     reset: 'Tạo lại mã',
     warning:
-      'Bất kỳ ai có Stream Key này đều có thể phát trực tiếp trên nền tảng livestream Kingdomgame 4.0 của bạn. Đảm bảo rằng bạn giữ mã Key này an toàn.',
+      'Bất kỳ ai có Stream Key này đều có thể phát trực tiếp trên nền tảng livestream Kingdomgame 4.0 của bạn. Đảm bảo rằng bạn giữ mã Key này an toàn.<br/><br/>Vui lòng mở tab "Thiết lập" và nhập tất cả thông tin của bạn để bắt đầu phát trực tiếp ngay bây giờ.',
     setup_title: 'Tiêu đề cho livestream',
     setup_desc: 'Mô tả về livestream',
     setup_tag: 'Nhập tối đa 3 tag, cách nhau bởi dấu ","',
@@ -502,7 +502,7 @@ const setup = {
     hide: 'Hide code',
     reset: 'Reset code',
     warning:
-      'Anyone with this Stream Key can go live on your Kingdomgame 4.0 livestream platform. Make sure you keep this Key safe.',
+      'Anyone with this Stream Key can go live on your Kingdomgame 4.0 livestream platform. Make sure you keep this Key safe.<br/><br/>Please open “Setup” tab and enter all of your information to start livestream now.',
     setup_title: 'Title for this livestream',
     setup_desc: 'Description about this livestream',
     setup_tag: 'Enter up to 3 tags, separated by ","',

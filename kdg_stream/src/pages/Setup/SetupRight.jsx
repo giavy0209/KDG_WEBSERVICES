@@ -82,7 +82,10 @@ const SetupRight = props => {
               <div className='setup__tabConnect-warning-iconBox'>
                 <RiIcon.RiErrorWarningFill className='icon' />
               </div>
-              <div className='setup__tabConnect-warning-text'>{setup[language].warning}</div>
+              <div
+                className='setup__tabConnect-warning-text'
+                dangerouslySetInnerHTML={{ __html: setup[language].warning }}
+              ></div>
             </div>
           </div>
         </TabPane>
