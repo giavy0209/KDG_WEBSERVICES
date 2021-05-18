@@ -485,6 +485,9 @@ const setup = {
     noti2: 'Để kết thúc buổi streaming, bạn hãy ngắt kết nối trước',
     noti3:
       'Stream của bạn đang tạm dừng, bạn hãy kết nối lại để tiếp tục hoặc bấm nút kết thúc để ngừng buổi stream này',
+    title: 'Tiêu đề',
+    desc: 'Mô tả',
+    tags: 'Nhãn dán',
   },
   en: {
     copied: 'Copied',
@@ -519,6 +522,9 @@ const setup = {
     noti2: 'To end the streaming session, disconnect first',
     noti3:
       'Your stream is paused, please reconnect to continue or click the link button to stop this stream',
+    title: 'Title',
+    desc: 'Description',
+    tags: 'Tags',
   },
 };
 

@@ -474,6 +474,10 @@
 
         display: block;
         margin-bottom: 5px;
+
+        @media (max-width: $break-point-extra-extra-small) {
+          font-size: $size-6;
+        }
       }
 
       input {
@@ -490,20 +494,19 @@
         &::placeholder {
           color: $placeholder-text-color;
         }
+
+        @media (max-width: $break-point-extra-extra-small) {
+          height: 40px;
+          padding: 0 10px;
+
+          font-size: $size-6;
+        }
       }
     }
 
     &-textareaBox {
       width: 100%;
       margin-bottom: 20px;
-
-      &-label {
-        font-size: $size-4;
-        font-weight: 500;
-
-        display: block;
-        margin-bottom: 5px;
-      }
 
       textarea {
         resize: none;
@@ -525,72 +528,92 @@
         &:focus {
           outline: none;
         }
-      }
-    }
 
-    &-radioBox {
-      display: flex;
-      align-items: center;
+        @media (max-width: $break-point-extra-extra-small) {
+          height: 100px;
+          padding: 10px;
 
-      .inputRadio {
-        cursor: pointer;
-        user-select: none;
-
-        display: flex;
-        align-items: center;
-
-        .circle {
-          width: 22px;
-          height: 22px;
-          border-radius: 50%;
-          border: 1px solid $primary-color;
-        }
-
-        .text {
-          color: $text-color;
-          font-size: $size-4;
-        }
-
-        &.active {
-          .circle {
-            position: relative;
-
-            &::before {
-              content: '';
-
-              position: absolute;
-              top: 50%;
-              left: 50%;
-              transform: translate(-50%, -50%);
-
-              display: block;
-              width: 12px;
-              height: 12px;
-              border-radius: 50%;
-              background-color: $primary-color;
-            }
-          }
-
-          .text {
-            color: $primary-color;
-            font-weight: 500;
-          }
+          font-size: $size-6;
         }
       }
     }
+
+    // &-radioBox {
+    //   display: flex;
+    //   align-items: center;
+
+    //   .inputRadio {
+    //     cursor: pointer;
+    //     user-select: none;
+
+    //     display: flex;
+    //     align-items: center;
+
+    //     .circle {
+    //       width: 22px;
+    //       height: 22px;
+    //       border-radius: 50%;
+    //       border: 1px solid $primary-color;
+    //     }
+
+    //     .text {
+    //       color: $text-color;
+    //       font-size: $size-4;
+    //     }
+
+    //     &.active {
+    //       .circle {
+    //         position: relative;
+
+    //         &::before {
+    //           content: '';
+
+    //           position: absolute;
+    //           top: 50%;
+    //           left: 50%;
+    //           transform: translate(-50%, -50%);
+
+    //           display: block;
+    //           width: 12px;
+    //           height: 12px;
+    //           border-radius: 50%;
+    //           background-color: $primary-color;
+    //         }
+    //       }
+
+    //       .text {
+    //         color: $primary-color;
+    //         font-weight: 500;
+    //       }
+    //     }
+    //   }
+    // }
 
     &-note {
       line-height: 1.4;
 
+      margin-bottom: 20px;
+
       > p:nth-child(1) {
-        font-size: $size-4;
-        border-left: 3px solid $text-color;
+        font-size: $size-3;
+        border-left: 3px solid $primary-color;
         padding-left: 5px;
       }
 
       > p {
-        color: $text-color;
+        color: $primary-color;
         font-size: $size-5;
+        font-weight: 500;
+      }
+
+      @media (max-width: $break-point-extra-extra-small) {
+        > p:nth-child(1) {
+          font-size: $size-7;
+        }
+
+        > p {
+          font-size: $size-7;
+        }
       }
     }
 
@@ -651,24 +674,41 @@
       }
 
       > p {
-        color: $text-color;
+        color: $title-color;
         font-size: $size-4;
+      }
+
+      @media (max-width: $break-point-extra-extra-small) {
+        height: 170px;
+        padding: 10px;
+
+        > .icon {
+          font-size: 80px;
+        }
+
+        > p {
+          font-size: 12px;
+        }
       }
     }
 
     &-action {
       display: flex;
+      flex-wrap: wrap;
       align-items: center;
       justify-content: center;
-      width: 100%s;
-      flex-wrap: wrap;
-      > button {
-        width: calc(50% - 10px);
-      }
     }
 
     &-noti {
+      color: $primary-color;
+      font-size: $size-4;
+      font-weight: 500;
+
       text-align: center;
+
+      @media (max-width: $break-point-extra-extra-small) {
+        font-size: $size-6;
+      }
     }
   }
 }

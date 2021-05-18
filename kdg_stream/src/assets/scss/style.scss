@@ -251,6 +251,10 @@
       cursor: not-allowed;
     }
   }
+
+  @media (max-width: $break-point-extra-extra-small) {
+    font-size: $size-7;
+  }
 }
 
 .banner {

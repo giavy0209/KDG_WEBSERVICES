@@ -87,6 +87,17 @@ const SetupRight = props => {
                 dangerouslySetInnerHTML={{ __html: setup[language].warning }}
               ></div>
             </div>
+
+            <div className='setup__tabSetup-action mt-20'>
+              {Stream.status === 1 && Stream.connect_status === 0 && (
+                <>
+                  <p className='setup__tabSetup-noti mb-10'>{setup[language].noti3}</p>
+                  <button type='button' className='button-new-new' onClick={handleStopStream}>
+                    {setup[language].end}
+                  </button>
+                </>
+              )}
+            </div>
           </div>
         </TabPane>
 
@@ -99,27 +110,25 @@ const SetupRight = props => {
                     htmlFor='setup__tabSetup-inputBox-name'
                     className='setup__tabSetup-inputBox-label'
                   >
-                    Title
+                    {setup[language].title}
                   </label>
                   <input
                     id='setup__tabSetup-inputBox-name'
                     name='name'
-                    // defaultValue={Stream.name}
                     placeholder={setup[language].setup_title}
                   />
                 </div>
 
                 <div className='setup__tabSetup-textareaBox'>
                   <label
-                    htmlFor='setup__tabSetup-inputBox-desc'
+                    htmlFor='setup__tabSetup-textareaBox-desc'
                     className='setup__tabSetup-inputBox-label'
                   >
-                    Description
+                    {setup[language].desc}
                   </label>
                   <textarea
-                    id='setup__tabSetup-inputBox-desc'
+                    id='setup__tabSetup-textareaBox-desc'
                     name='description'
-                    // defaultValue={Stream.description}
                     placeholder={setup[language].setup_desc}
                   ></textarea>
                 </div>
@@ -129,71 +138,68 @@ const SetupRight = props => {
                     htmlFor='setup__tabSetup-inputBox-tags'
                     className='setup__tabSetup-inputBox-label'
                   >
-                    Tags
+                    {setup[language].tags}
                   </label>
                   <input
                     id='setup__tabSetup-inputBox-tags'
                     type='text'
                     name='tags'
-                    // defaultValue={Stream.tags.join(', ')}
                     placeholder={setup[language].setup_tag}
                   />
                 </div>
 
-                <div className='setup__tabSetup-note mt-30'>
-                  <p>{setup[language].note}</p>
-                  <p>{setup[language].note1}</p>
-                  <p>{setup[language].note2}</p>
-                </div>
+                <div>
+                  <label className='setup__tabSetup-inputBox-label'>Thumbnail</label>
 
-                <div className='setup__tabSetup-thumbnailBox mt-20'>
-                  <input type='file' name='thumbnail' onChange={readURL} />
-                  <img
-                    src={STORAGE_DOMAIN + Stream?.thumbnail?.path}
-                    className={`${Stream?.thumbnail?.path ? 'show' : ''}`}
-                    alt=''
-                  />
-                  <GoIcon.GoCloudUpload className='icon' />
-                  <p>{setup[language].thumb1}</p>
-                  <p>{setup[language].thumb2}</p>
+                  <div className='setup__tabSetup-note'>
+                    <p>{setup[language].note}</p>
+                    <p>{setup[language].note1}</p>
+                    <p>{setup[language].note2}</p>
+                  </div>
+
+                  <div className='setup__tabSetup-thumbnailBox'>
+                    <input type='file' name='thumbnail' onChange={readURL} />
+                    <img
+                      src={STORAGE_DOMAIN + Stream?.thumbnail?.path}
+                      className={`${Stream?.thumbnail?.path ? 'show' : ''}`}
+                      alt=''
+                    />
+                    <GoIcon.GoCloudUpload className='icon' />
+                    <p>{setup[language].thumb1}</p>
+                    <p>{setup[language].thumb2}</p>
+                  </div>
                 </div>
               </>
             )}
 
-            {Stream.status === 1 && (
-              <div
-                style={{
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  textAlign: 'center',
-                  textDecoration: 'underline',
-                }}
-                className='mt-20'
-                onClick={() => history.push('/live?s=' + Stream._id)}
-              >
-                {setup[language].watch}
-              </div>
-            )}
-
             <div className='setup__tabSetup-action mt-20 mb-30'>
+              {Stream.status === 1 && (
+                <button
+                  className='button-new-new'
+                  onClick={() => history.push('/live?s=' + Stream._id)}
+                >
+                  {setup[language].watch}
+                </button>
+              )}
+
               {Stream.status === 0 && Stream.connect_status === 0 && (
                 <p className='setup__tabSetup-noti'>{setup[language].noti1}</p>
               )}
 
               {Stream.status === 0 && Stream.connect_status === 1 && (
-                <button type='submit' className='button'>
+                <button type='submit' className='button-new-new'>
                   {setup[language].start}
                 </button>
               )}
 
               {Stream.status === 1 && Stream.connect_status === 1 && (
-                <p className='setup__tabSetup-noti'>{setup[language].noti2}</p>
+                <p className='setup__tabSetup-noti mb-10 mt-10'>{setup[language].noti2}</p>
               )}
 
               {Stream.status === 1 && Stream.connect_status === 0 && (
                 <>
-                  <p className='setup__tabSetup-noti mb-20'>{setup[language].noti3}</p>
-                  <button type='button' className='button' onClick={handleStopStream}>
+                  <p className='setup__tabSetup-noti mb-10 mt-10'>{setup[language].noti3}</p>
+                  <button type='button' className='button-new-new' onClick={handleStopStream}>
                     {setup[language].end}
                   </button>
                 </>
