@@ -172,7 +172,7 @@ const SetupRight = props => {
               </>
             )}
 
-            <div className='setup__tabSetup-action mt-20 mb-30'>
+            <div className='setup__tabSetup-action mt-20 mb-90'>
               {Stream.status === 1 && (
                 <button
                   className='button-new-new'
