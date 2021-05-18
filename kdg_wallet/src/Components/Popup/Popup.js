@@ -56,6 +56,8 @@ export default function Popup() {
             history.push('/wallet');
             if (width > 768) {
               window.scrollTo(0, 600);
+            } else {
+              window.scrollTo(0, 689);
             }
           }}
         >
