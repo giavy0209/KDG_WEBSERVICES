@@ -2,22 +2,26 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import '../../assets/css/popup.scss';
 import { useLang } from '../../context/LanguageLayer';
+import useWindowSize from '../../hooks/useWindowSize';
 import CloseIcon from './CloseIcon';
 
 const popupLanguage = {
   vi: {
     swapnow: 'Chuyển đổi ngay',
     backgroundImageURL: '/images/popup/bg1.png',
+    backgroundImageURL768: '/images/popup/bg3.png',
   },
   en: {
     swapnow: 'Swap now',
     backgroundImageURL: '/images/popup/bg2.png',
+    backgroundImageURL768: '/images/popup/bg4.png',
   },
 };
 
 export default function Popup() {
   const history = useHistory();
   const [{ language }] = useLang();
+  const [width] = useWindowSize();
 
   const [isShow, setIsShow] = useState(true);
 
@@ -35,7 +39,13 @@ export default function Popup() {
 
       <div
         className='popup__content'
-        style={{ backgroundImage: `url(${popupLanguage[language].backgroundImageURL})` }}
+        style={{
+          backgroundImage: `url(${
+            width > 768
+              ? popupLanguage[language].backgroundImageURL
+              : popupLanguage[language].backgroundImageURL768
+          })`,
+        }}
       >
         <CloseIcon className='popup__closeicon' onClick={handleHidePopup} />
 
@@ -44,7 +54,9 @@ export default function Popup() {
           onClick={() => {
             setIsShow(false);
             history.push('/wallet');
-            window.scrollTo(0, 600);
+            if (width > 768) {
+              window.scrollTo(0, 600);
+            }
           }}
         >
           {popupLanguage[language].swapnow}

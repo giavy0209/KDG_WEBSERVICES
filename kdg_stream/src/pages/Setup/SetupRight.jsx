@@ -95,23 +95,44 @@ const SetupRight = props => {
             {Stream.status === 0 && (
               <>
                 <div className='setup__tabSetup-inputBox'>
+                  <label
+                    htmlFor='setup__tabSetup-inputBox-name'
+                    className='setup__tabSetup-inputBox-label'
+                  >
+                    Title
+                  </label>
                   <input
+                    id='setup__tabSetup-inputBox-name'
                     name='name'
                     // defaultValue={Stream.name}
                     placeholder={setup[language].setup_title}
                   />
                 </div>
 
-                <div className='setup__tabSetup-textareaBox mt-20'>
+                <div className='setup__tabSetup-textareaBox'>
+                  <label
+                    htmlFor='setup__tabSetup-inputBox-desc'
+                    className='setup__tabSetup-inputBox-label'
+                  >
+                    Description
+                  </label>
                   <textarea
+                    id='setup__tabSetup-inputBox-desc'
                     name='description'
                     // defaultValue={Stream.description}
                     placeholder={setup[language].setup_desc}
                   ></textarea>
                 </div>
 
-                <div className='setup__tabSetup-inputBox mt-20'>
+                <div className='setup__tabSetup-inputBox'>
+                  <label
+                    htmlFor='setup__tabSetup-inputBox-tags'
+                    className='setup__tabSetup-inputBox-label'
+                  >
+                    Tags
+                  </label>
                   <input
+                    id='setup__tabSetup-inputBox-tags'
                     type='text'
                     name='tags'
                     // defaultValue={Stream.tags.join(', ')}

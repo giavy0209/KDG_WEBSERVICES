@@ -24,19 +24,19 @@ export default function App() {
   const location = useLocation();
   const refresh = new URLSearchParams(location.search).get('refresh');
 
-  useMemo(() => {
-    if (refresh) {
-      storage.setRefresh(refresh);
-      dispatch(asyncInitAuth());
-    } else {
-      const old_refresh = storage.getRefresh();
-      if (!old_refresh) {
-        window.open('https://login.kingdomgame.org', '_self');
-      } else {
-        dispatch(asyncInitAuth());
-      }
-    }
-  }, [refresh, dispatch]);
+  // useMemo(() => {
+  //   if (refresh) {
+  //     storage.setRefresh(refresh);
+  //     dispatch(asyncInitAuth());
+  //   } else {
+  //     const old_refresh = storage.getRefresh();
+  //     if (!old_refresh) {
+  //       window.open('https://login.kingdomgame.org', '_self');
+  //     } else {
+  //       dispatch(asyncInitAuth());
+  //     }
+  //   }
+  // }, [refresh, dispatch]);
 
   useEffect(() => {
     const listenBalance = res => {
