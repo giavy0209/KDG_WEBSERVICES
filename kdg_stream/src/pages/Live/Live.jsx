@@ -29,6 +29,8 @@ const Live = () => {
   const [isHideChat, setIsHideChat] = useState(false);
   const id = new URLSearchParams(window.location.search).get('s');
 
+  const [viewing, setViewing] = useState('0');
+
   useEffect(() => {
     let streamId;
     callAPI.get('/streamming?id=' + id).then(res => {
@@ -42,6 +44,7 @@ const Live = () => {
       socket.emit('join_stream', res.data._id);
       streamId = res.data._id;
       setStream(res.data);
+      setViewing(res.data.viewing);
       if (res.data.connect_status === 1) setIsCanPlay(true);
     });
 
@@ -55,6 +58,11 @@ const Live = () => {
       });
     };
     socket.on('chat', handleReceiveChat);
+
+    const handleViewing = function (totalViewing) {
+      setViewing(totalViewing);
+    };
+    socket.on('viewing', handleViewing);
 
     const handleReceiveGift = gift => {
       setChat(_chat => [
@@ -101,6 +109,7 @@ const Live = () => {
       socket.removeEventListener('gift', handleReceiveGift);
       socket.removeEventListener('list_gift', handleListGift);
       socket.removeEventListener('stream', handleStream);
+      socket.removeEventListener('viewing', handleViewing);
     };
   }, [dispatch, id, history, language, live]);
 
@@ -167,7 +176,7 @@ const Live = () => {
           chatRef={chatRef}
           IsCanPlay={IsCanPlay}
         />
-        <VideoInfo id={id} type='live' />
+        <VideoInfo id={id} type='live' viewing={viewing} />
       </div>
 
       <div className='live__right'>

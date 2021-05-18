@@ -12,7 +12,7 @@ import { useLanguage } from '../../context/LanguageLayer';
 import useNumber from '../../hooks/useNumber';
 
 const VideoInfo = props => {
-  const { id, type = 'watch' } = props;
+  const { id, type = 'watch', viewing = 0 } = props;
 
   const [{ videoinfo, language }] = useLanguage();
   const history = useHistory();
@@ -22,6 +22,7 @@ const VideoInfo = props => {
 
   const [video, setVideo] = useState(null);
   const views = useNumber(video?.views);
+  const _viewing = useNumber(viewing);
 
   const [comments, setComments] = useState([]);
   const [totalComment, setTotalComment] = useState(0);
@@ -178,9 +179,16 @@ const VideoInfo = props => {
       </div>
 
       <div className='videoInfo__descTitle'>
-        <span>
-          {views} {videoinfo[language].views}
-        </span>
+        {type === 'watch' && (
+          <span>
+            {views} {videoinfo[language].views}
+          </span>
+        )}
+        {type === 'live' && (
+          <span>
+            {_viewing} {videoinfo[language].watching}
+          </span>
+        )}
         <span> • </span>
         {type === 'watch' && <CreateDate create_date={video?.create_date} />}
         {type === 'live' && <CreateDate create_date={video?.start_date} />}
