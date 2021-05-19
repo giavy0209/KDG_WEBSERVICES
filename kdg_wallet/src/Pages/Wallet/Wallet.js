@@ -86,7 +86,7 @@ export default function Wallet() {
                               {create_date.getHours()}:{create_date.getMinutes()}:{create_date.getSeconds()}
                             </span>
                           </td>
-                          <td className={`quantity ${from?._id === user?._id ? 'red' : 'green'}`}>{value}</td>
+                          <td className={`quantity ${(type === 2 || type === 4  ) ? 'red' : 'green'}`}>{value}</td>
                           <td>{coin.code}</td>
                           <td>
                             {type === 1
