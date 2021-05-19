@@ -427,7 +427,8 @@
     pointer-events: all;
   }
 
-  &--userinfo {
+  &--userinfo,
+  &--language {
     width: 315px;
     height: auto;
   }

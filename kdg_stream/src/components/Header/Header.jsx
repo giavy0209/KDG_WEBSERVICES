@@ -171,7 +171,7 @@ const Header = () => {
       </div>
 
       <div
-        className={`popper popper--userinfo ${showLanguage ? 'show' : ''}`}
+        className={`popper popper--language ${showLanguage ? 'show' : ''}`}
         onClick={e => e.stopPropagation()}
       >
         <div className='header__language'>{header[language].language}</div>
@@ -199,6 +199,7 @@ const Header = () => {
         <div className='header__info'>
           <div
             onClick={() => {
+              window.scrollTo(0, 0);
               history.push(`/profile?uid=${uid}`);
               setShowInfo(false);
             }}
@@ -235,6 +236,7 @@ const Header = () => {
           <div
             className='header__manage'
             onClick={() => {
+              window.scrollTo(0, 0);
               history.push('/profile?uid=' + user?._id);
               setShowInfo(false);
             }}
@@ -272,7 +274,7 @@ const Header = () => {
             storage.clearRefresh();
             storage.clearToken();
             history.replace('/home');
-            window.open('https://login.kingdomgame.org/logout', '_blank');
+            window.open('https://login.kingdomgame.org/logout', '_self');
           }}
         >
           <img className='icon' src={logoutIcon} alt='' />
@@ -281,7 +283,13 @@ const Header = () => {
       </div>
 
       <div className='header__left'>
-        <div className='header__logo' onClick={() => handleNavigation('/home')}>
+        <div
+          className='header__logo'
+          onClick={() => {
+            window.scrollTo(0, 0);
+            handleNavigation('/home');
+          }}
+        >
           {width > BREAK_POINT_EXTRA_SMALL ? (
             <img src={logoText} alt='logo' />
           ) : (
