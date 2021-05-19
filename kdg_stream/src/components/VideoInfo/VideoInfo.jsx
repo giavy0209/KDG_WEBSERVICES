@@ -146,20 +146,20 @@ const VideoInfo = props => {
     }
   }, [descRef.current?.clientHeight]);
 
-  const handleShareZalo = () => {
-    const app_id = 2192398247409559850;
-    const redirect_uri = 'https://kinglive.tv/';
-    const state = '123';
+  // const handleShareZalo = () => {
+  //   const app_id = 2192398247409559850;
+  //   const redirect_uri = 'https://kinglive.tv/';
+  //   const state = '123';
 
-    try {
-      const res1 = callAPI.get(
-        `https://oauth.zaloapp.com/v3/auth?app_id=${app_id}&redirect_uri=${redirect_uri}&state=${state}`
-      );
-      console.log({ res1 });
-    } catch (error) {
-      console.error('Error When Share Zalo', error);
-    }
-  };
+  //   try {
+  //     const res1 = callAPI.get(
+  //       `https://oauth.zaloapp.com/v3/auth?app_id=${app_id}&redirect_uri=${redirect_uri}&state=${state}`
+  //     );
+  //     console.log({ res1 });
+  //   } catch (error) {
+  //     console.error('Error When Share Zalo', error);
+  //   }
+  // };
 
   return (
     <div className='videoInfo'>
@@ -226,7 +226,7 @@ const VideoInfo = props => {
           }}
         />
 
-        <BiIcon.BiShare className='icon button-shareZalo' onClick={handleShareZalo} />
+        {/* <BiIcon.BiShare className='icon button-shareZalo' onClick={handleShareZalo} /> */}
       </div>
 
       <div className='videoInfo__info'>
