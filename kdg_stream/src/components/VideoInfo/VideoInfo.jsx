@@ -148,7 +148,7 @@ const VideoInfo = props => {
 
   const handleShareZalo = () => {
     const app_id = 2192398247409559850;
-    const redirect_uri = 'https://kinglive.tv/home';
+    const redirect_uri = 'https://kinglive.tv/';
     const state = '123';
 
     try {
