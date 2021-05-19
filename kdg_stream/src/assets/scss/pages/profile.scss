@@ -337,19 +337,9 @@
 
   &__tabs {
     display: flex;
-    align-items: flex-start;
 
     > *:not(:last-child) {
       margin-right: 20px;
-    }
-
-    @media (max-width: $break-point-extra-small) {
-      flex-flow: column;
-
-      > *:not(:last-child) {
-        margin-right: 0;
-        margin-bottom: 10px;
-      }
     }
 
     &-tab {
@@ -369,6 +359,37 @@
 
         color: $background-white;
         background-color: $primary-color;
+      }
+    }
+
+    @media (max-width: $break-point-extra-small) {
+      justify-content: space-between;
+
+      > * {
+        width: calc(50% - 10px);
+      }
+
+      > *:not(:last-child) {
+        margin-right: 0;
+      }
+
+      &-tab {
+        padding: 0 15px;
+
+        font-size: $size-7;
+
+        text-align: center;
+
+        border-radius: 5px;
+
+        background-color: $background-color-body;
+
+        &.active {
+          cursor: not-allowed;
+
+          color: $background-white;
+          background-color: $primary-color;
+        }
       }
     }
   }

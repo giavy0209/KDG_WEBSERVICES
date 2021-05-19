@@ -6,11 +6,14 @@ import tradeIcon from '../../assets/images/trade.svg';
 import withdrawIcon from '../../assets/images/withdraw.svg';
 import callAPI from '../../axios';
 import { AssetBox, CreateDate, PopupBox, QR, Table } from '../../components';
+import { BREAK_POINT_EXTRA_EXTRA_SMALL } from '../../constant';
 import { useLanguage } from '../../context/LanguageLayer';
 import { storage } from '../../helpers';
+import { useWindowSize } from '../../hooks';
 
 export default function Asset() {
   const [{ language, profile }] = useLanguage();
+  const [width] = useWindowSize();
 
   const GiftStorage = useSelector(state => state.giftStorage);
 
@@ -275,7 +278,7 @@ export default function Asset() {
             >
               <div className='message'>
                 {profile[language].are_you_sure_sell}{' '}
-                <span>
+                <span style={{ color: '#f52871' }}>
                   {sellData.quantity} {sellData.name}
                 </span>
                 ?
@@ -335,7 +338,11 @@ export default function Asset() {
       </AssetBox>
 
       <AssetBox title={profile[language].storage}>
-        <div className='pt-20 pb-20 pl-30 pr-30'>
+        <div
+          className={`pt-20 pb-20 ${
+            width > BREAK_POINT_EXTRA_EXTRA_SMALL ? 'pl-30 pr-30' : 'pl-15 pr-15'
+          }`}
+        >
           <div className='profile__table'>
             <Table dataHead={storageHead} dataBody={GiftStorage || []} />
           </div>
@@ -343,7 +350,11 @@ export default function Asset() {
       </AssetBox>
 
       <AssetBox title={profile[language].transaction_history}>
-        <div className='pt-20 pb-20 pl-30 pr-30'>
+        <div
+          className={`pt-20 pb-20 ${
+            width > BREAK_POINT_EXTRA_EXTRA_SMALL ? 'pl-30 pr-30' : 'pl-15 pr-15'
+          }`}
+        >
           <div className='profile__tabs'>
             <div
               onClick={() => setHistoryActive(8)}
