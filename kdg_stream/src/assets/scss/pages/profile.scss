@@ -496,27 +496,44 @@
     @media (max-width: $break-point-992) {
       flex-flow: column;
 
-      padding: 20px;
+      padding: 20px 15px;
 
       > *:not(:last-child) {
         margin-right: 0;
-        margin-bottom: 5px;
+        margin-bottom: 15px;
       }
 
       &-balance {
         > span:nth-child(1) {
-          font-size: $size-5;
+          font-size: $size-4;
+        }
+      }
+
+      &-deposit,
+      &-trade,
+      &-withdraw {
+        flex-flow: column;
+        justify-content: center;
+
+        height: 57px;
+        max-width: 90px;
+
+        font-size: $size-6;
+
+        > img[alt='icon'] {
+          margin-right: 0;
+          margin-bottom: 1px;
         }
       }
     }
 
     @media (max-width: $break-point-extra-small) {
       &-action {
-        flex-flow: column;
+        justify-content: space-between;
+        align-self: stretch;
 
         > *:not(:last-child) {
           margin-right: 0;
-          margin-bottom: 5px;
         }
       }
     }
