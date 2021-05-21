@@ -100,7 +100,7 @@ export default function ListCoin() {
         dispatch(actChangeLoading(true));
         const res = await callAPI.post('/swap', data);
         dispatch(actChangeLoading(false));
-
+        setVisibleSwap(false)
         if (res.status === 101) {
           message.error(WalletPageLanguage[language].swap_error_101);
         }
