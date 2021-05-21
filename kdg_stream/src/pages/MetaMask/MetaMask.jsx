@@ -7,7 +7,6 @@ const MetaMask = () => {
 
   const history = useHistory();
   const user = useSelector(state => state.user);
-  console.log({ user });
 
   useEffect(() => {
     if (user && user._id !== '5fa8c45516342d2ba8827eb5') {
