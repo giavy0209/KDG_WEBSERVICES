@@ -54,12 +54,12 @@ const Live = () => {
 
     callAPI.get('/chats?stream=' + id).then(res => {
       setChat([...res.data]);
-      loadingChatRef.current = false
+      loadingChatRef.current = false;
       document.querySelectorAll('.live__chatBox-top').forEach(el => {
         el.scroll(0, el.scrollHeight + 9999);
       });
-      if(res.data.length < 50 ) {
-        haveMoreChatRef.current = false
+      if (res.data.length < 50) {
+        haveMoreChatRef.current = false;
       }
     });
 
@@ -175,31 +175,30 @@ const Live = () => {
 
   useEffect(() => {
     console.log(boxChatRef);
-    if(!boxChatRef.current) {
+    if (!boxChatRef.current) {
       setTimeout(() => {
-        setReEffect(ReEffect+1)
+        setReEffect(ReEffect + 1);
       }, 50);
     }
-      if(boxChatRef.current) {
-        const boxChat = boxChatRef.current
-        boxChat.onscroll = () => {
-          console.log(loadingChatRef.current , boxChat.scrollTop);
-          if(!loadingChatRef.current && haveMoreChatRef.current && boxChat.scrollTop <= 50) {
-            loadingChatRef.current = true
-            callAPI.get(`/chats?stream=${id}&prev=${Chat[0]?._id}`)
-            .then(res => {
-              console.log(res);
-              setChat([...res.data,...Chat])
-              loadingChatRef.current = false
-              if(res.data.length < 50) {
-                haveMoreChatRef.current = false
-              }
-            })
-          }
+    if (boxChatRef.current) {
+      const boxChat = boxChatRef.current;
+      boxChat.onscroll = () => {
+        console.log(loadingChatRef.current, boxChat.scrollTop);
+        if (!loadingChatRef.current && haveMoreChatRef.current && boxChat.scrollTop <= 50) {
+          loadingChatRef.current = true;
+          callAPI.get(`/chats?stream=${id}&prev=${Chat[0]?._id}`).then(res => {
+            console.log(res);
+            setChat([...res.data, ...Chat]);
+            loadingChatRef.current = false;
+            if (res.data.length < 50) {
+              haveMoreChatRef.current = false;
+            }
+          });
         }
-      }
-      
-  },[id, Chat,ReEffect])
+      };
+    }
+  }, [id, Chat, ReEffect]);
+
   return (
     <div className='live'>
       <div className='live__left'>
