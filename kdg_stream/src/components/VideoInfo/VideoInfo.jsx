@@ -206,7 +206,7 @@ const VideoInfo = props => {
         )}
         <span> • </span>
         {type === 'watch' && <CreateDate create_date={video?.create_date} />}
-        {type === 'live' && <CreateDate create_date={video?.start_date} />}
+        {type === 'live' && <CreateDate create_date={video?.last_start} />}
       </div>
 
       <div className='videoInfo__share'>

@@ -57,7 +57,7 @@ const Video = props => {
             <span>{video.views} views</span>
             <span> • </span>
             {type === 'video' && <CreateDate create_date={video.create_date} />}
-            {type === 'stream' && <CreateDate create_date={video.start_date} />}
+            {type === 'stream' && <CreateDate create_date={video.last_start} />}
           </p>
           <p className='video__info-text-name'>
             {video.user.kyc.first_name} {video.user.kyc.last_name}
