@@ -7,7 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Header, ScrollButton } from './components';
 import { useLanguage } from './context/LanguageLayer';
 import { storage } from './helpers';
-import { Home, Live, Login, Profile, Search, Setup, Upload, Watch } from './pages';
+import { Home, Live, Login, MetaMask, Profile, Search, Setup, Upload, Watch } from './pages';
 import socket from './socket';
 import store from './store';
 import { actChangeUnreadNoti } from './store/action';
@@ -114,6 +114,8 @@ const App = () => {
         <Route path='/live' component={Live} exact />
 
         <Route path='/result' component={Search} exact />
+
+        <Route path='/metamask' component={MetaMask} exact />
       </Switch>
     </>
   );
