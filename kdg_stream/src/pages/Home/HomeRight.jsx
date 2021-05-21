@@ -17,6 +17,7 @@ const HomeRight = () => {
   const history = useHistory();
   const [{ language, home }] = useLanguage();
 
+
   return (
     <>
       <div className='main__title main__title--right ml-25 mr-25'>
