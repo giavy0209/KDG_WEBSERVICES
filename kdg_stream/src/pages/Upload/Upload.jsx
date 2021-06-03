@@ -212,7 +212,7 @@ const Upload = () => {
         <div className='mt-20'>
           <div className='upload__form-label'>Video</div>
           <label htmlFor='inputfile' className='upload__form-thumbnailBox mt-30'>
-            <input name='video' onChange={readURL} id='inputfile' type='file' />
+            <input accept=".mp4,.mkv,.webm,.flv,.vod,.avi,.mov,.wmv,.amv,.m4p,.mpeg,.mpg,.4mv" name='video' onChange={readURL} id='inputfile' type='file' />
             <GoIcon.GoCloudUpload className='icon' />
             {VideoSrc && <video autoPlay muted src={VideoSrc}></video>}
           </label>

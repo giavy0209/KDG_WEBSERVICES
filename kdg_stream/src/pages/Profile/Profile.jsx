@@ -265,7 +265,7 @@ const Profile = () => {
       <div className='profile__cover'>
         {uid === user?._id && (
           <form style={{ display: 'none' }} id='cover'>
-            <input onChange={readURLAvatar} type='file' name='file' id='cover-input' />
+            <input onChange={readURLAvatar} accept=".png,.jpg,.jpeg" type='file' name='file' id='cover-input' />
           </form>
         )}
 
@@ -322,7 +322,7 @@ const Profile = () => {
 
         {uid === user?._id && (
           <form style={{ display: 'none' }} id='avatar'>
-            <input onChange={readURLAvatar} type='file' name='file' id='avatar-input' />
+            <input accept=".png,.jpg,.jpeg" onChange={readURLAvatar} type='file' name='file' id='avatar-input' />
           </form>
         )}
 

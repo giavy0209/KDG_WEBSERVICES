@@ -158,7 +158,7 @@ const SetupRight = props => {
                   </div>
 
                   <div className='setup__tabSetup-thumbnailBox'>
-                    <input type='file' name='thumbnail' onChange={readURL} />
+                    <input type='file' accept=".png,.jpg,.jpeg" name='thumbnail' onChange={readURL} />
                     <img
                       src={STORAGE_DOMAIN + Stream?.thumbnail?.path}
                       className={`${Stream?.thumbnail?.path ? 'show' : ''}`}
