@@ -168,8 +168,15 @@
 
     font-size: 18px;
     color: #fff;
-    background-color: #ff6a97;
+    background-color: $button-color;
 
     border-radius: 5px;
+
+    &--cancel {
+      color: $text-color-text;
+      background-color: transparent;
+
+      border: 1px solid $text-color-text;
+    }
   }
 }

@@ -4,10 +4,14 @@ import plusSVG from '../../assets/svg/plus.svg'
 import uploadSVG from '../../assets/svg/upload.svg'
 
 export default function Upload() {
+  const inputVideoRef = useRef()
   const videoPreviewRef = useRef()
   const thumbnailPreviewRef = useRef()
+  const inputThumbnailRef = useRef()
+  const tagsRef = useRef()
   const titleRef = useRef()
   const descRef = useRef()
+  const defaultValueTags = useRef('KingdomGame, KDG, KingliveTv')
 
   const handlePreviewVideo = e => {
     const files = e.target.files || []
@@ -37,9 +41,23 @@ export default function Upload() {
 
     reader.onload = e => {
       thumbnailPreviewRef.current.src = e.target.result
+      thumbnailPreviewRef.current.style.opacity = 1
     }
 
     reader.readAsDataURL(files[0])
+  }
+
+  const handleCancelUpload = () => {
+    inputVideoRef.current.value = ''
+    inputThumbnailRef.current.value = ''
+
+    videoPreviewRef.current.src = ''
+    thumbnailPreviewRef.current.src = ''
+    thumbnailPreviewRef.current.style.opacity = 0
+
+    tagsRef.current.value = defaultValueTags.current
+    titleRef.current.value = ''
+    descRef.current.value = ''
   }
 
   return (
@@ -56,7 +74,12 @@ export default function Upload() {
         <div className='upload__container mb-50'>
           <div className='upload__left'>
             <div className='upload__video mb-25'>
-              <input type='file' accept='video/mp4' onInput={handlePreviewVideo} />
+              <input
+                ref={inputVideoRef}
+                type='file'
+                accept='video/mp4'
+                onInput={handlePreviewVideo}
+              />
               <video ref={videoPreviewRef}></video>
               <img src={uploadSVG} alt='' />
               <span>Drap and drop video file</span>
@@ -65,10 +88,11 @@ export default function Upload() {
             <div className='upload__label'>Enter up to 3 tags, separate by “,”</div>
 
             <input
+              ref={tagsRef}
               className='upload__input mb-25'
               type='text'
               placeholder='Enter tags for video'
-              defaultValue='KingdomGame, KDG, KingliveTv'
+              defaultValue={defaultValueTags.current}
             />
 
             <div className='upload__label'>Thumbnail</div>
@@ -79,7 +103,12 @@ export default function Upload() {
             </div>
 
             <div className='upload__thumbnail'>
-              <input type='file' accept='image/*' onInput={handlePreviewThumbnail} />
+              <input
+                ref={inputThumbnailRef}
+                type='file'
+                accept='image/*'
+                onInput={handlePreviewThumbnail}
+              />
               <img className='preview' ref={thumbnailPreviewRef} alt='' />
               <img src={plusSVG} alt='' />
             </div>
@@ -106,7 +135,10 @@ export default function Upload() {
         </div>
 
         <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <div className='upload__button'>Upload</div>
+          <div className='upload__button mr-15'>Upload</div>
+          <div className='upload__button upload__button--cancel' onClick={handleCancelUpload}>
+            Cancel
+          </div>
         </div>
       </div>
     </>
