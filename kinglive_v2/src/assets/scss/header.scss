@@ -1,11 +1,15 @@
+@import './common.scss';
+
 header {
-    padding: 16px;
-    background-color: #1E1F24;
-    display: flex;
-    .toggle-menu{
-        height: 10px;
-        width: 10px;
-        background-color: #fff;
-        cursor: pointer;
-    }
+  height: $header-height;
+
+  padding: 16px;
+  background-color: #1e1f24;
+  display: flex;
+  .toggle-menu {
+    height: 10px;
+    width: 10px;
+    background-color: #fff;
+    cursor: pointer;
+  }
 }
