@@ -6,6 +6,7 @@ $primary-color: #f52871;
 
 $header-height: 64px;
 
+// helper css
 @for $i from 1 through 100 {
   .mt-#{$i} {
     margin-top: #{$i}px;
@@ -39,3 +40,4 @@ $header-height: 64px;
     padding-right: #{$i}px;
   }
 }
+// helper css

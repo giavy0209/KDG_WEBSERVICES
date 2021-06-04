@@ -70,6 +70,17 @@
       opacity: 0;
     }
 
+    > video {
+      position: absolute;
+      top: 0;
+      left: 0;
+
+      width: 100%;
+      height: 100%;
+
+      pointer-events: none;
+    }
+
     > span {
       color: $primary-color;
       font-size: 18px;
@@ -108,6 +119,19 @@
 
       opacity: 0;
     }
+
+    > img.preview {
+      position: absolute;
+      top: 0;
+      left: 0;
+
+      width: 100%;
+      height: 100%;
+
+      object-fit: cover;
+
+      pointer-events: none;
+    }
   }
 
   &__input,
@@ -136,5 +160,19 @@
 
     padding: 10px 20px;
     height: 220px;
+  }
+
+  &__button {
+    cursor: pointer;
+    user-select: none;
+
+    display: inline-block;
+    padding: 5px 22px;
+
+    font-size: 18px;
+    color: #fff;
+    background-color: #ff6a97;
+
+    border-radius: 5px;
   }
 }
