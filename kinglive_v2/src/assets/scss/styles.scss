@@ -19,6 +19,7 @@ body {
 
 main {
   background-color: #16171b;
+  min-height: calc(100vh - #{$header-height});
 
   margin-left: auto;
   margin-right: 0;
