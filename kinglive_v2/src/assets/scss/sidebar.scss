@@ -1,0 +1,10 @@
+aside {
+    padding: 16px;
+    background-color: #1E1F24;
+    position: fixed;
+    width: 76px ;
+    transition: .3s ;
+    &.large {
+        width: 240px;
+    }
+}
