@@ -13,7 +13,7 @@ function App() {
   }, [])
   return (
     <>
-      <Header toggleSidebar={toggleSidebar} />
+      <Header IsOpenSidebar={IsOpenSidebar} toggleSidebar={toggleSidebar} />
       <Sidebar IsOpenSidebar={IsOpenSidebar} />
       <main className={`${IsOpenSidebar ? 'small' : ''}`} > 
         <Switch>
