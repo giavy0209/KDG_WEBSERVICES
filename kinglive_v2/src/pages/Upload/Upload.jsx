@@ -1,24 +1,26 @@
-import '../../assets/scss/upload.scss'
-import uploadSVG from '../../assets/svg/upload.svg'
-import plusSVG from '../../assets/svg/plus.svg'
 import { useRef } from 'react'
+import '../../assets/scss/upload.scss'
+import plusSVG from '../../assets/svg/plus.svg'
+import uploadSVG from '../../assets/svg/upload.svg'
 
 export default function Upload() {
   const videoPreviewRef = useRef()
   const thumbnailPreviewRef = useRef()
+  const titleRef = useRef()
+  const descRef = useRef()
 
-  const handleUploadVideo = e => {
+  const handlePreviewVideo = e => {
     const files = e.target.files || []
 
     if (!files.length) return
 
+    titleRef.current.value = files[0].name.replace('.mp4', '')
+    descRef.current.value = files[0].name.replace('.mp4', '')
+
     const reader = new FileReader()
-    const videoSource = document.createElement('source')
 
     reader.onload = e => {
-      videoSource.setAttribute('src', e.target.result)
-      videoPreviewRef.current.innerHTML = ''
-      videoPreviewRef.current.appendChild(videoSource)
+      videoPreviewRef.current.src = e.target.result
       videoPreviewRef.current.load()
       videoPreviewRef.current.play()
     }
@@ -26,7 +28,7 @@ export default function Upload() {
     reader.readAsDataURL(files[0])
   }
 
-  const handleUploadThumbnail = e => {
+  const handlePreviewThumbnail = e => {
     const files = e.target.files || []
 
     if (!files.length) return
@@ -54,7 +56,7 @@ export default function Upload() {
         <div className='upload__container mb-50'>
           <div className='upload__left'>
             <div className='upload__video mb-25'>
-              <input type='file' accept='video/mp4' onInput={handleUploadVideo} />
+              <input type='file' accept='video/mp4' onInput={handlePreviewVideo} />
               <video ref={videoPreviewRef}></video>
               <img src={uploadSVG} alt='' />
               <span>Drap and drop video file</span>
@@ -62,7 +64,12 @@ export default function Upload() {
 
             <div className='upload__label'>Enter up to 3 tags, separate by “,”</div>
 
-            <input className='upload__input mb-25' type='text' placeholder='Enter tags for video' />
+            <input
+              className='upload__input mb-25'
+              type='text'
+              placeholder='Enter tags for video'
+              defaultValue='KingdomGame, KDG, KingliveTv'
+            />
 
             <div className='upload__label'>Thumbnail</div>
 
@@ -72,7 +79,7 @@ export default function Upload() {
             </div>
 
             <div className='upload__thumbnail'>
-              <input type='file' accept='image/*' onInput={handleUploadThumbnail} />
+              <input type='file' accept='image/*' onInput={handlePreviewThumbnail} />
               <img className='preview' ref={thumbnailPreviewRef} alt='' />
               <img src={plusSVG} alt='' />
             </div>
@@ -82,6 +89,7 @@ export default function Upload() {
             <div className='upload__label'>Title</div>
 
             <input
+              ref={titleRef}
               className='upload__input mb-25'
               type='text'
               placeholder='Enter title for video'
@@ -90,6 +98,7 @@ export default function Upload() {
             <div className='upload__label'>Add a description</div>
 
             <textarea
+              ref={descRef}
               className='upload__textarea'
               placeholder='Enter description for video'
             ></textarea>
