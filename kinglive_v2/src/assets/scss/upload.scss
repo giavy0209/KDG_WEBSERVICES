@@ -1,0 +1,140 @@
+@import './common.scss';
+
+.upload {
+  padding-top: 35px;
+  padding-bottom: 100px;
+
+  min-height: calc(100vh - #{$header-height});
+
+  &__title {
+    color: #fff;
+    font-size: 24px;
+    font-weight: 500;
+
+    text-align: center;
+  }
+
+  &__description {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+
+    margin-bottom: 50px;
+  }
+
+  &__container {
+    display: flex;
+    justify-content: space-between;
+
+    > * {
+      width: calc((100% - 45px) / 2);
+    }
+  }
+
+  &__left {
+  }
+
+  &__right {
+  }
+
+  &__label {
+    line-height: 1;
+
+    margin-bottom: 10px;
+  }
+
+  &__video {
+    position: relative;
+
+    height: 220px;
+
+    border-radius: 5px;
+    border: 1px dashed #fe02f7;
+
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+
+    > input[type='file'] {
+      cursor: pointer;
+      user-select: none;
+
+      position: absolute;
+      top: 0;
+      left: 0;
+
+      width: 100%;
+      height: 100%;
+
+      opacity: 0;
+    }
+
+    > span {
+      color: $primary-color;
+      font-size: 18px;
+      line-height: 18px;
+    }
+  }
+
+  &__thumbDesc {
+    font-size: 14px;
+    line-height: 16.42px;
+  }
+
+  &__thumbnail {
+    position: relative;
+
+    width: 180px;
+    height: 100px;
+
+    border-radius: 5px;
+    border: 1px dashed #c4c4c4;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    > input[type='file'] {
+      cursor: pointer;
+      user-select: none;
+
+      position: absolute;
+      top: 0;
+      left: 0;
+
+      width: 100%;
+      height: 100%;
+
+      opacity: 0;
+    }
+  }
+
+  &__input,
+  &__textarea {
+    display: block;
+
+    width: 100%;
+    padding: 0 20px;
+
+    font-size: inherit;
+    line-height: inherit;
+    font-family: inherit;
+    color: $text-color-light;
+    background-color: #171a2b;
+
+    border: 1px solid #353849;
+    border-radius: 5px;
+  }
+
+  &__input {
+    height: 50px;
+  }
+
+  &__textarea {
+    resize: unset;
+
+    padding: 10px 20px;
+    height: 220px;
+  }
+}

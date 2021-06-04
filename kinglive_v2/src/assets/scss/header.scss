@@ -1,9 +1,13 @@
+@import './common.scss';
+
 header {
     padding: 16px 23px;
     background-color: #1E1F24;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    height: $header-height;
+
     .left, .right {
         display: flex;
         align-items: center;

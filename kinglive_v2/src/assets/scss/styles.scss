@@ -1,3 +1,5 @@
+@import './font-face.scss';
+@import './common.scss';
 * {
     margin : 0;
     padding: 0;
@@ -6,40 +8,34 @@
     border: none;
 }
 
-@font-face {
-    font-family: 'Work Sans';
-    src: url(../fonts/WorkSans-Regular.ttf);
-    font-weight: 400;
-}
 
-@font-face {
-    font-family: 'Work Sans';
-    src: url(../fonts/WorkSans-Medium.ttf);
-    font-weight: 500;
-}
-
-@font-face {
-    font-family: 'Work Sans';
-    src: url(../fonts/WorkSans-Bold.ttf);
-    font-weight: 600;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-    font-family: 'Work Sans' ;
-    font-size: 16px;
+  font-family: 'Work Sans', sans-serif;
+  color: $text-color-text;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
 }
 
 main {
-    margin-left: auto;
-    margin-right: 0;
-    width: calc(100vw - 76px);
-    transition: .3s;
-    &.small {
-        width:  calc(100vw - 240px);
-    }
+  background-color: #16171b;
+
+  margin-left: auto;
+  margin-right: 0;
+  width: calc(100vw - 76px);
+  transition: 0.3s;
+  &.small {
+    width: calc(100vw - 240px);
+  }
 }
 
-.container{
-    max-width: 1170px;
-    margin: 0 auto;
+.container {
+  max-width: 1170px;
+  margin: 0 auto;
 }
