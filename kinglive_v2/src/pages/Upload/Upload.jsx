@@ -2,6 +2,7 @@ import { useRef } from 'react'
 import '../../assets/scss/upload.scss'
 import plusSVG from '../../assets/svg/plus.svg'
 import uploadSVG from '../../assets/svg/upload.svg'
+import callAPI from '../../axios'
 
 export default function Upload() {
   const inputVideoRef = useRef()
@@ -60,9 +61,33 @@ export default function Upload() {
     descRef.current.value = ''
   }
 
+  const handleUpload = async e => {
+    e.preventDefault()
+
+    console.log('submit')
+
+    const data = new FormData(e.target)
+
+    // console.log({ data: data.values().next() })
+
+    const res = await callAPI.post('/upload_video', data, true, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+      onUploadProgress: e => {
+        if (e.lengthComputable) {
+          let percent = Math.round((e.loaded / e.total) * 100)
+          console.log({ percent, loaded: e.loaded, total: e.total })
+        }
+      },
+    })
+
+    console.log({ res })
+  }
+
   return (
     <>
-      <div className='upload container'>
+      <form className='upload container' onSubmit={handleUpload}>
         <p className='upload__title'>Upload Video</p>
 
         <p className='upload__description'>
@@ -75,6 +100,7 @@ export default function Upload() {
           <div className='upload__left'>
             <div className='upload__video mb-25'>
               <input
+                name='video'
                 ref={inputVideoRef}
                 type='file'
                 accept='video/mp4'
@@ -88,6 +114,7 @@ export default function Upload() {
             <div className='upload__label'>Enter up to 3 tags, separate by “,”</div>
 
             <input
+              name='tags'
               ref={tagsRef}
               className='upload__input mb-25'
               type='text'
@@ -118,6 +145,7 @@ export default function Upload() {
             <div className='upload__label'>Title</div>
 
             <input
+              name='name'
               ref={titleRef}
               className='upload__input mb-25'
               type='text'
@@ -127,6 +155,7 @@ export default function Upload() {
             <div className='upload__label'>Add a description</div>
 
             <textarea
+              name='description'
               ref={descRef}
               className='upload__textarea'
               placeholder='Enter description for video'
@@ -135,12 +164,14 @@ export default function Upload() {
         </div>
 
         <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <div className='upload__button mr-15'>Upload</div>
+          <button type='submit' className='upload__button mr-15'>
+            Upload
+          </button>
           <div className='upload__button upload__button--cancel' onClick={handleCancelUpload}>
             Cancel
           </div>
         </div>
-      </div>
+      </form>
     </>
   )
 }
