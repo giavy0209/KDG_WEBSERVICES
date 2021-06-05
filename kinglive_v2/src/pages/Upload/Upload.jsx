@@ -122,7 +122,7 @@ export default function Upload() {
               defaultValue={defaultValueTags.current}
             />
 
-            <div className='upload__label'>Thumbnail</div>
+            <div className='upload__label'>Thumbnail (optional)</div>
 
             <div className='upload__thumbDesc mb-10'>
               Please use the format JPG, JPEG, PNG. Maximum file size: 2MB. To make sure images
