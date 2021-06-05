@@ -3,11 +3,11 @@ const keyRefresh = 'refresh'
 
 const storage = {
   getToken() {
-    return localStorage.getItem(keyJwt)
+    return JSON.parse(localStorage.getItem(keyJwt))
   },
 
   setToken(jwtToken) {
-    localStorage.setItem(keyJwt, jwtToken)
+    localStorage.setItem(keyJwt, JSON.stringify(jwtToken))
   },
 
   clearToken() {
@@ -15,11 +15,11 @@ const storage = {
   },
 
   getRefresh() {
-    return localStorage.getItem(keyRefresh)
+    return JSON.parse(localStorage.getItem(keyRefresh))
   },
 
   setRefresh(refreshToken) {
-    localStorage.setItem(keyRefresh, refreshToken)
+    localStorage.setItem(keyRefresh, JSON.stringify(refreshToken))
   },
 
   clearRefresh() {
