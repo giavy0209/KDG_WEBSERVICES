@@ -10,7 +10,9 @@ export default function Sidebar ({
     return (
         <>
             <aside className={`${IsOpenSidebar ? 'large' : ''}`}>
-
+                <div className="item">
+                    
+                </div>
             </aside>
         </>
     )
