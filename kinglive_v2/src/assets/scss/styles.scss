@@ -25,6 +25,7 @@ main {
   margin-right: 0;
   width: calc(100vw - 76px);
   transition: 0.3s;
+  margin-top: $header-height;
   &.small {
     width: calc(100vw - 240px);
   }
