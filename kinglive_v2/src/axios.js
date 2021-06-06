@@ -4,7 +4,6 @@ import { API_DOMAIN } from './constant'
 
 function create() {
   const jwt = storage.getToken()
-  console.log(jwt);
   var Axios = axios.create({
     baseURL: API_DOMAIN,
     headers: {

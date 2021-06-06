@@ -48,7 +48,7 @@ export default function Upload() {
     reader.readAsDataURL(files[0])
   }
 
-  const handleCancelUpload = () => {
+  const handleClearInput = () => {
     inputVideoRef.current.value = ''
     inputThumbnailRef.current.value = ''
 
@@ -68,8 +68,6 @@ export default function Upload() {
 
     const data = new FormData(e.target)
 
-    // console.log({ data: data.values().next() })
-
     const res = await callAPI.post('/upload_video', data, true, {
       headers: {
         'Content-Type': 'multipart/form-data',
@@ -82,12 +80,28 @@ export default function Upload() {
       },
     })
 
+    if (res.status === 1) {
+      console.log('upload thanh cong')
+    }
+
+    if (res.status === 100) {
+      console.log('chua chon video')
+    }
+
+    if (res.status === 0) {
+      console.log('loi khong xac dinh')
+    }
+
     console.log({ res })
   }
 
   return (
     <>
       <form className='upload container' onSubmit={handleUpload}>
+        <div className='upload__loading'>
+          <div className='circle'></div>
+        </div>
+
         <p className='upload__title'>Upload Video</p>
 
         <p className='upload__description'>
@@ -167,7 +181,7 @@ export default function Upload() {
           <button type='submit' className='upload__button mr-15'>
             Upload
           </button>
-          <div className='upload__button upload__button--cancel' onClick={handleCancelUpload}>
+          <div className='upload__button upload__button--cancel' onClick={handleClearInput}>
             Cancel
           </div>
         </div>
