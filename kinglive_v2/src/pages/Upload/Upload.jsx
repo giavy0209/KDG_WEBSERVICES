@@ -1,7 +1,9 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import '../../assets/scss/upload.scss'
 import plusSVG from '../../assets/svg/plus.svg'
 import uploadSVG from '../../assets/svg/upload.svg'
+import checkSVG from '../../assets/svg/check.svg'
+import closeSVG from '../../assets/svg/close.svg'
 import callAPI from '../../axios'
 
 export default function Upload() {
@@ -13,6 +15,10 @@ export default function Upload() {
   const titleRef = useRef()
   const descRef = useRef()
   const defaultValueTags = useRef('KingdomGame, KDG, KingliveTv')
+
+  const [percent, setPercent] = useState(0)
+  const [isUploading, setIsUploading] = useState(false)
+  const [uploadSuccess, setUploadSuccess] = useState(false)
 
   const handlePreviewVideo = e => {
     const files = e.target.files || []
@@ -64,7 +70,8 @@ export default function Upload() {
   const handleUpload = async e => {
     e.preventDefault()
 
-    console.log('submit')
+    if (isUploading) return
+    setIsUploading(true)
 
     const data = new FormData(e.target)
 
@@ -75,13 +82,16 @@ export default function Upload() {
       onUploadProgress: e => {
         if (e.lengthComputable) {
           let percent = Math.round((e.loaded / e.total) * 100)
-          console.log({ percent, loaded: e.loaded, total: e.total })
+          setPercent(percent)
+          // console.log({ percent, loaded: e.loaded, total: e.total })
         }
       },
     })
 
     if (res.status === 1) {
       console.log('upload thanh cong')
+      setUploadSuccess(true)
+      setPercent(0)
     }
 
     if (res.status === 100) {
@@ -93,14 +103,62 @@ export default function Upload() {
     }
 
     console.log({ res })
+    setIsUploading(false)
+  }
+
+  const handleUploadSuccess = () => {
+    setUploadSuccess(false)
+    handleClearInput()
   }
 
   return (
     <>
       <form className='upload container' onSubmit={handleUpload}>
-        <div className='upload__loading'>
-          <div className='circle'></div>
-        </div>
+        {percent > 0 && (
+          <div className='upload__loading'>
+            <div className='circle'>
+              <div className='percent'>{percent}%</div>
+              <svg style={{ '--percent': percent }}>
+                <circle
+                  cx='100'
+                  cy='100'
+                  r='95'
+                  fill='none'
+                  stroke='rgba(255, 255, 255, 0.05)'
+                  strokeWidth='10'
+                  strokeLinecap='round'
+                ></circle>
+                <circle
+                  cx='100'
+                  cy='100'
+                  r='95'
+                  fill='none'
+                  stroke='rgba(255, 255, 255, 1)'
+                  strokeWidth='10'
+                  strokeLinecap='round'
+                ></circle>
+              </svg>
+            </div>
+          </div>
+        )}
+
+        {uploadSuccess && (
+          <div className='upload__popup'>
+            <div className='container😀'>
+              <img className='close😀' src={closeSVG} alt='' onClick={handleUploadSuccess} />
+              <div className='title😀'>Your file was uploaded!</div>
+              <div className='description😀'>
+                <img src={checkSVG} alt='' />
+                <span>
+                  Your file was succesfully uploaded. Please wait a minute to appear on the website.
+                </span>
+              </div>
+              <div className='upload__button button😀' onClick={handleUploadSuccess}>
+                Done
+              </div>
+            </div>
+          </div>
+        )}
 
         <p className='upload__title'>Upload Video</p>
 
@@ -110,7 +168,7 @@ export default function Upload() {
           <span>Do not use famous artist's image without permission</span>
         </p>
 
-        <div className='upload__container mb-50'>
+        <div className='upload__layout mb-50'>
           <div className='upload__left'>
             <div className='upload__video mb-25'>
               <input
@@ -177,14 +235,16 @@ export default function Upload() {
           </div>
         </div>
 
-        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <button type='submit' className='upload__button mr-15'>
-            Upload
-          </button>
-          <div className='upload__button upload__button--cancel' onClick={handleClearInput}>
-            Cancel
+        {!isUploading && (
+          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <button type='submit' className='upload__button mr-15'>
+              Upload
+            </button>
+            <div className='upload__button upload__button--cancel' onClick={handleClearInput}>
+              Cancel
+            </div>
           </div>
-        </div>
+        )}
       </form>
     </>
   )
