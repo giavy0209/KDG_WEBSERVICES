@@ -4,6 +4,7 @@ import plusSVG from '../../assets/svg/plus.svg'
 import uploadSVG from '../../assets/svg/upload.svg'
 import checkSVG from '../../assets/svg/check.svg'
 import closeSVG from '../../assets/svg/close.svg'
+import errorSVG from '../../assets/svg/error.svg'
 import callAPI from '../../axios'
 
 export default function Upload() {
@@ -19,6 +20,8 @@ export default function Upload() {
   const [percent, setPercent] = useState(0)
   const [isUploading, setIsUploading] = useState(false)
   const [uploadSuccess, setUploadSuccess] = useState(false)
+  const [uploadNotSelected, setUploadNotSelected] = useState(false)
+  const [uploadError, setUploadError] = useState(false)
 
   const handlePreviewVideo = e => {
     const files = e.target.files || []
@@ -75,40 +78,57 @@ export default function Upload() {
 
     const data = new FormData(e.target)
 
-    const res = await callAPI.post('/upload_video', data, true, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-      onUploadProgress: e => {
-        if (e.lengthComputable) {
-          let percent = Math.round((e.loaded / e.total) * 100)
-          setPercent(percent)
-          // console.log({ percent, loaded: e.loaded, total: e.total })
-        }
-      },
-    })
+    let res
+
+    try {
+      res = await callAPI.post('/upload_video', data, true, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        onUploadProgress: e => {
+          if (e.lengthComputable) {
+            let percent = Math.round((e.loaded / e.total) * 100)
+            setPercent(percent)
+            // console.log({ percent, loaded: e.loaded, total: e.total })
+          }
+        },
+      })
+    } catch (error) {
+      // console.log('catch error upload')
+      setUploadError(true)
+    }
 
     if (res.status === 1) {
-      console.log('upload thanh cong')
+      // console.log('upload thanh cong')
       setUploadSuccess(true)
-      setPercent(0)
     }
 
     if (res.status === 100) {
-      console.log('chua chon video')
+      // console.log('chua chon video')
+      setUploadNotSelected(true)
     }
 
     if (res.status === 0) {
-      console.log('loi khong xac dinh')
+      // console.log('loi khong xac dinh')
+      setUploadError(true)
     }
 
-    console.log({ res })
+    // console.log({ res })
+    setPercent(0)
     setIsUploading(false)
   }
 
   const handleUploadSuccess = () => {
     setUploadSuccess(false)
     handleClearInput()
+  }
+
+  const handleNotSelected = () => {
+    setUploadNotSelected(false)
+  }
+
+  const handleUploadError = () => {
+    setUploadError(false)
   }
 
   return (
@@ -155,6 +175,41 @@ export default function Upload() {
               </div>
               <div className='upload__button button😀' onClick={handleUploadSuccess}>
                 Done
+              </div>
+            </div>
+          </div>
+        )}
+
+        {uploadNotSelected && (
+          <div className='upload__popup'>
+            <div className='container😀'>
+              <img className='close😀' src={closeSVG} alt='' onClick={handleNotSelected} />
+              <div className='title😀'>Uploading has failed!</div>
+              <div className='description😀'>
+                <img src={errorSVG} alt='' />
+                <span>
+                  Uploading has failed. You haven't selected a video yet. Please check it again to
+                  complete.
+                </span>
+              </div>
+              <div className='upload__button button😀 ok😀' onClick={handleNotSelected}>
+                OK
+              </div>
+            </div>
+          </div>
+        )}
+
+        {uploadError && (
+          <div className='upload__popup'>
+            <div className='container😀'>
+              <img className='close😀' src={closeSVG} alt='' onClick={handleUploadError} />
+              <div className='title😀'>Uploading has failed!</div>
+              <div className='description😀'>
+                <img src={errorSVG} alt='' />
+                <span>Something went wrong. Please try again later!</span>
+              </div>
+              <div className='upload__button button😀 ok😀' onClick={handleUploadError}>
+                OK
               </div>
             </div>
           </div>
