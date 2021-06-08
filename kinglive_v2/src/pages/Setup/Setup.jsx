@@ -61,12 +61,14 @@ export default function Setup() {
     }
   }, [])
 
-  // useEffect(() => {
-  //   console.log({ streamData })
-  // }, [streamData])
+  useEffect(() => {
+    console.log({ streamData })
+    console.log(streamTags)
+  }, [streamData])
 
   const streamKey = useMemo(() => streamData.key, [streamData])
   const streamID = useMemo(() => streamData._id, [streamData])
+  const streamTags = useMemo(() => streamData.tags?.join(', '), [streamData])
   const status = useMemo(() => streamData.status, [streamData])
   const connect_status = useMemo(() => streamData.connect_status, [streamData])
 
@@ -127,6 +129,7 @@ export default function Setup() {
     if (step === 1) return setCurrentStep(1)
 
     if (status === 1) return setCurrentStep(step)
+    if (connect_status === 1) return setCurrentStep(step)
 
     if (step === 2) {
       if (
@@ -238,7 +241,7 @@ export default function Setup() {
               className='upload__input mb-25'
               type='text'
               placeholder='Enter tags for livestream'
-              defaultValue={status === 1 ? streamData.tags.join(', ') : defaultValueTags.current}
+              value={status === 1 ? streamTags : defaultValueTags.current}
               disabled={status === 1}
             />
 
