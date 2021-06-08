@@ -47,7 +47,7 @@ export default function Setup() {
         console.log('error get stream', { error })
       }
 
-      console.log({ res })
+      // console.log({ res })
     })()
 
     document.title = 'KingLive V2 - Setup'
@@ -61,9 +61,9 @@ export default function Setup() {
     }
   }, [])
 
-  useEffect(() => {
-    console.log({ streamData })
-  }, [streamData])
+  // useEffect(() => {
+  //   console.log({ streamData })
+  // }, [streamData])
 
   const streamKey = useMemo(() => streamData.key, [streamData])
   const streamID = useMemo(() => streamData._id, [streamData])
@@ -101,10 +101,8 @@ export default function Setup() {
 
     const data = new FormData(e.target)
 
-    let res
-
     try {
-      res = await callAPI.post(`/public_stream?sid=${streamID}`, data)
+      await callAPI.post(`/public_stream?sid=${streamID}`, data)
     } catch (error) {
       console.log('error live now', error)
     }
