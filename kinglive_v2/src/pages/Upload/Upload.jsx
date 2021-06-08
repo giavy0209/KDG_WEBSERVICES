@@ -217,7 +217,7 @@ export default function Upload() {
 
         <p className='upload__title'>Upload Video</p>
 
-        <p className='upload__description'>
+        <p className='upload__description mb-50'>
           <span>Setup information. Ensure that there are no violent or counter-revolutionary</span>
           <span>actions and words during the livestream process.</span>
           <span>Do not use famous artist's image without permission</span>
@@ -260,7 +260,7 @@ export default function Upload() {
               <input
                 ref={inputThumbnailRef}
                 type='file'
-                accept='image/*'
+                accept='.jpg,.jpeg,.png'
                 onInput={handlePreviewThumbnail}
               />
               <img className='preview' ref={thumbnailPreviewRef} alt='' />

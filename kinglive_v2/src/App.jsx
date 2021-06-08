@@ -5,6 +5,7 @@ import Header from './components/Header'
 import Sidebar from './components/Sidebar'
 import Home from './pages/Home'
 import Upload from './pages/Upload'
+import Setup from './pages/Setup'
 
 function App() {
   const [IsOpenSidebar, setIsOpenSidebar] = useState(false)
@@ -20,6 +21,7 @@ function App() {
         <Switch>
           <Route path='/' component={Home} exact />
           <Route path='/upload' component={Upload} exact />
+          <Route path='/setup' component={Setup} exact />
         </Switch>
       </main>
     </>
