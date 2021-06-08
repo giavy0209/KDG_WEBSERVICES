@@ -10,6 +10,40 @@ import swap from '../../assets/images/sidebar/swap.svg'
 import swapactive from '../../assets/images/sidebar/swapactive.svg'
 import book from '../../assets/images/sidebar/book.svg'
 import bookactive from '../../assets/images/sidebar/bookactive.svg'
+import { useHistory, useLocation } from 'react-router'
+
+const page = [
+    {
+        route : '/',
+        name : 'Home',
+        icon : home,
+        active : homeactive
+    },
+    {
+        route : '/live',
+        name : 'Livestream',
+        icon : live,
+        active : liveactive
+    },
+    {
+        route : '/market',
+        name : 'NFT',
+        icon : market,
+        active : marketactive
+    },
+    {
+        route : '/swap',
+        name : 'Swap',
+        icon : swap,
+        active : swapactive
+    },
+    {
+        route : '/tutorial',
+        name : 'Tutorial',
+        icon : book,
+        active : bookactive
+    },
+]
 export default function Sidebar ({
     IsOpenSidebar
 }) {
@@ -19,17 +53,18 @@ export default function Sidebar ({
         aside.style.height = (window.innerHeight -  headerHeight) + 'px'
         aside.style.top =  headerHeight + 'px'
     },[])
+    const location = useLocation()
+    const history = useHistory()
     return (
         <>
             <aside className={`${IsOpenSidebar ? 'large' : ''}`}>
-                <div className="item">
-                    <img src={home} alt="" />
-                    <span>Home</span>
-                </div>
-                <div className="item">
-                    <img src={live} alt="" />
-                    <span>Livestream</span>
-                </div>
+                {
+                    page.map(o => <div onClick={() => history.push(o.route)} className={`item ${location.pathname === o.route ? 'active' : ''}`}>
+                        <img src={location.pathname === o.route ? o.active : o.icon} alt="" />
+                        <span>{o.name}</span>
+                    </div>
+                    )
+                }
             </aside>
         </>
     )
