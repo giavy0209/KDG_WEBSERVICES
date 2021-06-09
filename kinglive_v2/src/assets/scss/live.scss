@@ -99,7 +99,7 @@
                 }
                 &:hover {
                     background-color: #f52871;
-                    &::before9 , &::after {
+                    &::before , &::after {
                         background-color: #fff;
                     }
                 }
@@ -112,7 +112,7 @@
         overflow: hidden;
         .watch-live {
             width: calc(100% * var(--total-item));
-            transform: translate(var(--translate , 0));
+            transform: translate(calc(var(--translate) + 6px) , 0);
             transition: .3s;
             position: relative;
             .item {
