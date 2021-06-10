@@ -1,8 +1,22 @@
 .live {
+    .live-container {
+        display: flex;
+        flex-wrap: wrap;
+        margin-top: 35px;
+    }
+    .left {
+        width : 75%;
+        padding-right: 12.5px;
+    }
+    .right {
+        width: 25%;
+        padding-left: 12.5px;
+    }
     .slide-track {
         overflow: hidden;
         position: relative;
         margin-bottom: 15px;
+        width: 100%;
         .slide {
             width: 300%;
             display: flex;
@@ -54,7 +68,6 @@
         justify-content: space-between;
         align-items: center;
         .title {
-            margin-top: 35px;
             font-weight: 500;
             font-size: 24px;
         }
@@ -189,6 +202,79 @@
                     .user-name {
                         color: #98999a;
                         font-size: 14px;
+                    }
+                }
+            }
+        }
+    }
+    .ranking{ 
+        background-color: #353849;
+        border-radius: 5px;
+        padding: 15px;
+        .title {
+            font-weight: 500;
+            font-size: 24px;
+            padding: 15px 0;
+            padding-bottom: 9px;
+            border-bottom: 1px solid #171A2B;
+            color: #fff;
+        }
+        .tabs {
+            margin-top: 25px;
+            display: flex;
+            position: relative;
+            &::before {
+                content : "";
+                width: 50%;
+                height: 2px;
+                background-color: #F52871;
+                position: absolute;
+                bottom: 0;
+                left: calc(50% * var(--item));
+                transition: .3s ease;
+            }
+            .tab{
+                cursor: pointer;
+                width: 50%;
+                text-align: center;
+                font-size: 18px;
+                color: #98999A;
+                padding-bottom: 14px;
+                border-bottom: 1px solid #6A6A6D;
+                transition: .3s ease;
+                &.active {
+                    color: #f52871;
+                }
+            }
+        }
+        .track-tabs {
+            margin-top: 20px;
+            overflow: hidden;
+            .tabs-items {
+                width: 200%;
+                display: flex;
+                transform: translate(calc(-50% * var(--item)) , 0);
+                transition: .3s;
+                .tab-item {
+                    width: 50%;
+                    .item {
+                        display: flex;
+                        align-items: center;
+                        .avatar {
+                            width: 65px;
+                            height: 65px;
+                            border-radius: 50%;
+                            overflow: hidden;
+                        }
+                        .info {
+                            margin-left: 16px;
+                            .name {
+                                color: #fff;
+                            }
+                            .rank-info {
+                                font-size: 14px;
+                            }
+                        }
                     }
                 }
             }
