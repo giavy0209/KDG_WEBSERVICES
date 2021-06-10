@@ -1,6 +1,36 @@
 @import './common.scss';
 
 .watchlive {
-  font-size: 100px;
-  color: red;
+  padding: 35px 15px 70px;
+
+  display: flex;
+  justify-content: space-between;
+
+  &__left {
+    width: calc(70% - 25px);
+  }
+
+  &__right {
+    width: 30%;
+  }
+
+  &__videoContainer {
+    position: relative;
+
+    &::before {
+      content: '';
+      display: block;
+      padding-top: 56.25%;
+    }
+  }
+
+  &__videoPlayer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    object-fit: contain;
+  }
 }

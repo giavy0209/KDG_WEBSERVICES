@@ -220,7 +220,7 @@ export default function Setup() {
               {connect_status === 1 && (
                 <ReactHlsPlayer
                   className='previewStream'
-                  src={`${PLAY_STREAM}${streamData.key}/index.m3u8`}
+                  src={`${PLAY_STREAM}${streamKey}/index.m3u8`}
                   autoPlay={true}
                   controls={true}
                   muted
