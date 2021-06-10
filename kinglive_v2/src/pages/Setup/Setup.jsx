@@ -61,10 +61,9 @@ export default function Setup() {
     }
   }, [])
 
-  useEffect(() => {
-    console.log({ streamData })
-    console.log(streamTags)
-  }, [streamData])
+  // useEffect(() => {
+  //   console.log({ streamData })
+  // }, [streamData])
 
   const streamKey = useMemo(() => streamData.key, [streamData])
   const streamID = useMemo(() => streamData._id, [streamData])
@@ -241,7 +240,7 @@ export default function Setup() {
               className='upload__input mb-25'
               type='text'
               placeholder='Enter tags for livestream'
-              value={status === 1 ? streamTags : defaultValueTags.current}
+              defaultValue={status === 1 ? streamTags : defaultValueTags.current}
               disabled={status === 1}
             />
 

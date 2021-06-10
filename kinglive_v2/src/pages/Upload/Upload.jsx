@@ -123,14 +123,6 @@ export default function Upload() {
     handleClearInput()
   }
 
-  const handleNotSelected = () => {
-    setUploadNotSelected(false)
-  }
-
-  const handleUploadError = () => {
-    setUploadError(false)
-  }
-
   return (
     <>
       <form className='upload container' onSubmit={handleUpload}>
@@ -183,7 +175,12 @@ export default function Upload() {
         {uploadNotSelected && (
           <div className='upload__popup'>
             <div className='container😀'>
-              <img className='close😀' src={closeSVG} alt='' onClick={handleNotSelected} />
+              <img
+                className='close😀'
+                src={closeSVG}
+                alt=''
+                onClick={() => setUploadNotSelected(false)}
+              />
               <div className='title😀'>Uploading has failed!</div>
               <div className='description😀'>
                 <img src={errorSVG} alt='' />
@@ -192,7 +189,10 @@ export default function Upload() {
                   complete.
                 </span>
               </div>
-              <div className='upload__button button😀 ok😀' onClick={handleNotSelected}>
+              <div
+                className='upload__button button😀 ok😀'
+                onClick={() => setUploadNotSelected(false)}
+              >
                 OK
               </div>
             </div>
@@ -202,13 +202,18 @@ export default function Upload() {
         {uploadError && (
           <div className='upload__popup'>
             <div className='container😀'>
-              <img className='close😀' src={closeSVG} alt='' onClick={handleUploadError} />
+              <img
+                className='close😀'
+                src={closeSVG}
+                alt=''
+                onClick={() => setUploadError(false)}
+              />
               <div className='title😀'>Uploading has failed!</div>
               <div className='description😀'>
                 <img src={errorSVG} alt='' />
                 <span>Something went wrong. Please try again later!</span>
               </div>
-              <div className='upload__button button😀 ok😀' onClick={handleUploadError}>
+              <div className='upload__button button😀 ok😀' onClick={() => setUploadError(false)}>
                 OK
               </div>
             </div>
