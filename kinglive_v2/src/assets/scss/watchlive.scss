@@ -33,4 +33,11 @@
 
     object-fit: contain;
   }
+
+  &__titleVideo {
+    color: $text-color-light;
+    font-size: 22px;
+
+    margin-top: 15px;
+  }
 }

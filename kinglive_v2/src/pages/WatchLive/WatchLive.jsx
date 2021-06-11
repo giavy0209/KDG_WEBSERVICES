@@ -31,11 +31,15 @@ export default function WatchLive() {
             className='watchlive__videoPlayer'
             src={`${PLAY_STREAM}${streamKey}/index.m3u8`}
             autoPlay={false}
-            controls={false}
+            controls={true}
             muted={false}
             width='100%'
             height='100%'
           />
+        </div>
+
+        <div className='watchlive__titleVideo'>
+          Gầy On Stream Hướng Dẫn Ae Cách Nạp Và Rút KDG - CMT NHỮNG THẮC MẮC CỦA BẠN
         </div>
       </div>
       <div className='watchlive__right'></div>
