@@ -26,8 +26,8 @@ const page = [
         active : liveactive
     },
     {
-        route : '/market',
-        name : 'NFT',
+        route : '/nft-market',
+        name : 'NFT Market',
         icon : market,
         active : marketactive
     },
