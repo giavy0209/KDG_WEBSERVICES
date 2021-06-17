@@ -1,27 +1,34 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import ReactHlsPlayer from 'react-hls-player'
+import { useHistory } from 'react-router-dom'
 import '../../assets/scss/watchlive.scss'
-// import avatest from '../../assets/svg/avatest.png'
-import bgtest from '../../assets/svg/bgtest.png'
+import avatarDefaultSVG from '../../assets/svg/avatarDefault.svg'
+import coverDefaultJPG from '../../assets/svg/coverDefault.jpg'
 import giftPNG from '../../assets/svg/gift.png'
 import sendSVG from '../../assets/svg/send.svg'
 import shareSVG from '../../assets/svg/share.svg'
 import callAPI from '../../axios'
 import { PLAY_STREAM, STORAGE_DOMAIN } from '../../constant'
-import convertDateAgo from '../../helpers/convertDate'
+import convertDateAgo from '../../helpers/convertDateAgo'
 import socket from '../../socket'
 
 export default function WatchLive() {
+  const history = useHistory()
+
   const chatListRef = useRef()
 
   const [streamData, setStreamData] = useState({})
+  const user = useMemo(() => streamData.user, [streamData])
   const [chatData, setChatData] = useState([])
+  const [liveList, setLiveList] = useState([])
+
   const [hideChat, setHideChat] = useState(false)
   const [hideLive, setHideLive] = useState(false)
-  const [hideRecommend, setHideRecommend] = useState(false)
+  // const [hideRecommend, setHideRecommend] = useState(false)
 
-  const id = '60c9764670863c4b00c83bf5'
+  const id = new URLSearchParams(window.location.search).get('s')
 
+  // Get Current LiveVideo
   useEffect(() => {
     let streamId
     ;(async () => {
@@ -41,8 +48,9 @@ export default function WatchLive() {
     return () => {
       socket.emit('leave_stream', streamId)
     }
-  }, [])
+  }, [id])
 
+  // Get Chat of LiveVideo
   useEffect(() => {
     ;(async () => {
       try {
@@ -60,14 +68,14 @@ export default function WatchLive() {
     return () => {
       socket.removeEventListener('chat', handleReceiveChat)
     }
-  }, [])
+  }, [id])
 
+  // Scroll ChatBox to very bottom when have new chat
   useEffect(() => {
     chatListRef.current.scroll(0, chatListRef.current.scrollHeight)
   }, [chatData])
 
-  const user = useMemo(() => streamData.user, [streamData])
-
+  // Emit new Chat
   const handleChat = e => {
     e.preventDefault()
 
@@ -79,6 +87,19 @@ export default function WatchLive() {
     socket.emit('chat', { room: streamData._id, chat })
     e.target.reset()
   }
+
+  // Get Live List
+  useEffect(() => {
+    ;(async () => {
+      try {
+        const res = await callAPI.get('/streammings')
+        console.log({ liveList: res })
+        setLiveList(res.data)
+      } catch (error) {
+        console.log('error get live list', error)
+      }
+    })()
+  }, [])
 
   return (
     <div className='watchlive'>
@@ -130,7 +151,14 @@ export default function WatchLive() {
               {chatData.map(chatItem => (
                 <div key={chatItem._id} className='watchlive__chatItem'>
                   <div>
-                    <img src={`${STORAGE_DOMAIN}${chatItem.user.kyc.avatar.path}`} alt='' />
+                    <img
+                      src={
+                        chatItem.user.kyc.avatar
+                          ? `${STORAGE_DOMAIN}${chatItem.user.kyc.avatar.path}`
+                          : avatarDefaultSVG
+                      }
+                      alt=''
+                    />
                   </div>
 
                   <div>
@@ -147,7 +175,14 @@ export default function WatchLive() {
 
             <form className='watchlive__chatInput' onSubmit={handleChat}>
               <div>
-                <img src={`${STORAGE_DOMAIN}${user?.kyc.avatar.path}`} alt='' />
+                <img
+                  src={
+                    user?.kyc.avatar
+                      ? `${STORAGE_DOMAIN}${user?.kyc.avatar.path}`
+                      : avatarDefaultSVG
+                  }
+                  alt=''
+                />
               </div>
 
               <div>
@@ -167,27 +202,47 @@ export default function WatchLive() {
           Watch Live
         </div>
 
-        {hideLive && (
+        {!hideLive && (
           <div>
-            <div className='watchlive__livevideo'>
-              <div>
-                <img src={bgtest} alt='' />
-              </div>
+            {liveList.map(live => (
+              <div
+                key={live._id}
+                className='watchlive__livevideo'
+                onClick={() => {
+                  history.push(`/watchlive?s=${live._id}`)
+                  window.scroll(0, 0)
+                }}
+              >
+                <div>
+                  <img
+                    src={
+                      live.thumbnail ? `${STORAGE_DOMAIN}${live.thumbnail.path}` : coverDefaultJPG
+                    }
+                    alt=''
+                  />
+                </div>
 
-              <div>
-                <div>Greatest Hits Game Of Popular</div>
-                <div>Trung Quan An Quan</div>
-                <div>11 views • 11 minutes ago</div>
+                <div>
+                  <div>{live.name}</div>
+                  <div>
+                    {live.user.kyc.first_name || live.user.kyc.last_name
+                      ? `${live.user.kyc.first_name} ${live.user.kyc.last_name}`
+                      : 'Username'}
+                  </div>
+                  <div>
+                    {live.views} views • {convertDateAgo(live.start_date)}
+                  </div>
+                </div>
               </div>
-            </div>
+            ))}
           </div>
         )}
 
-        <div className='watchlive__buttonToggle' onClick={() => setHideRecommend(x => !x)}>
+        {/* <div className='watchlive__buttonToggle' onClick={() => setHideRecommend(x => !x)}>
           Recommend
         </div>
 
-        {hideRecommend && (
+        {!hideRecommend && (
           <div>
             <div className='watchlive__livevideo'>
               <div>
@@ -201,7 +256,7 @@ export default function WatchLive() {
               </div>
             </div>
           </div>
-        )}
+        )} */}
       </div>
     </div>
   )

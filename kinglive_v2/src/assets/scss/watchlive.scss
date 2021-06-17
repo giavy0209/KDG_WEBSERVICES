@@ -228,12 +228,20 @@
       }
 
       > button[type='submit'] {
+        cursor: pointer;
+        user-select: none;
+
         background-color: transparent;
 
         > img {
           display: block;
           height: 100%;
         }
+      }
+
+      > img {
+        cursor: pointer;
+        user-select: none;
       }
     }
   }
@@ -253,6 +261,9 @@
   }
 
   &__livevideo {
+    cursor: pointer;
+    user-select: none;
+
     display: flex;
     align-items: flex-start;
 
