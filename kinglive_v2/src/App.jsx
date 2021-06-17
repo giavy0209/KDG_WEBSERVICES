@@ -8,6 +8,7 @@ import Live from './pages/Live'
 import Upload from './pages/Upload'
 import Setup from './pages/Setup'
 import WatchLive from './pages/WatchLive'
+import NFT from './pages/NFT'
 
 function App() {
   const [IsOpenSidebar, setIsOpenSidebar] = useState(false)
@@ -26,6 +27,7 @@ function App() {
           <Route path='/upload' component={Upload} exact />
           <Route path='/setup' component={Setup} exact />
           <Route path='/watchlive' component={WatchLive} exact />
+          <Route path='/nft-market' component={NFT} exact />
         </Switch>
       </main>
     </>
