@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import ReactHlsPlayer from 'react-hls-player'
+import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import '../../assets/scss/watchlive.scss'
 import avatarDefaultSVG from '../../assets/svg/avatarDefault.svg'
@@ -14,6 +15,7 @@ import socket from '../../socket'
 
 export default function WatchLive() {
   const history = useHistory()
+  const userRedux = useSelector(state => state.user)
 
   const chatListRef = useRef()
 
@@ -21,6 +23,7 @@ export default function WatchLive() {
   const user = useMemo(() => streamData.user, [streamData])
   const [chatData, setChatData] = useState([])
   const [liveList, setLiveList] = useState([])
+  const [isFollow, setIsFollow] = useState(false)
 
   const [hideChat, setHideChat] = useState(false)
   const [hideLive, setHideLive] = useState(false)
@@ -37,8 +40,12 @@ export default function WatchLive() {
         console.log({ streamData: res })
         setStreamData(res.data)
 
-        streamId = res.data._id
+        // Check Follow Yet
+        if (res.is_followed) {
+          setIsFollow(true)
+        }
 
+        streamId = res.data._id
         socket.emit('join_stream', streamId)
       } catch (error) {
         console.log('error get video livestream', error)
@@ -101,6 +108,17 @@ export default function WatchLive() {
     })()
   }, [])
 
+  // Follow and Unfollow
+  const handleFollow = async () => {
+    try {
+      const res = await callAPI.post(`follow?id=${user?._id}`)
+      console.log({ follow: res })
+      if (res.status === 1) setIsFollow(x => !x)
+    } catch (error) {
+      console.log('error follow or unfollow', error)
+    }
+  }
+
   return (
     <div className='watchlive'>
       <div className='watchlive__left'>
@@ -132,7 +150,8 @@ export default function WatchLive() {
           <div>
             <img src={`${STORAGE_DOMAIN}${user?.kyc.avatar.path}`} alt='' />
           </div>
-          <div>
+
+          <div style={{ position: 'relative' }}>
             <div>
               {user?.kyc.first_name || user?.kyc.last_name
                 ? `${user?.kyc.first_name} ${user?.kyc.last_name}`
@@ -140,6 +159,18 @@ export default function WatchLive() {
             </div>
             <div>{user?.kinglive.total_follower} followers</div>
             <div>{streamData.description}</div>
+
+            {userRedux?._id !== user?._id && (
+              <div style={{ position: 'absolute', top: 0, right: 0 }}>
+                <div
+                  className={`button-follow ${isFollow ? 'following' : ''}`}
+                  onClick={handleFollow}
+                >
+                  <span className='span1'>{isFollow ? 'Following' : 'Follow'}</span>
+                  <span className='span2'>Unfollow</span>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
