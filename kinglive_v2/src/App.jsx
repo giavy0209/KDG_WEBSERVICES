@@ -10,6 +10,7 @@ import NFT from './pages/NFT'
 import Setup from './pages/Setup'
 import Upload from './pages/Upload'
 import WatchLive from './pages/WatchLive'
+import WatchVideo from './pages/WatchVideo'
 import { asyncInitUser } from './store/actions'
 
 function App() {
@@ -36,6 +37,7 @@ function App() {
           <Route path='/upload' component={Upload} exact />
           <Route path='/setup' component={Setup} exact />
           <Route path='/watchlive' component={WatchLive} exact />
+          <Route path='/watchvideo' component={WatchVideo} exact />
           <Route path='/nft-market' component={NFT} exact />
         </Switch>
       </main>
