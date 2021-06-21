@@ -180,5 +180,206 @@
                 }
             }
         }
+        .list {
+            position: relative;
+            margin-top: 20px;
+            .top-quatity, .top-seller {
+                transition: .3s;
+                column-gap:  30px;
+                display: flex;
+                flex-wrap: wrap;
+                position: absolute;
+                opacity: 0;
+                pointer-events: none;
+                top: 0;
+                left: 0;
+                &.show {
+                    opacity: 1;
+                    pointer-events: all;
+                    position: relative;
+                }
+                .item {
+                    padding: 7px 15px;
+                    background-color: #171A2B;
+                    width: calc(33.3333% - 20px);
+                    display: flex;
+                    align-items: center;
+                    .index {
+                        margin-right: 27px;
+                        font-size: 14px;
+                    }
+                    .avatar {
+                        margin-right: 16px;
+                        width: 65px;
+                        height: 65px;
+                        border-radius: 50%;
+                        overflow: hidden;
+                        img {
+                            width: 100%;
+                            height: 100%;
+                        }
+                    }
+                    .info {
+                        display: flex;
+                        flex-direction: column;
+                        .name {
+                            color: #fff;
+                        }
+                        .quatity {
+                            font-size: 14px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    .popular-nft {
+        margin-top: 35px;
+        .title {
+            font-size: 24px;
+            color: #fff;
+        }
+        .list {
+            margin-top: 25px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            .item {
+                width: calc(33.3333% - 20px);
+                position: relative;
+                padding: 20px;
+                background-color: #353849;
+                border-radius: 15px;
+                .avatar-container {
+                    position: absolute;
+                    top: 0;
+                    left: 50%;
+                    transform: translate(-50% , 0);
+                    width: 145px;
+                    height: 40px;
+                    background-color: #FEFEFE;
+                    z-index: 9;
+                    &::before {
+                        content : "";
+                        position: absolute;
+                        // background-color: #FEFEFE;
+                        width: 0;
+                        height: 0;
+                        border-top: 40px solid #FEFEFE;
+                        border-left: 9px solid transparent;
+                        top: 0;
+                        left: 0;
+                        transform: translate(calc(-100% + 1px) , 0);
+                    }
+                    &::after {
+                        content : "";
+                        position: absolute;
+                        // background-color: #FEFEFE;
+                        width: 0;
+                        height: 0;
+                        border-top: 40px solid #FEFEFE;
+                        border-right: 9px solid transparent;
+                        top: 0;
+                        right:  0;
+                        transform: translate(calc(100% - 1px) , 0);
+                    }
+                    .avatar {
+                        width: 35px;
+                        height: 35px;
+                        border-radius: 50%;
+                        overflow: hidden;
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50% , -50%);
+                        img {
+                            width: 100%;
+                            height: 100%;
+                        }
+                    }
+                }
+                .nft-blur {
+                    position: relative;
+                    .blur {
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50% , -50%);
+                        z-index: 99;
+                        width: 75%;
+                        border-radius: 15px;
+                        overflow: hidden;
+                        img {
+                            position: absolute;
+                            top: 0;
+                            left: 0;
+                            right: 0;
+                            bottom: 0;
+                            object-fit: cover;
+                            width: 100%;
+                            height: 100%;
+                        }
+                        &::before {
+                            content : "" ;
+                            padding-top: 118.75%;
+                            display: block;
+                        }
+                    }
+                    .nft {
+                        position: relative;
+                        width: 100%;
+                        filter: blur(15px);
+                        img {
+                            position: absolute;
+                            top: 0;
+                            left: 0;
+                            right: 0;
+                            bottom: 0;
+                            object-fit: cover;
+                            width: 100%;
+                            height: 100%;
+                        }
+                        &::before {
+                            content : "" ;
+                            padding-top: 118.75%;
+                            display: block;
+                        }
+                    }
+                }
+                .name {
+                    margin-top: 10px;
+                    color: #fff;
+                }
+                .info {
+                    display: flex;
+                    align-items: center;
+                    margin-top: 6px;
+                    img {
+                        margin-right: 6px;
+                        width: 29px;
+                        height: 29px;
+                    }
+                    .price {
+                        margin-right: 50px;
+                        color: #F52871;
+                        font-size: 14px;
+                    }
+                    .amount {
+                        font-size: 14px;
+                        color: #fff;
+                    }
+                }
+                .btn {
+                    cursor: pointer;
+                    border-radius: 5px;
+                    text-align: center;
+                    background-color: #F52871;
+                    color: #fff;
+                    font-size: 14px;
+                    margin-top: 9px;
+                    padding: 10px;
+                }
+            }
+        }
     }
 }
