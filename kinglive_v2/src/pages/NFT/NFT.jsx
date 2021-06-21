@@ -1,66 +1,252 @@
 import '../../assets/scss/nft-market.scss'
 import banner from '../../assets/images/nft-market/banner.jpg'
 import nft from '../../assets/images/nft-market/nft.jpg'
+import avatar from '../../assets/images/nft-market/avatar.png'
+import kdg from '../../assets/images/nft-market/kdg.png'
 import { useState } from 'react'
 const top9 = [
     {
-        img : nft,
-        name : 'The World NFT Set Up In My Mind',
-        price : 100000,
-        artist : 'Esther Howard',
+        img: nft,
+        name: 'The World NFT Set Up In My Mind',
+        price: 100000,
+        artist: 'Esther Howard',
     },
     {
-        img : nft,
-        name : 'The World NFT Set Up In My Mind',
-        price : 100000,
-        artist : 'Esther Howard',
+        img: nft,
+        name: 'The World NFT Set Up In My Mind',
+        price: 100000,
+        artist: 'Esther Howard',
     },
     {
-        img : nft,
-        name : 'The World NFT Set Up In My Mind',
-        price : 100000,
-        artist : 'Esther Howard',
+        img: nft,
+        name: 'The World NFT Set Up In My Mind',
+        price: 100000,
+        artist: 'Esther Howard',
     },
     {
-        img : nft,
-        name : 'The World NFT Set Up In My Mind',
-        price : 100000,
-        artist : 'Esther Howard',
+        img: nft,
+        name: 'The World NFT Set Up In My Mind',
+        price: 100000,
+        artist: 'Esther Howard',
     },
     {
-        img : nft,
-        name : 'The World NFT Set Up In My Mind',
-        price : 100000,
-        artist : 'Esther Howard',
+        img: nft,
+        name: 'The World NFT Set Up In My Mind',
+        price: 100000,
+        artist: 'Esther Howard',
     },
     {
-        img : nft,
-        name : 'The World NFT Set Up In My Mind',
-        price : 100000,
-        artist : 'Esther Howard',
+        img: nft,
+        name: 'The World NFT Set Up In My Mind',
+        price: 100000,
+        artist: 'Esther Howard',
     },
     {
-        img : nft,
-        name : 'The World NFT Set Up In My Mind',
-        price : 100000,
-        artist : 'Esther Howard',
+        img: nft,
+        name: 'The World NFT Set Up In My Mind',
+        price: 100000,
+        artist: 'Esther Howard',
     },
     {
-        img : nft,
-        name : 'The World NFT Set Up In My Mind',
-        price : 100000,
-        artist : 'Esther Howard',
+        img: nft,
+        name: 'The World NFT Set Up In My Mind',
+        price: 100000,
+        artist: 'Esther Howard',
     },
     {
-        img : nft,
-        name : 'The World NFT Set Up In My Mind',
-        price : 100000,
-        artist : 'Esther Howard',
+        img: nft,
+        name: 'The World NFT Set Up In My Mind',
+        price: 100000,
+        artist: 'Esther Howard',
+    },
+]
+
+const top_quatity = [
+    {
+        avatar: avatar,
+        name: 'Dmm',
+        quatity: 100
+    },
+    {
+        avatar: avatar,
+        name: 'Dmm',
+        quatity: 100
+    },
+    {
+        avatar: avatar,
+        name: 'Dmm',
+        quatity: 100
+    },
+    {
+        avatar: avatar,
+        name: 'Dmm',
+        quatity: 100
+    },
+    {
+        avatar: avatar,
+        name: 'Dmm',
+        quatity: 100
+    },
+    {
+        avatar: avatar,
+        name: 'Dmm',
+        quatity: 100
+    },
+    {
+        avatar: avatar,
+        name: 'Dmm',
+        quatity: 100
+    },
+    {
+        avatar: avatar,
+        name: 'Dmm',
+        quatity: 100
+    },
+    {
+        avatar: avatar,
+        name: 'Dmm',
+        quatity: 100
+    },
+]
+
+const popular = [
+    {
+        avatar ,
+        nft ,
+        name : 'Dmm',
+        price : 50000,
+        amount : 5
+    },
+    {
+        avatar ,
+        nft ,
+        name : 'Dmm',
+        price : 50000,
+        amount : 5
+    },
+    {
+        avatar ,
+        nft ,
+        name : 'Dmm',
+        price : 50000,
+        amount : 5
+    },
+    {
+        avatar ,
+        nft ,
+        name : 'Dmm',
+        price : 50000,
+        amount : 5
+    },
+    {
+        avatar ,
+        nft ,
+        name : 'Dmm',
+        price : 50000,
+        amount : 5
+    },
+    {
+        avatar ,
+        nft ,
+        name : 'Dmm',
+        price : 50000,
+        amount : 5
+    },
+    {
+        avatar ,
+        nft ,
+        name : 'Dmm',
+        price : 50000,
+        amount : 5
+    },
+    {
+        avatar ,
+        nft ,
+        name : 'Dmm',
+        price : 50000,
+        amount : 5
+    },
+    {
+        avatar ,
+        nft ,
+        name : 'Dmm',
+        price : 50000,
+        amount : 5
+    },
+    {
+        avatar ,
+        nft ,
+        name : 'Dmm',
+        price : 50000,
+        amount : 5
+    },
+    {
+        avatar ,
+        nft ,
+        name : 'Dmm',
+        price : 50000,
+        amount : 5
+    },
+    {
+        avatar ,
+        nft ,
+        name : 'Dmm',
+        price : 50000,
+        amount : 5
+    },
+    {
+        avatar ,
+        nft ,
+        name : 'Dmm',
+        price : 50000,
+        amount : 5
+    },
+    {
+        avatar ,
+        nft ,
+        name : 'Dmm',
+        price : 50000,
+        amount : 5
+    },
+    {
+        avatar ,
+        nft ,
+        name : 'Dmm',
+        price : 50000,
+        amount : 5
+    },
+    {
+        avatar ,
+        nft ,
+        name : 'Dmm',
+        price : 50000,
+        amount : 5
+    },
+    {
+        avatar ,
+        nft ,
+        name : 'Dmm',
+        price : 50000,
+        amount : 5
+    },
+    {
+        avatar ,
+        nft ,
+        name : 'Dmm',
+        price : 50000,
+        amount : 5
+    },
+    {
+        avatar ,
+        nft ,
+        name : 'Dmm',
+        price : 50000,
+        amount : 5
     },
 ]
 export default function NFT() {
-    const [ActiveTop9 , setActiveTop9] = useState(0)
-    const [ActiveRanking , setActiveRanking] = useState(0)
+    const [ActiveTop9, setActiveTop9] = useState(0)
+    const [ActiveRanking, setActiveRanking] = useState(0)
     return (
         <>
             <div className="nft-market">
@@ -81,9 +267,9 @@ export default function NFT() {
                         <div className="list">
                             <div className="left">
                                 {
-                                    top9.map((o , index) => <span key={index} onClick={()=>setActiveTop9(index)} className={`item ${ActiveTop9 === index ? 'active' : ''}`}>
+                                    top9.map((o, index) => <span key={index} onClick={() => setActiveTop9(index)} className={`item ${ActiveTop9 === index ? 'active' : ''}`}>
                                         <img src={o.img} alt="" />
-                                    </span> )
+                                    </span>)
                                 }
                             </div>
                             <div className="mid">
@@ -113,11 +299,63 @@ export default function NFT() {
                     <div className="ranking">
                         <div className="title">Ranking</div>
                         <div className="tabs">
-                            <div onClick={()=>setActiveRanking(0)} className={`tab ${ActiveRanking === 0 ? 'active' : ''}`}>Top Seller (Quatity)</div>
-                            <div onClick={()=>setActiveRanking(1)} className={`tab ${ActiveRanking === 1 ? 'active' : ''}`}>Top Seller (revenue)</div>
+                            <div onClick={() => setActiveRanking(0)} className={`tab ${ActiveRanking === 0 ? 'active' : ''}`}>Top Seller (Quatity)</div>
+                            <div onClick={() => setActiveRanking(1)} className={`tab ${ActiveRanking === 1 ? 'active' : ''}`}>Top Seller (revenue)</div>
                         </div>
-                        <div className="top-quatity">
-
+                        <div className="list">
+                            <div className={`top-quatity ${ActiveRanking === 0 ? 'show' : ''}`}>
+                                {
+                                    top_quatity.map((o, index) => <div className="item">
+                                        <span className="index">{index + 1}</span>
+                                        <span className="avatar"><img src={o.avatar} alt="" /></span>
+                                        <span className="info">
+                                            <span className="name">{o.name}</span>
+                                            <span className="quatity">{o.quatity} Artworks</span>
+                                        </span>
+                                    </div>)
+                                }
+                            </div>
+                            <div className={`top-seller ${ActiveRanking === 1 ? 'show' : ''}`}>
+                                {
+                                    top_quatity.map((o, index) => <div className="item">
+                                        <span className="index">{index + 1}</span>
+                                        <span className="avatar"><img src={o.avatar} alt="" /></span>
+                                        <span className="info">
+                                            <span className="name">{o.name}</span>
+                                            <span className="quatity">{o.quatity} Artworks</span>
+                                        </span>
+                                    </div>)
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div className="popular-nft">
+                        <div className="title">Popular NFT</div>
+                        <div className="list">
+                            {
+                                popular.map(o => <div className="item">
+                                    <div className="avatar-container">
+                                        <span className="avatar">
+                                            <img src={o.avatar} alt="" />
+                                        </span>
+                                    </div>
+                                    <div className="nft-blur">
+                                        <div className="blur">
+                                            <img src={o.nft} alt="" />
+                                        </div>
+                                        <div className="nft">
+                                            <img src={o.nft} alt="" />
+                                        </div>
+                                    </div>
+                                    <span className="name">{o.name}</span>
+                                    <div className="info">
+                                        <img src={kdg} alt="" />
+                                        <span className="price">{o.price}</span>
+                                        <span className="amount">Amount: {o.amount}</span>
+                                    </div>
+                                    <div className="btn">Insufficient KDG balance</div>
+                                </div> )
+                            }
                         </div>
                     </div>
                 </div>
