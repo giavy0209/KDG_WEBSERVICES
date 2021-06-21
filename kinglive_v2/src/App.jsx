@@ -7,6 +7,7 @@ import Sidebar from './components/Sidebar'
 import Home from './pages/Home'
 import Live from './pages/Live'
 import NFT from './pages/NFT'
+import Profile from './pages/Profile'
 import Setup from './pages/Setup'
 import Upload from './pages/Upload'
 import WatchLive from './pages/WatchLive'
@@ -36,6 +37,7 @@ function App() {
           <Route path='/live' component={Live} exact />
           <Route path='/upload' component={Upload} exact />
           <Route path='/setup' component={Setup} exact />
+          <Route path='/profile' component={Profile} exact />
           <Route path='/watchlive' component={WatchLive} exact />
           <Route path='/watchvideo' component={WatchVideo} exact />
           <Route path='/nft-market' component={NFT} exact />
