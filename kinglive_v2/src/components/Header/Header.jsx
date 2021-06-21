@@ -61,7 +61,7 @@ export default function Header({ toggleSidebar = () => {}, IsOpenSidebar = false
             <span></span>
             <span></span>
           </div>
-          <a href='#' className='logo'>
+          <a href='/' className='logo'>
             <img src={logo} alt='' />
           </a>
           <div className='search-box'>
