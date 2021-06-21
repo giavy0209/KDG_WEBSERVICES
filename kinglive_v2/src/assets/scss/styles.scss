@@ -15,7 +15,7 @@ body {
   font-size: 16px;
   font-weight: 400;
   line-height: 1.5;
-  &::-webkit-scrollbar{
+  &::-webkit-scrollbar {
     display: none;
   }
 }
@@ -37,4 +37,73 @@ main {
 .container {
   max-width: 1170px;
   margin: 0 auto;
+}
+
+.button-share {
+  cursor: pointer;
+  user-select: none;
+
+  color: #c4c4c4;
+  font-size: 14px;
+  line-height: 1;
+
+  padding: 6px 14px;
+
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+
+  background-color: #1e1f24;
+  border-radius: 999px;
+
+  > img {
+    margin-right: 5px;
+  }
+}
+
+.button-follow {
+  cursor: pointer;
+  user-select: none;
+
+  padding: 7px 12px;
+
+  color: $primary-color;
+  font-size: 16px;
+  line-height: 1;
+
+  background-color: transparent;
+  border: 1px solid $primary-color;
+  border-radius: 999px;
+
+  transition: 0.3s;
+
+  &:hover {
+    color: $text-color-light;
+    background-color: $button-color;
+    border: none;
+  }
+
+  & > .span2 {
+    display: none;
+  }
+
+  &.following {
+    color: $text-color-light;
+    background-color: $primary-color;
+    border: none;
+  }
+
+  &.following:hover {
+    color: $text-color-light;
+    background-color: #6a6a6d;
+    border: none;
+
+    > .span1 {
+      display: none;
+    }
+
+    > .span2 {
+      display: initial;
+    }
+  }
 }

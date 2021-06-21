@@ -338,7 +338,7 @@ export default function Setup() {
 
               {status === 1 && connect_status === 1 && (
                 <p className='upload__message'>
-                  <span onClick={() => window.open(`/live?s=${streamID}`)}>
+                  <span onClick={() => window.open(`/watchlive?s=${streamID}`)}>
                     You are live streaming now
                   </span>
                   . Please stop OBS livestream or disconnect OBS to end the livestream session on
