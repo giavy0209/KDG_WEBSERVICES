@@ -98,6 +98,8 @@
                 background-color: #353849;
                 padding: 25px;
                 margin-left: 10px;
+                display: flex;
+                flex-direction: column;
                 .name {
                     font-size: 24px;
                     color: #fff;
@@ -105,6 +107,76 @@
                 .price {
                     font-size: 18px;
                     color: #F52871;
+                }
+                .info {
+                    margin-top: 30px;
+                    border-bottom: 1px solid #171A2B;
+                    padding-bottom: 15px;
+                    .row {
+                        margin-top: 10px;
+                        span {
+                            color: #98999A;
+                            + span {
+                                color: #fff;
+                            }
+                        }
+                    }
+                    .detail {
+                        color: #24B7E8;
+                        margin-top: 10px;
+                        cursor: pointer;
+                    }
+                }
+                .btn {
+                    padding: 5px 15px;
+                    color: #fff;
+                    background-color: #F52871;
+                    border-radius: 5px;
+                    margin-top: 30px;
+                    align-self: center;
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+    .ranking {
+        margin-top: 50px;
+        .title {
+            font-size: 24px;
+            color: #fff;
+        }
+        .tabs {
+            margin-top: 25px;
+            display: flex;
+            border-bottom: 1px solid #6A6A6D;
+            .tab{ 
+                padding-right: 35px;
+                padding-bottom: 10px;
+                font-size: 18px;
+                color: #98999A;
+                position: relative;
+                transition: .3s;
+                cursor: pointer;
+                &.active {
+                    color: #F52871;
+                    &::before {
+                        opacity: 1;
+                    }
+                }
+                &::before {
+                    content : "";
+                    position: absolute;
+                    bottom: 0;
+                    height: 2px;
+                    width: 100%;
+                    background-color: #F52871;
+                    left: 0;
+                    opacity: 0;
+                    transition  : .3s;
+                }
+                + .tab {
+                    padding-right: 0;
+                    padding-left: 35px;
                 }
             }
         }

@@ -15,32 +15,32 @@ function create() {
 }
 
 export const refreshToken = async (method, url, body) => {
-  const refreshToken = storage.getRefresh()
+  const refreshToken = storage.getRefresh();
   if (!refreshToken) {
-    return { status: 0 }
+    return { status: 0 };
   }
 
   try {
-    const res = await callAPI.post('/refresh', { refresh_token: refreshToken })
+    const res = await callAPI.post('/refresh', { refresh_token: refreshToken });
     if (res.status === 1) {
       if (method && url) {
-        storage.setRefresh(res.refreshToken)
-        storage.setToken(res.jwt)
-        return await callAPI[method](url, body, false)
+        storage.setRefresh(res.refreshToken);
+        storage.setToken(res.jwt);
+        return await callAPI[method](url, body, false);
       }
 
-      return { status: 1 }
+      return { status: 1 };
     }
     if (res.status === 402) {
-      storage.clearRefresh()
-      storage.clearToken()
-      return { status: 0 }
+      storage.clearRefresh();
+      storage.clearToken();
+      return { status: 0 };
     }
   } catch (error) {
-    console.log(error)
-    return { status: 0 }
+    console.log(error);
+    return { status: 0 };
   }
-}
+};
 
 const callAPI = {
   get: async (url, body, reget = true) => {

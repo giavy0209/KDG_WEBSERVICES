@@ -60,6 +60,7 @@ const top9 = [
 ]
 export default function NFT() {
     const [ActiveTop9 , setActiveTop9] = useState(0)
+    const [ActiveRanking , setActiveRanking] = useState(0)
     return (
         <>
             <div className="nft-market">
@@ -91,7 +92,32 @@ export default function NFT() {
                             <div className="right">
                                 <div className="name">{top9[ActiveTop9].name}</div>
                                 <div className="price">{top9[ActiveTop9].price} KDG</div>
+                                <div className="info">
+                                    <div className="row">
+                                        <span>Artist : </span>
+                                        <span>{top9[ActiveTop9].artist}</span>
+                                    </div>
+                                    <div className="row">
+                                        <span>Created : </span>
+                                        <span>Ngày tạo</span>
+                                    </div>
+                                    <div className="detail">Detail {'>'}{'>'}</div>
+                                </div>
+                                <span className="btn">
+                                    Buy Now
+                                </span>
                             </div>
+                        </div>
+                    </div>
+
+                    <div className="ranking">
+                        <div className="title">Ranking</div>
+                        <div className="tabs">
+                            <div onClick={()=>setActiveRanking(0)} className={`tab ${ActiveRanking === 0 ? 'active' : ''}`}>Top Seller (Quatity)</div>
+                            <div onClick={()=>setActiveRanking(1)} className={`tab ${ActiveRanking === 1 ? 'active' : ''}`}>Top Seller (revenue)</div>
+                        </div>
+                        <div className="top-quatity">
+
                         </div>
                     </div>
                 </div>
