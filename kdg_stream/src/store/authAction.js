@@ -48,7 +48,7 @@ export function asyncGetBalances() {
   return async dispatch => {
     const res = await callAPI.get('/balances');
     dispatch(actChangeBalances(res.balances));
-    const balance = res.balances.find(o => o.coin.code === 'KDG');
+    const balance = res.balances.find(o => o.coin.code === 'KDG-BEP20');
     dispatch(actChangeBalanceKDG(balance.balance));
     dispatch(actChangeAddressKDG(balance.wallet.address));
   };
