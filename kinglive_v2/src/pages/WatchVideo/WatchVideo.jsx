@@ -90,7 +90,7 @@ export default function WatchVideo() {
         console.log('Error get comment list', error)
       }
     })()
-  }, [])
+  }, [videoData])
 
   // Follow and Unfollow
   const handleFollow = async () => {

@@ -98,4 +98,65 @@
     font-weight: 500;
     text-align: center;
   }
+
+  &__button-edit {
+    cursor: pointer;
+    user-select: none;
+
+    font-size: 18px;
+    color: $primary-color;
+
+    padding: 7px 10px;
+    border-radius: 5px;
+
+    backdrop-filter: blur(10px);
+    background: rgba($color: #fff, $alpha: 0.2);
+
+    > *:nth-child(1) {
+      margin-right: 3px;
+    }
+  }
+
+  &__edit-information {
+    padding: 40px 80px;
+
+    > h3 {
+      font-size: 20px;
+      font-weight: 500;
+      color: $text-color-light;
+
+      margin-bottom: 40px;
+    }
+
+    > .form-control {
+      display: flex;
+      align-items: center;
+
+      font-size: 18px;
+
+      margin-bottom: 25px;
+
+      > .label {
+        width: 140px;
+
+        color: #c4c4c4;
+      }
+
+      > input {
+        width: calc(100% - 140px);
+
+        display: block;
+        height: 50px;
+        padding: 0 15px;
+        border: 1px solid #353849;
+        border-radius: 5px;
+
+        font-size: inherit;
+        line-height: inherit;
+        font-family: inherit;
+        color: $text-color-text;
+        background-color: #171a2b;
+      }
+    }
+  }
 }

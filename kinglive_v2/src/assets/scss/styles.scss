@@ -107,3 +107,27 @@ main {
     }
   }
 }
+
+.buttonX {
+  cursor: pointer;
+  user-select: none;
+
+  display: inline-block;
+  padding: 5px 22px;
+
+  color: #fff;
+  font-size: 18px;
+  line-height: inherit;
+  font-weight: inherit;
+  font-family: inherit;
+  background-color: $button-color;
+
+  border-radius: 5px;
+
+  &--cancel {
+    color: $text-color-text;
+    background-color: transparent;
+
+    border: 1px solid $text-color-text;
+  }
+}
