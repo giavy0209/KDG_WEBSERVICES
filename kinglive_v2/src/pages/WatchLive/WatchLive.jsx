@@ -35,7 +35,7 @@ export default function WatchLive() {
   // Push to Home when id === undefined
   // Get Current LiveVideo
   useEffect(() => {
-    if (!id) return history.push('/home')
+    if (!id) return history.push('/')
 
     let streamId
     ;(async () => {

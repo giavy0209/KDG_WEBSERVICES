@@ -173,9 +173,11 @@ export default function Profile() {
 
       <div className='profile😢__name'>{!userName || userName === ' ' ? 'Username' : userName}</div>
 
-      <div style={{ display: 'flex', justifyContent: 'center', marginTop: 10 }}>
-        <ButtonFollow isFollow={isFollow} handleFollow={handleFollow} />
-      </div>
+      {uid && uid !== userRedux?._id && (
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: 10 }}>
+          <ButtonFollow isFollow={isFollow} handleFollow={handleFollow} />
+        </div>
+      )}
 
       {isEdit && (
         <form onSubmit={handleEditUser} className='profile😢__edit-information'>

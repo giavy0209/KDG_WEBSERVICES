@@ -31,6 +31,7 @@ export default function WatchVideo() {
 
   // Get Current Video
   useEffect(() => {
+    if (!id) return history.push('/')
     ;(async () => {
       try {
         const res = await callAPI.get(`/video?sid=${id}`)
