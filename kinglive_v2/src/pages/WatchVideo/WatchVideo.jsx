@@ -48,7 +48,7 @@ export default function WatchVideo() {
         console.log('error get video', error)
       }
     })()
-  }, [id])
+  }, [id, history])
 
   // Get History Chat of Video
   // useEffect(() => {

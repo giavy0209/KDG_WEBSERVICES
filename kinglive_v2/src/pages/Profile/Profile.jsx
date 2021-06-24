@@ -13,7 +13,6 @@ import { asyncInitUser } from '../../store/actions'
 export default function Profile() {
   const dispatch = useDispatch()
 
-  const uid = new URLSearchParams(window.location.search).get('uid')
   const userRedux = useSelector(state => state.user)
   const [isFollow, setIsFollow] = useState(false)
   const [previewIMG, setPreviewIMG] = useState('')
@@ -38,7 +37,7 @@ export default function Profile() {
 
   // Get Profile of User dependent uid
   useEffect(() => {
-    let id = uid || userRedux?._id
+    const id = userRedux?._id
     if (!id) return
     ;(async () => {
       try {
@@ -56,7 +55,7 @@ export default function Profile() {
         console.log('Error get user', error)
       }
     })()
-  }, [uid, userRedux])
+  }, [userRedux])
 
   // Edit User
   const handleEditUser = async e => {
@@ -119,37 +118,35 @@ export default function Profile() {
           <span></span>
         </div>
 
-        {(!uid || uid === userRedux?._id) && (
-          <div
-            style={{
-              position: 'absolute',
-              top: 10,
-              right: 10,
-              display: 'flex',
-            }}
-          >
-            {!isEdit && (
-              <div className='profile😢__button-edit' onClick={() => setIsEdit(true)}>
-                <img src={editSVG} alt='' />
-                <span>Change profile information</span>
-              </div>
-            )}
+        <div
+          style={{
+            position: 'absolute',
+            top: 10,
+            right: 10,
+            display: 'flex',
+          }}
+        >
+          {!isEdit && (
+            <div className='profile😢__button-edit' onClick={() => setIsEdit(true)}>
+              <img src={editSVG} alt='' />
+              <span>Change profile information</span>
+            </div>
+          )}
 
-            {isEdit && (
-              <div className='profile😢__button-edit mr-10'>
-                <img src={editSVG} alt='' />
-                <span>Change Avatar</span>
-              </div>
-            )}
+          {isEdit && (
+            <div className='profile😢__button-edit mr-10'>
+              <img src={editSVG} alt='' />
+              <span>Change Avatar</span>
+            </div>
+          )}
 
-            {isEdit && (
-              <div className='profile😢__button-edit'>
-                <img src={editSVG} alt='' />
-                <span>Change Cover</span>
-              </div>
-            )}
-          </div>
-        )}
+          {isEdit && (
+            <div className='profile😢__button-edit'>
+              <img src={editSVG} alt='' />
+              <span>Change Cover</span>
+            </div>
+          )}
+        </div>
 
         <div
           style={{
@@ -173,11 +170,9 @@ export default function Profile() {
 
       <div className='profile😢__name'>{!userName || userName === ' ' ? 'Username' : userName}</div>
 
-      {uid && uid !== userRedux?._id && (
-        <div style={{ display: 'flex', justifyContent: 'center', marginTop: 10 }}>
-          <ButtonFollow isFollow={isFollow} handleFollow={handleFollow} />
-        </div>
-      )}
+      <div style={{ display: 'flex', justifyContent: 'center', marginTop: 10 }}>
+        <ButtonFollow isFollow={isFollow} handleFollow={handleFollow} />
+      </div>
 
       {isEdit && (
         <form onSubmit={handleEditUser} className='profile😢__edit-information'>
