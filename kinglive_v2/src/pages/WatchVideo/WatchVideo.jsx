@@ -6,6 +6,7 @@ import avatarDefaultSVG from '../../assets/svg/avatarDefault.svg'
 import coverDefaultJPG from '../../assets/svg/coverDefault.jpg'
 import shareSVG from '../../assets/svg/share.svg'
 import callAPI from '../../axios'
+import ButtonFollow from '../../components/ButtonFollow'
 import { STORAGE_DOMAIN } from '../../constant'
 import convertDateAgo from '../../helpers/convertDateAgo'
 
@@ -39,6 +40,8 @@ export default function WatchVideo() {
         // Check Follow Yet
         if (res.is_followed) {
           setIsFollow(true)
+        } else {
+          setIsFollow(false)
         }
       } catch (error) {
         console.log('error get video', error)
@@ -96,7 +99,6 @@ export default function WatchVideo() {
   const handleFollow = async () => {
     try {
       const res = await callAPI.post(`follow?id=${user?._id}`)
-      console.log({ follow: res })
       if (res.status === 1) setIsFollow(x => !x)
     } catch (error) {
       console.log('error follow or unfollow', error)
@@ -145,13 +147,7 @@ export default function WatchVideo() {
 
             {userRedux?._id !== user?._id && (
               <div style={{ position: 'absolute', top: 0, right: 0 }}>
-                <div
-                  className={`button-follow ${isFollow ? 'following' : ''}`}
-                  onClick={handleFollow}
-                >
-                  <span className='span1'>{isFollow ? 'Following' : 'Follow'}</span>
-                  <span className='span2'>Unfollow</span>
-                </div>
+                <ButtonFollow isFollow={isFollow} handleFollow={handleFollow} />
               </div>
             )}
           </div>

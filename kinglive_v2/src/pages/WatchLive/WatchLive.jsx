@@ -9,6 +9,7 @@ import giftPNG from '../../assets/svg/gift.png'
 import sendSVG from '../../assets/svg/send.svg'
 import shareSVG from '../../assets/svg/share.svg'
 import callAPI from '../../axios'
+import ButtonFollow from '../../components/ButtonFollow'
 import { PLAY_STREAM, STORAGE_DOMAIN } from '../../constant'
 import convertDateAgo from '../../helpers/convertDateAgo'
 import socket from '../../socket'
@@ -31,8 +32,11 @@ export default function WatchLive() {
 
   const id = new URLSearchParams(window.location.search).get('s')
 
+  // Push to Home when id === undefined
   // Get Current LiveVideo
   useEffect(() => {
+    if (!id) return history.push('/home')
+
     let streamId
     ;(async () => {
       try {
@@ -43,6 +47,8 @@ export default function WatchLive() {
         // Check Follow Yet
         if (res.is_followed) {
           setIsFollow(true)
+        } else {
+          setIsFollow(false)
         }
 
         streamId = res.data._id
@@ -55,7 +61,7 @@ export default function WatchLive() {
     return () => {
       socket.emit('leave_stream', streamId)
     }
-  }, [id])
+  }, [id, history])
 
   // Get Chat of LiveVideo
   useEffect(() => {
@@ -112,7 +118,6 @@ export default function WatchLive() {
   const handleFollow = async () => {
     try {
       const res = await callAPI.post(`follow?id=${user?._id}`)
-      console.log({ follow: res })
       if (res.status === 1) setIsFollow(x => !x)
     } catch (error) {
       console.log('error follow or unfollow', error)
@@ -162,13 +167,7 @@ export default function WatchLive() {
 
             {userRedux?._id !== user?._id && (
               <div style={{ position: 'absolute', top: 0, right: 0 }}>
-                <div
-                  className={`button-follow ${isFollow ? 'following' : ''}`}
-                  onClick={handleFollow}
-                >
-                  <span className='span1'>{isFollow ? 'Following' : 'Follow'}</span>
-                  <span className='span2'>Unfollow</span>
-                </div>
+                <ButtonFollow isFollow={isFollow} handleFollow={handleFollow} />
               </div>
             )}
           </div>
