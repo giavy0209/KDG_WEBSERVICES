@@ -1,0 +1,223 @@
+@import "./common.scss";
+
+@mixin padding-img($ratio, $color-hover, $border-radius) {
+    overflow: hidden;
+
+    cursor: pointer;
+
+    position: relative;
+
+    &::before {
+        content: "";
+        display: block;
+        padding-top: (1 / $ratio) * 100%;
+    }
+
+    > img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform: translate(var(--x), var(--y));
+
+        width: var(--zoom);
+
+        & + span {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+
+            background-color: $color-hover;
+
+            border-radius: $border-radius;
+
+            pointer-events: none;
+
+            opacity: 0;
+
+            transition: 0.3s;
+        }
+
+        &:hover + span {
+            opacity: 1;
+        }
+    }
+}
+
+.myartwork {
+    &__previewIMG {
+        z-index: 99999;
+        position: fixed;
+        top: 0;
+        left: 0;
+
+        width: 100vw;
+        height: 100vh;
+
+        background-color: rgba($color: #000, $alpha: 0.7);
+
+        > img {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+
+            max-width: 100vw;
+            max-height: 100vh;
+            height: auto;
+            padding: 10px;
+
+            border: 1px solid #eaeaea;
+            border-radius: 15px;
+
+            background-color: #9e7171;
+        }
+    }
+
+    &__cover {
+        @include padding-img(3, rgba($color: #fff, $alpha: 0.1), 0);
+
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+    }
+
+    &__avatar {
+        @include padding-img(1, rgba($color: #000, $alpha: 0.3), 50%);
+
+        width: 120px;
+        height: 120px;
+
+        border-radius: 50%;
+        border: 2px solid $primary-color;
+    }
+
+    &__name {
+        color: #fff;
+        font-size: 22px;
+        font-weight: 500;
+        text-align: center;
+    }
+
+    &__button-edit {
+        cursor: pointer;
+        user-select: none;
+
+        font-size: 18px;
+        color: $primary-color;
+
+        padding: 7px 10px;
+        border-radius: 5px;
+
+        backdrop-filter: blur(10px);
+        background: rgba($color: #fff, $alpha: 0.2);
+
+        > *:nth-child(1) {
+            margin-right: 3px;
+        }
+    }
+
+    &__edit-information {
+        padding: 40px 80px;
+
+        > h3 {
+            font-size: 20px;
+            font-weight: 500;
+            color: $text-color-light;
+
+            margin-bottom: 40px;
+        }
+
+        > .form-control {
+            display: flex;
+            align-items: center;
+
+            font-size: 18px;
+
+            margin-bottom: 25px;
+
+            > .label {
+                width: 140px;
+
+                color: #c4c4c4;
+            }
+
+            > input {
+                width: calc(100% - 140px);
+
+                display: block;
+                height: 50px;
+                padding: 0 15px;
+                border: 1px solid #353849;
+                border-radius: 5px;
+
+                font-size: inherit;
+                line-height: inherit;
+                font-family: inherit;
+                color: $text-color-text;
+                background-color: #171a2b;
+            }
+        }
+    }
+    &__tabs {
+        display: flex;
+        justify-content: space-between;
+        background-color: #171A2B;
+        border-radius: 50px;
+        overflow: hidden;
+    }
+    &__tab{
+        padding: 13px 0;
+        width: 25%;
+        text-align: center;
+        font-size: 18px;
+        transition: .3s;
+        position: relative;
+        cursor: pointer;
+        overflow: hidden;
+        span {
+            top: 100%;
+            position: absolute;
+            left: 50%;
+            transform: translate(-50% , 0);
+            z-index: 9;
+           
+        }
+        
+        &::before {
+            content : '';
+            top: 50%;
+            left: 50%;
+            right: 50%;
+            bottom: 50%;
+            position: absolute;
+            background-color: #F52871;
+            transition: .3s;
+        }
+        &:hover {
+            span {
+                transition: .3s;
+                transition-delay: .3s;
+                color: #fff;
+                top: 50%;
+                transform: translate(-50% , -50%);
+            }
+            &::before {
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+            }
+        }
+        &.active{
+            color: #fff;
+            background-color: #F52871;
+            span {
+                display: none;
+            }
+            &::before {
+                display: none;
+            }
+        }
+    }
+}

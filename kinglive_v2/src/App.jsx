@@ -7,6 +7,7 @@ import Sidebar from './components/Sidebar'
 import Home from './pages/Home'
 import Live from './pages/Live'
 import NFT from './pages/NFT'
+import MyArtwork from './pages/MyArtwork'
 import Profile from './pages/Profile'
 import Setup from './pages/Setup'
 import Upload from './pages/Upload'
@@ -41,6 +42,7 @@ function App() {
           <Route path='/watchlive' component={WatchLive} exact />
           <Route path='/watchvideo' component={WatchVideo} exact />
           <Route path='/nft-market' component={NFT} exact />
+          <Route path='/my-artwork' component={MyArtwork} exact />
         </Switch>
       </main>
     </>

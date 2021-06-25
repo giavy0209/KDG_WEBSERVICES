@@ -249,3 +249,8 @@ main {
     }
   }
 }
+.scroll-style {
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
