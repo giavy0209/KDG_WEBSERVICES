@@ -133,6 +133,8 @@
     display: flex;
     flex-flow: row wrap;
 
+    margin-bottom: 25px;
+
     > .itemStatistic {
       width: calc(25% - 15px);
       margin-bottom: 20px;
