@@ -209,3 +209,43 @@ main {
     }
   }
 }
+
+.tabs {
+  padding-top: 35px;
+  padding-bottom: 35px;
+
+  &__header {
+    display: flex;
+    margin-bottom: 25px;
+
+    color: #c4c4c4;
+    font-size: 20px;
+    font-weight: 500;
+
+    > .item {
+      cursor: pointer;
+      user-select: none;
+
+      width: calc(1 / 3 * 100%);
+      padding-bottom: 5px;
+      border-bottom: 2px solid #353849;
+
+      text-align: center;
+
+      &.active {
+        color: $primary-color;
+        border-bottom: 2px solid $primary-color;
+      }
+    }
+  }
+
+  &__body {
+    > .item {
+      display: none;
+
+      &.active {
+        display: initial;
+      }
+    }
+  }
+}

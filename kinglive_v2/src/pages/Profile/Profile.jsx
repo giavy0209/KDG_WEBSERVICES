@@ -10,6 +10,37 @@ import convertPositionIMG from '../../helpers/convertPositionIMG'
 import isValidDate from '../../helpers/isValidDate'
 import { asyncInitUser } from '../../store/actions'
 
+const statisticArray = [
+  {
+    amount: 234,
+    name: 'KDG',
+  },
+  {
+    amount: 34,
+    name: 'Total Videos Owner',
+  },
+  {
+    amount: 45,
+    name: 'Total Views',
+  },
+  {
+    amount: 23,
+    name: 'Total Gifts',
+  },
+  {
+    amount: 2434,
+    name: 'Followers',
+  },
+  {
+    amount: 324,
+    name: 'Followings',
+  },
+  {
+    amount: 45,
+    name: 'Total Live (hours)',
+  },
+]
+
 export default function Profile() {
   const dispatch = useDispatch()
 
@@ -17,6 +48,7 @@ export default function Profile() {
   const [isFollow, setIsFollow] = useState(false)
   const [previewIMG, setPreviewIMG] = useState('')
   const [isEdit, setIsEdit] = useState(false)
+  const [tabIndex, setTabIndex] = useState(0)
 
   const [userData, setUserData] = useState({})
   const avatar = useMemo(() => userData?.kyc?.avatar?.path, [userData])
@@ -237,6 +269,52 @@ export default function Profile() {
             </div>
           </div>
         </form>
+      )}
+
+      {!isEdit && (
+        <div className='tabs'>
+          <div className='tabs__header'>
+            <div
+              className={`item ${tabIndex === 0 ? 'active' : ''}`}
+              onClick={() => setTabIndex(0)}
+            >
+              Personal
+            </div>
+            <div
+              className={`item ${tabIndex === 1 ? 'active' : ''}`}
+              onClick={() => setTabIndex(1)}
+            >
+              Assets
+            </div>
+            <div
+              className={`item ${tabIndex === 2 ? 'active' : ''}`}
+              onClick={() => setTabIndex(2)}
+            >
+              Top Donate
+            </div>
+          </div>
+
+          <div className='tabs__body'>
+            <div className={`item ${tabIndex === 0 ? 'active' : ''}`}>
+              <div className='profile😢__statistic'>
+                {statisticArray.map(item => (
+                  <div key={item.name} className='itemStatistic'>
+                    <div className='absolute'>
+                      <span>{item.amount}</span>
+                      <span>{item.name}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className='profile😢__introduce'></div>
+            </div>
+
+            <div className={`item ${tabIndex === 1 ? 'active' : ''}`}>Assets Body</div>
+
+            <div className={`item ${tabIndex === 2 ? 'active' : ''}`}>Top Donate Body</div>
+          </div>
+        </div>
       )}
     </div>
   )
