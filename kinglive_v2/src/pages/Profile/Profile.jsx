@@ -6,7 +6,6 @@ import editSVG from '../../assets/svg/edit.svg'
 import menuSVG from '../../assets/svg/menu.svg'
 import radioSVG from '../../assets/svg/radio.svg'
 import callAPI from '../../axios'
-import ButtonFollow from '../../components/ButtonFollow'
 import VideoPlayer from '../../components/VideoPlayer'
 import { STORAGE_DOMAIN } from '../../constant'
 import convertPositionIMG from '../../helpers/convertPositionIMG'
@@ -48,7 +47,6 @@ export default function Profile() {
   const dispatch = useDispatch()
 
   const userRedux = useSelector(state => state.user)
-  const [isFollow, setIsFollow] = useState(false)
   const [previewIMG, setPreviewIMG] = useState('')
   const [isEdit, setIsEdit] = useState(false)
   const [tabIndex, setTabIndex] = useState(0)
@@ -70,7 +68,7 @@ export default function Profile() {
     return `${day}/${month}/${year}`
   }, [userData])
 
-  // Get Profile of User dependent uid
+  // Get Profile of userRedux
   useEffect(() => {
     const id = userRedux?._id
     if (!id) return
@@ -79,13 +77,6 @@ export default function Profile() {
         const res = await callAPI.get(`/user?uid=${id}`)
         console.log({ userData: res.data })
         setUserData(res.data)
-
-        // Check Follow Yet
-        if (res.data.isFollowed) {
-          setIsFollow(true)
-        } else {
-          setIsFollow(false)
-        }
       } catch (error) {
         console.log('Error get user', error)
       }
@@ -121,16 +112,6 @@ export default function Profile() {
       }
     } catch (error) {
       console.log('Error Edit User', error)
-    }
-  }
-
-  // Follow and Unfollow
-  const handleFollow = async () => {
-    try {
-      const res = await callAPI.post(`follow?id=${userData?._id}`)
-      if (res.status === 1) setIsFollow(x => !x)
-    } catch (error) {
-      console.log('error follow or unfollow', error)
     }
   }
 
@@ -204,10 +185,6 @@ export default function Profile() {
       </div>
 
       <div className='profile😢__name'>{!userName || userName === ' ' ? 'Username' : userName}</div>
-
-      <div style={{ display: 'flex', justifyContent: 'center', marginTop: 10 }}>
-        <ButtonFollow isFollow={isFollow} handleFollow={handleFollow} />
-      </div>
 
       {isEdit && (
         <form onSubmit={handleEditUser} className='profile😢__edit-information'>
