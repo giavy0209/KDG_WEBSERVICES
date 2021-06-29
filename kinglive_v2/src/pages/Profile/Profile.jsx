@@ -356,17 +356,6 @@ export default function Profile() {
                 <div className='profile😢__title'>Video Uploaded</div>
 
                 <div className='flexbox flex3' style={{ '--gap-col': '5px', '--gap-row': '25px' }}>
-                  <div className='flexbox__item profile😢__video'>
-                    <div className='thumbnail'>
-                      <img src={coverDefaultJPG} alt='' />
-                    </div>
-
-                    <div className='info'>
-                      <div>Greatest Hits Game Of Popular Game Of All Time</div>
-                      <img src={menuSVG} alt='' />
-                    </div>
-                  </div>
-
                   {[1, 2, 3].map(item => (
                     <div key={item} className='flexbox__item profile😢__video'>
                       <div className='thumbnail'>
