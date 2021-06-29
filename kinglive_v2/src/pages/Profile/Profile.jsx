@@ -1,10 +1,13 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import '../../assets/scss/profile.scss'
+import coverDefaultJPG from '../../assets/svg/coverDefault.jpg'
 import editSVG from '../../assets/svg/edit.svg'
+import menuSVG from '../../assets/svg/menu.svg'
 import radioSVG from '../../assets/svg/radio.svg'
 import callAPI from '../../axios'
 import ButtonFollow from '../../components/ButtonFollow'
+import VideoPlayer from '../../components/VideoPlayer'
 import { STORAGE_DOMAIN } from '../../constant'
 import convertPositionIMG from '../../helpers/convertPositionIMG'
 import isValidDate from '../../helpers/isValidDate'
@@ -307,7 +310,80 @@ export default function Profile() {
                 ))}
               </div>
 
-              <div className='profile😢__introduce'></div>
+              <div className='profile😢__introduce'>
+                <VideoPlayer guid={`7ba74ab1-fc07-4a55-8394-2a1b1f771049`} />
+
+                <div>
+                  <div>Epic Riddles Marathon Only Bravest Detectives Can Pass</div>
+                  <div>39 views • 8 days ago</div>
+                  <div>
+                    Are you a fan of solving different puzzles, sudoku or crosswords? Here's a fresh
+                    set of riddles to entertain and train your brain. Let's see how many you can
+                    crack and share your number down. Here's a fresh set of riddles to entertain and
+                    train your brain. Let's see how many you can crack and share your number down.
+                    Here's a fresh set of riddles to entertain and train your brain. Let's see how
+                    many you can crack and share your number down.
+                  </div>
+
+                  <img src={menuSVG} alt='' />
+                </div>
+              </div>
+
+              <div>
+                <div className='profile😢__title'>Live</div>
+
+                <div className='profile😢__introduce'>
+                  <VideoPlayer guid={`7ba74ab1-fc07-4a55-8394-2a1b1f771049`} />
+
+                  <div>
+                    <div>Epic Riddles Marathon Only Bravest Detectives Can Pass</div>
+                    <div>39 views • 8 days ago</div>
+                    <div>
+                      Are you a fan of solving different puzzles, sudoku or crosswords? Here's a
+                      fresh set of riddles to entertain and train your brain. Let's see how many you
+                      can crack and share your number down. Here's a fresh set of riddles to
+                      entertain and train your brain. Let's see how many you can crack and share
+                      your number down. Here's a fresh set of riddles to entertain and train your
+                      brain. Let's see how many you can crack and share your number down.
+                    </div>
+
+                    <img src={menuSVG} alt='' />
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <div className='profile😢__title'>Video Uploaded</div>
+
+                <div className='flexbox flex3' style={{ '--gap-col': '5px', '--gap-row': '25px' }}>
+                  <div className='flexbox__item profile😢__video'>
+                    <div className='thumbnail'>
+                      <img src={coverDefaultJPG} alt='' />
+                    </div>
+
+                    <div className='info'>
+                      <div>Greatest Hits Game Of Popular Game Of All Time</div>
+                      <img src={menuSVG} alt='' />
+                    </div>
+                  </div>
+
+                  {[1, 2, 3].map(item => (
+                    <div key={item} className='flexbox__item profile😢__video'>
+                      <div className='thumbnail'>
+                        <img src={coverDefaultJPG} alt='' />
+                      </div>
+
+                      <div className='info'>
+                        <div>
+                          Greatest Hits Game Of Popular Game Of All Time Greatest Hits Game Of
+                          Popular Game Of All Time Greatest Hits Game Of Popular Game Of All Time
+                        </div>
+                        <img src={menuSVG} alt='' />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
 
             <div className={`item ${tabIndex === 1 ? 'active' : ''}`}>Assets Body</div>

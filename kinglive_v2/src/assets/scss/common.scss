@@ -43,4 +43,40 @@ $index-connect-wallet: 100;
     padding-right: #{$i}px;
   }
 }
+
+.flexbox {
+  --gap-col: 25px;
+  --gap-row: 25px;
+
+  display: flex;
+  flex-flow: column nowrap;
+
+  &__item {
+    margin-bottom: var(--gap-row);
+  }
+
+  @for $i from 2 to 4 {
+    &.flex#{$i} {
+      flex-flow: row wrap;
+
+      .flexbox__item {
+        width: calc((100% - var(--gap-col) * (#{$i - 1})) / #{$i});
+
+        &:not(:nth-child(#{$i}n)) {
+          margin-right: var(--gap-col);
+        }
+      }
+    }
+  }
+}
 // helper css
+
+@mixin show-text-line($line) {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: $line;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+}

@@ -7,6 +7,7 @@ import coverDefaultJPG from '../../assets/svg/coverDefault.jpg'
 import shareSVG from '../../assets/svg/share.svg'
 import callAPI from '../../axios'
 import ButtonFollow from '../../components/ButtonFollow'
+import VideoPlayer from '../../components/VideoPlayer'
 import { STORAGE_DOMAIN } from '../../constant'
 import convertDateAgo from '../../helpers/convertDateAgo'
 
@@ -109,16 +110,7 @@ export default function WatchVideo() {
   return (
     <div className='watchlive'>
       <div className='watchlive__left'>
-        <div className='watchlive__videoContainer'>
-          <iframe
-            className='watchlive__videoPlayer'
-            title='video'
-            loading='lazy'
-            allowFullScreen={true}
-            src={`https://iframe.mediadelivery.net/embed/1536/${videoData.guid}?autoplay=true`}
-            allow='accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;'
-          ></iframe>
-        </div>
+        <VideoPlayer guid={videoData.guid} />
 
         <div className='watchlive__titleVideo'>{videoData.name}</div>
 
