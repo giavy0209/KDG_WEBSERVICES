@@ -18,20 +18,20 @@ $index-connect-wallet: 100;
   position: relative;
 
   &::before {
-      content: "";
-      display: block;
-      padding-top: (1 / $ratio) * 100%;
+    content: '';
+    display: block;
+    padding-top: (1 / $ratio) * 100%;
   }
 
   > img {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 }
 @for $i from 1 through 100 {
@@ -67,4 +67,40 @@ $index-connect-wallet: 100;
     padding-right: #{$i}px;
   }
 }
+
+.flexbox {
+  --gap-col: 25px;
+  --gap-row: 25px;
+
+  display: flex;
+  flex-flow: column nowrap;
+
+  &__item {
+    margin-bottom: var(--gap-row);
+  }
+
+  @for $i from 2 through 4 {
+    &.flex#{$i} {
+      flex-flow: row wrap;
+
+      .flexbox__item {
+        width: calc((100% - var(--gap-col) * (#{$i - 1})) / #{$i});
+
+        &:not(:nth-child(#{$i}n)) {
+          margin-right: var(--gap-col);
+        }
+      }
+    }
+  }
+}
 // helper css
+
+@mixin show-text-line($line) {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: $line;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+}

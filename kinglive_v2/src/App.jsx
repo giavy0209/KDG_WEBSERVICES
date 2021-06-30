@@ -6,11 +6,12 @@ import Header from './components/Header'
 import Sidebar from './components/Sidebar'
 import Home from './pages/Home'
 import Live from './pages/Live'
-import NFT from './pages/NFT'
 import MyArtwork from './pages/MyArtwork'
+import NFT from './pages/NFT'
 import Profile from './pages/Profile'
 import Setup from './pages/Setup'
 import Upload from './pages/Upload'
+import User from './pages/User'
 import WatchLive from './pages/WatchLive'
 import WatchVideo from './pages/WatchVideo'
 import MintNFT from './pages/MintNFT'
@@ -37,9 +38,13 @@ function App() {
         <Switch>
           <Route path='/' component={Home} exact />
           <Route path='/live' component={Live} exact />
+          <Route path='/nft-market' component={NFT} exact />
+          <Route path='/my-artwork' component={MyArtwork} exact />
+
           <Route path='/upload' component={Upload} exact />
           <Route path='/setup' component={Setup} exact />
           <Route path='/profile' component={Profile} exact />
+          <Route path='/user' component={User} exact />
           <Route path='/watchlive' component={WatchLive} exact />
           <Route path='/watchvideo' component={WatchVideo} exact />
           <Route path='/nft-market' component={NFT} exact />
