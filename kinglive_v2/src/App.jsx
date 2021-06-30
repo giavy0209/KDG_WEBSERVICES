@@ -15,6 +15,7 @@ import Upload from './pages/Upload'
 import User from './pages/User'
 import WatchLive from './pages/WatchLive'
 import WatchVideo from './pages/WatchVideo'
+import MintNFT from './pages/MintNFT'
 import { asyncInitUser } from './store/actions'
 
 function App() {
@@ -40,6 +41,7 @@ function App() {
           <Route path='/live' component={Live} exact />
           <Route path='/nft-market' component={NFT} exact />
           <Route path='/my-artwork' component={MyArtwork} exact />
+          <Route path='/mint-nft' component={MintNFT} exact />
 
           <Route path='/upload' component={Upload} exact />
           <Route path='/setup' component={Setup} exact />
