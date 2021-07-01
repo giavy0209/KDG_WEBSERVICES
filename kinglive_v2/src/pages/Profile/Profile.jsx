@@ -252,8 +252,8 @@ export default function Profile() {
       )}
 
       {!isEdit && (
-        <div className='tabs'>
-          <div className='tabs__header'>
+        <div className='tabsX'>
+          <div className='tabsX__header'>
             <div
               className={`item ${tabIndex === 0 ? 'active' : ''}`}
               onClick={() => setTabIndex(0)}
@@ -274,7 +274,7 @@ export default function Profile() {
             </div>
           </div>
 
-          <div className='tabs__body'>
+          <div className='tabsX__body'>
             <div className={`item ${tabIndex === 0 ? 'active' : ''}`}>
               <div className='profile😢__statistic'>
                 {statisticArray.map(item => (
