@@ -2,12 +2,16 @@
 
 .test-metamask {
   &__address {
-    color: $text-color-dark;
+    color: $text-color-light;
     font-size: 30px;
   }
 
   &__loading {
     opacity: 0.5;
     cursor: not-allowed;
+  }
+
+  &__hidden {
+    display: none;
   }
 }
