@@ -1,12 +1,20 @@
 import { useState } from 'react'
 import Web3 from 'web3'
 import '../../assets/scss/test-metamask.scss'
-import { ABIKL1155, addressKL1155 } from '../../contracts/KL1155'
+import {
+  ABIKL1155,
+  addressKL1155,
+  _createNFTResult,
+  _donateNFTResult,
+} from '../../contracts/KL1155'
 
 export default function TestMetamask() {
   const [address, setAddress] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-  const [idNFT, setIdNFT] = useState('')
+  const [createNFTResult, setCreateNFTResult] = useState(_createNFTResult)
+  const [donateNFTResult, setDonateNFTResult] = useState(_donateNFTResult)
+
+  const address2 = '0xC31866467f2f97dE8D96E4A77842aA657ee76D83'
 
   const connectMetaMask = async () => {
     setIsLoading(true)
@@ -30,18 +38,34 @@ export default function TestMetamask() {
 
   // create(_maxSupply, _initSupply , _royaltyFee, _uri, _data)
   const createNFT = async () => {
-    let _id
+    let result
 
     try {
-      _id = await window.contractKL1155.methods
+      result = await window.contractKL1155.methods
         .create('10', '5', '1', 'i dont know', 0x00)
         .send({ from: address })
     } catch (error) {
       console.log('error create nft', error)
     }
 
-    console.log({ idNFT: _id })
-    setIdNFT(_id)
+    console.log({ createNFTResult: result })
+    setCreateNFTResult(result)
+  }
+
+  // safeTransferFrom(_from, _to, _id, _amount, _data)
+  const donateNFT = async () => {
+    let result
+
+    try {
+      result = await window.contractKL1155.methods
+        .safeTransferFrom(address, address2, 1, 1, 0x00)
+        .send({ from: address })
+    } catch (error) {
+      console.log('error donate nft', error)
+    }
+
+    console.log({ donateNFTResult: result })
+    setDonateNFTResult(result)
   }
 
   return (
@@ -62,7 +86,13 @@ export default function TestMetamask() {
         Create NFT
       </button>
 
-      <div className='test-metamask__address'>idNFT: {idNFT}</div>
+      <div className='test-metamask__address'>Result Create NFT: {createNFTResult?.blockHash}</div>
+
+      <button className='buttonX' onClick={donateNFT}>
+        Donate NFT
+      </button>
+
+      <div className='test-metamask__address'>Result Donate NFT: {donateNFTResult?.blockHash}</div>
     </div>
   )
 }
