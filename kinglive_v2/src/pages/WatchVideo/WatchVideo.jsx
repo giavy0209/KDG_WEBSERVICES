@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import '../../assets/scss/watchlive.scss'
-import avatarDefaultSVG from '../../assets/svg/avatarDefault.svg'
+// import avatarDefaultSVG from '../../assets/svg/avatarDefault.svg'
 import coverDefaultJPG from '../../assets/svg/coverDefault.jpg'
 import shareSVG from '../../assets/svg/share.svg'
 import callAPI from '../../axios'
@@ -19,9 +19,9 @@ export default function WatchVideo() {
 
   const [videoData, setVideoData] = useState({})
   const user = useMemo(() => videoData.user, [videoData])
-  const [chatData, setChatData] = useState([])
+  // const [chatData, setChatData] = useState([])
   const [liveList, setLiveList] = useState([])
-  const [commentList, setCommentList] = useState([])
+  // const [commentList, setCommentList] = useState([])
   const [isFollow, setIsFollow] = useState(false)
 
   const [hideChat, setHideChat] = useState(false)
@@ -85,17 +85,17 @@ export default function WatchVideo() {
   }, [])
 
   // Get Comment List
-  useEffect(() => {
-    ;(async () => {
-      try {
-        const res = await callAPI.get(`/comment?video=${videoData._id}`)
-        console.log({ commentList: res })
-        setCommentList(res.data)
-      } catch (error) {
-        console.log('Error get comment list', error)
-      }
-    })()
-  }, [videoData])
+  // useEffect(() => {
+  //   ;(async () => {
+  //     try {
+  //       const res = await callAPI.get(`/comment?video=${videoData._id}`)
+  //       console.log({ commentList: res })
+  //       setCommentList(res.data)
+  //     } catch (error) {
+  //       console.log('Error get comment list', error)
+  //     }
+  //   })()
+  // }, [videoData])
 
   // Follow and Unfollow
   const handleFollow = async () => {
@@ -151,7 +151,7 @@ export default function WatchVideo() {
         <div className='watchlive__chatContainer'>
           <div className={`${hideChat ? 'hide' : ''}`}>
             <div ref={chatListRef} className='watchlive__chatList'>
-              {chatData.map(chatItem => (
+              {/* {chatData.map(chatItem => (
                 <div key={chatItem._id} className='watchlive__chatItem'>
                   <div>
                     <img
@@ -173,7 +173,7 @@ export default function WatchVideo() {
                     <span>{chatItem.chat}</span>
                   </div>
                 </div>
-              ))}
+              ))} */}
             </div>
           </div>
 
