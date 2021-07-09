@@ -9,6 +9,7 @@ import {
   _donateNFTResult,
 } from '../../contracts/KL1155'
 import { ABIMarket, addressMarket, _listNFTResult } from '../../contracts/Market'
+import { ABIERC20, addressERC20 } from '../../contracts/ERC20'
 
 export default function TestMetamask() {
   const [address, setAddress] = useState('')
@@ -17,6 +18,7 @@ export default function TestMetamask() {
   const [donateNFTResult, setDonateNFTResult] = useState(_donateNFTResult)
   const [approveAllNFTResult, setApproveAllNFTResult] = useState(_approveAllNFTResult)
   const [listNFTResult, setListNFTResult] = useState(_listNFTResult)
+  const [buyNFTResult, setBuyNFTResult] = useState('')
 
   const address2 = '0xC31866467f2f97dE8D96E4A77842aA657ee76D83'
 
@@ -31,7 +33,7 @@ export default function TestMetamask() {
     // inject address and abi
     window.contractKL1155 = new window.web3.eth.Contract(ABIKL1155, addressKL1155)
     window.contractMarket = new window.web3.eth.Contract(ABIMarket, addressMarket)
-    console.log(window.contractMarket)
+    window.contractERC20 = new window.web3.eth.Contract(ABIERC20, addressERC20)
 
     const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' })
     const account = accounts[0]
@@ -88,7 +90,7 @@ export default function TestMetamask() {
     setApproveAllNFTResult(result)
   }
 
-  // list(address _tokenAddress, uint256 _tokenId, uint256 _quantity, uint256 _mask, uint256 _price, address _paymentToken, uint256 _expiration)
+  // list(_tokenAddress, _tokenId, _quantity, _mask, _price, _paymentToken, _expiration)
   const listNFT = async () => {
     let isApprovedForAll
     let result
@@ -122,6 +124,22 @@ export default function TestMetamask() {
     console.log({ isApprovedForAll: isApprovedForAll })
     console.log({ listNFTResult: result })
     setListNFTResult(result)
+  }
+
+  // approve(address spender, uint256 amount)
+  const buyNFT = async () => {
+    let result
+
+    try {
+      result = await window.contractERC20.methods
+        .approve(addressMarket, 1000000000)
+        .send({ from: address })
+    } catch (error) {
+      console.log('error buy nft', error)
+    }
+
+    console.log({ buyNFTResult: result })
+    setBuyNFTResult(result)
   }
 
   return (
@@ -163,6 +181,12 @@ export default function TestMetamask() {
       </button>
 
       <div className='test-metamask__address'>Result list NFT: {listNFTResult?.blockHash}</div>
+
+      <button className='buttonX' onClick={buyNFT}>
+        Buy NFT
+      </button>
+
+      <div className='test-metamask__address'>Result buy NFT: {buyNFTResult?.blockHash}</div>
     </div>
   )
 }
