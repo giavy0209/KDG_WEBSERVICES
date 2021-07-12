@@ -33,9 +33,16 @@ async function compress(type) {
             html = html.replace('</head>' , `<title><%=pageData.meta_title%></title><meta name="title" content="<%=pageData.meta_title%>"><meta name="description" content="<%=pageData.metades%>"><meta property="og:type" content="website"><meta property="og:image" content="<%=pageData.meta_og_img%>"><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="<%=pageData.slug%>"><meta property="twitter:title" content="<%=pageData.meta_title%>"><meta property="twitter:description" content="<%=pageData.metades%>"><meta property="twitter:image" content="<%=pageData.meta_og_img%>"></head>`)
             fs.writeFileSync(path.join(__dirname , type , 'build/index.ejs'), html)
         }
+        if(type === 'kinglive_v2') {
+            const fs = require('fs')
+            let html = fs.readFileSync(path.join(__dirname , type , 'build/index.html') , 'utf8')
+            html = html.replace('</head>' , `<title><%=pageData.meta_title%></title><meta name="title" content="<%=pageData.meta_title%>"><meta name="description" content="<%=pageData.metades%>"><meta property="og:type" content="website"><meta property="og:image" content="<%=pageData.meta_og_img%>"><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="<%=pageData.slug%>"><meta property="twitter:title" content="<%=pageData.meta_title%>"><meta property="twitter:description" content="<%=pageData.metades%>"><meta property="twitter:image" content="<%=pageData.meta_og_img%>"></head>`)
+            fs.writeFileSync(path.join(__dirname , type , 'build/index.ejs'), html)
+        }
         const res = await compressing.zip.compressDir(path.join(__dirname ,type, 'build'), path.join(__dirname,'file.zip'))
         console.log('compressed  ' + type);
         if(type === 'kdg_stream') type = 'kinglive'
+        if(type === 'kinglive_v2') type = 'kinglive_v2'
         if(type === 'kdg_wallet') type = 'wallet'
         if(type === 'kdg_login') type = 'login'
         await sendFile(type)
@@ -46,7 +53,7 @@ async function compress(type) {
 }
 
 const acceptType = [
-    'kdg_stream', 'kdg_wallet' , 'kdg_login'
+    'kdg_stream', 'kdg_wallet' , 'kdg_login','kinglive_v2'
 ]
 async function main () {
     const args = process.argv.slice(2);
