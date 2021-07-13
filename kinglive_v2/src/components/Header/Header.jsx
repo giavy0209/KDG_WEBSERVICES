@@ -22,7 +22,7 @@ export default function Header({ toggleSidebar = () => {}, IsOpenSidebar = false
   const [IsOpenConnect, setIsOpenConnect] = useState(false)
 
   const connectMetaMask = async () => {
-    if (currentAddress) return
+    if (window.ethereum.selectedAddress) return
 
     if (window.ethereum && window.ethereum.isMetaMask) {
       window.web3 = new Web3(window.ethereum)
