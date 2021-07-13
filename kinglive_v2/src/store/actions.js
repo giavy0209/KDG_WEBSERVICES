@@ -7,3 +7,8 @@ export function asyncInitUser() {
     dispatch({ type: INIT_USER, payload: res.data })
   }
 }
+
+export const CHANGE_ADDRESS = 'CHANGE_ADDRESS'
+export function actChangeAddress(address) {
+  return { type: CHANGE_ADDRESS, payload: address }
+}

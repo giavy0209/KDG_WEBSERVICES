@@ -1,25 +1,25 @@
-import { useCallback, useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useCallback, useState } from 'react'
+// import { useDispatch } from 'react-redux'
 import { Route, Switch } from 'react-router'
 import './assets/scss/styles.scss'
 import Header from './components/Header'
 import Sidebar from './components/Sidebar'
 import Home from './pages/Home'
 import Live from './pages/Live'
+import MintNFT from './pages/MintNFT'
 import MyArtwork from './pages/MyArtwork'
 import NFT from './pages/NFT'
 import Profile from './pages/Profile'
 import Setup from './pages/Setup'
-import TestMetamask from './pages/TestMetamask'
+// import TestMetamask from './pages/TestMetamask'
 import Upload from './pages/Upload'
 import User from './pages/User'
 import WatchLive from './pages/WatchLive'
 import WatchVideo from './pages/WatchVideo'
-import MintNFT from './pages/MintNFT'
-import { asyncInitUser } from './store/actions'
+// import { asyncInitUser } from './store/actions'
 
 function App() {
-  const dispatch = useDispatch()
+  // const dispatch = useDispatch()
 
   const [IsOpenSidebar, setIsOpenSidebar] = useState(false)
 
@@ -27,9 +27,9 @@ function App() {
     setIsOpenSidebar(_isopen => !_isopen)
   }, [])
 
-  useEffect(() => {
-    dispatch(asyncInitUser())
-  }, [dispatch])
+  // useEffect(() => {
+  //   dispatch(asyncInitUser())
+  // }, [dispatch])
 
   return (
     <>
@@ -49,7 +49,7 @@ function App() {
           <Route path='/user' component={User} exact />
           <Route path='/watchlive' component={WatchLive} exact />
           <Route path='/watchvideo' component={WatchVideo} exact />
-          <Route path='/test' component={TestMetamask} exact />
+          {/* <Route path='/test' component={TestMetamask} exact /> */}
         </Switch>
       </main>
     </>

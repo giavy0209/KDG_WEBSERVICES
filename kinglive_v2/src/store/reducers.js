@@ -1,4 +1,4 @@
-import { INIT_USER } from './actions'
+import { INIT_USER, CHANGE_ADDRESS } from './actions'
 
 const initialState = {}
 
@@ -8,6 +8,13 @@ export default function reducers(state = initialState, action) {
       return {
         ...state,
         user: action.payload,
+      }
+    }
+
+    case CHANGE_ADDRESS: {
+      return {
+        ...state,
+        address: action.payload,
       }
     }
 

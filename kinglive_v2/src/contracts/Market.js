@@ -1,79 +1,4 @@
-export const _listNFTResult = {
-  blockHash: '0xe40ef41a0b3ec69e048a85406b720583d0f437da69cc9e9765f24d5b3bdcd474',
-  blockNumber: 10381343,
-  contractAddress: null,
-  cumulativeGasUsed: 7013283,
-  from: '0xa83f993153f9c26a40adad46caae63400f2276f9',
-  gasUsed: 273345,
-  logsBloom:
-    '0x00000000000000000000000800000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000001000000000000000000000000000000000000400000000000000000000002000000000000000000000000000000000001000000000000000000080002400000000000000000000080000000000000000000000000000000000000000000000800000000000000000080000000000001000000000000000000000000020000080000000000000000008000000000000000000000000000000000000000000000000000000000200000000000000080000000000',
-  status: true,
-  to: '0x714e125de461763d3efe99f2414890eb4b052da6',
-  transactionHash: '0x6d817902cb14013c2cc091092c2e28d39d5ee5947672ca3de75c6393ef251e53',
-  transactionIndex: 3,
-  type: '0x0',
-  events: {
-    0: {
-      address: '0x7e1d861F3bec6f6defeB49121B8Bd82f217794ab',
-      blockNumber: 10381343,
-      transactionHash: '0x6d817902cb14013c2cc091092c2e28d39d5ee5947672ca3de75c6393ef251e53',
-      transactionIndex: 3,
-      blockHash: '0xe40ef41a0b3ec69e048a85406b720583d0f437da69cc9e9765f24d5b3bdcd474',
-      logIndex: 2,
-      removed: false,
-      id: 'log_cf357852',
-      returnValues: {},
-      signature: null,
-      raw: {
-        data: '0x00000000000000000000000000000000000000000000000000000000000000050000000000000000000000000000000000000000000000000000000000000001',
-        topics: [
-          '0xc3d58168c5ae7397731d063d5bbf3d657854427343f4c083240f7aacaa2d0f62',
-          '0x000000000000000000000000714e125de461763d3efe99f2414890eb4b052da6',
-          '0x000000000000000000000000a83f993153f9c26a40adad46caae63400f2276f9',
-          '0x000000000000000000000000714e125de461763d3efe99f2414890eb4b052da6',
-        ],
-      },
-    },
-    List: {
-      address: '0x714e125De461763D3Efe99F2414890Eb4B052dA6',
-      blockNumber: 10381343,
-      transactionHash: '0x6d817902cb14013c2cc091092c2e28d39d5ee5947672ca3de75c6393ef251e53',
-      transactionIndex: 3,
-      blockHash: '0xe40ef41a0b3ec69e048a85406b720583d0f437da69cc9e9765f24d5b3bdcd474',
-      logIndex: 3,
-      removed: false,
-      id: 'log_913f20ba',
-      returnValues: {
-        0: '0',
-        1: '0xA83F993153F9C26a40adAd46cAAE63400F2276f9',
-        2: '0x7e1d861F3bec6f6defeB49121B8Bd82f217794ab',
-        3: '5',
-        4: '1',
-        5: '1',
-        6: '10000',
-        7: '0xB73b2e0C455F125Bbec80f41a864A33fC67aaDa0',
-        8: '1000000',
-        _orderId: '0',
-        _owner: '0xA83F993153F9C26a40adAd46cAAE63400F2276f9',
-        _tokenAddress: '0x7e1d861F3bec6f6defeB49121B8Bd82f217794ab',
-        tokenId: '5',
-        _quantity: '1',
-        _mask: '1',
-        _price: '10000',
-        _paymentToken: '0xB73b2e0C455F125Bbec80f41a864A33fC67aaDa0',
-        _expiration: '1000000',
-      },
-      event: 'List',
-      signature: '0x18c768c9ab72aed1a8131b2c7e54d3e8666b16339f76ab71d05d498ad37eca43',
-      raw: {
-        data: '0x0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000a83f993153f9c26a40adad46caae63400f2276f90000000000000000000000007e1d861f3bec6f6defeb49121b8bd82f217794ab0000000000000000000000000000000000000000000000000000000000000005000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000002710000000000000000000000000b73b2e0c455f125bbec80f41a864a33fc67aada000000000000000000000000000000000000000000000000000000000000f4240',
-        topics: ['0x18c768c9ab72aed1a8131b2c7e54d3e8666b16339f76ab71d05d498ad37eca43'],
-      },
-    },
-  },
-}
-
-export const addressMarket = '0x714e125De461763D3Efe99F2414890Eb4B052dA6'
+export const addressMarket = '0xF4Be7395F5663c9DD06fABE4FAd4A3185786Ab7f'
 
 export const ABIMarket = [
   {
@@ -84,6 +9,12 @@ export const ABIMarket = [
   {
     anonymous: false,
     inputs: [
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: '_itemId',
+        type: 'uint256',
+      },
       {
         indexed: false,
         internalType: 'uint256',
@@ -179,7 +110,7 @@ export const ABIMarket = [
       {
         indexed: false,
         internalType: 'uint256',
-        name: '_bidAmount',
+        name: '_bidPrice',
         type: 'uint256',
       },
       {
@@ -233,6 +164,43 @@ export const ABIMarket = [
       },
     ],
     name: 'Buy',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: '_itemId',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: '_bidOrderId',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'address',
+        name: '_from',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'address',
+        name: '_to',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'bool',
+        name: '_result',
+        type: 'bool',
+      },
+    ],
+    name: 'CancelBid',
     type: 'event',
   },
   {
@@ -385,6 +353,12 @@ export const ABIMarket = [
       {
         indexed: false,
         internalType: 'uint256',
+        name: '_itemId',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
         name: '_bidId',
         type: 'uint256',
       },
@@ -409,7 +383,7 @@ export const ABIMarket = [
       {
         indexed: false,
         internalType: 'uint256',
-        name: '_bidAmount',
+        name: '_bidPrice',
         type: 'uint256',
       },
       {
@@ -666,7 +640,7 @@ export const ABIMarket = [
       },
       {
         internalType: 'uint256',
-        name: '_bidAmount',
+        name: '_bidPrice',
         type: 'uint256',
       },
       {
@@ -683,7 +657,7 @@ export const ABIMarket = [
         type: 'uint256',
       },
     ],
-    stateMutability: 'nonpayable',
+    stateMutability: 'payable',
     type: 'function',
   },
   {
@@ -708,7 +682,7 @@ export const ABIMarket = [
       },
       {
         internalType: 'uint256',
-        name: 'bidAmount',
+        name: 'bidPrice',
         type: 'uint256',
       },
       {
@@ -767,6 +741,25 @@ export const ABIMarket = [
       },
     ],
     stateMutability: 'payable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '_bidOrderId',
+        type: 'uint256',
+      },
+    ],
+    name: 'cancelBid',
+    outputs: [
+      {
+        internalType: 'bool',
+        name: '',
+        type: 'bool',
+      },
+    ],
+    stateMutability: 'nonpayable',
     type: 'function',
   },
   {
@@ -1333,7 +1326,7 @@ export const ABIMarket = [
       },
       {
         internalType: 'uint256',
-        name: '_bidAmount',
+        name: '_bidPrice',
         type: 'uint256',
       },
       {

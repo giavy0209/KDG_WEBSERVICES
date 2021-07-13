@@ -1,14 +1,43 @@
-import '../../assets/scss/header.scss'
-import logo from '../../assets/images/header/logo.svg'
+import { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import Web3 from 'web3'
 import kdg from '../../assets/images/header/kdg.png'
+import logo from '../../assets/images/header/logo.svg'
 import metamask from '../../assets/images/header/metamask.png'
 import trust from '../../assets/images/header/trust.png'
-import { useState } from 'react'
+import '../../assets/scss/header.scss'
+import { ABIERC20, addressERC20 } from '../../contracts/ERC20'
+import { ABIKL1155, addressKL1155 } from '../../contracts/KL1155'
+import { ABIMarket, addressMarket } from '../../contracts/Market'
+import shortAddress from '../../helpers/shortAddress'
+import { actChangeAddress } from '../../store/actions'
+
 export default function Header({ toggleSidebar = () => {}, IsOpenSidebar = false }) {
+  const dispatch = useDispatch()
+  const currentAddress = useSelector(state => state.address)
+
   const [IsOpenNoti, setIsOpenNoti] = useState(false)
   const [IsOpenLive, setIsOpenLive] = useState(false)
   const [IsOpenProfile, setIsOpenProfile] = useState(false)
   const [IsOpenConnect, setIsOpenConnect] = useState(false)
+
+  const connectMetaMask = async () => {
+    if (currentAddress) return
+
+    if (window.ethereum && window.ethereum.isMetaMask) {
+      window.web3 = new Web3(window.ethereum)
+    } else {
+      return console.log("You haven't installed MetaMask yet!")
+    }
+
+    window.contractKL1155 = new window.web3.eth.Contract(ABIKL1155, addressKL1155)
+    window.contractMarket = new window.web3.eth.Contract(ABIMarket, addressMarket)
+    window.contractERC20 = new window.web3.eth.Contract(ABIERC20, addressERC20)
+
+    const [account] = await window.ethereum.request({ method: 'eth_requestAccounts' })
+    dispatch(actChangeAddress(account))
+  }
+
   return (
     <>
       <div className={`connect-wallet ${IsOpenConnect ? 'show' : ''}`}>
@@ -17,7 +46,7 @@ export default function Header({ toggleSidebar = () => {}, IsOpenSidebar = false
           <p>
             Connect to a wallet <span onClick={() => setIsOpenConnect(false)}></span>
           </p>
-          <div className='item'>
+          <div className='item' onClick={connectMetaMask}>
             <span>Metamask</span>
             <div className='icon'>
               <img src={metamask} alt='' />
@@ -203,8 +232,11 @@ export default function Header({ toggleSidebar = () => {}, IsOpenSidebar = false
               </div>
             </div>
           </div>
-          <div onClick={() => setIsOpenConnect(true)} className='connect'>
-            Connect
+          <div
+            onClick={() => setIsOpenConnect(true)}
+            className={`connect ${currentAddress && 'disabled'}`}
+          >
+            {currentAddress ? shortAddress(currentAddress) : 'Connect'}
           </div>
           <div onClick={() => setIsOpenProfile(!IsOpenProfile)} className='profile'>
             <span className='avatar'>
