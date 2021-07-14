@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Web3 from 'web3'
@@ -15,6 +16,10 @@ import { actChangeAddress } from '../../store/actions'
 export default function Header({ toggleSidebar = () => {}, IsOpenSidebar = false }) {
   const dispatch = useDispatch()
   const currentAddress = useSelector(state => state.address)
+
+  useEffect(() => {
+    dispatch(actChangeAddress(window.ethereum.selectedAddress))
+  }, [])
 
   const [IsOpenNoti, setIsOpenNoti] = useState(false)
   const [IsOpenLive, setIsOpenLive] = useState(false)
@@ -36,6 +41,7 @@ export default function Header({ toggleSidebar = () => {}, IsOpenSidebar = false
 
     const [account] = await window.ethereum.request({ method: 'eth_requestAccounts' })
     dispatch(actChangeAddress(account))
+    setIsOpenConnect(false)
   }
 
   return (
