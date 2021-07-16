@@ -152,7 +152,8 @@ main {
     color: #c4c4c4;
   }
 
-  > input[type='text'] {
+  > input[type='text'],
+  input[type='number'] {
     display: block;
     height: 50px;
     padding: 0 15px;
