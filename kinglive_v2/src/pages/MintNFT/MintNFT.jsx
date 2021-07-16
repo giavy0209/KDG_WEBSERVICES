@@ -1,10 +1,16 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import '../../assets/scss/mint-nft.scss'
 import uploadSVG from '../../assets/svg/upload.svg'
 import checkSVG from '../../assets/svg/check.svg'
 import closeSVG from '../../assets/svg/close.svg'
 import errorSVG from '../../assets/svg/error.svg'
 import callAPI from '../../axios'
+import Web3 from 'web3'
+import shortAddress from '../../helpers/shortAddress'
+import { actChangeAddress } from '../../store/actions'
+import { ABIERC20, addressERC20 } from '../../contracts/ERC20'
+import { ABIKL1155, addressKL1155 } from '../../contracts/KL1155'
+import { ABIMarket, addressMarket } from '../../contracts/Market'
 
 export default function MintNFT() {
   const inputVideoRef = useRef()
@@ -14,13 +20,25 @@ export default function MintNFT() {
   const titleRef = useRef()
   const descRef = useRef()
   const defaultValueTags = useRef('KingdomGame, KDG, KingliveTv')
+  const [isApproval, setIsApproval] = useState(false)
+  const [file, setFile] = useState([])
 
   const [percent, setPercent] = useState(0)
   const [isUploading, setIsUploading] = useState(false)
   const [uploadSuccess, setUploadSuccess] = useState(false)
   const [uploadNotSelected, setUploadNotSelected] = useState(false)
   const [uploadError, setUploadError] = useState(false)
-
+  useEffect(() => {
+    async function getAllowance() {
+      if(window.web3.eth){
+        const allowance = await new window.web3.eth.Contract(ABIERC20, addressERC20).methods.allowance(window.ethereum.selectedAddress,addressKL1155).call()
+        if(Number(allowance)>=20000000000000000000){
+          setIsApproval(true);
+        }
+      }
+    }
+    getAllowance();
+  },[]);
   const handlePreviewVideo = e => {
     const files = e.target.files || []
 
@@ -28,7 +46,7 @@ export default function MintNFT() {
 
     titleRef.current.value = files[0].name.replace('.mp4', '')
     descRef.current.value = files[0].name.replace('.mp4', '')
-
+    setFile(files[0])
     const reader = new FileReader()
 
     reader.onload = e => {
@@ -42,6 +60,12 @@ export default function MintNFT() {
   }
 
 
+
+  const handleApproval = async () => {
+    console.log("window.web3.eth",window.web3.eth)
+    await new window.web3.eth.Contract(ABIERC20, addressERC20).methods.approve(addressKL1155, "115792089237316195423570985008687907853269984665640564039457584007913129639935").send({from : window.ethereum.selectedAddress})
+  }
+
   const handleClearInput = () => {
     inputVideoRef.current.value = ''
 
@@ -51,21 +75,28 @@ export default function MintNFT() {
     titleRef.current.value = ''
     descRef.current.value = ''
   }
-
-  const handleUpload = async e => {
+  const handleMintNFT = async e => {
     e.preventDefault()
 
     if (isUploading) return
     setIsUploading(true)
 
-    const data = new FormData(e.target)
+    const data = new FormData()
+    console.log("e.target.files",file);
+    data.append("file",file)
+    data.append("name",e.target.name.value)
+    data.append("numEditions",e.target.numEditions.value)
+    data.append("description",e.target.description.value)
 
     let res
 
     try {
-      res = await callAPI.post('/upload_video', data, true, {
+      res = await callAPI.post('/ipfs', data, false, {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          'content-type': 'multipart/form-data',
+          'x-authenticated-id-by-kdg' : '-1',
+          'Access-Control-Allow-Origin' :"*",
+
         },
         onUploadProgress: e => {
           if (e.lengthComputable) {
@@ -74,16 +105,26 @@ export default function MintNFT() {
             // console.log({ percent, loaded: e.loaded, total: e.total })
           }
         },
-      })
+      });
+
+      console.log("res",res);
+      
+      if(res?.data?.hashes[0]){
+
+        const transaction = await new window.web3.eth.Contract(ABIKL1155, addressKL1155).methods.create(e.target.numEditions.value,
+          e.target.numEditions.value,2500,res?.data?.hashes[0],"0x00")
+          .send({ from : window.ethereum.selectedAddress });   
+        if (transaction) {
+          // console.log('upload thanh cong')
+          setUploadSuccess(true)
+        }
+      }
     } catch (error) {
-      // console.log('catch error upload')
+      console.log('catch error upload',error)
       setUploadError(true)
     }
 
-    if (res.status === 1) {
-      // console.log('upload thanh cong')
-      setUploadSuccess(true)
-    }
+ 
 
     if (res.status === 100) {
       // console.log('chua chon video')
@@ -91,7 +132,7 @@ export default function MintNFT() {
     }
 
     if (res.status === 0) {
-      // console.log('loi khong xac dinh')
+      // console.log('loi kh1ong xac dinh')
       setUploadError(true)
     }
 
@@ -100,6 +141,7 @@ export default function MintNFT() {
     setIsUploading(false)
   }
 
+
   const handleUploadSuccess = () => {
     setUploadSuccess(false)
     handleClearInput()
@@ -107,7 +149,7 @@ export default function MintNFT() {
 
   return (
     <>
-      <form className='upload container' onSubmit={handleUpload}>
+      <form className='upload container' onSubmit={handleMintNFT}>
         {percent > 0 && (
           <div className='upload__loading'>
             <div className='circle'>
@@ -214,7 +256,7 @@ export default function MintNFT() {
           <div className='upload__left'>
             <div className='upload__video mb-25'>
               <input
-                name='video'
+                name='file'
                 ref={inputVideoRef}
                 type='file'
                 accept='.mp4,.png,.jpg,.gif'
@@ -229,7 +271,7 @@ export default function MintNFT() {
             <div className='upload__label'>Amount to mint</div>
 
             <input
-              name='tags'
+              name='numEditions'
               ref={tagsRef}
               className='upload__input mb-25'
               type='number'
@@ -261,9 +303,16 @@ export default function MintNFT() {
 
         {!isUploading && (
           <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <button type='submit' className='upload__button mr-15'>
+            {isApproval && (
+              <button type='submit' className='upload__button mr-15'>
               Upload
             </button>
+            )} 
+            {!isApproval && (
+              <button className='upload__button mr-15' onClick={handleApproval}> 
+              Approve 
+            </button>
+            )}
             <div className='upload__button upload__button--cancel' onClick={handleClearInput}>
               Cancel
             </div>

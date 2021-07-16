@@ -18,6 +18,9 @@ export default function Header({ toggleSidebar = () => {}, IsOpenSidebar = false
   const currentAddress = useSelector(state => state.address)
 
   useEffect(() => {
+    if (window.ethereum.selectedAddress && !window.web3.eth ) {
+      window.web3 = new Web3(window.ethereum)
+    }
     dispatch(actChangeAddress(window.ethereum.selectedAddress))
   }, [])
 
@@ -27,14 +30,17 @@ export default function Header({ toggleSidebar = () => {}, IsOpenSidebar = false
   const [IsOpenConnect, setIsOpenConnect] = useState(false)
 
   const connectMetaMask = async () => {
-    if (window.ethereum.selectedAddress) return
+    if (window.ethereum.selectedAddress) {
+      window.web3 = new Web3(window.ethereum)
+      return
+    }
 
     if (window.ethereum && window.ethereum.isMetaMask) {
       window.web3 = new Web3(window.ethereum)
     } else {
       return console.log("You haven't installed MetaMask yet!")
     }
-
+    console.log("new window.web3.eth", window.web3.eth)
     window.contractKL1155 = new window.web3.eth.Contract(ABIKL1155, addressKL1155)
     window.contractMarket = new window.web3.eth.Contract(ABIMarket, addressMarket)
     window.contractERC20 = new window.web3.eth.Contract(ABIERC20, addressERC20)
