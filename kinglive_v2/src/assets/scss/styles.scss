@@ -278,3 +278,66 @@ main {
     object-fit: contain;
   }
 }
+
+.popupX {
+  z-index: 99999;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  background-color: rgba($color: #000, $alpha: 0.5);
+
+  .containerX {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    width: 500px;
+    padding: 25px 80px;
+
+    display: flex;
+    flex-flow: column nowrap;
+
+    background-color: #171a2b;
+
+    border-radius: 5px;
+  }
+
+  .closeX {
+    position: absolute;
+    top: 7px;
+    right: 15px;
+
+    cursor: pointer;
+    user-select: none;
+
+    padding: 10px;
+  }
+
+  .titleX {
+    color: $text-color-light;
+    font-size: 18px;
+    line-height: 1;
+
+    margin-bottom: 20px;
+  }
+
+  .descriptionX {
+    position: relative;
+
+    margin-bottom: 30px;
+
+    > img {
+      position: absolute;
+      top: 0;
+      left: -60px;
+    }
+  }
+
+  .ok😀 {
+    background-color: $primary-color;
+  }
+}

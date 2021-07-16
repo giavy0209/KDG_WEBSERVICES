@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import '../../assets/scss/profile.scss'
 import coverDefaultJPG from '../../assets/svg/coverDefault.jpg'
 import editSVG from '../../assets/svg/edit.svg'
 import menuSVG from '../../assets/svg/menu.svg'

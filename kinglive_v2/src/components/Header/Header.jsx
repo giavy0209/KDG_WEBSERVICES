@@ -1,5 +1,4 @@
-import { useEffect } from 'react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Web3 from 'web3'
 import kdg from '../../assets/images/header/kdg.png'
@@ -7,6 +6,8 @@ import logo from '../../assets/images/header/logo.svg'
 import metamask from '../../assets/images/header/metamask.png'
 import trust from '../../assets/images/header/trust.png'
 import '../../assets/scss/header.scss'
+import closeSVG from '../../assets/svg/close.svg'
+import errorSVG from '../../assets/svg/error.svg'
 import { ABIERC20, addressERC20 } from '../../contracts/ERC20'
 import { ABIKL1155, addressKL1155 } from '../../contracts/KL1155'
 import { ABIMarket, addressMarket } from '../../contracts/Market'
@@ -17,41 +18,77 @@ export default function Header({ toggleSidebar = () => {}, IsOpenSidebar = false
   const dispatch = useDispatch()
   const currentAddress = useSelector(state => state.address)
 
-  useEffect(() => {
-    if (window.ethereum.selectedAddress && !window.web3.eth ) {
-      window.web3 = new Web3(window.ethereum)
-    }
-    dispatch(actChangeAddress(window.ethereum.selectedAddress))
-  }, [])
-
   const [IsOpenNoti, setIsOpenNoti] = useState(false)
   const [IsOpenLive, setIsOpenLive] = useState(false)
   const [IsOpenProfile, setIsOpenProfile] = useState(false)
   const [IsOpenConnect, setIsOpenConnect] = useState(false)
 
-  const connectMetaMask = async () => {
-    if (window.ethereum.selectedAddress) {
-      window.web3 = new Web3(window.ethereum)
-      return
-    }
+  const [pim, setPim] = useState(false)
 
-    if (window.ethereum && window.ethereum.isMetaMask) {
-      window.web3 = new Web3(window.ethereum)
-    } else {
-      return console.log("You haven't installed MetaMask yet!")
-    }
-    console.log("new window.web3.eth", window.web3.eth)
+  const setupMetaMask = async () => {
+    window.web3 = new Web3(window.ethereum)
+
     window.contractKL1155 = new window.web3.eth.Contract(ABIKL1155, addressKL1155)
     window.contractMarket = new window.web3.eth.Contract(ABIMarket, addressMarket)
     window.contractERC20 = new window.web3.eth.Contract(ABIERC20, addressERC20)
 
-    const [account] = await window.ethereum.request({ method: 'eth_requestAccounts' })
-    dispatch(actChangeAddress(account))
+    await window.ethereum.request({ method: 'eth_requestAccounts' })
+    dispatch(actChangeAddress(window.ethereum.selectedAddress))
+    window.ethereum.on('accountsChanged', function (accounts) {
+      dispatch(actChangeAddress(accounts[0]))
+    })
+  }
+
+  useEffect(() => {
+    ;(async () => {
+      if (window.ethereum && window.ethereum.isMetaMask) {
+        await setupMetaMask()
+      }
+    })()
+  }, [])
+
+  const connectMetaMask = async () => {
+    if (window.ethereum && window.ethereum.isMetaMask) {
+      await setupMetaMask()
+    } else {
+      setPim(true)
+    }
+
     setIsOpenConnect(false)
   }
 
   return (
     <>
+      {pim && (
+        <div className='popupX'>
+          <div className='containerX'>
+            <img className='closeX' src={closeSVG} alt='' onClick={() => setPim(false)} />
+            <div className='titleX'>You haven't installed MetaMask yet!</div>
+            <div className='descriptionX'>
+              <img src={errorSVG} alt='' />
+              <span>Do you want to install MetaMask?</span>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <div
+                className='buttonX mr-20'
+                onClick={() => {
+                  window.open(
+                    'https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn',
+                    '_blank'
+                  )
+                  setPim(false)
+                }}
+              >
+                Yes
+              </div>
+              <div className='buttonX buttonX--cancel' onClick={() => setPim(false)}>
+                No
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className={`connect-wallet ${IsOpenConnect ? 'show' : ''}`}>
         <div onClick={() => setIsOpenConnect(false)} className='mask'></div>
         <div className='body'>
