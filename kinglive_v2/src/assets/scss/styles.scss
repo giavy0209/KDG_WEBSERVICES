@@ -1,6 +1,12 @@
 @import './font-face.scss';
 @import './common.scss';
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 * {
   margin: 0;
   padding: 0;
