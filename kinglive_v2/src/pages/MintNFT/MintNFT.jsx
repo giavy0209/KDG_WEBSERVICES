@@ -146,7 +146,7 @@ export default function MintNFT() {
 
   return (
     <>
-      <form className='upload container' onSubmit={handleMintNFT}>
+      <form className='mint-nft container' onSubmit={handleMintNFT}>
         {percent > 0 && (
           <div className='upload__loading'>
             <div className='circle'>
