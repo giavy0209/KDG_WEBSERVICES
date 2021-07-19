@@ -30,7 +30,7 @@ export default function MintNFT() {
   const [uploadError, setUploadError] = useState(false)
   useEffect(() => {
     async function getAllowance() {
-      if(window.web3.eth){
+      if(window?.web3?.eth){
         const allowance = await new window.web3.eth.Contract(ABIERC20, addressERC20).methods.allowance(window.ethereum.selectedAddress,addressKL1155).call()
         if(Number(allowance)>=20000000000000000000){
           setIsApproval(true);
@@ -81,12 +81,12 @@ export default function MintNFT() {
     if (isUploading) return
     setIsUploading(true)
 
-    const data = new FormData()
-    console.log("e.target.files",file);
-    data.append("file",file)
-    data.append("name",e.target.name.value)
-    data.append("numEditions",e.target.numEditions.value)
-    data.append("description",e.target.description.value)
+    const data = new FormData(e.target)
+    // console.log("e.target.files",file);
+    // data.append("file",file)
+    // data.append("name",e.target.name.value)
+    // data.append("numEditions",e.target.numEditions.value)
+    // data.append("description",e.target.description.value)
 
     let res
 
@@ -94,9 +94,6 @@ export default function MintNFT() {
       res = await callAPI.post('/ipfs', data, false, {
         headers: {
           'content-type': 'multipart/form-data',
-          'x-authenticated-id-by-kdg' : '-1',
-          'Access-Control-Allow-Origin' :"*",
-
         },
         onUploadProgress: e => {
           if (e.lengthComputable) {
@@ -276,6 +273,7 @@ export default function MintNFT() {
               className='upload__input mb-25'
               type='number'
               placeholder='1'
+              defaultValue="1"
             />
           </div>
 
