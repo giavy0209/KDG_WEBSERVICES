@@ -1,3 +1,4 @@
+import { useCallback } from 'react'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Web3 from 'web3'
@@ -16,7 +17,7 @@ import { actChangeAddress } from '../../store/actions'
 
 export default function Header({ toggleSidebar = () => {}, IsOpenSidebar = false }) {
   const dispatch = useDispatch()
-  const currentAddress = useSelector(state => state.address)
+  const currentAddress = useSelector((state) => state.address)
 
   const [IsOpenNoti, setIsOpenNoti] = useState(false)
   const [IsOpenLive, setIsOpenLive] = useState(false)
@@ -25,7 +26,7 @@ export default function Header({ toggleSidebar = () => {}, IsOpenSidebar = false
 
   const [pim, setPim] = useState(false)
 
-  const setupMetaMask = async () => {
+  const setupMetaMask = useCallback(async () => {
     window.web3 = new Web3(window.ethereum)
 
     window.contractKL1155 = new window.web3.eth.Contract(ABIKL1155, addressKL1155)
@@ -37,7 +38,7 @@ export default function Header({ toggleSidebar = () => {}, IsOpenSidebar = false
     window.ethereum.on('accountsChanged', function (accounts) {
       dispatch(actChangeAddress(accounts[0]))
     })
-  }
+  }, [dispatch])
 
   useEffect(() => {
     ;(async () => {
@@ -45,7 +46,7 @@ export default function Header({ toggleSidebar = () => {}, IsOpenSidebar = false
         await setupMetaMask()
       }
     })()
-  }, [])
+  }, [setupMetaMask])
 
   const connectMetaMask = async () => {
     if (window.ethereum && window.ethereum.isMetaMask) {
