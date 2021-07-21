@@ -1,10 +1,14 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import arrowSVG from '../../assets/svg/arrow.svg'
 import coverDefaultJPG from '../../assets/svg/coverDefault.jpg'
 import editSVG from '../../assets/svg/edit.svg'
+import kdgSVG from '../../assets/svg/kdg.svg'
 import menuSVG from '../../assets/svg/menu.svg'
 import radioSVG from '../../assets/svg/radio.svg'
+import tradeSVG from '../../assets/svg/trade.svg'
 import callAPI from '../../axios'
+import TableX from '../../components/TableX'
 import VideoPlayer from '../../components/VideoPlayer'
 import { STORAGE_DOMAIN } from '../../constant'
 import convertPositionIMG from '../../helpers/convertPositionIMG'
@@ -45,7 +49,7 @@ const statisticArray = [
 export default function Profile() {
   const dispatch = useDispatch()
 
-  const userRedux = useSelector(state => state.user)
+  const userRedux = useSelector((state) => state.user)
   const [previewIMG, setPreviewIMG] = useState('')
   const [isEdit, setIsEdit] = useState(false)
   const [tabIndex, setTabIndex] = useState(0)
@@ -83,7 +87,7 @@ export default function Profile() {
   }, [userRedux])
 
   // Edit User
-  const handleEditUser = async e => {
+  const handleEditUser = async (e) => {
     e.preventDefault()
 
     const data = new FormData(e.target)
@@ -276,7 +280,7 @@ export default function Profile() {
           <div className='tabsX__body'>
             <div className={`item ${tabIndex === 0 ? 'active' : ''}`}>
               <div className='profile😢__statistic'>
-                {statisticArray.map(item => (
+                {statisticArray.map((item) => (
                   <div key={item.name} className='itemStatistic'>
                     <div className='absolute'>
                       <span>{item.amount}</span>
@@ -332,7 +336,7 @@ export default function Profile() {
                 <div className='profile😢__title'>Video Uploaded</div>
 
                 <div className='flexbox flex3' style={{ '--gap-col': '5px', '--gap-row': '25px' }}>
-                  {[1, 2, 3].map(item => (
+                  {[1, 2, 3].map((item) => (
                     <div key={item} className='flexbox__item profile😢__video'>
                       <div className='thumbnail'>
                         <img src={coverDefaultJPG} alt='' />
@@ -351,7 +355,45 @@ export default function Profile() {
               </div>
             </div>
 
-            <div className={`item ${tabIndex === 1 ? 'active' : ''}`}>Assets Body</div>
+            <div className={`item ${tabIndex === 1 ? 'active' : ''}`}>
+              <div className='profile😢__box1 mb-15'>
+                <div onClick={(e) => e.target.classList.toggle('hide')}>
+                  <span>Balance</span>
+                  <img src={arrowSVG} alt='' />
+                </div>
+
+                <div>
+                  <div className='profile😢__coin mb-20'>
+                    <img src={kdgSVG} alt='' />
+                    <span>2,000</span>
+                    <span>KDG</span>
+                  </div>
+
+                  <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    <div className='buttonTrade'>
+                      <img src={tradeSVG} alt='' />
+                      <span>Trade</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className='profile😢__box1 mb-15'>
+                <div onClick={(e) => e.target.classList.toggle('hide')}>
+                  <span>Transaction History</span>
+                  <img src={arrowSVG} alt='' />
+                </div>
+
+                <div>
+                  <div className='mb-20'>
+                    <div className='buttonX mr-20'>Swap History</div>
+                    <div className='buttonX buttonX--disabled'>Gift History</div>
+                  </div>
+
+                  <TableX />
+                </div>
+              </div>
+            </div>
 
             <div className={`item ${tabIndex === 2 ? 'active' : ''}`}>Top Donate Body</div>
           </div>
