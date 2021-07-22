@@ -1,25 +1,22 @@
-import { useEffect, useMemo, useState, useCallback, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import '../../assets/scss/my-artwork.scss'
 import callAPI from '../../axios'
 import { STORAGE_DOMAIN } from '../../constant'
-import convertPositionIMG from '../../helpers/convertPositionIMG'
-import { actChangeAddress } from '../../store/actions'
-import { ABIERC20, addressERC20 } from '../../contracts/ERC20'
 import { ABIKL1155, addressKL1155 } from '../../contracts/KL1155'
-import { ABIMarket, addressMarket } from '../../contracts/Market'
-import closeSVG from '../../assets/svg/close.svg'
+import { addressMarket } from '../../contracts/Market'
+import convertPositionIMG from '../../helpers/convertPositionIMG'
 
 export default function MyArtwork() {
-  const userRedux = useSelector(state => state.user)
+  const userRedux = useSelector((state) => state.user)
   const [ActiveTab, setActiveTab] = useState(0)
   const [previewIMG, setPreviewIMG] = useState('')
   const [AssetList, setAssetList] = useState([])
 
   const isLoadMore = useRef(true)
   const isLoadingAPI = useRef(false)
-  const [isLoading, setIsLoading] = useState(false)
-  const [isApprovedForAll, setIsApprovedForAll] = useState(false)
+  const [, setIsLoading] = useState(false)
+  const [, setIsApprovedForAll] = useState(false)
 
   const [userData, setUserData] = useState({})
   const avatar = useMemo(() => userData?.kyc?.avatar?.path, [userData])
@@ -32,7 +29,7 @@ export default function MyArtwork() {
   )
 
   const getAssets = useCallback(async () => {
-    const ids = AssetList.map(o => o._id)
+    const ids = AssetList.map((o) => o._id)
     const res = await callAPI.get(`/user-asset?limit=20&ids=${ids}`)
 
     if (res?.data?.length === 0) {
@@ -84,7 +81,7 @@ export default function MyArtwork() {
   }, [userRedux])
 
   useMemo(() => {
-    callAPI.get('/user-asset?limit=20').then(res => {
+    callAPI.get('/user-asset?limit=20').then((res) => {
       console.log('res.data', res.data)
       setAssetList(res.data)
     })
@@ -92,7 +89,7 @@ export default function MyArtwork() {
 
   const [isOpenSell, setIsOpenSell] = useState(false)
 
-  const handleSell = async e => {
+  const handleSell = async (e) => {
     e.preventDefault()
 
     const data = new FormData(e.target)
@@ -110,7 +107,7 @@ export default function MyArtwork() {
     <>
       {isOpenSell && (
         <div className='popupX' onClick={() => setIsOpenSell(false)}>
-          <form className='containerX' onSubmit={handleSell} onClick={e => e.stopPropagation()}>
+          <form className='containerX' onSubmit={handleSell} onClick={(e) => e.stopPropagation()}>
             <div className='form-control'>
               <div class='label'>Quantity</div>
               <input type='number' name='_quantity' />
@@ -208,7 +205,7 @@ export default function MyArtwork() {
 
           {AssetList.length > 0 && (
             <div className='myartwork__list'>
-              {AssetList.map(al => (
+              {AssetList.map((al) => (
                 <div className='myartwork__list-item'>
                   <div className='artwork'>
                     <div className='img'>

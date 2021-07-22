@@ -12,7 +12,6 @@ import MyArtwork from './pages/MyArtwork'
 import NFT from './pages/NFT'
 import Profile from './pages/Profile'
 import Setup from './pages/Setup'
-// import TestMetamask from './pages/TestMetamask'
 import Upload from './pages/Upload'
 import User from './pages/User'
 import WatchLive from './pages/WatchLive'
@@ -25,7 +24,7 @@ function App() {
   const [IsOpenSidebar, setIsOpenSidebar] = useState(false)
 
   const toggleSidebar = useCallback(() => {
-    setIsOpenSidebar(_isopen => !_isopen)
+    setIsOpenSidebar((_isopen) => !_isopen)
   }, [])
 
   // useEffect(() => {
@@ -50,7 +49,6 @@ function App() {
           <Route path='/user' component={User} exact />
           <Route path='/watchlive' component={WatchLive} exact />
           <Route path='/watchvideo' component={WatchVideo} exact />
-          {/* <Route path='/test' component={TestMetamask} exact /> */}
         </Switch>
       </main>
     </>

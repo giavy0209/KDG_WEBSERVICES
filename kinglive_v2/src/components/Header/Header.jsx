@@ -1,3 +1,4 @@
+import { useCallback } from 'react'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
@@ -9,10 +10,12 @@ import trust from '../../assets/images/header/trust.png'
 import '../../assets/scss/header.scss'
 import closeSVG from '../../assets/svg/close.svg'
 import errorSVG from '../../assets/svg/error.svg'
+import callAPI from '../../axios'
 import { ABIERC20, addressERC20 } from '../../contracts/ERC20'
 import { ABIKL1155, addressKL1155 } from '../../contracts/KL1155'
 import { ABIMarket, addressMarket } from '../../contracts/Market'
 import shortAddress from '../../helpers/shortAddress'
+import storage from '../../helpers/storage'
 import { actChangeAddress } from '../../store/actions'
 
 export default function Header({ toggleSidebar = () => { }, IsOpenSidebar = false }) {
@@ -27,7 +30,44 @@ export default function Header({ toggleSidebar = () => { }, IsOpenSidebar = fals
 
   const [pim, setPim] = useState(false)
 
-  const setupMetaMask = async () => {
+  const createUser = useCallback(async () => {
+    try {
+      const res = await callAPI.post('/user', { address: currentAddress })
+      if (res.status === 1) {
+        console.log({ create: res })
+      }
+    } catch (error) {
+      console.log('error create')
+      console.log(error)
+    }
+  }, [currentAddress])
+
+  const loginUser = useCallback(async () => {
+    try {
+      const res = await callAPI.post('/login', { address: currentAddress })
+      if (res.status === 1) {
+        storage.setToken(res.jwt)
+        storage.setRefresh(res.refreshToken)
+      }
+
+      if (res.status === 100) {
+        await createUser()
+        await loginUser()
+      }
+    } catch (error) {
+      console.log('error login')
+      console.log(error)
+    }
+  }, [createUser, currentAddress])
+
+  const changeAccounts = useCallback(async () => {
+    if (!currentAddress) {
+      storage.clearToken()
+      storage.clearRefresh()
+    }
+  }, [currentAddress])
+
+  const setupMetaMask = useCallback(async () => {
     window.web3 = new Web3(window.ethereum)
 
     window.contractKL1155 = new window.web3.eth.Contract(ABIKL1155, addressKL1155)
@@ -36,20 +76,25 @@ export default function Header({ toggleSidebar = () => { }, IsOpenSidebar = fals
 
     await window.ethereum.request({ method: 'eth_requestAccounts' })
     dispatch(actChangeAddress(window.ethereum.selectedAddress))
+  }, [dispatch])
+
+  useEffect(() => {
     window.ethereum.on('accountsChanged', function (accounts) {
       dispatch(actChangeAddress(accounts[0]))
+      changeAccounts()
     })
-  }
+  }, [dispatch, changeAccounts])
 
   useEffect(() => {
     ; (async () => {
       if (window.ethereum && window.ethereum.isMetaMask) {
         await setupMetaMask()
+        await loginUser()
       }
     })()
-  }, [])
+  }, [setupMetaMask, loginUser])
 
-  const connectMetaMask = async () => {
+  const connectMetaMask = useCallback(async () => {
     if (window.ethereum && window.ethereum.isMetaMask) {
       await setupMetaMask()
     } else {
@@ -57,7 +102,7 @@ export default function Header({ toggleSidebar = () => { }, IsOpenSidebar = fals
     }
 
     setIsOpenConnect(false)
-  }
+  }, [setupMetaMask])
 
   return (
     <>
