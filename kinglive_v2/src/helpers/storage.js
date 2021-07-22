@@ -11,7 +11,7 @@ const storage = {
   },
 
   clearToken() {
-    localStorage.clear(keyJwt)
+    localStorage.removeItem(keyJwt)
   },
 
   getRefresh() {
@@ -23,7 +23,7 @@ const storage = {
   },
 
   clearRefresh() {
-    localStorage.clear(keyRefresh)
+    localStorage.removeItem(keyRefresh)
   },
 
   getItem(key) {

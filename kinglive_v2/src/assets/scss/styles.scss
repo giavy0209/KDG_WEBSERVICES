@@ -133,8 +133,12 @@ main {
   &--cancel {
     color: $text-color-text;
     background-color: transparent;
-
     border: 1px solid $text-color-text;
+  }
+
+  &--disabled {
+    color: $text-color-dark;
+    background-color: #353849;
   }
 }
 
@@ -346,5 +350,31 @@ main {
 
   .ok😀 {
     background-color: $primary-color;
+  }
+}
+
+.tableX {
+  width: 100%;
+  // border-collapse: collapse;
+
+  thead {
+    th {
+      border-bottom: 1px solid #353849;
+      padding-bottom: 5px;
+
+      color: #c4c4c4;
+      font-size: 18px;
+      font-weight: 400;
+    }
+  }
+
+  tbody {
+    td {
+      padding: 5px 0;
+
+      font-size: 16px;
+      color: $text-color-light;
+      text-align: center;
+    }
   }
 }
