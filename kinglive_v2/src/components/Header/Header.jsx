@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 import Web3 from 'web3'
 import kdg from '../../assets/images/header/kdg.png'
 import logo from '../../assets/images/header/logo.svg'
@@ -14,8 +15,9 @@ import { ABIMarket, addressMarket } from '../../contracts/Market'
 import shortAddress from '../../helpers/shortAddress'
 import { actChangeAddress } from '../../store/actions'
 
-export default function Header({ toggleSidebar = () => {}, IsOpenSidebar = false }) {
+export default function Header({ toggleSidebar = () => { }, IsOpenSidebar = false }) {
   const dispatch = useDispatch()
+  const history = useHistory()
   const currentAddress = useSelector(state => state.address)
 
   const [IsOpenNoti, setIsOpenNoti] = useState(false)
@@ -40,7 +42,7 @@ export default function Header({ toggleSidebar = () => {}, IsOpenSidebar = false
   }
 
   useEffect(() => {
-    ;(async () => {
+    ; (async () => {
       if (window.ethereum && window.ethereum.isMetaMask) {
         await setupMetaMask()
       }
@@ -232,7 +234,7 @@ export default function Header({ toggleSidebar = () => {}, IsOpenSidebar = false
             </svg>
             <span>Live</span>
             <div className={`dropdown ${IsOpenLive ? 'show' : ''}`}>
-              <div>
+              <div onClick={() => history.push('/upload')}>
                 <svg
                   width='18'
                   height='11'
@@ -247,7 +249,7 @@ export default function Header({ toggleSidebar = () => {}, IsOpenSidebar = false
                 </svg>
                 <span>Upload video</span>
               </div>
-              <div>
+              <div onClick={() => history.push('/setup')}>
                 <svg
                   width='18'
                   height='13'
