@@ -1,16 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
 import '../../assets/scss/mint-nft.scss'
-import uploadSVG from '../../assets/svg/upload.svg'
 import checkSVG from '../../assets/svg/check.svg'
 import closeSVG from '../../assets/svg/close.svg'
 import errorSVG from '../../assets/svg/error.svg'
+import uploadSVG from '../../assets/svg/upload.svg'
 import callAPI from '../../axios'
-import Web3 from 'web3'
-import shortAddress from '../../helpers/shortAddress'
-import { actChangeAddress } from '../../store/actions'
 import { ABIERC20, addressERC20 } from '../../contracts/ERC20'
 import { ABIKL1155, addressKL1155 } from '../../contracts/KL1155'
-import { ABIMarket, addressMarket } from '../../contracts/Market'
 
 export default function MintNFT() {
   const inputVideoRef = useRef()
@@ -37,14 +33,13 @@ export default function MintNFT() {
             setIsApproval(true);
           }
         }catch(e){
-
         }
        
       }
     }
-    getAllowance();
-  },[]);
-  const handlePreviewVideo = e => {
+    getAllowance()
+  }, [])
+  const handlePreviewVideo = (e) => {
     const files = e.target.files || []
 
     if (!files.length) return
@@ -54,7 +49,7 @@ export default function MintNFT() {
     setFile(files[0])
     const reader = new FileReader()
 
-    reader.onload = e => {
+    reader.onload = (e) => {
       videoPreviewRef.current.src = e.target.result
       imagePreviewRef.current.src = e.target.result
       videoPreviewRef.current.load()
@@ -64,11 +59,14 @@ export default function MintNFT() {
     reader.readAsDataURL(files[0])
   }
 
-
-
   const handleApproval = async () => {
-    console.log("window.web3.eth",window.web3.eth)
-    await new window.web3.eth.Contract(ABIERC20, addressERC20).methods.approve(addressKL1155, "115792089237316195423570985008687907853269984665640564039457584007913129639935").send({from : window.ethereum.selectedAddress})
+    console.log('window.web3.eth', window.web3.eth)
+    await new window.web3.eth.Contract(ABIERC20, addressERC20).methods
+      .approve(
+        addressKL1155,
+        '115792089237316195423570985008687907853269984665640564039457584007913129639935'
+      )
+      .send({ from: window.ethereum.selectedAddress })
   }
 
   const handleClearInput = () => {
@@ -80,7 +78,7 @@ export default function MintNFT() {
     titleRef.current.value = ''
     descRef.current.value = ''
   }
-  const handleMintNFT = async e => {
+  const handleMintNFT = async (e) => {
     e.preventDefault()
 
     if (isUploading) return
@@ -99,7 +97,7 @@ export default function MintNFT() {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
-        onUploadProgress: e => {
+        onUploadProgress: (e) => {
           if (e.lengthComputable) {
             let percent = Math.round((e.loaded / e.total) * 100)
             setPercent(percent)
@@ -121,11 +119,9 @@ export default function MintNFT() {
         }
       }
     } catch (error) {
-      console.log('catch error upload',error)
+      console.log('catch error upload', error)
       setUploadError(true)
     }
-
- 
 
     if (res.status === 100) {
       // console.log('chua chon video')
@@ -142,7 +138,6 @@ export default function MintNFT() {
     setIsUploading(false)
   }
 
-
   const handleUploadSuccess = () => {
     setUploadSuccess(false)
     handleClearInput()
@@ -150,7 +145,7 @@ export default function MintNFT() {
 
   return (
     <>
-      <form className='upload container' onSubmit={handleMintNFT}>
+      <form className='mint-nft container' onSubmit={handleMintNFT}>
         {percent > 0 && (
           <div className='upload__loading'>
             <div className='circle'>
@@ -264,7 +259,7 @@ export default function MintNFT() {
                 onInput={handlePreviewVideo}
               />
               <video ref={videoPreviewRef}></video>
-              <img className="preview-image" ref={imagePreviewRef} alt="" />
+              <img className='preview-image' ref={imagePreviewRef} alt='' />
               <img src={uploadSVG} alt='' />
               <span>Drap and drop video file</span>
             </div>
@@ -277,6 +272,7 @@ export default function MintNFT() {
               className='upload__input mb-25'
               type='number'
               placeholder='1'
+              defaultValue='1'
             />
           </div>
 
@@ -306,13 +302,13 @@ export default function MintNFT() {
           <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
             {isApproval && (
               <button type='submit' className='upload__button mr-15'>
-              Upload
-            </button>
-            )} 
+                Upload
+              </button>
+            )}
             {!isApproval && (
-              <button className='upload__button mr-15' onClick={handleApproval}> 
-              Approve 
-            </button>
+              <button className='upload__button mr-15' onClick={handleApproval}>
+                Approve
+              </button>
             )}
             <div className='upload__button upload__button--cancel' onClick={handleClearInput}>
               Cancel
