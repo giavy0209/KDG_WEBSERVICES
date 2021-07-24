@@ -18,24 +18,22 @@ import shortAddress from '../../helpers/shortAddress'
 import storage from '../../helpers/storage'
 import { actChangeAddress } from '../../store/actions'
 
-export default function Header({ toggleSidebar = () => { }, IsOpenSidebar = false }) {
+export default function Header({ toggleSidebar = () => {}, IsOpenSidebar = false }) {
   const dispatch = useDispatch()
   const history = useHistory()
-  const currentAddress = useSelector(state => state.address)
+  const currentAddress = useSelector((state) => state.address)
 
   const [IsOpenNoti, setIsOpenNoti] = useState(false)
   const [IsOpenLive, setIsOpenLive] = useState(false)
   const [IsOpenProfile, setIsOpenProfile] = useState(false)
   const [IsOpenConnect, setIsOpenConnect] = useState(false)
-
   const [pim, setPim] = useState(false)
 
   const createUser = useCallback(async () => {
+    if (!currentAddress) return
+
     try {
-      const res = await callAPI.post('/user', { address: currentAddress })
-      if (res.status === 1) {
-        console.log({ create: res })
-      }
+      await callAPI.post('/user', { address: currentAddress })
     } catch (error) {
       console.log('error create')
       console.log(error)
@@ -43,6 +41,8 @@ export default function Header({ toggleSidebar = () => { }, IsOpenSidebar = fals
   }, [currentAddress])
 
   const loginUser = useCallback(async () => {
+    if (!currentAddress) return
+
     try {
       const res = await callAPI.post('/login', { address: currentAddress })
       if (res.status === 1) {
@@ -60,11 +60,11 @@ export default function Header({ toggleSidebar = () => { }, IsOpenSidebar = fals
     }
   }, [createUser, currentAddress])
 
-  const changeAccounts = useCallback(async () => {
-    if (!currentAddress) {
-      storage.clearToken()
-      storage.clearRefresh()
-    }
+  const clearStorage = useCallback(async () => {
+    if (currentAddress) return
+
+    storage.clearToken()
+    storage.clearRefresh()
   }, [currentAddress])
 
   const setupMetaMask = useCallback(async () => {
@@ -81,12 +81,12 @@ export default function Header({ toggleSidebar = () => { }, IsOpenSidebar = fals
   useEffect(() => {
     window.ethereum.on('accountsChanged', function (accounts) {
       dispatch(actChangeAddress(accounts[0]))
-      changeAccounts()
+      clearStorage()
     })
-  }, [dispatch, changeAccounts])
+  }, [dispatch, clearStorage])
 
   useEffect(() => {
-    ; (async () => {
+    ;(async () => {
       if (window.ethereum && window.ethereum.isMetaMask) {
         await setupMetaMask()
         await loginUser()

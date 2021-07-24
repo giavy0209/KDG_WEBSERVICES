@@ -1,49 +1,24 @@
-import { head1 } from '../../mock/table'
+const TableX = ({ head, body }) => {
+  const keyList = head.map(({ key }) => key)
 
-const TableX = () => {
   return (
     <table className='tableX'>
       <thead>
         <tr>
-          {head1.map(({ key, value }) => (
+          {head.map(({ key, value }) => (
             <th key={key}>{value}</th>
           ))}
-          {/* <th>Date</th>
-          <th>Gift type</th>
-          <th>Amount (KDG)</th> */}
         </tr>
       </thead>
 
       <tbody>
-        <tr>
-          <td>13:00:00 - 24/04/2021</td>
-          <td>Chocolate</td>
-          <td>90</td>
-        </tr>
-
-        <tr>
-          <td>13:00:00 - 24/04/2021</td>
-          <td>Chocolate</td>
-          <td>90</td>
-        </tr>
-
-        <tr>
-          <td>13:00:00 - 24/04/2021</td>
-          <td>Chocolate</td>
-          <td>90</td>
-        </tr>
-
-        <tr>
-          <td>13:00:00 - 24/04/2021</td>
-          <td>Chocolate</td>
-          <td>90</td>
-        </tr>
-
-        <tr>
-          <td>13:00:00 - 24/04/2021</td>
-          <td>Chocolate</td>
-          <td>90</td>
-        </tr>
+        {body.map((row, idx) => (
+          <tr key={idx}>
+            {keyList.map((key) => (
+              <td key={key}>{row[key]}</td>
+            ))}
+          </tr>
+        ))}
       </tbody>
     </table>
   )
