@@ -13,6 +13,7 @@ import VideoPlayer from '../../components/VideoPlayer'
 import { STORAGE_DOMAIN } from '../../constant'
 import convertPositionIMG from '../../helpers/convertPositionIMG'
 import isValidDate from '../../helpers/isValidDate'
+import { body1, body2, head1, head2 } from '../../mock/table'
 import { asyncInitUser } from '../../store/actions'
 
 const statisticArray = [
@@ -390,12 +391,23 @@ export default function Profile() {
                     <div className='buttonX buttonX--disabled'>Gift History</div>
                   </div>
 
-                  <TableX />
+                  <TableX head={head1} body={body1} />
                 </div>
               </div>
             </div>
 
-            <div className={`item ${tabIndex === 2 ? 'active' : ''}`}>Top Donate Body</div>
+            <div className={`item ${tabIndex === 2 ? 'active' : ''}`}>
+              <div className='profile😢__box1 mb-15'>
+                <div onClick={(e) => e.target.classList.toggle('hide')}>
+                  <span>Top Donate</span>
+                  <img src={arrowSVG} alt='' />
+                </div>
+
+                <div>
+                  <TableX head={head2} body={body2} />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       )}
