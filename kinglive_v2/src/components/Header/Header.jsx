@@ -75,9 +75,10 @@ export default function Header({ toggleSidebar = () => {}, IsOpenSidebar = false
     window.ethereum.on('accountsChanged', function (accounts) {
       dispatch(actChangeAddress(accounts[0]))
 
-      if (!accounts[0]) return
-      storage.clearToken()
-      storage.clearRefresh()
+      if (!accounts[0]) {
+        storage.clearToken()
+        storage.clearRefresh()
+      }
     })
   }, [dispatch])
 

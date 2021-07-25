@@ -100,6 +100,7 @@ export default function Sidebar({ IsOpenSidebar }) {
               <div className='child'>
                 {o.child.map((child) => (
                   <div
+                    key={child.route}
                     onClick={(e) => {
                       e.stopPropagation()
                       history.push(child.route)
