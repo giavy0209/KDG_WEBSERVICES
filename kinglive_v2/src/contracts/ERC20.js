@@ -1,3 +1,5 @@
+import kdg from '../assets/images/nft-market/kdg.png'
+
 export const addressERC20 = '0xb73b2e0c455f125bbec80f41a864a33fc67aada0'
 
 export const ABIERC20 = [
@@ -288,3 +290,4 @@ export const ABIERC20 = [
     type: 'function',
   },
 ]
+export const paymentList = [{address: '0xb73b2e0c455f125bbec80f41a864a33fc67aada0', coin : 'KDG', image :kdg , decimal: 18 }]

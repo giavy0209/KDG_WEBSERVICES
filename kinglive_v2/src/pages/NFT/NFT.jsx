@@ -3,7 +3,11 @@ import banner from '../../assets/images/nft-market/banner.jpg'
 import nft from '../../assets/images/nft-market/nft.jpg'
 import avatar from '../../assets/images/nft-market/avatar.png'
 import kdg from '../../assets/images/nft-market/kdg.png'
-import { useState } from 'react'
+import { useState , useRef , useCallback, useEffect} from 'react'
+import callAPI from '../../axios'
+import { paymentList } from '../../contracts/ERC20'
+
+
 const top9 = [
     {
         img: nft,
@@ -109,144 +113,52 @@ const top_quatity = [
     },
 ]
 
-const popular = [
-    {
-        avatar ,
-        nft ,
-        name : 'Dmm',
-        price : 50000,
-        amount : 5
-    },
-    {
-        avatar ,
-        nft ,
-        name : 'Dmm',
-        price : 50000,
-        amount : 5
-    },
-    {
-        avatar ,
-        nft ,
-        name : 'Dmm',
-        price : 50000,
-        amount : 5
-    },
-    {
-        avatar ,
-        nft ,
-        name : 'Dmm',
-        price : 50000,
-        amount : 5
-    },
-    {
-        avatar ,
-        nft ,
-        name : 'Dmm',
-        price : 50000,
-        amount : 5
-    },
-    {
-        avatar ,
-        nft ,
-        name : 'Dmm',
-        price : 50000,
-        amount : 5
-    },
-    {
-        avatar ,
-        nft ,
-        name : 'Dmm',
-        price : 50000,
-        amount : 5
-    },
-    {
-        avatar ,
-        nft ,
-        name : 'Dmm',
-        price : 50000,
-        amount : 5
-    },
-    {
-        avatar ,
-        nft ,
-        name : 'Dmm',
-        price : 50000,
-        amount : 5
-    },
-    {
-        avatar ,
-        nft ,
-        name : 'Dmm',
-        price : 50000,
-        amount : 5
-    },
-    {
-        avatar ,
-        nft ,
-        name : 'Dmm',
-        price : 50000,
-        amount : 5
-    },
-    {
-        avatar ,
-        nft ,
-        name : 'Dmm',
-        price : 50000,
-        amount : 5
-    },
-    {
-        avatar ,
-        nft ,
-        name : 'Dmm',
-        price : 50000,
-        amount : 5
-    },
-    {
-        avatar ,
-        nft ,
-        name : 'Dmm',
-        price : 50000,
-        amount : 5
-    },
-    {
-        avatar ,
-        nft ,
-        name : 'Dmm',
-        price : 50000,
-        amount : 5
-    },
-    {
-        avatar ,
-        nft ,
-        name : 'Dmm',
-        price : 50000,
-        amount : 5
-    },
-    {
-        avatar ,
-        nft ,
-        name : 'Dmm',
-        price : 50000,
-        amount : 5
-    },
-    {
-        avatar ,
-        nft ,
-        name : 'Dmm',
-        price : 50000,
-        amount : 5
-    },
-    {
-        avatar ,
-        nft ,
-        name : 'Dmm',
-        price : 50000,
-        amount : 5
-    },
-]
+
 export default function NFT() {
+    const [AssetSellList, setAssetSellList] = useState([])
     const [ActiveTop9, setActiveTop9] = useState(0)
     const [ActiveRanking, setActiveRanking] = useState(0)
+    const isLoadMore = useRef(true)
+    const isLoadingAPI = useRef(false)
+    const [isLoading, setIsLoading] = useState(false)
+
+    const getAssets = useCallback(async () => {
+        var ids = AssetSellList.map(o => o._id);
+        
+        const res = await callAPI.get(`/listing-asset?limit=20&${ids.length?`ids=${ids}`:""}`,true,{headers: {'x-authenticated-id-by-kdg':'60f5dff80169e54df90a0884'}})
+    
+        if (res?.data?.length === 0) {
+          isLoadMore.current = false
+          setAssetSellList([...AssetSellList])
+          return
+        }
+    
+        setAssetSellList([...AssetSellList, ...res?.data?res.data:[]])
+      }, [AssetSellList])
+
+      useEffect(() => {
+        const handleLoad = async () => {
+          const totalHeight = document.getElementById('root').clientHeight
+          const scrolledHeight = window.scrollY + window.innerHeight
+          const restHeight = totalHeight - scrolledHeight
+          const isEnd = restHeight <= 100
+    
+          if (isEnd && isLoadMore.current && !isLoadingAPI.current) {
+            isLoadingAPI.current = true
+            setIsLoading(true)
+            await getAssets()
+            setIsLoading(false)
+            isLoadingAPI.current = false
+          }
+        }
+        window.addEventListener('scroll', handleLoad)
+
+        return () => {
+          window.removeEventListener('scroll', handleLoad)
+        }
+      }, [getAssets])
+    
+
     return (
         <>
             <div className="nft-market">
@@ -333,25 +245,25 @@ export default function NFT() {
                         <div className="title">Popular NFT</div>
                         <div className="list">
                             {
-                                popular.map(o => <div className="item">
+                                AssetSellList.map(o => <div className="item">
                                     <div className="avatar-container">
                                         <span className="avatar">
-                                            <img src={o.avatar} alt="" />
+                                            <img src={o.owner?.avatar} alt="" />
                                         </span>
                                     </div>
                                     <div className="nft-blur">
                                         <div className="blur">
-                                            <img src={o.nft} alt="" />
+                                            <img src={o.asset?.metadata?.image} alt="" />
                                         </div>
                                         <div className="nft">
-                                            <img src={o.nft} alt="" />
+                                            <img src={o.asset?.metadata?.image} alt="" />
                                         </div>
                                     </div>
-                                    <span className="name">{o.name}</span>
+                                    <span className="name">{o.asset?.metadata?.name}</span>
                                     <div className="info">
                                         <img src={kdg} alt="" />
                                         <span className="price">{o.price}</span>
-                                        <span className="amount">Amount: {o.amount}</span>
+                                        <span className="amount">Amount: {o.quatity}</span>
                                     </div>
                                     <div className="btn">Insufficient KDG balance</div>
                                 </div> )

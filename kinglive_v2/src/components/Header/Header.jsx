@@ -74,12 +74,13 @@ export default function Header({ toggleSidebar = () => {}, IsOpenSidebar = false
     window.contractMarket = new window.web3.eth.Contract(ABIMarket, addressMarket)
     window.contractERC20 = new window.web3.eth.Contract(ABIERC20, addressERC20)
 
-    await window.ethereum.request({ method: 'eth_requestAccounts' })
-    dispatch(actChangeAddress(window.ethereum.selectedAddress))
+    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' })
+    dispatch(actChangeAddress(accounts[0]))
   }, [dispatch])
 
   useEffect(() => {
-    window.ethereum.on('accountsChanged', function (accounts) {
+    if(window.ethereum)
+    window.ethereum.on('accountsChanged', async function (accounts) {
       dispatch(actChangeAddress(accounts[0]))
       clearStorage()
     })

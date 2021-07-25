@@ -8,7 +8,7 @@ import { Header, ScrollButton } from './components';
 import { useLanguage } from './context/LanguageLayer';
 import { storage } from './helpers';
 import { Home, Live, Login, MetaMask, Profile, Search, Setup, Upload, Watch } from './pages';
-import socket from './socket';
+// import socket from './socket';
 import store from './store';
 import { actChangeUnreadNoti } from './store/action';
 import {
@@ -79,16 +79,16 @@ const App = () => {
       dispatch(actChangeGiftStorage(res.data));
     };
 
-    socket.on('balances', listenBalance);
-    socket.on('user', listenUser);
-    socket.on('noti', listenNoti);
-    socket.on('gift_storage', listenGiftStorage);
-    return () => {
-      socket.removeEventListener('balances', listenBalance);
-      socket.removeEventListener('user', listenUser);
-      socket.removeEventListener('noti', listenNoti);
-      socket.removeEventListener('gift_storage', listenGiftStorage);
-    };
+    // socket.on('balances', listenBalance);
+    // socket.on('user', listenUser);
+    // socket.on('noti', listenNoti);
+    // socket.on('gift_storage', listenGiftStorage);
+    // return () => {
+    //   socket.removeEventListener('balances', listenBalance);
+    //   socket.removeEventListener('user', listenUser);
+    //   socket.removeEventListener('noti', listenNoti);
+    //   socket.removeEventListener('gift_storage', listenGiftStorage);
+    // };
   }, [dispatch, handleType, handleClickNoti]);
 
   return (

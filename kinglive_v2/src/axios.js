@@ -8,7 +8,7 @@ function create() {
     baseURL: API_DOMAIN,
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${jwt}`,
+      'Authorization': `Bearer ${jwt}`,
     },
   })
   return Axios
@@ -43,8 +43,8 @@ export const refreshToken = async (method, url, body) => {
 };
 
 const callAPI = {
-  get: async (url, body, reget = true) => {
-    var res = (await create().get(url)).data
+  get: async (url, reget = true, config = {}) => {
+    var res = (await create().get(url,config)).data
     if (res.status === 401) {
       if (reget) {
         return await refreshToken('get', url)

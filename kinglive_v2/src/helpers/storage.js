@@ -3,7 +3,11 @@ const keyRefresh = 'refresh'
 
 const storage = {
   getToken() {
-    return JSON.parse(localStorage.getItem(keyJwt))
+    try{
+      return JSON.parse(localStorage.getItem(keyJwt))
+    } catch {
+      return null
+    }
   },
 
   setToken(jwtToken) {
