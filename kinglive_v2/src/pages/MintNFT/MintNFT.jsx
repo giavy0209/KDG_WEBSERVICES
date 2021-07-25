@@ -24,10 +24,11 @@ export default function MintNFT() {
   const [uploadSuccess, setUploadSuccess] = useState(false)
   const [uploadNotSelected, setUploadNotSelected] = useState(false)
   const [uploadError, setUploadError] = useState(false)
+
   useEffect(() => {
     async function getAllowance() {
       if (window?.web3?.eth) {
-        const allowance = await new window.web3.eth.Contract(ABIERC20, addressERC20).methods
+        const allowance = await window.contractERC20.methods
           .allowance(window.ethereum.selectedAddress, addressKL1155)
           .call()
         if (Number(allowance) >= 20000000000000000000) {
@@ -37,6 +38,7 @@ export default function MintNFT() {
     }
     getAllowance()
   }, [])
+
   const handlePreviewVideo = (e) => {
     const files = e.target.files || []
 
@@ -58,13 +60,10 @@ export default function MintNFT() {
   }
 
   const handleApproval = async () => {
-    console.log('window.web3.eth', window.web3.eth)
-    await new window.web3.eth.Contract(ABIERC20, addressERC20).methods
-      .approve(
-        addressKL1155,
-        '115792089237316195423570985008687907853269984665640564039457584007913129639935'
-      )
-      .send({ from: window.ethereum.selectedAddress })
+    await new window.contractERC20.methods.approve(
+      addressKL1155,
+      '115792089237316195423570985008687907853269984665640564039457584007913129639935'
+    ).send({ from: window.ethereum.selectedAddress })
   }
 
   const handleClearInput = () => {
@@ -76,6 +75,7 @@ export default function MintNFT() {
     titleRef.current.value = ''
     descRef.current.value = ''
   }
+
   const handleMintNFT = async (e) => {
     e.preventDefault()
 
