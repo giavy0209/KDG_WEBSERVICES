@@ -5,7 +5,6 @@ import closeSVG from '../../assets/svg/close.svg'
 import errorSVG from '../../assets/svg/error.svg'
 import uploadSVG from '../../assets/svg/upload.svg'
 import callAPI from '../../axios'
-import { ABIERC20, addressERC20 } from '../../contracts/ERC20'
 import { ABIKL1155, addressKL1155 } from '../../contracts/KL1155'
 
 export default function MintNFT() {
@@ -16,14 +15,15 @@ export default function MintNFT() {
   const titleRef = useRef()
   const descRef = useRef()
   const defaultValueTags = useRef('KingdomGame, KDG, KingliveTv')
-  const [isApproval, setIsApproval] = useState(false)
-  const [, setFile] = useState([])
 
   const [percent, setPercent] = useState(0)
   const [isUploading, setIsUploading] = useState(false)
   const [uploadSuccess, setUploadSuccess] = useState(false)
   const [uploadNotSelected, setUploadNotSelected] = useState(false)
   const [uploadError, setUploadError] = useState(false)
+
+  const [isApproval, setIsApproval] = useState(false)
+  const [, setFile] = useState([])
 
   useEffect(() => {
     async function getAllowance() {

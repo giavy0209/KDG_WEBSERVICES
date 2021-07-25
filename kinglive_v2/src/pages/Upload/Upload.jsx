@@ -7,7 +7,7 @@ import closeSVG from '../../assets/svg/close.svg'
 import errorSVG from '../../assets/svg/error.svg'
 import callAPI from '../../axios'
 
-const waitfor = ms => new Promise(r => setTimeout(r , ms))
+const waitfor = (ms) => new Promise((r) => setTimeout(r, ms))
 
 export default function Upload() {
   const inputVideoRef = useRef()
@@ -25,11 +25,13 @@ export default function Upload() {
   const [uploadNotSelected, setUploadNotSelected] = useState(false)
   const [uploadError, setUploadError] = useState(false)
   const [exactVideoSize, setExactVideoSize] = useState(false)
+
   const handleClearInput = () => {
     inputVideoRef.current.value = ''
     inputThumbnailRef.current.value = ''
 
     videoPreviewRef.current.src = ''
+    videoPreviewRef.current.style.opacity = 0
     thumbnailPreviewRef.current.src = ''
     thumbnailPreviewRef.current.style.opacity = 0
 
@@ -37,99 +39,86 @@ export default function Upload() {
     titleRef.current.value = ''
     descRef.current.value = ''
   }
-  const handlePreviewVideo = e => {
-    const files = e.target.files || []
 
+  const handlePreviewVideo = (e) => {
+    const files = e.target.files || []
     if (!files.length) return
-    console.log(files[0]);
-    if(files[0].size / 1024 / 1024 > 100) {
+
+    if (files[0].size / 1024 / 1024 > 100) {
       setExactVideoSize(true)
       handleClearInput()
       return
-    }  
+    }
+
     titleRef.current.value = files[0].name.replace('.mp4', '')
     descRef.current.value = files[0].name.replace('.mp4', '')
 
     const reader = new FileReader()
-
-    reader.onload = async e => {
+    reader.onload = async (e) => {
       videoPreviewRef.current.src = e.target.result
+      videoPreviewRef.current.style.opacity = 1
       videoPreviewRef.current.load()
       videoPreviewRef.current.play()
-      
-      while(true) {
-        if(videoPreviewRef.current.duration) {
-          console.log(videoPreviewRef.current.duration);
+
+      while (true) {
+        if (videoPreviewRef.current.duration) {
+          console.log(videoPreviewRef.current.duration)
           break
         }
         await waitfor(100)
       }
     }
-
     reader.readAsDataURL(files[0])
   }
 
-  const handlePreviewThumbnail = e => {
+  const handlePreviewThumbnail = (e) => {
     const files = e.target.files || []
-
     if (!files.length) return
 
     const reader = new FileReader()
-
-    reader.onload = e => {
+    reader.onload = (e) => {
       thumbnailPreviewRef.current.src = e.target.result
       thumbnailPreviewRef.current.style.opacity = 1
     }
-
     reader.readAsDataURL(files[0])
   }
 
-  
-
-  const handleUpload = async e => {
+  const handleUpload = async (e) => {
     e.preventDefault()
 
     if (isUploading) return
     setIsUploading(true)
 
     const data = new FormData(e.target)
-
     let res
-
     try {
       res = await callAPI.post('/upload_video', data, true, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
-        onUploadProgress: e => {
+        onUploadProgress: (e) => {
           if (e.lengthComputable) {
             let percent = Math.round((e.loaded / e.total) * 100)
             setPercent(percent)
-            // console.log({ percent, loaded: e.loaded, total: e.total })
           }
         },
       })
     } catch (error) {
-      // console.log('catch error upload')
       setUploadError(true)
     }
 
     if (res.status === 1) {
-      // console.log('upload thanh cong')
       setUploadSuccess(true)
     }
 
     if (res.status === 100) {
-      // console.log('chua chon video')
       setUploadNotSelected(true)
     }
 
     if (res.status === 0) {
-      // console.log('loi khong xac dinh')
       setUploadError(true)
     }
 
-    // console.log({ res })
     setPercent(0)
     setIsUploading(false)
   }
@@ -250,7 +239,10 @@ export default function Upload() {
                 <img src={errorSVG} alt='' />
                 <span>Video size is larger than 100MB, please select video smaller than 100MB</span>
               </div>
-              <div className='upload__button button😀 ok😀' onClick={() => setExactVideoSize(false)}>
+              <div
+                className='upload__button button😀 ok😀'
+                onClick={() => setExactVideoSize(false)}
+              >
                 OK
               </div>
             </div>
@@ -275,7 +267,7 @@ export default function Upload() {
                 accept='video/mp4'
                 onInput={handlePreviewVideo}
               />
-              <video controls ref={videoPreviewRef}></video>
+              <video ref={videoPreviewRef}></video>
               <img src={uploadSVG} alt='' />
               <span>Drap and drop video file</span>
             </div>

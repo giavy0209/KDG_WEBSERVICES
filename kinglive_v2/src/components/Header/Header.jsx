@@ -30,21 +30,21 @@ export default function Header({ toggleSidebar = () => {}, IsOpenSidebar = false
   const [pim, setPim] = useState(false)
 
   const createUser = useCallback(async () => {
-    if (!currentAddress) return
+    if (!window.ethereum.selectedAddress) return
 
     try {
-      await callAPI.post('/user', { address: currentAddress })
+      await callAPI.post('/user', { address: window.ethereum.selectedAddress })
     } catch (error) {
       console.log('error create')
       console.log(error)
     }
-  }, [currentAddress])
+  }, [])
 
   const loginUser = useCallback(async () => {
-    if (!currentAddress) return
+    if (!window.ethereum.selectedAddress) return
 
     try {
-      const res = await callAPI.post('/login', { address: currentAddress })
+      const res = await callAPI.post('/login', { address: window.ethereum.selectedAddress })
       if (res.status === 1) {
         storage.setToken(res.jwt)
         storage.setRefresh(res.refreshToken)
@@ -58,14 +58,7 @@ export default function Header({ toggleSidebar = () => {}, IsOpenSidebar = false
       console.log('error login')
       console.log(error)
     }
-  }, [createUser, currentAddress])
-
-  const clearStorage = useCallback(async () => {
-    if (currentAddress) return
-
-    storage.clearToken()
-    storage.clearRefresh()
-  }, [currentAddress])
+  }, [createUser])
 
   const setupMetaMask = useCallback(async () => {
     window.web3 = new Web3(window.ethereum)
@@ -81,9 +74,12 @@ export default function Header({ toggleSidebar = () => {}, IsOpenSidebar = false
   useEffect(() => {
     window.ethereum.on('accountsChanged', function (accounts) {
       dispatch(actChangeAddress(accounts[0]))
-      clearStorage()
+
+      if (!accounts[0]) return
+      storage.clearToken()
+      storage.clearRefresh()
     })
-  }, [dispatch, clearStorage])
+  }, [dispatch])
 
   useEffect(() => {
     ;(async () => {
@@ -370,7 +366,7 @@ export default function Header({ toggleSidebar = () => {}, IsOpenSidebar = false
               </div>
 
               <div className='mid'>
-                <div className='item'>
+                <div className='item' onClick={() => history.push('/profile')}>
                   <svg
                     width='14'
                     height='15'
