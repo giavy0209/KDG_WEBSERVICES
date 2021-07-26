@@ -16,7 +16,7 @@ import { ABIKL1155, addressKL1155 } from '../../contracts/KL1155'
 import { ABIMarket, addressMarket } from '../../contracts/Market'
 import shortAddress from '../../helpers/shortAddress'
 import storage from '../../helpers/storage'
-import { actChangeAddress } from '../../store/actions'
+import { actChangeAddress, asyncChangeUser } from '../../store/actions'
 
 export default function Header({ toggleSidebar = () => {}, IsOpenSidebar = false }) {
   const dispatch = useDispatch()
@@ -27,7 +27,7 @@ export default function Header({ toggleSidebar = () => {}, IsOpenSidebar = false
   const [IsOpenLive, setIsOpenLive] = useState(false)
   const [IsOpenProfile, setIsOpenProfile] = useState(false)
   const [IsOpenConnect, setIsOpenConnect] = useState(false)
-  const [pim, setPim] = useState(false)
+  const [insMetaMask, setInsMetaMask] = useState(false)
 
   const createUser = useCallback(async () => {
     if (!window.ethereum.selectedAddress) return
@@ -45,9 +45,11 @@ export default function Header({ toggleSidebar = () => {}, IsOpenSidebar = false
 
     try {
       const res = await callAPI.post('/login', { address: window.ethereum.selectedAddress })
+
       if (res.status === 1) {
         storage.setToken(res.jwt)
         storage.setRefresh(res.refreshToken)
+        dispatch(asyncChangeUser())
       }
 
       if (res.status === 100) {
@@ -58,56 +60,65 @@ export default function Header({ toggleSidebar = () => {}, IsOpenSidebar = false
       console.log('error login')
       console.log(error)
     }
-  }, [createUser])
+  }, [createUser, dispatch])
 
   const setupMetaMask = useCallback(async () => {
-    window.web3 = new Web3(window.ethereum)
+    if (!window.ethereum) return
+    if (!window.ethereum.isMetaMask) return
 
+    window.web3 = new Web3(window.ethereum)
     window.contractKL1155 = new window.web3.eth.Contract(ABIKL1155, addressKL1155)
     window.contractMarket = new window.web3.eth.Contract(ABIMarket, addressMarket)
     window.contractERC20 = new window.web3.eth.Contract(ABIERC20, addressERC20)
-
     const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' })
     dispatch(actChangeAddress(accounts[0]))
   }, [dispatch])
 
+  // accountsChanged
   useEffect(() => {
-    if(window.ethereum)
+    if (!window.ethereum) return
+    if (!window.ethereum.isMetaMask) return
+
     window.ethereum.on('accountsChanged', async function (accounts) {
       dispatch(actChangeAddress(accounts[0]))
+      await loginUser()
 
-      if (!accounts[0]) {
-        storage.clearToken()
-        storage.clearRefresh()
-      }
+      if (accounts[0]) return
+
+      storage.clearToken()
+      storage.clearRefresh()
     })
-  }, [dispatch])
+    console.log('accountsChanged run')
+  }, [dispatch, loginUser])
 
   useEffect(() => {
-    ;(async () => {
+    async function xxx() {
       if (window.ethereum && window.ethereum.isMetaMask) {
         await setupMetaMask()
         await loginUser()
       }
-    })()
+    }
+    xxx()
   }, [setupMetaMask, loginUser])
 
   const connectMetaMask = useCallback(async () => {
+    setIsOpenConnect(false)
+
     if (window.ethereum && window.ethereum.isMetaMask) {
       await setupMetaMask()
-    } else {
-      setPim(true)
+      await loginUser()
+      return
     }
 
-    setIsOpenConnect(false)
-  }, [setupMetaMask])
+    setInsMetaMask(true)
+  }, [setupMetaMask, loginUser])
 
   return (
     <>
-      {pim && (
+      {insMetaMask && (
         <div className='popupX'>
           <div className='containerX'>
-            <img className='closeX' src={closeSVG} alt='' onClick={() => setPim(false)} />
+            <img className='closeX' src={closeSVG} alt='' onClick={() => setInsMetaMask(false)} />
             <div className='titleX'>You haven't installed MetaMask yet!</div>
             <div className='descriptionX'>
               <img src={errorSVG} alt='' />
@@ -121,12 +132,12 @@ export default function Header({ toggleSidebar = () => {}, IsOpenSidebar = false
                     'https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn',
                     '_blank'
                   )
-                  setPim(false)
+                  setInsMetaMask(false)
                 }}
               >
                 Yes
               </div>
-              <div className='buttonX buttonX--cancel' onClick={() => setPim(false)}>
+              <div className='buttonX buttonX--cancel' onClick={() => setInsMetaMask(false)}>
                 No
               </div>
             </div>

@@ -62,9 +62,9 @@ export default function Setup() {
     }
   }, [])
 
-  // useEffect(() => {
-  //   console.log({ streamData })
-  // }, [streamData])
+  useEffect(() => {
+    console.log({ streamData })
+  }, [streamData])
 
   const streamKey = useMemo(() => streamData.key, [streamData])
   const streamID = useMemo(() => streamData._id, [streamData])

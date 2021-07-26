@@ -25,18 +25,15 @@ export default function MintNFT() {
   const [uploadNotSelected, setUploadNotSelected] = useState(false)
   const [uploadError, setUploadError] = useState(false)
 
-  const [isApproval, setIsApproval] = useState(false)
-  const [, setFile] = useState([])
-
   useEffect(() => {
     async function getAllowance() {
       if (window?.web3?.eth) {
-        const allowance = await new window.web3.eth.Contract(ABIERC20, addressERC20).methods.allowance(window.ethereum.selectedAddress, addressKL1155)
+        const allowance = await window.contractERC20.methods
+          .allowance(window.ethereum.selectedAddress, addressKL1155)
           .call()
         if (Number(allowance) >= 20000000000000000000) {
           setIsApproval(true)
         }
-       
       }
     }
     getAllowance()
@@ -63,11 +60,10 @@ export default function MintNFT() {
   }
 
   const handleApproval = async () => {
-    const approval = await new window.web3.eth.Contract(ABIERC20, addressERC20).methods.approve(
-      addressKL1155,
-      '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
-    ).send({ from: window.ethereum.selectedAddress })
-    if(approval){
+    const approval = await window.contractERC20.methods
+      .approve(addressKL1155, '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff')
+      .send({ from: window.ethereum.selectedAddress })
+    if (approval) {
       setIsApproval(true)
     }
   }
@@ -89,10 +85,10 @@ export default function MintNFT() {
     setIsUploading(true)
 
     const data = new FormData()
-    data.append("file",file)
-    data.append("name",e.target.name.value)
-    data.append("numEditions",e.target.numEditions.value)
-    data.append("description",e.target.description.value)
+    data.append('file', file)
+    data.append('name', e.target.name.value)
+    data.append('numEditions', e.target.numEditions.value)
+    data.append('description', e.target.description.value)
 
     let res
 
@@ -100,7 +96,7 @@ export default function MintNFT() {
       res = await callAPI.post('/ipfs', data, false, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          'x-authenticated-id-by-kdg':'60f5e0830169e54df90a0886'
+          'x-authenticated-id-by-kdg': '60f5e0830169e54df90a0886',
         },
         onUploadProgress: (e) => {
           if (e.lengthComputable) {
@@ -109,15 +105,20 @@ export default function MintNFT() {
             // console.log({ percent, loaded: e.loaded, total: e.total })
           }
         },
-      });
+      })
 
       // console.log("res",res);
-      
-      if(res?.data?.hashes[0]){
 
-        const transaction = await new window.web3.eth.Contract(ABIKL1155, addressKL1155).methods.create(e.target.numEditions.value,
-          e.target.numEditions.value,2500,res?.data?.hashes[0],"0x00")
-          .send({ from : window.ethereum.selectedAddress });   
+      if (res?.data?.hashes[0]) {
+        const transaction = await new window.web3.eth.Contract(ABIKL1155, addressKL1155).methods
+          .create(
+            e.target.numEditions.value,
+            e.target.numEditions.value,
+            2500,
+            res?.data?.hashes[0],
+            '0x00'
+          )
+          .send({ from: window.ethereum.selectedAddress })
         if (transaction) {
           // console.log('upload thanh cong')
           setUploadSuccess(true)

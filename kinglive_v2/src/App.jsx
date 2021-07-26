@@ -1,8 +1,7 @@
-import { useCallback, useState } from 'react'
-// import { useDispatch } from 'react-redux'
+import { useState } from 'react'
 import { Route, Switch } from 'react-router'
-import './assets/scss/styles.scss'
 import './assets/scss/profile.scss'
+import './assets/scss/styles.scss'
 import Header from './components/Header'
 import Sidebar from './components/Sidebar'
 import Home from './pages/Home'
@@ -16,25 +15,15 @@ import Upload from './pages/Upload'
 import User from './pages/User'
 import WatchLive from './pages/WatchLive'
 import WatchVideo from './pages/WatchVideo'
-// import { asyncInitUser } from './store/actions'
 
 function App() {
-  // const dispatch = useDispatch()
-
   const [IsOpenSidebar, setIsOpenSidebar] = useState(false)
-
-  const toggleSidebar = useCallback(() => {
-    setIsOpenSidebar((_isopen) => !_isopen)
-  }, [])
-
-  // useEffect(() => {
-  //   dispatch(asyncInitUser())
-  // }, [dispatch])
 
   return (
     <>
-      <Header IsOpenSidebar={IsOpenSidebar} toggleSidebar={toggleSidebar} />
+      <Header IsOpenSidebar={IsOpenSidebar} toggleSidebar={() => setIsOpenSidebar((x) => !x)} />
       <Sidebar IsOpenSidebar={IsOpenSidebar} />
+
       <main className={`${IsOpenSidebar ? 'small' : ''}`}>
         <Switch>
           <Route path='/' component={Home} exact />
