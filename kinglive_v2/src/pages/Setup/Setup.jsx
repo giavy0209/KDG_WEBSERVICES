@@ -11,7 +11,7 @@ import callAPI from '../../axios'
 import { PLAY_STREAM, RTMP_DOMAIN, STORAGE_DOMAIN } from '../../constant'
 import socket from '../../socket'
 
-const copyToClipboard = value => {
+const copyToClipboard = (value) => {
   let input = document.createElement('input')
   document.body.appendChild(input)
   input.value = value
@@ -35,24 +35,25 @@ export default function Setup() {
   const [currentStep, setCurrentStep] = useState(1)
 
   useEffect(() => {
-    ;(async () => {
-      let res
+    document.title = 'KingLive V2 - Setup'
+  }, [])
 
+  useEffect(() => {
+    ;(async () => {
       try {
-        res = await callAPI.get('/stream')
+        const res = await callAPI.get('/stream')
         setStreamData(res.data)
 
         if (res.data.status === 1) setCurrentStep(2)
       } catch (error) {
-        console.log('error get stream', { error })
+        console.log('error get stream')
+        console.log(error)
       }
-
-      // console.log({ res })
     })()
+  }, [])
 
-    document.title = 'KingLive V2 - Setup'
-
-    const handleStream = data => setStreamData(data)
+  useEffect(() => {
+    const handleStream = (data) => setStreamData(data)
 
     socket.on('stream', handleStream)
 
@@ -71,18 +72,15 @@ export default function Setup() {
   const status = useMemo(() => streamData.status, [streamData])
   const connect_status = useMemo(() => streamData.connect_status, [streamData])
 
-  const handlePreviewThumbnail = e => {
+  const handlePreviewThumbnail = (e) => {
     const files = e.target.files || []
-
     if (!files.length) return
 
     const reader = new FileReader()
-
-    reader.onload = e => {
+    reader.onload = (e) => {
       thumbnailPreviewRef.current.src = e.target.result
       thumbnailPreviewRef.current.style.opacity = 1
     }
-
     reader.readAsDataURL(files[0])
   }
 
@@ -97,7 +95,7 @@ export default function Setup() {
     descRef.current.value = ''
   }
 
-  const handlePublicStream = async e => {
+  const handlePublicStream = async (e) => {
     e.preventDefault()
 
     const data = new FormData(e.target)
@@ -124,7 +122,7 @@ export default function Setup() {
     setCurrentStep(1)
   }
 
-  const handleChangeStep = step => {
+  const handleChangeStep = (step) => {
     if (step === 1) return setCurrentStep(1)
 
     if (status === 1) return setCurrentStep(step)
