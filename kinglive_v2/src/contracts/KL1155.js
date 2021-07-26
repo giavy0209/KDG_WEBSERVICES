@@ -1,4 +1,4 @@
-export const addressKL1155 = '0x30AcD5239D75183dBe05048D2A66e57ad23DA05B'
+export const addressKL1155 = '0xD55983c3aee488fcCe336Ce481aefC5c854eAAda'
 
 export const ABIKL1155 = [
 	{

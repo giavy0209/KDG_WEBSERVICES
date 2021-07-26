@@ -3,145 +3,45 @@ import banner from '../../assets/images/nft-market/banner.jpg'
 import nft from '../../assets/images/nft-market/nft.jpg'
 import avatar from '../../assets/images/nft-market/avatar.png'
 import kdg from '../../assets/images/nft-market/kdg.png'
-import { useState , useRef , useCallback, useEffect} from 'react'
+import { useState , useRef , useCallback, useEffect, useMemo} from 'react'
 import callAPI from '../../axios'
 import { paymentList } from '../../contracts/ERC20'
 
 
-const top9 = [
-    {
-        img: nft,
-        name: 'The World NFT Set Up In My Mind',
-        price: 100000,
-        artist: 'Esther Howard',
-    },
-    {
-        img: nft,
-        name: 'The World NFT Set Up In My Mind',
-        price: 100000,
-        artist: 'Esther Howard',
-    },
-    {
-        img: nft,
-        name: 'The World NFT Set Up In My Mind',
-        price: 100000,
-        artist: 'Esther Howard',
-    },
-    {
-        img: nft,
-        name: 'The World NFT Set Up In My Mind',
-        price: 100000,
-        artist: 'Esther Howard',
-    },
-    {
-        img: nft,
-        name: 'The World NFT Set Up In My Mind',
-        price: 100000,
-        artist: 'Esther Howard',
-    },
-    {
-        img: nft,
-        name: 'The World NFT Set Up In My Mind',
-        price: 100000,
-        artist: 'Esther Howard',
-    },
-    {
-        img: nft,
-        name: 'The World NFT Set Up In My Mind',
-        price: 100000,
-        artist: 'Esther Howard',
-    },
-    {
-        img: nft,
-        name: 'The World NFT Set Up In My Mind',
-        price: 100000,
-        artist: 'Esther Howard',
-    },
-    {
-        img: nft,
-        name: 'The World NFT Set Up In My Mind',
-        price: 100000,
-        artist: 'Esther Howard',
-    },
-]
-
-const top_quatity = [
-    {
-        avatar: avatar,
-        name: 'Dmm',
-        quatity: 100
-    },
-    {
-        avatar: avatar,
-        name: 'Dmm',
-        quatity: 100
-    },
-    {
-        avatar: avatar,
-        name: 'Dmm',
-        quatity: 100
-    },
-    {
-        avatar: avatar,
-        name: 'Dmm',
-        quatity: 100
-    },
-    {
-        avatar: avatar,
-        name: 'Dmm',
-        quatity: 100
-    },
-    {
-        avatar: avatar,
-        name: 'Dmm',
-        quatity: 100
-    },
-    {
-        avatar: avatar,
-        name: 'Dmm',
-        quatity: 100
-    },
-    {
-        avatar: avatar,
-        name: 'Dmm',
-        quatity: 100
-    },
-    {
-        avatar: avatar,
-        name: 'Dmm',
-        quatity: 100
-    },
-]
-
 
 export default function NFT() {
-    const [AssetSellList, setAssetSellList] = useState([])
+    const [PopulateList, setPopulateList] = useState([])
+    const [top9List, setTop9List] = useState([])
+    const [total, setTotal] = useState(0)
+
+    const [topQuantity, setTopQuantityList] = useState([])
     const [ActiveTop9, setActiveTop9] = useState(0)
     const [ActiveRanking, setActiveRanking] = useState(0)
     const isLoadMore = useRef(true)
     const isLoadingAPI = useRef(false)
     const [isLoading, setIsLoading] = useState(false)
+    const { Decimal } = require('decimal.js');
+    const [isOpenBuy, setIsOpenBuy] = useState(false)
 
     const getAssets = useCallback(async () => {
-        var ids = AssetSellList.map(o => o._id);
+        var ids = PopulateList.map(o => o._id);
         
-        const res = await callAPI.get(`/listing-asset?limit=20&${ids.length?`ids=${ids}`:""}`,true,{headers: {'x-authenticated-id-by-kdg':'60f5dff80169e54df90a0884'}})
+        const res = await callAPI.get(`/listing-asset?limit=9&${ids.length?`ids=${ids}`:""}`,true,{headers: {'x-authenticated-id-by-kdg':'60f5dff80169e54df90a0884'}})
     
         if (res?.data?.length === 0) {
           isLoadMore.current = false
-          setAssetSellList([...AssetSellList])
+          setPopulateList([...PopulateList])
           return
         }
-    
-        setAssetSellList([...AssetSellList, ...res?.data?res.data:[]])
-      }, [AssetSellList])
+        setPopulateList([...PopulateList, ...res.data])
+      }, [PopulateList])
 
       useEffect(() => {
         const handleLoad = async () => {
           const totalHeight = document.getElementById('root').clientHeight
           const scrolledHeight = window.scrollY + window.innerHeight
           const restHeight = totalHeight - scrolledHeight
-          const isEnd = restHeight <= 100
+          const isEnd = restHeight <= 500
     
           if (isEnd && isLoadMore.current && !isLoadingAPI.current) {
             isLoadingAPI.current = true
@@ -157,10 +57,77 @@ export default function NFT() {
           window.removeEventListener('scroll', handleLoad)
         }
       }, [getAssets])
+
+      useEffect(() => {
+        ;(async () => {
+        const res = await callAPI.get(`/listing-asset?limit=9&`,true,{headers: {'x-authenticated-id-by-kdg':'60f5dff80169e54df90a0884'}})
+        setTop9List(res.data)
+        setTopQuantityList(res.data)
+        })()
+      }, [])
+
+
+      const handleBuy = async () => {
+       const item = top9List[ActiveTop9]
+
+      }
+
+      const handleChangeAmount = async (e) => {
+        const { Decimal } = require('decimal.js');
+        const amount = e.target.value
+        console.log("!isNaN(amount)",!isNaN(amount));
+        if(amount && amount.length  && !isNaN(amount))
+        {
+            paymentList.map((token) => {
+            if (token.address === top9List[ActiveTop9].payment_token) {
+                setTotal(new Decimal(amount).mul(Decimal(top9List[ActiveTop9].price).div(new Decimal(10).pow(token.decimal))))
+            }
+            })
+        } else {
+            setTotal(0)
+        }    
+    }
+
+      
+    
     
 
     return (
         <>
+            {isOpenBuy && (
+                    <div key={top9List[ActiveTop9]._id} className='popupX' onClick={() => setIsOpenBuy(false)}>
+                    <form className='containerX' onSubmit={handleBuy} onClick={(e) => e.stopPropagation()}>
+                        <div className='form-control'>
+                        <div class='label'>NFT</div>
+                        <input type='text' name='_name' readOnly value={top9List[ActiveTop9]?.asset?.metadata?.name}/>
+                        <input type='hidden' name='_contract' readOnly value={top9List[ActiveTop9]?.asset?.collection_id}/>
+                        <input type='hidden' name='_id' readOnly value={top9List[ActiveTop9]?.asset?.id}/>
+                        </div>
+                        <div className='form-control'>
+                        <div class='label'>Avaiable</div>
+                        <input type='number' readOnly value={top9List[ActiveTop9]?.quantity} name='_quantity' />
+                        </div>  
+                        <div className='form-control'>
+                        <div class='label'>Amount to buy</div>
+                        <input type="number" id="_amount" name="_amount"  min="1" max={top9List[ActiveTop9]?.quantity} onChange={(e) => handleChangeAmount(e)}/>
+                        </div>
+                        <div className='form-control'>
+                        <div class='label'>Price</div>
+                        {paymentList.map((token) => {
+                                    if (token.address === top9List[ActiveTop9].payment_token) {
+                                        return <div className='price'>{new Decimal(top9List[ActiveTop9].price).div(new Decimal(10).pow(token.decimal)) + " " + token.coin} </div>
+                                    }
+                                })}
+                                
+                        </div>
+                        <div className='form-control'>
+                        <div class='label'>Total</div>
+                        <input type='number' readOnly  name='_total' value={total}/>
+                        </div> 
+                        <button type='submit' className='buttonX'>Buy</button>
+                    </form>
+                    </div>
+                )}
             <div className="nft-market">
                 <div className="banner">
                     <img src={banner} alt="" />
@@ -176,36 +143,46 @@ export default function NFT() {
                             </svg>
                             Create New NFT
                         </div>
+                        {top9List.length>0 && (
                         <div className="list">
                             <div className="left">
                                 {
-                                    top9.map((o, index) => <span key={index} onClick={() => setActiveTop9(index)} className={`item ${ActiveTop9 === index ? 'active' : ''}`}>
-                                        <img src={o.img} alt="" />
-                                    </span>)
+                                    top9List.map((o, index) => (
+                                        <span key={index} onClick={() => setActiveTop9(index)} className={`item ${ActiveTop9 === index ? 'active' : ''}`}>
+                                            <img src={o.asset?.metadata?.image} alt="" />
+                                        </span>
+                                    ))
                                 }
                             </div>
                             <div className="mid">
-                                <img src={top9[ActiveTop9].img} alt="" />
+                                <img src={top9List[ActiveTop9].asset?.metadata?.image} alt="" />
                             </div>
                             <div className="right">
-                                <div className="name">{top9[ActiveTop9].name}</div>
-                                <div className="price">{top9[ActiveTop9].price} KDG</div>
+                                <div className="name">{top9List[ActiveTop9].asset?.metadata?.name}</div>
+                                {paymentList.map((token) => {
+                                    if (token.address === top9List[ActiveTop9].payment_token) {
+                                        return <div className='price'>{new Decimal(top9List[ActiveTop9].price).div(new Decimal(10).pow(token.decimal)) + " " + token.coin} </div>
+                                    }
+                                })}
+
+                                    
                                 <div className="info">
                                     <div className="row">
-                                        <span>Artist : </span>
-                                        <span>{top9[ActiveTop9].artist}</span>
+                                        <span>{"Artist :" + top9List[ActiveTop9]?.owner?.address}</span>
                                     </div>
                                     <div className="row">
-                                        <span>Created : </span>
-                                        <span>Ngày tạo</span>
+                                        <span> {"Created : "+new Date(top9List[ActiveTop9].asset?.time).toDateString()} </span>
                                     </div>
-                                    <div className="detail">Detail {'>'}{'>'}</div>
+                                    <div className="row">
+                                        <span> {"Avaiable : "+top9List[ActiveTop9].quantity} </span>
+                                    </div>
                                 </div>
-                                <span className="btn">
+                                <span className="btn" onClick={() => setIsOpenBuy(true)}>
                                     Buy Now
-                                </span>
-                            </div>
+                                </span> 
+                             </div> 
                         </div>
+                        )} 
                     </div>
 
                     <div className="ranking">
@@ -217,7 +194,7 @@ export default function NFT() {
                         <div className="list">
                             <div className={`top-quatity ${ActiveRanking === 0 ? 'show' : ''}`}>
                                 {
-                                    top_quatity.map((o, index) => <div className="item">
+                                    topQuantity.map((o, index) => <div className="item">
                                         <span className="index">{index + 1}</span>
                                         <span className="avatar"><img src={o.avatar} alt="" /></span>
                                         <span className="info">
@@ -229,7 +206,7 @@ export default function NFT() {
                             </div>
                             <div className={`top-seller ${ActiveRanking === 1 ? 'show' : ''}`}>
                                 {
-                                    top_quatity.map((o, index) => <div className="item">
+                                    topQuantity.map((o, index) => <div className="item">
                                         <span className="index">{index + 1}</span>
                                         <span className="avatar"><img src={o.avatar} alt="" /></span>
                                         <span className="info">
@@ -245,7 +222,7 @@ export default function NFT() {
                         <div className="title">Popular NFT</div>
                         <div className="list">
                             {
-                                AssetSellList.map(o => <div className="item">
+                                PopulateList.map(o => <div className="item">
                                     <div className="avatar-container">
                                         <span className="avatar">
                                             <img src={o.owner?.avatar} alt="" />

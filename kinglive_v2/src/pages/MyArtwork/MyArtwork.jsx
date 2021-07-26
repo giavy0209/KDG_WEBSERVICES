@@ -50,7 +50,7 @@ export default function MyArtwork() {
   const getAssets = useCallback(async (status) => {
     var ids = AssetList.map(o => o._id);
     
-    const res = await callAPI.get(`/user-asset?limit=20&${ids.length?`ids=${ids}`:""}&status=${status}`,true,{headers: {'x-authenticated-id-by-kdg':'60f5dff80169e54df90a0884'}})
+    const res = await callAPI.get(`/user-asset?limit=20&${ids.length?`ids=${ids}`:""}&status=${status}`,true,{headers: {'x-authenticated-id-by-kdg':'60f5e0830169e54df90a0886'}})
 
     if (res?.data?.length === 0) {
       isLoadMore.current = false
@@ -93,18 +93,19 @@ export default function MyArtwork() {
     })()
   }, [userRedux])
 
-  useMemo(() => {
+  useEffect(() => {
     ;(async () => {
-      callAPI.get(`/user-asset?limit=20&status=${status}`,true,{headers: {'x-authenticated-id-by-kdg':'60f5dff80169e54df90a0884'}}).then(res => {
+      callAPI.get(`/user-asset?limit=20&status=${status}`,true,{headers: {'x-authenticated-id-by-kdg':'60f5e0830169e54df90a0886'}}).then(res => {
       setAssetList(res?.data?res.data:[])
     })
 
-    if (window.web3.eth) {
-      const approved = await new window.web3.eth.Contract(ABIKL1155, addressKL1155).methods
+    if (window.web3.eth && window.ethereum.selectedAddress) {
+        new window.web3.eth.Contract(ABIKL1155, addressKL1155).methods
         .isApprovedForAll(window.ethereum.selectedAddress, addressMarket)
-        .call()
-        console.log("approved",approved)
-      setIsApprovedForAll(approved)
+        .call().then(approved =>{
+          setIsApprovedForAll(approved)
+        }   
+        )
     }
     })()
   }, [])
@@ -125,6 +126,25 @@ export default function MyArtwork() {
   const handleSellButton = async (item) => {
     setIsOpenSell(true)
     setSellingItem(item)
+  }
+
+  const handleAccept = async (item) => {
+    console.log("item",item);
+    const result = await new window.web3.eth.Contract(ABIKL1155, addressKL1155).methods
+          .reviewAsset(item.asset.id,true)
+          .send({from : window.ethereum.selectedAddress})
+    if(result){
+      getAssets()
+    }
+  }
+
+  const handleDeny = async (item) => {
+    const result = await new window.web3.eth.Contract(ABIKL1155, addressKL1155).methods
+          .reviewAsset(item.asset.id,false)
+          .send({from : window.ethereum.selectedAddress})
+    if(result){
+      getAssets()
+    }
   }
 
   return (
@@ -267,14 +287,24 @@ export default function MyArtwork() {
                       <span></span>
                     </div>
                   </div>
-                  {isApprovedForAll > 0 && (
+                  {status === 1 && isApprovedForAll > 0 && (
                     <div key={"sell"+al._id}  className='buttonX' onClick={() => handleSellButton(al)}>
                     Sell
                     </div>
                   )}
-                  {!isApprovedForAll > 0 && (
+                  {status === 1 && !isApprovedForAll > 0 && (
                     <div key={"approve"+al._id} className='buttonX' onClick={() => handleApprove()}>
                     Approval for sell
+                    </div>
+                  )}
+                   {status === 0  && (
+                    <div>
+                    <div key={"review"+al._id} className='buttonX' onClick={() => handleAccept(al)}>
+                    Accept
+                    </div>
+                    <div key={"deny"+al._id} className='buttonX' onClick={() => handleDeny(al)}>
+                    Deny
+                    </div>
                     </div>
                   )}
                     

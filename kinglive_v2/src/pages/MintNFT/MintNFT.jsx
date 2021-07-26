@@ -27,10 +27,8 @@ export default function MintNFT() {
 
   useEffect(() => {
     async function getAllowance() {
-
       if (window?.web3?.eth) {
-        const allowance = await window.contractERC20.methods
-          .allowance(window.ethereum.selectedAddress, addressKL1155)
+        const allowance = await new window.web3.eth.Contract(ABIERC20, addressERC20).methods.allowance(window.ethereum.selectedAddress, addressKL1155)
           .call()
         if (Number(allowance) >= 20000000000000000000) {
           setIsApproval(true)
@@ -62,10 +60,13 @@ export default function MintNFT() {
   }
 
   const handleApproval = async () => {
-    await new window.contractERC20.methods.approve(
+    const approval = await new window.web3.eth.Contract(ABIERC20, addressERC20).methods.approve(
       addressKL1155,
-      2**128
+      '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
     ).send({ from: window.ethereum.selectedAddress })
+    if(approval){
+      setIsApproval(true)
+    }
   }
 
   const handleClearInput = () => {
@@ -96,6 +97,7 @@ export default function MintNFT() {
       res = await callAPI.post('/ipfs', data, false, {
         headers: {
           'Content-Type': 'multipart/form-data',
+          'x-authenticated-id-by-kdg':'60f5e0830169e54df90a0886'
         },
         onUploadProgress: (e) => {
           if (e.lengthComputable) {
