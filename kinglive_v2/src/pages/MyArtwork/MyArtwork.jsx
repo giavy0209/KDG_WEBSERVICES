@@ -50,7 +50,7 @@ export default function MyArtwork() {
   const getAssets = useCallback(async (status) => {
     var ids = AssetList.map(o => o._id);
     
-    const res = await callAPI.get(`/user-asset?limit=20&${ids.length?`ids=${ids}`:""}&status=${status}`,true,{headers: {'x-authenticated-id-by-kdg':'60f5e0830169e54df90a0886'}})
+    const res = await callAPI.get(`/user-asset?limit=20&${ids.length?`ids=${ids}`:""}&status=${status}`,true)
 
     if (res?.data?.length === 0) {
       isLoadMore.current = false
@@ -95,7 +95,7 @@ export default function MyArtwork() {
 
   useEffect(() => {
     ;(async () => {
-      callAPI.get(`/user-asset?limit=20&status=${status}`,true,{headers: {'x-authenticated-id-by-kdg':'60f5e0830169e54df90a0886'}}).then(res => {
+      callAPI.get(`/user-asset?limit=20&status=${status}`,true).then(res => {
       setAssetList(res?.data?res.data:[])
     })
 
@@ -120,6 +120,8 @@ export default function MyArtwork() {
     await new window.web3.eth.Contract(ABIMarket, addressMarket).methods
           .list(e.target._contract.value, e.target._id.value,e.target._quantity.value,e.target._mask.value, price,paymentToken.address,100000000)
           .send({from : window.ethereum.selectedAddress})
+    AssetList.length=0
+    await getAssets(status)
     setIsOpenSell(false)
   }
 
@@ -134,7 +136,8 @@ export default function MyArtwork() {
           .reviewAsset(item.asset.id,true)
           .send({from : window.ethereum.selectedAddress})
     if(result){
-      getAssets()
+      AssetList.length=0
+      await getAssets(status)    
     }
   }
 
@@ -143,7 +146,8 @@ export default function MyArtwork() {
           .reviewAsset(item.asset.id,false)
           .send({from : window.ethereum.selectedAddress})
     if(result){
-      getAssets()
+      AssetList.length=0
+      await getAssets(status)  
     }
   }
 
@@ -284,7 +288,7 @@ export default function MyArtwork() {
                         />
                       </svg>
 
-                      <span></span>
+                      <span>{new Date(al.asset?.time * 1000).toDateString()}</span>
                     </div>
                   </div>
                   {status === 1 && isApprovedForAll > 0 && (

@@ -6,6 +6,9 @@ import kdg from '../../assets/images/nft-market/kdg.png'
 import { useState , useRef , useCallback, useEffect, useMemo} from 'react'
 import callAPI from '../../axios'
 import { paymentList } from '../../contracts/ERC20'
+import { addressKL1155 } from '../../contracts/KL1155'
+import { ABIMarket, addressMarket } from '../../contracts/Market'
+import { ABIERC20, addressERC20 } from '../../contracts/ERC20'
 
 
 
@@ -13,6 +16,12 @@ export default function NFT() {
     const [PopulateList, setPopulateList] = useState([])
     const [top9List, setTop9List] = useState([])
     const [total, setTotal] = useState(0)
+    const [netTotal, setNetTotal] = useState(0)
+    const [error, setError] = useState('')
+
+    const [amountBuy, setAmountBuy] = useState(0)
+    const [itemBuy, setItemBuy] = useState({})
+    const [isApproval, setIsApproval] = useState(false)
 
     const [topQuantity, setTopQuantityList] = useState([])
     const [ActiveTop9, setActiveTop9] = useState(0)
@@ -26,7 +35,7 @@ export default function NFT() {
     const getAssets = useCallback(async () => {
         var ids = PopulateList.map(o => o._id);
         
-        const res = await callAPI.get(`/listing-asset?limit=9&${ids.length?`ids=${ids}`:""}`,true,{headers: {'x-authenticated-id-by-kdg':'60f5dff80169e54df90a0884'}})
+        const res = await callAPI.get(`/listing-asset?limit=9&${ids.length?`ids=${ids}`:""}`,true)
     
         if (res?.data?.length === 0) {
           isLoadMore.current = false
@@ -35,6 +44,16 @@ export default function NFT() {
         }
         setPopulateList([...PopulateList, ...res.data])
       }, [PopulateList])
+
+      const getTop9 = useCallback(async () => {
+        
+        const res = await callAPI.get(`/listing-asset?limit=9`,true)
+    
+        if (res?.data?.length === 0) {
+          return
+        }
+        setTop9List([...res.data])
+      }, [top9List])
 
       useEffect(() => {
         const handleLoad = async () => {
@@ -60,74 +79,148 @@ export default function NFT() {
 
       useEffect(() => {
         ;(async () => {
-        const res = await callAPI.get(`/listing-asset?limit=9&`,true,{headers: {'x-authenticated-id-by-kdg':'60f5dff80169e54df90a0884'}})
-        setTop9List(res.data)
-        setTopQuantityList(res.data)
+        const res = await callAPI.get(`/listing-asset?limit=9&`,true)
+        if (res?.data?.length) {
+            setTop9List(res.data)
+            setTopQuantityList(res.data)
+          }
         })()
       }, [])
 
 
-      const handleBuy = async () => {
-       const item = top9List[ActiveTop9]
+      const handleBuy = async (e) => { 
+        e.preventDefault()
+        const listId = e.target._listid.value
+        const amount = e.target._amount.value
+        const paymentToken = itemBuy.payment_token
+        const netTotalPayment = e.target._netTotal.value
+        console.log("netTotalPayment", netTotalPayment)
+        window.contractMarket.methods.buy(
+                listId,amount,paymentToken,netTotalPayment
+            ).send({ from: window.ethereum.selectedAddress }).then((result) =>{
+                if(result){
+                    top9List.length=0
+                    PopulateList.length=0
+                    getTop9()
+                    getAssets()
+                    setIsOpenBuy(false)
+                }
+            })
+        }
+    
 
-      }
+      const handleApproval = useCallback(async () => {
+        const approval = window.contractERC20.methods.approve(
+            addressMarket,
+            '0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
+          ).send({ from: window.ethereum.selectedAddress }).then(
+            result =>{
+                setIsApproval(true)
+            }
+          )
+    })
 
-      const handleChangeAmount = async (e) => {
+
+      const checkApproval = useCallback(async (item) => {
+        if (window?.web3?.eth) {
+            const allowance = await new window.web3.eth.Contract(ABIERC20, addressERC20).methods.allowance(window.ethereum.selectedAddress, addressMarket)
+              .call()
+            if(allowance && item)
+            {
+                if (new Decimal(allowance).gt(new Decimal(item.price).mul(item?.quantity))) {
+                    setIsApproval(true)
+                }
+            }
+            
+        }
+        if(window.ethereum.selectedAddress === item?.owner?.address)
+        {
+            setError("Owner can't Buy")
+        }
+    },[])
+
+
+      const handleChangeAmount = async (amount) => {
         const { Decimal } = require('decimal.js');
-        const amount = e.target.value
-        console.log("!isNaN(amount)",!isNaN(amount));
         if(amount && amount.length  && !isNaN(amount))
         {
             paymentList.map((token) => {
-            if (token.address === top9List[ActiveTop9].payment_token) {
-                setTotal(new Decimal(amount).mul(Decimal(top9List[ActiveTop9].price).div(new Decimal(10).pow(token.decimal))))
+            if (token.address === itemBuy.payment_token) {
+                if(new Decimal(amount).gt(itemBuy.quantity))
+                {
+                    setAmountBuy(itemBuy.quantity)
+                    setTotal(new Decimal(itemBuy.quantity).mul(Decimal(itemBuy.price).div(new Decimal(10).pow(token.decimal))))
+                    setNetTotal(new Decimal(itemBuy.quantity).mul(Decimal(itemBuy.price)))
+                    return
+                } else {
+                    setAmountBuy(amount)
+                    setTotal(new Decimal(amount).mul(Decimal(itemBuy.price).div(new Decimal(10).pow(token.decimal))))
+                    setNetTotal(new Decimal(amount).mul(Decimal(itemBuy.price)))
+                    return 
+                }            
             }
             })
         } else {
             setTotal(0)
+            setAmountBuy(0)
+            return
         }    
     }
-
-      
-    
-    
 
     return (
         <>
             {isOpenBuy && (
-                    <div key={top9List[ActiveTop9]._id} className='popupX' onClick={() => setIsOpenBuy(false)}>
+                    <div key={itemBuy._id} className='popupX' onClick={() => setIsOpenBuy(false)}>
                     <form className='containerX' onSubmit={handleBuy} onClick={(e) => e.stopPropagation()}>
+                        <img className='preview-image' src={itemBuy?.asset?.metadata?.image} alt='' />
                         <div className='form-control'>
-                        <div class='label'>NFT</div>
-                        <input type='text' name='_name' readOnly value={top9List[ActiveTop9]?.asset?.metadata?.name}/>
-                        <input type='hidden' name='_contract' readOnly value={top9List[ActiveTop9]?.asset?.collection_id}/>
-                        <input type='hidden' name='_id' readOnly value={top9List[ActiveTop9]?.asset?.id}/>
+                        <div className='label'>NFT</div>
+                        <input type='text' name='_name' readOnly value={itemBuy?.asset?.metadata?.name}/>
+                        <input type='hidden' name='_contract' readOnly value={itemBuy?.asset?.collection_id}/>
+                        <input type='hidden' name='_id' readOnly value={itemBuy?.asset?.id}/>
+                        <input type='hidden' name='_listid' readOnly value={itemBuy?.id}/>
                         </div>
                         <div className='form-control'>
-                        <div class='label'>Avaiable</div>
-                        <input type='number' readOnly value={top9List[ActiveTop9]?.quantity} name='_quantity' />
+                        <div className='label'>Avaiable</div>
+                        <input type='number' readOnly value={itemBuy?.quantity} name='_quantity' />
                         </div>  
                         <div className='form-control'>
-                        <div class='label'>Amount to buy</div>
-                        <input type="number" id="_amount" name="_amount"  min="1" max={top9List[ActiveTop9]?.quantity} onChange={(e) => handleChangeAmount(e)}/>
+                        <div className='label'>Amount to buy</div>
+                        <input type="number" id="_amount" name="_amount"  min="1" max={itemBuy?.quantity} value={amountBuy} onChange={e => handleChangeAmount(e.target.value)} />
                         </div>
                         <div className='form-control'>
-                        <div class='label'>Price</div>
-                        {paymentList.map((token) => {
-                                    if (token.address === top9List[ActiveTop9].payment_token) {
-                                        return <div className='price'>{new Decimal(top9List[ActiveTop9].price).div(new Decimal(10).pow(token.decimal)) + " " + token.coin} </div>
-                                    }
-                                })}
+                        <div className='label'>Price</div>
+                        {
+                            paymentList.map((token) => {
+                                if (token.address === itemBuy?.payment_token) {
+                                    return (
+                                        <div className='price'>{new Decimal(itemBuy.price).div(new Decimal(10).pow(token.decimal)) + " " +token.coin} </div>
+                                    )
+                                }
+                            })
+                        }
                                 
                         </div>
                         <div className='form-control'>
-                        <div class='label'>Total</div>
+                        <div className='label'>Total</div>
                         <input type='number' readOnly  name='_total' value={total}/>
+                        <input type='hidden' readOnly  name='_netTotal' value={netTotal}/>
                         </div> 
-                        <button type='submit' className='buttonX'>Buy</button>
+                        {error && (
+                               <div className='form-control'>
+                               <div className='error'>{error}</div>
+                                </div>
+                        )}
+                        {!error && isApproval && (
+                            <button type='submit' className='buttonX'>Buy</button>
+                        )}
+                         {!isApproval && (
+                            <button className='buttonX' onClick={handleApproval}>Approval</button>
+                        )}
                     </form>
                     </div>
-                )}
+                )
+            }
             <div className="nft-market">
                 <div className="banner">
                     <img src={banner} alt="" />
@@ -138,7 +231,7 @@ export default function NFT() {
                         <p className="title">The 1st & the best NFT marketplace</p>
                         <div className="create">
                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd" clip-rule="evenodd" d="M8 15C11.866 15 15 11.866 15 8C15 4.13401 11.866 1 8 1C4.13401 1 1 4.13401 1 8C1 11.866 4.13401 15 8 15ZM8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16Z" fill="#F52871" />
+                                <path fillRule="evenodd" clipRule="evenodd" d="M8 15C11.866 15 15 11.866 15 8C15 4.13401 11.866 1 8 1C4.13401 1 1 4.13401 1 8C1 11.866 4.13401 15 8 15ZM8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16Z" fill="#F52871" />
                                 <path d="M12.1117 7.17602V8.60002H8.92775V11.944H7.43975V8.60002H4.23975V7.17602H7.43975V3.84802H8.92775V7.17602H12.1117Z" fill="#F52871" />
                             </svg>
                             Create New NFT
@@ -148,7 +241,7 @@ export default function NFT() {
                             <div className="left">
                                 {
                                     top9List.map((o, index) => (
-                                        <span key={index} onClick={() => setActiveTop9(index)} className={`item ${ActiveTop9 === index ? 'active' : ''}`}>
+                                        <span key={index} onClick={() => { setActiveTop9(index) }} className={`item ${ActiveTop9 === index ? 'active' : ''}`}>
                                             <img src={o.asset?.metadata?.image} alt="" />
                                         </span>
                                     ))
@@ -171,15 +264,25 @@ export default function NFT() {
                                         <span>{"Artist :" + top9List[ActiveTop9]?.owner?.address}</span>
                                     </div>
                                     <div className="row">
-                                        <span> {"Created : "+new Date(top9List[ActiveTop9].asset?.time).toDateString()} </span>
+                                        <span> {"Created : "+new Date(top9List[ActiveTop9].asset?.time * 1000).toDateString()} </span>
                                     </div>
                                     <div className="row">
                                         <span> {"Avaiable : "+top9List[ActiveTop9].quantity} </span>
                                     </div>
                                 </div>
-                                <span className="btn" onClick={() => setIsOpenBuy(true)}>
-                                    Buy Now
-                                </span> 
+                                
+                                 
+                                <span className="btn" onClick={async () => 
+                                    { 
+                                        await setItemBuy(top9List[ActiveTop9])
+                                        await checkApproval(top9List[ActiveTop9])
+                                        await handleChangeAmount(0)
+                                        await setIsOpenBuy(true) 
+                                        
+                                    }}>
+                                        Buy Now
+                                    </span> 
+                               
                              </div> 
                         </div>
                         )} 
@@ -222,13 +325,14 @@ export default function NFT() {
                         <div className="title">Popular NFT</div>
                         <div className="list">
                             {
-                                PopulateList.map(o => <div className="item">
-                                    <div className="avatar-container">
+                                PopulateList.map((o,index) => 
+                                    <div className="item">
+                                    <div key={"avt" +index} className="avatar-container">
                                         <span className="avatar">
                                             <img src={o.owner?.avatar} alt="" />
                                         </span>
                                     </div>
-                                    <div className="nft-blur">
+                                    <div key={"nft" +index} className="nft-blur">
                                         <div className="blur">
                                             <img src={o.asset?.metadata?.image} alt="" />
                                         </div>
@@ -236,14 +340,27 @@ export default function NFT() {
                                             <img src={o.asset?.metadata?.image} alt="" />
                                         </div>
                                     </div>
-                                    <span className="name">{o.asset?.metadata?.name}</span>
-                                    <div className="info">
-                                        <img src={kdg} alt="" />
-                                        <span className="price">{o.price}</span>
-                                        <span className="amount">Amount: {o.quatity}</span>
+                                    <span key={"name" +index} className="name">{o.asset?.metadata?.name}</span>
+                                    <div key={"price"+index} className="info">
+                                    {paymentList.map((token) => {
+                                        if (token.address === o.payment_token) {
+                                          return <span className='price'>{new Decimal(o.price).div(new Decimal(10).pow(token.decimal)) + " " + token.coin} </span>
+                                        }
+                                    })}
+                                  
+                                  
+                                    <span key={"amount" +index} className="amount">Amount: {o.quantity}</span>
                                     </div>
-                                    <div className="btn">Insufficient KDG balance</div>
-                                </div> )
+                                    <div key={"btn" +index} className="btn" onClick={async () => 
+                                    { 
+                                        await setItemBuy(o)
+                                        await checkApproval(o)
+                                        await handleChangeAmount(0)
+                                        await setIsOpenBuy(true) 
+                                        
+                                    }}>Buy</div>
+                                </div> 
+                                )
                             }
                         </div>
                     </div>
