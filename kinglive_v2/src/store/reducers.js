@@ -1,10 +1,10 @@
-import { INIT_USER, CHANGE_ADDRESS } from './actions'
+import { CHANGE_USER, CHANGE_ADDRESS } from './actions'
 
 const initialState = {}
 
 export default function reducers(state = initialState, action) {
   switch (action.type) {
-    case INIT_USER: {
+    case CHANGE_USER: {
       return {
         ...state,
         user: action.payload,

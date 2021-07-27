@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import arrowSVG from '../../assets/svg/arrow.svg'
 import coverDefaultJPG from '../../assets/svg/coverDefault.jpg'
@@ -14,7 +14,7 @@ import { STORAGE_DOMAIN } from '../../constant'
 import convertPositionIMG from '../../helpers/convertPositionIMG'
 import isValidDate from '../../helpers/isValidDate'
 import { body1, body2, head1, head2 } from '../../mock/table'
-import { asyncInitUser } from '../../store/actions'
+import { asyncChangeUser } from '../../store/actions'
 
 const statisticArray = [
   {
@@ -50,20 +50,17 @@ const statisticArray = [
 export default function Profile() {
   const dispatch = useDispatch()
 
-  const userRedux = useSelector((state) => state.user)
   const [previewIMG, setPreviewIMG] = useState('')
   const [isEdit, setIsEdit] = useState(false)
   const [tabIndex, setTabIndex] = useState(0)
 
-  const [userData, setUserData] = useState({})
-  const avatar = useMemo(() => userData?.kyc?.avatar?.path, [userData])
-  const avatarPos = useMemo(() => userData?.kyc?.avatar_pos, [userData])
-  const cover = useMemo(() => userData?.kyc?.cover?.path, [userData])
-  const coverPos = useMemo(() => userData?.kyc?.cover_pos, [userData])
-  const userName = useMemo(
-    () => `${userData?.kyc?.first_name} ${userData?.kyc?.last_name}`,
-    [userData]
-  )
+  const userData = useSelector((state) => state.user)
+  const avatar = userData?.kyc?.avatar?.path
+  const avatarPos = userData?.kyc?.avatar_pos
+  const cover = userData?.kyc?.cover?.path
+  const coverPos = userData?.kyc?.cover_pos
+  const userName = `${userData?.kyc?.first_name} ${userData?.kyc?.last_name}`
+
   const userBirthday = useMemo(() => {
     let x = userData?.kyc?.birth_day.split('/')
     if (!x) return ''
@@ -72,30 +69,12 @@ export default function Profile() {
     return `${day}/${month}/${year}`
   }, [userData])
 
-  // Get Profile of userRedux
-  useEffect(() => {
-    const id = userRedux?._id
-    if (!id) return
-    ;(async () => {
-      try {
-        const res = await callAPI.get(`/user?uid=${id}`)
-        console.log({ userData: res.data })
-        setUserData(res.data)
-      } catch (error) {
-        console.log('Error get user', error)
-      }
-    })()
-  }, [userRedux])
-
-  // Edit User
   const handleEditUser = async (e) => {
     e.preventDefault()
 
     const data = new FormData(e.target)
-    if (!isValidDate(data.get('birth_day'))) {
-      console.log('invalid date')
-      return
-    }
+
+    if (!isValidDate(data.get('birth_day'))) return
 
     const submitData = {}
     for (let field of data) {
@@ -112,10 +91,11 @@ export default function Profile() {
       const res = await callAPI.put('/user', submitData)
 
       if (res.status === 1) {
-        dispatch(asyncInitUser())
+        dispatch(asyncChangeUser())
       }
     } catch (error) {
-      console.log('Error Edit User', error)
+      console.log('Error Edit User')
+      console.log(error)
     }
   }
 
@@ -292,7 +272,7 @@ export default function Profile() {
               </div>
 
               <div className='profile😢__introduce'>
-                <VideoPlayer guid={`7ba74ab1-fc07-4a55-8394-2a1b1f771049`} />
+                {/* <VideoPlayer guid={`7ba74ab1-fc07-4a55-8394-2a1b1f771049`} /> */}
 
                 <div>
                   <div>Epic Riddles Marathon Only Bravest Detectives Can Pass</div>
@@ -314,7 +294,7 @@ export default function Profile() {
                 <div className='profile😢__title'>Live</div>
 
                 <div className='profile😢__introduce'>
-                  <VideoPlayer guid={`7ba74ab1-fc07-4a55-8394-2a1b1f771049`} />
+                  {/* <VideoPlayer guid={`7ba74ab1-fc07-4a55-8394-2a1b1f771049`} /> */}
 
                   <div>
                     <div>Epic Riddles Marathon Only Bravest Detectives Can Pass</div>

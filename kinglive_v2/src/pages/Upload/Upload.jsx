@@ -61,10 +61,7 @@ export default function Upload() {
       videoPreviewRef.current.play()
 
       while (true) {
-        if (videoPreviewRef.current.duration) {
-          console.log(videoPreviewRef.current.duration)
-          break
-        }
+        if (videoPreviewRef.current.duration) break
         await waitfor(100)
       }
     }
