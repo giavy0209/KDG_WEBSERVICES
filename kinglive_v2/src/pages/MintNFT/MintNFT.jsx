@@ -6,7 +6,6 @@ import errorSVG from '../../assets/svg/error.svg'
 import uploadSVG from '../../assets/svg/upload.svg'
 import callAPI from '../../axios'
 import { ABIKL1155, addressKL1155 } from '../../contracts/KL1155'
-import { ABIERC20, addressERC20 } from '../../contracts/ERC20'
 
 export default function MintNFT() {
   const inputVideoRef = useRef()
@@ -96,7 +95,7 @@ export default function MintNFT() {
     try {
       res = await callAPI.post('/ipfs', data, false, {
         headers: {
-          'Content-Type': 'multipart/form-data'        
+          'Content-Type': 'multipart/form-data',
         },
         onUploadProgress: (e) => {
           if (e.lengthComputable) {
