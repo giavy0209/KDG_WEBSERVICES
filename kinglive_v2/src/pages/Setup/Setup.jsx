@@ -35,10 +35,6 @@ export default function Setup() {
   const [currentStep, setCurrentStep] = useState(1)
 
   useEffect(() => {
-    document.title = 'KingLive V2 - Setup'
-  }, [])
-
-  useEffect(() => {
     ;(async () => {
       try {
         const res = await callAPI.get('/stream')
@@ -103,7 +99,8 @@ export default function Setup() {
     try {
       await callAPI.post(`/public_stream?sid=${streamID}`, data)
     } catch (error) {
-      console.log('error live now', error)
+      console.log('error live now')
+      console.log(error)
     }
   }
 
@@ -112,7 +109,8 @@ export default function Setup() {
       await callAPI.post(`/stop_stream?sid=${streamID}`)
       setEndLiveSuccess(true)
     } catch (error) {
-      console.log('error end live', error)
+      console.log('error end live')
+      console.log(error)
     }
   }
 
