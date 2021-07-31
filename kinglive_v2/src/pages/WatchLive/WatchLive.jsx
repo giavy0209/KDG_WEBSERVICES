@@ -16,27 +16,36 @@ import socket from '../../socket'
 
 export default function WatchLive() {
   const history = useHistory()
-  const userRedux = useSelector(state => state.user)
+  const userRedux = useSelector((state) => state.user)
 
   const chatListRef = useRef()
 
   const [streamData, setStreamData] = useState({})
   const user = useMemo(() => streamData.user, [streamData])
+  const streamKey = useMemo(() => streamData.key, [streamData])
+
+  const [streamData1, setStreamData1] = useState({})
+
   const [chatData, setChatData] = useState([])
   const [liveList, setLiveList] = useState([])
   const [isFollow, setIsFollow] = useState(false)
 
   const [hideChat, setHideChat] = useState(false)
   const [hideLive, setHideLive] = useState(false)
-  // const [hideRecommend, setHideRecommend] = useState(false)
 
   const id = new URLSearchParams(window.location.search).get('s')
+  if (!id) history.push('/')
 
-  // Push to Home when id === undefined
+  useEffect(() => {
+    const handleStream = (data) => setStreamData1(data)
+    socket.on('stream', handleStream)
+    return () => socket.removeEventListener('stream', handleStream)
+  }, [])
+
+  useEffect(() => console.log(streamData1), [streamData1])
+
   // Get Current LiveVideo
   useEffect(() => {
-    if (!id) return history.push('/')
-
     let streamId
     ;(async () => {
       try {
@@ -54,7 +63,8 @@ export default function WatchLive() {
         streamId = res.data._id
         socket.emit('join_stream', streamId)
       } catch (error) {
-        console.log('error get video livestream', error)
+        console.log('error get video livestream')
+        console.log(error)
       }
     })()
 
@@ -71,11 +81,12 @@ export default function WatchLive() {
         console.log({ chatData: res })
         setChatData(res.data)
       } catch (error) {
-        console.log('error get chat', error)
+        console.log('error get chat')
+        console.log(error)
       }
     })()
 
-    const handleReceiveChat = chatItem => setChatData(_chatData => [..._chatData, chatItem])
+    const handleReceiveChat = (chatItem) => setChatData((_chatData) => [..._chatData, chatItem])
     socket.on('chat', handleReceiveChat)
 
     return () => {
@@ -89,7 +100,7 @@ export default function WatchLive() {
   }, [chatData])
 
   // Emit new Chat
-  const handleChat = e => {
+  const handleChat = (e) => {
     e.preventDefault()
 
     const data = new FormData(e.target)
@@ -109,7 +120,8 @@ export default function WatchLive() {
         console.log({ liveList: res })
         setLiveList(res.data)
       } catch (error) {
-        console.log('error get live list', error)
+        console.log('error get live list')
+        console.log(error)
       }
     })()
   }, [])
@@ -118,7 +130,7 @@ export default function WatchLive() {
   const handleFollow = async () => {
     try {
       const res = await callAPI.post(`follow?id=${user?._id}`)
-      if (res.status === 1) setIsFollow(x => !x)
+      if (res.status === 1) setIsFollow((x) => !x)
     } catch (error) {
       console.log('error follow or unfollow', error)
     }
@@ -130,7 +142,7 @@ export default function WatchLive() {
         <div className='watchlive__videoContainer'>
           <ReactHlsPlayer
             className='watchlive__videoPlayer'
-            src={`${PLAY_STREAM}${streamData.key}/index.m3u8`}
+            src={`${PLAY_STREAM}${streamKey}/index.m3u8`}
             autoPlay={true}
             controls={true}
             muted={false}
@@ -143,23 +155,30 @@ export default function WatchLive() {
 
         <div className='mb-30'>
           <span>
-            {streamData.views} views • {convertDateAgo(streamData.start_date)} |{' '}
+            {streamData.views} views • {convertDateAgo(streamData.start_date)}
           </span>
-          <span className='button-share'>
+          {/* <span className='button-share'>
             <img src={shareSVG} alt='' />
             Share
-          </span>
+          </span> */}
         </div>
 
         <div className='watchlive__infoVideo'>
-          <div>
-            <img src={`${STORAGE_DOMAIN}${user?.kyc.avatar.path}`} alt='' />
+          <div onClick={() => history.push(`/user?uid=${user?._id}`)}>
+            <img
+              src={
+                user?.kyc?.avatar?.path
+                  ? `${STORAGE_DOMAIN}${user.kyc.avatar.path}`
+                  : avatarDefaultSVG
+              }
+              alt=''
+            />
           </div>
 
           <div style={{ position: 'relative' }}>
-            <div>
-              {user?.kyc.first_name || user?.kyc.last_name
-                ? `${user?.kyc.first_name} ${user?.kyc.last_name}`
+            <div onClick={() => history.push(`/user?uid=${user?._id}`)}>
+              {user?.kyc?.first_name || user?.kyc?.last_name
+                ? `${user?.kyc?.first_name} ${user?.kyc?.last_name}`
                 : 'Username'}
             </div>
             <div>{user?.kinglive.total_follower} followers</div>
@@ -178,12 +197,12 @@ export default function WatchLive() {
         <div className='watchlive__chatContainer'>
           <div className={`${hideChat ? 'hide' : ''}`}>
             <div ref={chatListRef} className='watchlive__chatList'>
-              {chatData.map(chatItem => (
+              {chatData.map((chatItem) => (
                 <div key={chatItem._id} className='watchlive__chatItem'>
                   <div>
                     <img
                       src={
-                        chatItem.user.kyc.avatar
+                        chatItem.user?.kyc?.avatar?.path
                           ? `${STORAGE_DOMAIN}${chatItem.user.kyc.avatar.path}`
                           : avatarDefaultSVG
                       }
@@ -207,8 +226,8 @@ export default function WatchLive() {
               <div>
                 <img
                   src={
-                    user?.kyc.avatar
-                      ? `${STORAGE_DOMAIN}${user?.kyc.avatar.path}`
+                    user?.kyc?.avatar?.path
+                      ? `${STORAGE_DOMAIN}${user.kyc.avatar.path}`
                       : avatarDefaultSVG
                   }
                   alt=''
@@ -225,16 +244,16 @@ export default function WatchLive() {
             </form>
           </div>
 
-          <div onClick={() => setHideChat(x => !x)}>Hide chat</div>
+          <div onClick={() => setHideChat((x) => !x)}>Hide chat</div>
         </div>
 
-        <div className='watchlive__buttonToggle' onClick={() => setHideLive(x => !x)}>
+        <div className='watchlive__buttonToggle' onClick={() => setHideLive((x) => !x)}>
           Watch Live
         </div>
 
         {!hideLive && (
           <div>
-            {liveList.map(live => (
+            {liveList.map((live) => (
               <div
                 key={live._id}
                 className='watchlive__livevideo'
@@ -267,26 +286,6 @@ export default function WatchLive() {
             ))}
           </div>
         )}
-
-        {/* <div className='watchlive__buttonToggle' onClick={() => setHideRecommend(x => !x)}>
-          Recommend
-        </div>
-
-        {!hideRecommend && (
-          <div>
-            <div className='watchlive__livevideo'>
-              <div>
-                <img src={bgtest} alt='' />
-              </div>
-
-              <div>
-                <div>Greatest Hits Game Of Popular</div>
-                <div>Trung Quan An Quan</div>
-                <div>11 views • 11 minutes ago</div>
-              </div>
-            </div>
-          </div>
-        )} */}
       </div>
     </div>
   )

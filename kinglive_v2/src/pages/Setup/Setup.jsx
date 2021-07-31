@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import ReactHlsPlayer from 'react-hls-player'
+import { useHistory } from 'react-router-dom'
 import '../../assets/scss/upload.scss'
 import checkSVG from '../../assets/svg/check.svg'
 import closeSVG from '../../assets/svg/close.svg'
@@ -21,6 +22,8 @@ const copyToClipboard = (value) => {
 }
 
 export default function Setup() {
+  const history = useHistory()
+
   const thumbnailPreviewRef = useRef()
   const inputThumbnailRef = useRef()
   const tagsRef = useRef()
@@ -32,6 +35,12 @@ export default function Setup() {
   const [changeStepError, setChangeStepError] = useState(false)
 
   const [streamData, setStreamData] = useState({})
+  const streamKey = useMemo(() => streamData.key, [streamData])
+  const streamID = useMemo(() => streamData._id, [streamData])
+  const streamTags = useMemo(() => streamData.tags?.join(', '), [streamData])
+  const status = useMemo(() => streamData.status, [streamData])
+  const connect_status = useMemo(() => streamData.connect_status, [streamData])
+
   const [currentStep, setCurrentStep] = useState(1)
 
   useEffect(() => {
@@ -50,23 +59,11 @@ export default function Setup() {
 
   useEffect(() => {
     const handleStream = (data) => setStreamData(data)
-
     socket.on('stream', handleStream)
-
-    return () => {
-      socket.removeEventListener('stream', handleStream)
-    }
+    return () => socket.removeEventListener('stream', handleStream)
   }, [])
 
-  useEffect(() => {
-    console.log({ streamData })
-  }, [streamData])
-
-  const streamKey = useMemo(() => streamData.key, [streamData])
-  const streamID = useMemo(() => streamData._id, [streamData])
-  const streamTags = useMemo(() => streamData.tags?.join(', '), [streamData])
-  const status = useMemo(() => streamData.status, [streamData])
-  const connect_status = useMemo(() => streamData.connect_status, [streamData])
+  useEffect(() => console.log({ streamData }), [streamData])
 
   const handlePreviewThumbnail = (e) => {
     const files = e.target.files || []
@@ -95,7 +92,6 @@ export default function Setup() {
     e.preventDefault()
 
     const data = new FormData(e.target)
-
     try {
       await callAPI.post(`/public_stream?sid=${streamID}`, data)
     } catch (error) {
@@ -291,6 +287,10 @@ export default function Setup() {
                 defaultValue={status === 1 ? streamData.description : ''}
                 disabled={status === 1}
               ></textarea>
+
+              <div className='buttonX mt-20' onClick={() => handleChangeStep(2)}>
+                Next
+              </div>
             </div>
 
             <div className='rotate3D'>
@@ -334,7 +334,7 @@ export default function Setup() {
 
               {status === 1 && connect_status === 1 && (
                 <p className='upload__message'>
-                  <span onClick={() => window.open(`/watchlive?s=${streamID}`)}>
+                  <span onClick={() => history.push(`/watchlive?s=${streamID}`)}>
                     You are live streaming now
                   </span>
                   . Please stop OBS livestream or disconnect OBS to end the livestream session on
@@ -348,11 +348,18 @@ export default function Setup() {
                     Livestream is paused. Please reconnect to continue or click the button below to
                     end the livestream session on KingliveTv
                   </p>
-                  <div className='upload__button upload__button--cancel' onClick={handleStopStream}>
+                  <div
+                    className='upload__button upload__button--cancel mr-20'
+                    onClick={handleStopStream}
+                  >
                     End livestream
                   </div>
                 </>
               )}
+
+              <div className='buttonX mt-20' onClick={() => handleChangeStep(1)}>
+                Previous
+              </div>
             </div>
           </div>
         </div>
