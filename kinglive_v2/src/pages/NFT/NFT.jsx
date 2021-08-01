@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { useHistory } from 'react-router-dom'
 import banner from '../../assets/images/nft-market/banner.jpg'
 import '../../assets/scss/nft-market.scss'
 import callAPI from '../../axios'
@@ -6,6 +7,8 @@ import { ABIERC20, addressERC20, paymentList } from '../../contracts/ERC20'
 import { addressMarket } from '../../contracts/Market'
 
 export default function NFT() {
+  const history = useHistory()
+
   const [PopulateList, setPopulateList] = useState([])
   const [top9List, setTop9List] = useState([])
   const [total, setTotal] = useState(0)
@@ -249,7 +252,7 @@ export default function NFT() {
           <div className='top-9'>
             <p className='sub-title'>Buy, sell, bidding and discover artworks</p>
             <p className='title'>The 1st & the best NFT marketplace</p>
-            <div className='create'>
+            <div className='create' onClick={() => history.push('/mint-nft')}>
               <svg
                 width='16'
                 height='16'
