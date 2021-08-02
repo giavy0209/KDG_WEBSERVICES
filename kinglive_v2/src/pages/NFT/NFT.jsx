@@ -177,7 +177,7 @@ export default function NFT() {
       {isOpenBuy && (
         <div key={itemBuy._id} className='popupX' onClick={() => setIsOpenBuy(false)}>
           <form className='containerX' onSubmit={handleBuy} onClick={(e) => e.stopPropagation()}>
-            <img className='preview-image' src={itemBuy?.asset?.metadata?.image} alt='' />
+            <img className='preview-image mb-25' src={itemBuy?.asset?.metadata?.image} alt='' />
             <div className='form-control'>
               <div className='label'>NFT</div>
               <input type='text' name='_name' readOnly value={itemBuy?.asset?.metadata?.name} />
