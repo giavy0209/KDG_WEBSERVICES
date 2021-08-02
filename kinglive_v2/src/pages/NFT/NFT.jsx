@@ -191,7 +191,7 @@ export default function NFT() {
               <input type='hidden' name='_listid' readOnly value={itemBuy?.id} />
             </div>
             <div className='form-control'>
-              <div className='label'>Avaiable</div>
+              <div className='label'>Available</div>
               <input type='number' readOnly value={itemBuy?.quantity} name='_quantity' />
             </div>
             <div className='form-control'>
