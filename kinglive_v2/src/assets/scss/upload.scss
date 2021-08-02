@@ -377,6 +377,24 @@
     align-items: center;
   }
 
+  &__copynoti {
+    position: absolute;
+    bottom: 100%;
+    right: 0;
+    padding: 5px 20px;
+    border-radius: 5px;
+
+    background-color: #000;
+    color: #fff;
+    opacity: 0.5;
+
+    display: none;
+
+    &.show {
+      display: block;
+    }
+  }
+
   &__input,
   &__textarea {
     display: block;

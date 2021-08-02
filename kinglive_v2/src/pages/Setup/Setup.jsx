@@ -12,13 +12,22 @@ import callAPI from '../../axios'
 import { PLAY_STREAM, RTMP_DOMAIN, STORAGE_DOMAIN } from '../../constant'
 import socket from '../../socket'
 
-const copyToClipboard = (value) => {
+const copyToClipboard = (value, e) => {
   let input = document.createElement('input')
   document.body.appendChild(input)
   input.value = value
   input.select()
   document.execCommand('copy')
   input.remove()
+
+  let target = e.target
+  while (!target.classList.contains('upload__copy')) {
+    target = target.parentElement
+  }
+  target.nextElementSibling.classList.add('show')
+  setTimeout(() => {
+    target.nextElementSibling.classList.remove('show')
+  }, 1000)
 }
 
 export default function Setup() {
@@ -43,6 +52,8 @@ export default function Setup() {
 
   const [currentStep, setCurrentStep] = useState(1)
 
+  useEffect(() => console.log({ streamData }), [streamData])
+
   useEffect(() => {
     ;(async () => {
       try {
@@ -62,8 +73,6 @@ export default function Setup() {
     socket.on('stream', handleStream)
     return () => socket.removeEventListener('stream', handleStream)
   }, [])
-
-  useEffect(() => console.log({ streamData }), [streamData])
 
   const handlePreviewThumbnail = (e) => {
     const files = e.target.files || []
@@ -303,9 +312,10 @@ export default function Setup() {
                   defaultValue={RTMP_DOMAIN}
                   disabled
                 />
-                <div className='upload__copy' onClick={() => copyToClipboard(RTMP_DOMAIN)}>
+                <div className='upload__copy' onClick={(e) => copyToClipboard(RTMP_DOMAIN, e)}>
                   <img src={copySVG} alt='' />
                 </div>
+                <div className='upload__copynoti'>Copied!</div>
               </div>
 
               <div className='upload__label'>Stream Key</div>
@@ -317,9 +327,10 @@ export default function Setup() {
                   defaultValue={streamKey}
                   disabled
                 />
-                <div className='upload__copy' onClick={() => copyToClipboard(streamKey)}>
+                <div className='upload__copy' onClick={(e) => copyToClipboard(streamKey, e)}>
                   <img src={copySVG} alt='' />
                 </div>
+                <div className='upload__copynoti'>Copied!</div>
               </div>
 
               {status === 0 && connect_status === 0 && (
