@@ -327,7 +327,7 @@ export default function Setup() {
               )}
 
               {status === 0 && connect_status === 1 && (
-                <button className='upload__button' type='submit'>
+                <button className='upload__button mr-20' type='submit'>
                   Live now
                 </button>
               )}
