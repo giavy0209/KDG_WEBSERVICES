@@ -7,6 +7,7 @@ import uploadSVG from '../../assets/svg/upload.svg'
 import callAPI from '../../axios'
 import { ABIKL1155, addressKL1155 } from '../../contracts/KL1155'
 import { ABIERC20, addressERC20 } from '../../contracts/ERC20'
+import {getThumbnailAsync} from 'expo-video-thumbnails';
 
 export default function MintNFT() {
   const inputVideoRef = useRef()
@@ -19,6 +20,7 @@ export default function MintNFT() {
 
   const [isApproval, setIsApproval] = useState(false)
   const [file, setFile] = useState([])
+  const [image, setImage] = useState({})
 
   const [percent, setPercent] = useState(0)
   const [isUploading, setIsUploading] = useState(false)
@@ -38,9 +40,9 @@ export default function MintNFT() {
       }
     }
     getAllowance()
-  }, [])
+  }, [window.ethereum.selectedAddress])
 
-  const handlePreviewVideo = (e) => {
+  const handlePreviewVideo = async (e) => {
     const files = e.target.files || []
 
     if (!files.length) return
@@ -49,7 +51,8 @@ export default function MintNFT() {
     descRef.current.value = files[0].name.replace('.mp4', '')
     setFile(files[0])
     const reader = new FileReader()
-
+   
+ 
     reader.onload = (e) => {
       videoPreviewRef.current.src = e.target.result
       imagePreviewRef.current.src = e.target.result
@@ -86,6 +89,7 @@ export default function MintNFT() {
     setIsUploading(true)
 
     const data = new FormData()
+    data.append('image',image);
     data.append('file', file)
     data.append('name', e.target.name.value)
     data.append('numEditions', e.target.numEditions.value)
@@ -263,8 +267,8 @@ export default function MintNFT() {
                 type='file'
                 accept='.mp4,.png,.jpg,.gif'
                 onInput={handlePreviewVideo}
-              />
-              <video ref={videoPreviewRef}></video>
+              />     
+              <video ref={videoPreviewRef}></video>     
               <img className='preview-image' ref={imagePreviewRef} alt='' />
               <img src={uploadSVG} alt='' />
               <span>Drap and drop video file</span>

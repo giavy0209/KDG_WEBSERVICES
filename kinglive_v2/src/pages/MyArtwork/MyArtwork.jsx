@@ -25,6 +25,7 @@ export default function MyArtwork() {
   const avatarPos = useMemo(() => userData?.kyc?.avatar_pos, [userData])
   const cover = useMemo(() => userData?.kyc?.cover?.path, [userData])
   const coverPos = useMemo(() => userData?.kyc?.cover_pos, [userData])
+  const isReviewer = useMemo(() => userRedux?.isReviewer, [userRedux])
   const userName = useMemo(
     () => `${userData?.kyc?.first_name} ${userData?.kyc?.last_name}`,
     [userData]
@@ -90,6 +91,7 @@ export default function MyArtwork() {
     ;(async () => {
       try {
         const res = await callAPI.get(`/user?uid=${userRedux?._id}`)
+        console.log("res",res);
         setUserData(res.data)
       } catch (error) {}
     })()
@@ -280,7 +282,12 @@ export default function MyArtwork() {
                 <div key={'artwork' + al._id} className='myartwork__list-item'>
                   <div className='artwork'>
                     <div className='img'>
-                      <img key={'image' + al._id} src={al.asset?.metadata?.image} alt='' />
+                      {al.asset?.metadata?.mimetype.startsWith('image') && (
+                         <img key={'image' + al._id} src={al.asset?.metadata?.image} alt='' />
+                      )}
+                      {al.asset?.metadata?.mimetype.startsWith('video/mp4') && (
+                         <img key={'image' + al._id} src={al.asset?.metadata?.image} alt='' />
+                         )}
                     </div>
                     <div key={'name' + al._id} className='name'>
                       {al.asset?.metadata?.name}
@@ -327,7 +334,7 @@ export default function MyArtwork() {
                       Approval for sell
                     </div>
                   )}
-                  {status === 0 && (
+                  {isReviewer && status === 0 && (
                     <div>
                       <div
                         key={'review' + al._id}
