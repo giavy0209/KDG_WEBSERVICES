@@ -91,9 +91,9 @@ export default function NFT() {
   const handleBuy = async (e) => {
     e.preventDefault()
     const listId = e.target._listid.value
-    const amount = e.target._amount.value.toHex()
+    const amount = new Decimal(e.target._amount.value).toHex()
     const paymentToken = itemBuy.payment_token
-    const netTotalPayment = e.target._netTotal.value.toHex()
+    const netTotalPayment = new Decimal(e.target._netTotal.value).toHex()
     console.log('netTotalPayment', netTotalPayment)
     window.contractMarket.methods
       .buy(listId, amount, paymentToken, netTotalPayment)
@@ -137,12 +137,12 @@ export default function NFT() {
     [Decimal]
   )
 
-  const handleChangeAmount = async (e) => {
+  const handleChangeAmount = async (amount) => {
     const { Decimal } = require('decimal.js')
-    if (e.target.value && e.target.value.length && !isNaN(e.target.value)) {
+    if (amount && amount.length && !isNaN(amount)) {
       paymentList.forEach((token) => {
         if (token.address === itemBuy.payment_token) {
-          if (new Decimal(e.target.value).gt(itemBuy.quantity)) {
+          if (new Decimal(amount).gt(itemBuy.quantity)) {
             setAmountBuy(itemBuy.quantity)
             setTotal(
               new Decimal(itemBuy.quantity).mul(
@@ -152,13 +152,13 @@ export default function NFT() {
             setNetTotal(new Decimal(itemBuy.quantity).mul(Decimal(itemBuy.price)))
             return
           } else {
-            setAmountBuy(new Decimal(e.target.value))
+            setAmountBuy(new Decimal(amount))
             setTotal(
-              new Decimal(e.target.value).mul(
+              new Decimal(amount).mul(
                 Decimal(itemBuy.price).div(new Decimal(10).pow(token.decimal))
               )
             )
-            setNetTotal(new Decimal(e.target.value).mul(Decimal(itemBuy.price)))
+            setNetTotal(new Decimal(amount).mul(Decimal(itemBuy.price)))
             return
           }
         }
@@ -201,7 +201,7 @@ export default function NFT() {
                 min='1'
                 max={itemBuy?.quantity}
                 value={amountBuy}
-                onChange={(e) => handleChangeAmount(e)}
+                onChange={(e) =>handleChangeAmount(e.target.value)}
               />
             </div>
             <div className='form-control'>

@@ -126,12 +126,12 @@ export default function MyArtwork() {
     const paymentToken = paymentList[e.target._paymentToken.value]
     const price = new Decimal(e.target._price.value)
       .mul(new Decimal(10).pow(paymentToken.decimal))
-      .toString()
+      .toHex()
     await new window.web3.eth.Contract(ABIMarket, addressMarket).methods
       .list(
         e.target._contract.value,
         e.target._id.value,
-        e.target._quantity.value,
+        new Decimal(e.target._quantity.value).toHex(),
         e.target._mask.value,
         price,
         paymentToken.address,
@@ -263,7 +263,7 @@ export default function MyArtwork() {
               className={`myartwork__tab ${status === 1 ? 'active' : ''}`}
               onClick={() => handleChangeStatus(1)}
             >
-              Revewed <span>Revewed</span>{' '}
+              Reviewed <span>Reviewed</span>{' '}
             </div>
             <div
               className={`myartwork__tab ${status === 0 ? 'active' : ''}`}
