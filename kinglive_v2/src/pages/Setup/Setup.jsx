@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import ReactHlsPlayer from 'react-hls-player'
+import { useHistory } from 'react-router-dom'
 import '../../assets/scss/upload.scss'
 import checkSVG from '../../assets/svg/check.svg'
 import closeSVG from '../../assets/svg/close.svg'
@@ -11,16 +12,27 @@ import callAPI from '../../axios'
 import { PLAY_STREAM, RTMP_DOMAIN, STORAGE_DOMAIN } from '../../constant'
 import socket from '../../socket'
 
-const copyToClipboard = (value) => {
+const copyToClipboard = (value, e) => {
   let input = document.createElement('input')
   document.body.appendChild(input)
   input.value = value
   input.select()
   document.execCommand('copy')
   input.remove()
+
+  let target = e.target
+  while (!target.classList.contains('upload__copy')) {
+    target = target.parentElement
+  }
+  target.nextElementSibling.classList.add('show')
+  setTimeout(() => {
+    target.nextElementSibling.classList.remove('show')
+  }, 1000)
 }
 
 export default function Setup() {
+  const history = useHistory()
+
   const thumbnailPreviewRef = useRef()
   const inputThumbnailRef = useRef()
   const tagsRef = useRef()
@@ -32,11 +44,15 @@ export default function Setup() {
   const [changeStepError, setChangeStepError] = useState(false)
 
   const [streamData, setStreamData] = useState({})
+  const streamKey = useMemo(() => streamData.key, [streamData])
+  const streamID = useMemo(() => streamData._id, [streamData])
+  const streamTags = useMemo(() => streamData.tags?.join(', '), [streamData])
+  const status = useMemo(() => streamData.status, [streamData])
+  const connect_status = useMemo(() => streamData.connect_status, [streamData])
+
   const [currentStep, setCurrentStep] = useState(1)
 
-  useEffect(() => {
-    document.title = 'KingLive V2 - Setup'
-  }, [])
+  useEffect(() => console.log({ streamData }), [streamData])
 
   useEffect(() => {
     ;(async () => {
@@ -54,23 +70,9 @@ export default function Setup() {
 
   useEffect(() => {
     const handleStream = (data) => setStreamData(data)
-
     socket.on('stream', handleStream)
-
-    return () => {
-      socket.removeEventListener('stream', handleStream)
-    }
+    return () => socket.removeEventListener('stream', handleStream)
   }, [])
-
-  useEffect(() => {
-    console.log({ streamData })
-  }, [streamData])
-
-  const streamKey = useMemo(() => streamData.key, [streamData])
-  const streamID = useMemo(() => streamData._id, [streamData])
-  const streamTags = useMemo(() => streamData.tags?.join(', '), [streamData])
-  const status = useMemo(() => streamData.status, [streamData])
-  const connect_status = useMemo(() => streamData.connect_status, [streamData])
 
   const handlePreviewThumbnail = (e) => {
     const files = e.target.files || []
@@ -99,11 +101,11 @@ export default function Setup() {
     e.preventDefault()
 
     const data = new FormData(e.target)
-
     try {
       await callAPI.post(`/public_stream?sid=${streamID}`, data)
     } catch (error) {
-      console.log('error live now', error)
+      console.log('error live now')
+      console.log(error)
     }
   }
 
@@ -112,7 +114,8 @@ export default function Setup() {
       await callAPI.post(`/stop_stream?sid=${streamID}`)
       setEndLiveSuccess(true)
     } catch (error) {
-      console.log('error end live', error)
+      console.log('error end live')
+      console.log(error)
     }
   }
 
@@ -293,6 +296,10 @@ export default function Setup() {
                 defaultValue={status === 1 ? streamData.description : ''}
                 disabled={status === 1}
               ></textarea>
+
+              <div className='buttonX mt-20' onClick={() => handleChangeStep(2)}>
+                Next
+              </div>
             </div>
 
             <div className='rotate3D'>
@@ -305,9 +312,10 @@ export default function Setup() {
                   defaultValue={RTMP_DOMAIN}
                   disabled
                 />
-                <div className='upload__copy' onClick={() => copyToClipboard(RTMP_DOMAIN)}>
+                <div className='upload__copy' onClick={(e) => copyToClipboard(RTMP_DOMAIN, e)}>
                   <img src={copySVG} alt='' />
                 </div>
+                <div className='upload__copynoti'>Copied!</div>
               </div>
 
               <div className='upload__label'>Stream Key</div>
@@ -319,9 +327,10 @@ export default function Setup() {
                   defaultValue={streamKey}
                   disabled
                 />
-                <div className='upload__copy' onClick={() => copyToClipboard(streamKey)}>
+                <div className='upload__copy' onClick={(e) => copyToClipboard(streamKey, e)}>
                   <img src={copySVG} alt='' />
                 </div>
+                <div className='upload__copynoti'>Copied!</div>
               </div>
 
               {status === 0 && connect_status === 0 && (
@@ -329,14 +338,14 @@ export default function Setup() {
               )}
 
               {status === 0 && connect_status === 1 && (
-                <button className='upload__button' type='submit'>
+                <button className='upload__button mr-20' type='submit'>
                   Live now
                 </button>
               )}
 
               {status === 1 && connect_status === 1 && (
                 <p className='upload__message'>
-                  <span onClick={() => window.open(`/watchlive?s=${streamID}`)}>
+                  <span onClick={() => history.push(`/watchlive?s=${streamID}`)}>
                     You are live streaming now
                   </span>
                   . Please stop OBS livestream or disconnect OBS to end the livestream session on
@@ -350,11 +359,18 @@ export default function Setup() {
                     Livestream is paused. Please reconnect to continue or click the button below to
                     end the livestream session on KingliveTv
                   </p>
-                  <div className='upload__button upload__button--cancel' onClick={handleStopStream}>
+                  <div
+                    className='upload__button upload__button--cancel mr-20'
+                    onClick={handleStopStream}
+                  >
                     End livestream
                   </div>
                 </>
               )}
+
+              <div className='buttonX mt-20' onClick={() => handleChangeStep(1)}>
+                Previous
+              </div>
             </div>
           </div>
         </div>

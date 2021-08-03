@@ -3,7 +3,7 @@ const keyRefresh = 'refresh'
 
 const storage = {
   getToken() {
-    try{
+    try {
       return JSON.parse(localStorage.getItem(keyJwt))
     } catch {
       return null
@@ -36,6 +36,10 @@ const storage = {
 
   setItem(key, value) {
     localStorage.setItem(key, JSON.stringify(value))
+  },
+
+  clearItem(key) {
+    localStorage.removeItem(key)
   },
 }
 

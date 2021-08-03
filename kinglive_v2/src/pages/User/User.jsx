@@ -27,7 +27,7 @@ const statisticArray = [
 export default function User() {
   const history = useHistory()
 
-  const userRedux = useSelector(state => state.user)
+  const userRedux = useSelector((state) => state.user)
   const [isFollow, setIsFollow] = useState(false)
   const [previewIMG, setPreviewIMG] = useState('')
 
@@ -48,18 +48,13 @@ export default function User() {
 
   // Get Profile of user dependent uid
   useEffect(() => {
-    let id
+    // if (uid === userRedux?._id) {
+    //   return history.push('/profile')
+    // }
 
-    if (uid === userRedux?._id) {
-      return history.push('/profile')
-    } else {
-      id = uid
-    }
-
-    if (!id) return
     ;(async () => {
       try {
-        const res = await callAPI.get(`/user?uid=${id}`)
+        const res = await callAPI.get(`/user?uid=${uid}`)
         console.log({ userData: res.data })
         setUserData(res.data)
 
@@ -79,7 +74,7 @@ export default function User() {
   const handleFollow = async () => {
     try {
       const res = await callAPI.post(`follow?id=${userData?._id}`)
-      if (res.status === 1) setIsFollow(x => !x)
+      if (res.status === 1) setIsFollow((x) => !x)
     } catch (error) {
       console.log('error follow or unfollow', error)
     }
@@ -131,7 +126,7 @@ export default function User() {
       </div>
 
       <div className='profile😢__statistic'>
-        {statisticArray.map(item => (
+        {statisticArray.map((item) => (
           <div key={item.name} className='itemStatistic'>
             <div className='absolute'>
               <span>{item.amount}</span>
@@ -183,7 +178,7 @@ export default function User() {
         <div className='profile😢__title'>Video Uploaded</div>
 
         <div className='flexbox flex3' style={{ '--gap-col': '5px', '--gap-row': '25px' }}>
-          {[1, 2, 3].map(item => (
+          {[1, 2, 3].map((item) => (
             <div key={item} className='flexbox__item profile😢__video'>
               <div className='thumbnail'>
                 <img src={coverDefaultJPG} alt='' />

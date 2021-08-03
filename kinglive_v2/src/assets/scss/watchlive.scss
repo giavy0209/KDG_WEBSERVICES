@@ -52,12 +52,13 @@
       padding-right: 10px;
 
       > img {
+        cursor: pointer;
+        user-select: none;
+
         width: 45px;
         height: 45px;
-
         border-radius: 50%;
-
-        object-fit: cover;
+        object-fit: contain;
       }
     }
 
@@ -65,6 +66,11 @@
       width: calc(100% - 55px);
 
       > *:nth-child(1) {
+        cursor: pointer;
+        user-select: none;
+
+        margin-bottom: 5px;
+
         color: $text-color-light;
         font-size: 16px;
         line-height: 1;
@@ -139,10 +145,8 @@
       > img {
         width: 25px;
         height: 25px;
-
         border-radius: 50%;
-
-        object-fit: cover;
+        object-fit: contain;
       }
     }
 
@@ -174,10 +178,8 @@
       > img {
         width: 25px;
         height: 25px;
-
         border-radius: 50%;
-
-        object-fit: cover;
+        object-fit: contain;
       }
     }
 

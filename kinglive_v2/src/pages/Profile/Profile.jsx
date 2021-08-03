@@ -272,7 +272,7 @@ export default function Profile() {
               </div>
 
               <div className='profile😢__introduce'>
-                {/* <VideoPlayer guid={`7ba74ab1-fc07-4a55-8394-2a1b1f771049`} /> */}
+                <VideoPlayer guid={`7ba74ab1-fc07-4a55-8394-2a1b1f771049`} />
 
                 <div>
                   <div>Epic Riddles Marathon Only Bravest Detectives Can Pass</div>
@@ -294,7 +294,7 @@ export default function Profile() {
                 <div className='profile😢__title'>Live</div>
 
                 <div className='profile😢__introduce'>
-                  {/* <VideoPlayer guid={`7ba74ab1-fc07-4a55-8394-2a1b1f771049`} /> */}
+                  <VideoPlayer guid={`7ba74ab1-fc07-4a55-8394-2a1b1f771049`} />
 
                   <div>
                     <div>Epic Riddles Marathon Only Bravest Detectives Can Pass</div>

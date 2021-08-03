@@ -17,7 +17,7 @@ export default function MyArtwork() {
 
   const isLoadMore = useRef(true)
   const isLoadingAPI = useRef(false)
-  const [isLoading, setIsLoading] = useState(false)
+  const [, setIsLoading] = useState(false)
   const [isApprovedForAll, setIsApprovedForAll] = useState(false)
 
   const [userData, setUserData] = useState({})
@@ -31,13 +31,13 @@ export default function MyArtwork() {
     [userData]
   )
 
-  const handleChangeStatus = useCallback(async (status) => {
+  const handleChangeStatus = async (status) => {
     setStatus(status)
     AssetList.length = 0
     await getAssets(status)
-  })
+  }
 
-  const handleApprove = useCallback(async () => {
+  const handleApprove = async () => {
     if (window.web3.eth) {
       const approved = await new window.web3.eth.Contract(ABIKL1155, addressKL1155).methods
         .setApprovalForAll(addressMarket, true)
@@ -46,12 +46,16 @@ export default function MyArtwork() {
         setIsApprovedForAll(true)
       }
     }
-  })
+  }
 
-  const getAssets = useCallback(async (status) => {
-      var ids = AssetList.map(o => o._id);
-      
-      const res = await callAPI.get(`/user-asset?limit=20&${ids.length?`ids=${ids}`:""}&status=${status}`,true)
+  const getAssets = useCallback(
+    async (status) => {
+      var ids = AssetList.map((o) => o._id)
+
+      const res = await callAPI.get(
+        `/user-asset?limit=20&${ids.length ? `ids=${ids}` : ''}&status=${status}`,
+        true
+      )
 
       if (res?.data?.length === 0) {
         isLoadMore.current = false
@@ -85,7 +89,7 @@ export default function MyArtwork() {
     return () => {
       window.removeEventListener('scroll', handleLoad)
     }
-  }, [getAssets])
+  }, [getAssets, status])
 
   useEffect(() => {
     ;(async () => {
@@ -99,10 +103,9 @@ export default function MyArtwork() {
 
   useEffect(() => {
     ;(async () => {
-      callAPI.get(`/user-asset?limit=20&status=${status}`,true).then(res => {
-      setAssetList(res?.data?res.data:[])
-    })
-
+      callAPI.get(`/user-asset?limit=20&status=${status}`, true).then((res) => {
+        setAssetList(res?.data ? res.data : [])
+      })
 
       if (window.web3.eth && window.ethereum.selectedAddress) {
         new window.web3.eth.Contract(ABIKL1155, addressKL1155).methods
@@ -113,7 +116,7 @@ export default function MyArtwork() {
           })
       }
     })()
-  }, [])
+  }, [status])
 
   const [isOpenSell, setIsOpenSell] = useState(false)
 
@@ -125,9 +128,17 @@ export default function MyArtwork() {
       .mul(new Decimal(10).pow(paymentToken.decimal))
       .toString()
     await new window.web3.eth.Contract(ABIMarket, addressMarket).methods
-          .list(e.target._contract.value, e.target._id.value,e.target._quantity.value,e.target._mask.value, price,paymentToken.address,100000000)
-          .send({from : window.ethereum.selectedAddress})
-    AssetList.length=0
+      .list(
+        e.target._contract.value,
+        e.target._id.value,
+        e.target._quantity.value,
+        e.target._mask.value,
+        price,
+        paymentToken.address,
+        100000000
+      )
+      .send({ from: window.ethereum.selectedAddress })
+    AssetList.length = 0
     await getAssets(status)
 
     setIsOpenSell(false)
@@ -140,23 +151,21 @@ export default function MyArtwork() {
 
   const handleAccept = async (item) => {
     const result = await new window.web3.eth.Contract(ABIKL1155, addressKL1155).methods
-          .reviewAsset(item.asset.id,true)
-          .send({from : window.ethereum.selectedAddress})
-    if(result){
-      AssetList.length=0
-      await getAssets(status)    
-
+      .reviewAsset(item.asset.id, true)
+      .send({ from: window.ethereum.selectedAddress })
+    if (result) {
+      AssetList.length = 0
+      await getAssets(status)
     }
   }
 
   const handleDeny = async (item) => {
     const result = await new window.web3.eth.Contract(ABIKL1155, addressKL1155).methods
-          .reviewAsset(item.asset.id,false)
-          .send({from : window.ethereum.selectedAddress})
-    if(result){
-      AssetList.length=0
-      await getAssets(status)  
-
+      .reviewAsset(item.asset.id, false)
+      .send({ from: window.ethereum.selectedAddress })
+    if (result) {
+      AssetList.length = 0
+      await getAssets(status)
     }
   }
 

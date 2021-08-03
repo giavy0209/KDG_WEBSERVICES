@@ -1,4 +1,5 @@
 import callAPI from '../axios'
+import storage from '../helpers/storage'
 
 export const CHANGE_USER = 'CHANGE_USER'
 export function asyncChangeUser() {
@@ -8,6 +9,7 @@ export function asyncChangeUser() {
 
       if (res.status === 1) {
         dispatch({ type: CHANGE_USER, payload: res.data })
+        storage.setItem('user', res.data)
       }
 
       if (res.status === 401) {
