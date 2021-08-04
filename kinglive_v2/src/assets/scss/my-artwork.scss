@@ -77,6 +77,7 @@
     &-item {
       width: 33.33333%;
       padding: 0 10px;
+
       .artwork {
         background-color: #171a2b;
         border-radius: 10px;
@@ -85,6 +86,9 @@
           @include img(0.75);
           border-radius: 10px;
           overflow: hidden;
+          video {
+            opacity: 0;
+          }
         }
         .name {
           color: #fff;
@@ -102,6 +106,19 @@
             margin-left: 5px;
             font-size: 14px;
             color: #6a6a6d;
+          }
+        }
+      }
+
+      &.active-video {
+        .artwork{ 
+          .img {
+            img {
+              opacity: 0;
+            }
+            video {
+              opacity: 1;
+            }
           }
         }
       }

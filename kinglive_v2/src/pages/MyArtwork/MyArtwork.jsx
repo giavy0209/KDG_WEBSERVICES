@@ -169,6 +169,38 @@ export default function MyArtwork() {
     }
   }
 
+  const handleMouseOverNFT = useCallback((e) => {
+    let target = e.target
+    while (true) {
+      const targetClassList = Array.from(target.classList)
+      if(targetClassList.includes('myartwork__list-item')) {
+        break
+      }
+      target = target.parentElement
+    }
+    target.classList.add('active-video')
+    const video = target.querySelector('video')
+    if(video) {
+      video.play()
+    }
+  },[])
+
+  const handleMouseOutNFT = useCallback((e) => {
+    let target = e.target
+    while (true) {
+      const targetClassList = Array.from(target.classList)
+      if(targetClassList.includes('myartwork__list-item')) {
+        break
+      }
+      target = target.parentElement
+    }
+    target.classList.remove('active-video')
+    const video = target.querySelector('video')
+    if(video) {
+      video.pause()
+    }
+  })
+
   return (
     <>
       {isOpenSell && (
@@ -288,15 +320,21 @@ export default function MyArtwork() {
           {AssetList?.length > 0 && (
             <div className='myartwork__list'>
               {AssetList.map((al) => (
-                <div key={'artwork' + al._id} className='myartwork__list-item'>
+                <div 
+                onMouseOver={handleMouseOverNFT}
+                onMouseOut={handleMouseOutNFT}
+                key={'artwork' + al._id} className='myartwork__list-item'>
                   <div className='artwork'>
                     <div className='img'>
                       {al.asset?.metadata?.mimetype.startsWith('image') && (
                          <img key={'image' + al._id} src={al.asset?.metadata?.image} alt='' />
                       )}
                       {al.asset?.metadata?.mimetype.startsWith('video/mp4') && (
+                        <>
                          <img key={'image' + al._id} src={al.asset?.metadata?.image} alt='' />
-                         )}
+                         <video muted autoPlay key={'image' + al._id} src={al.asset?.metadata?.animation_url} alt='' />
+                        </>
+                        )}
                     </div>
                     <div key={'name' + al._id} className='name'>
                       {al.asset?.metadata?.name}
