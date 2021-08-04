@@ -198,6 +198,7 @@ export default function MyArtwork() {
     const video = target.querySelector('video')
     if(video) {
       video.pause()
+      video.currentTime=0
     }
   })
 
