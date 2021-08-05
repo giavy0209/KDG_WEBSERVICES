@@ -258,9 +258,9 @@ export default function MintNFT() {
           <span>Max size: 10MB</span>
         </p>
 
-        <div className='upload__layout mb-50'>
-          <div className='upload__left'>
-            <div className='upload__video mb-25'>
+        <div className='mint-nft__layout mb-50'>
+          <div className='mint-nft__left'>
+            <div className='mint-nft__video mb-25'>
               <input
                 name='file'
                 ref={inputVideoRef}

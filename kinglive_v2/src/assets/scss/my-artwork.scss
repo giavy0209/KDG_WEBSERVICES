@@ -86,11 +86,19 @@
           @include img(0.75);
           border-radius: 10px;
           overflow: hidden;
+        }
+        .video {
+          @include img(0.75);
+          border-radius: 10px;
+          overflow: hidden;
           video {
             opacity: 0;
           }
         }
         .name {
+          color: #fff;
+        }
+        .type {
           color: #fff;
         }
         .price {
@@ -112,7 +120,7 @@
 
       &.active-video {
         .artwork{ 
-          .img {
+          .video {
             img {
               opacity: 0;
             }

@@ -326,16 +326,22 @@ export default function MyArtwork() {
                 onMouseOut={handleMouseOutNFT}
                 key={'artwork' + al._id} className='myartwork__list-item'>
                   <div className='artwork'>
-                    <div className='img'>
                       {al.asset?.metadata?.mimetype.startsWith('image') && (
-                         <img key={'image' + al._id} src={al.asset?.metadata?.image} alt='' />
+                         <div className='img'>
+                            <img key={'image' + al._id} src={al.asset?.metadata?.image} alt='' />
+                         </div>
+
                       )}
                       {al.asset?.metadata?.mimetype.startsWith('video/mp4') && (
                         <>
-                         <img key={'image' + al._id} src={al.asset?.metadata?.image} alt='' />
-                         <video muted autoPlay key={'image' + al._id} src={al.asset?.metadata?.animation_url} alt='' />
+                          <div className='video'>
+                            <img key={'image' + al._id} src={al.asset?.metadata?.image} alt='' />
+                            <video muted autoPlay key={'video' + al._id} src={al.asset?.metadata?.animation_url} alt='' />
+                         </div>
                         </>
                         )}
+                    <div key={'type' + al._id} className='type'>
+                      {al.asset?.metadata?.mimetype}
                     </div>
                     <div key={'name' + al._id} className='name'>
                       {al.asset?.metadata?.name}
