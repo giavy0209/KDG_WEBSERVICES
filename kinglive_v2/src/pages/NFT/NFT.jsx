@@ -170,6 +170,39 @@ export default function NFT() {
     }
   }
 
+  const handleMouseOverNFT = useCallback((e) => {
+    let target = e.target
+    while (true) {
+      const targetClassList = Array.from(target.classList)
+      if(targetClassList.includes('mid')) {
+        break
+      }
+      target = target.parentElement
+    }
+    target.classList.add('active-video')
+    const video = target.querySelector('video')
+    if(video) {
+      video.play()
+    }
+  },[])
+
+  const handleMouseOutNFT = useCallback((e) => {
+    let target = e.target
+    while (true) {
+      const targetClassList = Array.from(target.classList)
+      if(targetClassList.includes('mid')) {
+        break
+      }
+      target = target.parentElement
+    }
+    target.classList.remove('active-video')
+    const video = target.querySelector('video')
+    if(video) {
+      video.pause()
+      video.currentTime=0
+    }
+  })
+
   return (
     <>
       {isOpenBuy && (
@@ -286,8 +319,25 @@ export default function NFT() {
                     </span>
                   ))}
                 </div>
-                <div className='mid'>
-                  <img src={top9List[ActiveTop9]?.asset?.metadata?.image} alt='' />
+                <div className='mid' 
+                onMouseOver={handleMouseOverNFT}
+                onMouseOut={handleMouseOutNFT}>
+                  
+                      {top9List[ActiveTop9]?.asset?.metadata?.mimetype.startsWith('image') && (
+                        <>
+                        <div className='img'>
+                            <img key={'image' + top9List[ActiveTop9]?._id} src={top9List[ActiveTop9]?.asset?.metadata?.image} alt='' />
+                         </div>
+                        </>
+                      )}
+                      {top9List[ActiveTop9]?.asset?.metadata?.mimetype.startsWith('video/mp4') && (
+                        <>
+                          <div className='video'>
+                            <img key={'image' + top9List[ActiveTop9]?._id} src={top9List[ActiveTop9]?.asset?.metadata?.image} alt='' />
+                            <video muted autoPlay key={'video' + top9List[ActiveTop9]?._id} src={top9List[ActiveTop9]?.asset?.metadata?.animation_url} alt='' />
+                         </div>
+                        </>
+                        )}
                 </div>
                 <div className='right'>
                   <div className='name'>{top9List[ActiveTop9]?.asset?.metadata?.name}</div>
