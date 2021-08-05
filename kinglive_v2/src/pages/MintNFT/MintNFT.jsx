@@ -51,13 +51,15 @@ export default function MintNFT() {
     descRef.current.value = files[0].name.replace('.mp4', '')
     setFile(files[0])
     const reader = new FileReader()
-   
- 
     reader.onload = (e) => {
-      videoPreviewRef.current.src = e.target.result
+      console.log(files[0]);
+      if(files[0].type.includes('video')){
+        videoPreviewRef.current.src = e.target.result
+        videoPreviewRef.current.load()
+        videoPreviewRef.current.play()
+        return
+      }
       imagePreviewRef.current.src = e.target.result
-      videoPreviewRef.current.load()
-      videoPreviewRef.current.play()
     }
 
     reader.readAsDataURL(files[0])
@@ -268,8 +270,8 @@ export default function MintNFT() {
                 accept='.mp4,.png,.jpg,.gif'
                 onInput={handlePreviewVideo}
               />     
-              <video ref={videoPreviewRef}></video>     
-              <img className='preview-image' ref={imagePreviewRef} alt='' />
+              <video className={`${file?.type?.includes('video') ? 'show' : ''}`} ref={videoPreviewRef}></video>     
+              <img className={`preview-image ${file?.type?.includes('image') ? 'show' : ''}`} ref={imagePreviewRef} alt='' />
               <img src={uploadSVG} alt='' />
               <span>Drap and drop video file</span>
             </div>
