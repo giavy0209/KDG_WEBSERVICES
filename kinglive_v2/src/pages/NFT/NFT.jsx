@@ -8,7 +8,6 @@ import { addressMarket } from '../../contracts/Market'
 
 export default function NFT() {
   const history = useHistory()
-
   const [PopulateList, setPopulateList] = useState([])
   const [top9List, setTop9List] = useState([])
   const [total, setTotal] = useState(0)
@@ -358,11 +357,11 @@ export default function NFT() {
 
                   <div className='info'>
                     <div className='row'>
-                      {top9List[ActiveTop9]?.owner?.kyc?.lastname && (
-                        <span>{'Artist :' + top9List[ActiveTop9]?.owner?.kyc?.last_name + ' ' +top9List[ActiveTop9]?.owner?.kyc?.first_name}</span>
+                      {top9List[ActiveTop9]?.owner?.kyc?.last_name && (
+                        <span>{'Artist : ' + top9List[ActiveTop9]?.owner?.kyc?.last_name + ' ' +top9List[ActiveTop9]?.owner?.kyc?.first_name}</span>
                       )}
-                       {!top9List[ActiveTop9]?.owner?.kyc?.lastname && (
-                        <span>{'Artist :' + top9List[ActiveTop9]?.owner?.address}</span>
+                       {!top9List[ActiveTop9]?.owner?.kyc?.last_name && (
+                        <span>{'Artist : 0x..' + top9List[ActiveTop9]?.owner?.address.substring(top9List[ActiveTop9]?.owner?.address.length - 10, top9List[ActiveTop9]?.owner?.address.length)}</span>
                       )}
                     </div>
                     <div className='row'>
