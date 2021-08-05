@@ -169,6 +169,39 @@ export default function MyArtwork() {
     }
   }
 
+  const handleMouseOverNFT = useCallback((e) => {
+    let target = e.target
+    while (true) {
+      const targetClassList = Array.from(target.classList)
+      if(targetClassList.includes('myartwork__list-item')) {
+        break
+      }
+      target = target.parentElement
+    }
+    target.classList.add('active-video')
+    const video = target.querySelector('video')
+    if(video) {
+      video.play()
+    }
+  },[])
+
+  const handleMouseOutNFT = useCallback((e) => {
+    let target = e.target
+    while (true) {
+      const targetClassList = Array.from(target.classList)
+      if(targetClassList.includes('myartwork__list-item')) {
+        break
+      }
+      target = target.parentElement
+    }
+    target.classList.remove('active-video')
+    const video = target.querySelector('video')
+    if(video) {
+      video.pause()
+      video.currentTime=0
+    }
+  })
+
   return (
     <>
       {isOpenSell && (
@@ -288,15 +321,27 @@ export default function MyArtwork() {
           {AssetList?.length > 0 && (
             <div className='myartwork__list'>
               {AssetList.map((al) => (
-                <div key={'artwork' + al._id} className='myartwork__list-item'>
+                <div 
+                onMouseOver={handleMouseOverNFT}
+                onMouseOut={handleMouseOutNFT}
+                key={'artwork' + al._id} className='myartwork__list-item'>
                   <div className='artwork'>
-                    <div className='img'>
                       {al.asset?.metadata?.mimetype.startsWith('image') && (
-                         <img key={'image' + al._id} src={al.asset?.metadata?.image} alt='' />
+                         <div className='img'>
+                            <img key={'image' + al._id} src={al.asset?.metadata?.image} alt='' />
+                         </div>
+
                       )}
                       {al.asset?.metadata?.mimetype.startsWith('video/mp4') && (
-                         <img key={'image' + al._id} src={al.asset?.metadata?.image} alt='' />
-                         )}
+                        <>
+                          <div className='video'>
+                            <img key={'image' + al._id} src={al.asset?.metadata?.image} alt='' />
+                            <video muted autoPlay key={'video' + al._id} src={al.asset?.metadata?.animation_url} alt='' />
+                         </div>
+                        </>
+                        )}
+                    <div key={'type' + al._id} className='type'>
+                      {al.asset?.metadata?.mimetype}
                     </div>
                     <div key={'name' + al._id} className='name'>
                       {al.asset?.metadata?.name}
