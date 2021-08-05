@@ -8,15 +8,12 @@ import callAPI from '../../axios'
 import { ABIKL1155, addressKL1155 } from '../../contracts/KL1155'
 import { ABIERC20, addressERC20 } from '../../contracts/ERC20'
 
-
 export default function MintNFT() {
   const inputVideoRef = useRef()
   const videoPreviewRef = useRef()
   const imagePreviewRef = useRef()
-  const tagsRef = useRef()
   const titleRef = useRef()
   const descRef = useRef()
-  const defaultValueTags = useRef('KingdomGame, KDG, KingliveTv')
 
   const [isApproval, setIsApproval] = useState(false)
   const [file, setFile] = useState([])
@@ -51,8 +48,7 @@ export default function MintNFT() {
     descRef.current.value = files[0].name.replace('.mp4', '')
     setFile(files[0])
     const reader = new FileReader()
-   
- 
+
     reader.onload = (e) => {
       videoPreviewRef.current.src = e.target.result
       imagePreviewRef.current.src = e.target.result
@@ -74,10 +70,7 @@ export default function MintNFT() {
 
   const handleClearInput = () => {
     inputVideoRef.current.value = ''
-
     videoPreviewRef.current.src = ''
-
-    tagsRef.current.value = defaultValueTags.current
     titleRef.current.value = ''
     descRef.current.value = ''
   }
@@ -89,7 +82,7 @@ export default function MintNFT() {
     setIsUploading(true)
 
     const data = new FormData()
-    data.append('image',image);
+    data.append('image', image)
     data.append('file', file)
     data.append('name', e.target.name.value)
     data.append('numEditions', e.target.numEditions.value)
@@ -267,8 +260,8 @@ export default function MintNFT() {
                 type='file'
                 accept='.mp4,.png,.jpg,.gif'
                 onInput={handlePreviewVideo}
-              />     
-              <video ref={videoPreviewRef}></video>     
+              />
+              <video ref={videoPreviewRef}></video>
               <img className='preview-image' ref={imagePreviewRef} alt='' />
               <img src={uploadSVG} alt='' />
               <span>Drap and drop video file</span>
@@ -278,7 +271,6 @@ export default function MintNFT() {
 
             <input
               name='numEditions'
-              ref={tagsRef}
               className='upload__input mb-25'
               type='number'
               placeholder='1'
