@@ -308,7 +308,12 @@ export default function NFT() {
 
                   <div className='info'>
                     <div className='row'>
-                      <span>{'Artist :' + top9List[ActiveTop9]?.owner?.address}</span>
+                      {top9List[ActiveTop9]?.owner?.kyc?.lastname && (
+                        <span>{'Artist :' + top9List[ActiveTop9]?.owner?.kyc?.last_name + ' ' +top9List[ActiveTop9]?.owner?.kyc?.first_name}</span>
+                      )}
+                       {!top9List[ActiveTop9]?.owner?.kyc?.lastname && (
+                        <span>{'Artist :' + top9List[ActiveTop9]?.owner?.address}</span>
+                      )}
                     </div>
                     <div className='row'>
                       <span>

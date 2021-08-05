@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import Web3 from 'web3'
@@ -19,6 +19,10 @@ import storage from '../../helpers/storage'
 import { actChangeAddress, asyncChangeUser } from '../../store/actions'
 
 export default function Header({ toggleSidebar = () => {}, IsOpenSidebar = false }) {
+  const userRedux = useSelector((state) => state.user)
+  const userName = useMemo(() => userRedux?userRedux?.kyc?.last_name + ' ' + userRedux?.kyc?.first_name:"", [userRedux])
+  const followers = useMemo(() => userRedux?userRedux?.kinglive?.total_follower :"0", [userRedux])
+
   const dispatch = useDispatch()
   const history = useHistory()
   const currentAddress = useSelector((state) => state.address)
@@ -347,7 +351,7 @@ export default function Header({ toggleSidebar = () => {}, IsOpenSidebar = false
             <span className='avatar'>
               <img src={logo} alt='' />
             </span>
-            <span className='name'>Ten ne</span>
+            <span className='name'>{userName}</span>
             <svg
               width='10'
               height='6'
@@ -367,8 +371,8 @@ export default function Header({ toggleSidebar = () => {}, IsOpenSidebar = false
                     <img src={logo} alt='' />
                   </span>
                   <div className='name'>
-                    <span>Ten ne</span>
-                    <span>2 Followers</span>
+                    <span>{userName}</span>
+                    <span>{followers} Followers</span>
                   </div>
                 </div>
                 
