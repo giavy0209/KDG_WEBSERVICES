@@ -1,16 +1,28 @@
 import '../../assets/scss/live.scss'
-import banner from '../../assets/images/live/banner.png'
+// import banner from '../../assets/images/live/banner.png'
+import banner01 from '../../assets/images/home/b01.jpg'
+import banner02 from '../../assets/images/home/b02.jpg'
+import banner03 from '../../assets/images/home/b03.jpg'
 import { useCallback, useEffect, useRef, useState } from 'react'
+import callAPI from '../../axios'
+import emptyGift from '../../assets/svg/emptyGift.svg'
+import coverDefault from '../../assets/svg/coverDefault.jpg'
+import avatarDefault from '../../assets/svg/avatarDefault.svg'
+import { STORAGE_DOMAIN } from '../../constant'
+import convertDateAgo from '../../helpers/convertDateAgo'
+import { useHistory } from 'react-router-dom'
 
-const slide = [banner, banner, banner]
+// const slide = [banner, banner, banner]
+const slide = [banner01, banner02, banner03]
 
 const live = []
 for (let index = 0; index < 100; index++) {
   live.push(index)
 }
 export default function Live() {
+  const history = useHistory()
+
   const [ActiveSlide, setActiveSlide] = useState(0)
-  const [ActiveLive, setActiveLive] = useState(0)
   const [ActiveTab, setActiveTab] = useState(0)
   const timeout = useRef(null)
   useEffect(() => {
@@ -30,18 +42,23 @@ export default function Live() {
     setActiveSlide(index)
   }, [])
 
-  const handlePlusSlideLive = useCallback(() => {
-    setActiveLive((_active) => {
-      if (_active === live.length - 1) return 0
-      return _active + 1
-    })
+  const [streamList, setStreamList] = useState([])
+
+  useEffect(() => {
+    callAPI
+      .get('/streammings')
+      .then((res) => {
+        if (res.status === 1) {
+          console.log({ streamList: res.data })
+          setStreamList(res.data)
+        }
+      })
+      .catch((error) => {
+        console.log('error get streamList')
+        console.log(error)
+      })
   }, [])
-  const handleMinusSlideLive = useCallback(() => {
-    setActiveLive((_active) => {
-      if (_active === 0) return live.length - 1
-      return _active - 1
-    })
-  }, [])
+
   return (
     <>
       <div className='live'>
@@ -67,14 +84,14 @@ export default function Live() {
         </div>
         <div className='container live-container'>
           <div className='left'>
-            <div className='title-controls'>
+            {/* <div className='title-controls'>
               <h2 className='title'>Watch Live</h2>
               <div className='controls'>
                 <div onClick={handleMinusSlideLive} className='btn left'></div>
                 <div onClick={handlePlusSlideLive} className='btn right'></div>
               </div>
-            </div>
-            <div className='watch-live-track'>
+            </div> */}
+            {/* <div className='watch-live-track'>
               <div
                 style={{
                   '--total-item': 100,
@@ -143,44 +160,79 @@ export default function Live() {
                   </div>
                 ))}
               </div>
+            </div> */}
+            <div className='title-controls'>
+              <h2 className='title'>Watch Live</h2>
             </div>
-            {/* <div className='title-controls'>
-              <h2 className='title'>Recommend</h2>
-            </div>
-            <div className='recommend'>
-              {live.map((o) => (
-                <div className='item'>
-                  <div className='video-live'>
-                    <div className='thumb'>
-                      <img src={banner} alt='' />
-                    </div>
-                    <div className='detail-avatar'>
-                      <div className='avatar'>
-                        <img src={banner} alt='' />
+
+            {streamList.length === 0 && (
+              <div
+                style={{
+                  height: 472,
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              >
+                <img src={emptyGift} alt='' />
+              </div>
+            )}
+
+            {streamList.length !== 0 && (
+              <div className='recommend'>
+                {streamList.map((stream) => (
+                  <div className='item' onClick={() => history.push(`/watchlive?s=${stream._id}`)}>
+                    <div className='video-live'>
+                      <div className='thumb'>
+                        <img
+                          src={
+                            stream.thumbnail?.path
+                              ? `${STORAGE_DOMAIN}${stream.thumbnail.path}`
+                              : coverDefault
+                          }
+                          alt=''
+                        />
                       </div>
-                      <div className='detail'>
-                        <div className='name'>Đây là cái tiêu đề</div>
-                        <div className='view-time'>
-                          11view
-                          <svg
-                            width='4'
-                            height='4'
-                            viewBox='0 0 4 4'
-                            fill='none'
-                            xmlns='http://www.w3.org/2000/svg'
-                          >
-                            <circle cx='1.67185' cy='2.23797' r='1.40135' fill='#98999A' />
-                          </svg>
-                          11 days ago
+                      <div className='detail-avatar'>
+                        <div className='avatar'>
+                          <img
+                            src={
+                              stream.user?.kyc?.avatar?.path
+                                ? `${STORAGE_DOMAIN}${stream.user.kyc.avatar.path}`
+                                : avatarDefault
+                            }
+                            alt=''
+                          />
                         </div>
-                        <div className='user-name'>Vai cai lon</div>
+                        <div className='detail'>
+                          <div className='name'>{stream.name}</div>
+                          <div className='view-time'>
+                            {stream.views} views
+                            <svg
+                              width='4'
+                              height='4'
+                              viewBox='0 0 4 4'
+                              fill='none'
+                              xmlns='http://www.w3.org/2000/svg'
+                            >
+                              <circle cx='1.67185' cy='2.23797' r='1.40135' fill='#98999A' />
+                            </svg>
+                            {convertDateAgo(stream.start_date)}
+                          </div>
+                          <div className='user-name'>
+                            {stream.user?.kyc?.first_name
+                              ? `${stream.user?.kyc?.first_name} ${stream.user?.kyc?.last_name}`
+                              : 'Username'}
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div> */}
+                ))}
+              </div>
+            )}
           </div>
+
           <div className='right'>
             <div style={{ '--item': ActiveTab }} className='ranking'>
               <div className='title'>Ranking</div>
@@ -203,7 +255,7 @@ export default function Live() {
                   <div className='tab-item'>
                     <div className='item'>
                       <div className='avatar'>
-                        <img src={banner} alt='' />
+                        <img src={avatarDefault} alt='' />
                       </div>
                       <div className='info'>
                         <div className='name'>Tên nà</div>
@@ -214,7 +266,7 @@ export default function Live() {
                   <div className='tab-item'>
                     <div className='item'>
                       <div className='avatar'>
-                        <img src={banner} alt='' />
+                        <img src={avatarDefault} alt='' />
                       </div>
                       <div className='info'>
                         <div className='name'>Tên nà</div>

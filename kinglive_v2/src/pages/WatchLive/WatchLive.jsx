@@ -4,20 +4,24 @@ import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import '../../assets/scss/watchlive.scss'
 import avatarDefaultSVG from '../../assets/svg/avatarDefault.svg'
-import coverDefaultJPG from '../../assets/svg/coverDefault.jpg'
+import thumb from '../../assets/svg/thumb.png'
 import giftPNG from '../../assets/svg/gift.png'
 import sendSVG from '../../assets/svg/send.svg'
-import shareSVG from '../../assets/svg/share.svg'
+// import shareSVG from '../../assets/svg/share.svg'
 import callAPI from '../../axios'
 import ButtonFollow from '../../components/ButtonFollow'
 import { PLAY_STREAM, STORAGE_DOMAIN } from '../../constant'
 import convertDateAgo from '../../helpers/convertDateAgo'
 import socket from '../../socket'
+import emptyGift from '../../assets/svg/emptyGift.svg'
+import { useWeb3React } from '@web3-react/core'
+import {  useContractKL1155 } from '../../components/ConnectWalletButton/contract'
 
 export default function WatchLive() {
   const history = useHistory()
   const userRedux = useSelector((state) => state.user)
-
+  const { account } = useWeb3React()
+  const contractKL1155 = useContractKL1155()
   const chatListRef = useRef()
 
   const [streamData, setStreamData] = useState({})
@@ -44,7 +48,6 @@ export default function WatchLive() {
 
   useEffect(() => console.log({ streamData1 }), [streamData1])
 
-  // Get Current LiveVideo
   useEffect(() => {
     let streamId
     ;(async () => {
@@ -73,7 +76,6 @@ export default function WatchLive() {
     }
   }, [id, history])
 
-  // Get Chat of LiveVideo
   useEffect(() => {
     ;(async () => {
       try {
@@ -94,12 +96,10 @@ export default function WatchLive() {
     }
   }, [id])
 
-  // Scroll ChatBox to very bottom when have new chat
   useEffect(() => {
     chatListRef.current.scroll(0, chatListRef.current.scrollHeight)
   }, [chatData])
 
-  // Emit new Chat
   const handleChat = (e) => {
     e.preventDefault()
 
@@ -112,7 +112,6 @@ export default function WatchLive() {
     e.target.reset()
   }
 
-  // Get Live List
   useEffect(() => {
     ;(async () => {
       try {
@@ -126,7 +125,6 @@ export default function WatchLive() {
     })()
   }, [])
 
-  // Follow and Unfollow
   const handleFollow = async () => {
     try {
       const res = await callAPI.post(`follow?id=${user?._id}`)
@@ -174,9 +172,8 @@ export default function WatchLive() {
     const _data = 0x00
 
     try {
-      await window.contractKL1155.methods
-        .safeTransferFrom(_from, _to, _id, _amount, _data)
-        .send({ from: _from })
+      if(!account) return
+      await contractKL1155.safeTransferFrom(_from, _to, _id, _amount, _data)
 
       const res = await callAPI.get(`/user-asset?limit=20&status=1&`)
 
@@ -194,33 +191,80 @@ export default function WatchLive() {
       <div className={`popupGift ${showGift ? 'show' : ''}`}>
         <div className='popupGift__mask' onClick={() => setShowGift(false)}></div>
 
-        <div className='popupGift__content flexbox flex4' style={{ '--gap-col': '40px' }}>
-          {NFTList.map((nft) => (
-            <form onSubmit={handleDonate} key={nft._id} className='popupGift__gift flexbox__item'>
-              <img src={nft.asset.metadata.image_thumbnail} alt='gift' />
-              <p>{nft.asset.metadata.name}</p>
-              <p>{nft.amount}</p>
-              <input
-                type='number'
-                name='amount'
-                defaultValue={1}
-                onInput={(e) => {
-                  if (Number(e.target.value) <= 0) e.target.value = ''
-                  if (Number(e.target.value) >= nft.amount) e.target.value = 100
-                }}
-              />
-              <input
-                style={{ display: 'none' }}
-                type='text'
-                name='id'
-                readOnly
-                defaultValue={nft.asset.id}
-              />
-              <button style={{ display: 'none' }} type='submit'>
-                Donate
-              </button>
-            </form>
-          ))}
+        <div className='popupGift__content'>
+          <div style={{ color: '#fefefe', marginBottom: 16 }}>Gift</div>
+          {NFTList.length !== 0 && (
+            <div className='flexbox flex4' style={{ height: 362, overflowY: 'auto' }}>
+              {NFTList.map((nft) => (
+                <form
+                  onSubmit={handleDonate}
+                  key={nft._id}
+                  className='popupGift__gift flexbox__item'
+                >
+                  <img src={nft.asset.metadata.image_thumbnail} alt='gift' />
+                  <p>{nft.asset.metadata.name}</p>
+                  <div style={{ position: 'relative' }}>
+                    <input
+                      type='number'
+                      name='amount'
+                      defaultValue={1}
+                      onInput={(e) => {
+                        if (Number(e.target.value) <= 0) e.target.value = ''
+                        if (Number(e.target.value) >= nft.amount) e.target.value = nft.amount
+                      }}
+                    />
+                    <div
+                      style={{
+                        position: 'absolute',
+                        top: 0,
+                        right: 2,
+                        bottom: 0,
+                        fontSize: 14,
+                        lineHeight: '25px',
+                      }}
+                    >
+                      | of {nft.amount}
+                    </div>
+                  </div>
+                  <input
+                    style={{ display: 'none' }}
+                    type='text'
+                    name='id'
+                    readOnly
+                    defaultValue={nft.asset.id}
+                  />
+                  <button style={{ display: 'none' }} type='submit'>
+                    Donate
+                  </button>
+                </form>
+              ))}
+            </div>
+          )}
+
+          {NFTList.length === 0 && (
+            <div
+              style={{
+                height: 362,
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <img src={emptyGift} alt='' />
+            </div>
+          )}
+
+          <div
+            style={{
+              color: '#f52871',
+              textAlign: 'right',
+              textDecoration: 'underline',
+              cursor: 'pointer',
+            }}
+            onClick={() => window.open('/nft-market', '_blank')}
+          >
+            Get more &gt;&gt;
+          </div>
         </div>
       </div>
 
@@ -341,39 +385,54 @@ export default function WatchLive() {
           </div>
 
           {!hideLive && (
-            <div>
-              {liveList.map((live) => (
+            <>
+              {liveList.length !== 0 && (
+                <div>
+                  {liveList.map((live) => (
+                    <div
+                      key={live._id}
+                      className='watchlive__livevideo'
+                      onClick={() => {
+                        history.push(`/watchlive?s=${live._id}`)
+                        window.scroll(0, 0)
+                      }}
+                    >
+                      <div>
+                        <img
+                          src={live.thumbnail ? `${STORAGE_DOMAIN}${live.thumbnail.path}` : thumb}
+                          alt=''
+                        />
+                      </div>
+
+                      <div>
+                        <div>{live.name}</div>
+                        <div>
+                          {live.user.kyc.first_name || live.user.kyc.last_name
+                            ? `${live.user.kyc.first_name} ${live.user.kyc.last_name}`
+                            : 'Username'}
+                        </div>
+                        <div>
+                          {live.views} views • {convertDateAgo(live.start_date)}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {liveList.length === 0 && (
                 <div
-                  key={live._id}
-                  className='watchlive__livevideo'
-                  onClick={() => {
-                    history.push(`/watchlive?s=${live._id}`)
-                    window.scroll(0, 0)
+                  style={{
+                    height: 362,
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
                   }}
                 >
-                  <div>
-                    <img
-                      src={
-                        live.thumbnail ? `${STORAGE_DOMAIN}${live.thumbnail.path}` : coverDefaultJPG
-                      }
-                      alt=''
-                    />
-                  </div>
-
-                  <div>
-                    <div>{live.name}</div>
-                    <div>
-                      {live.user.kyc.first_name || live.user.kyc.last_name
-                        ? `${live.user.kyc.first_name} ${live.user.kyc.last_name}`
-                        : 'Username'}
-                    </div>
-                    <div>
-                      {live.views} views • {convertDateAgo(live.start_date)}
-                    </div>
-                  </div>
+                  <img src={emptyGift} alt='' />
                 </div>
-              ))}
-            </div>
+              )}
+            </>
           )}
         </div>
       </div>

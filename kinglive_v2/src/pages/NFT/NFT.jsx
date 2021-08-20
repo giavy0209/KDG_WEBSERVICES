@@ -1,51 +1,73 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState, useMemo } from 'react'
 import { useHistory } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 import banner from '../../assets/images/nft-market/banner.jpg'
 import '../../assets/scss/nft-market.scss'
+import '../../assets/scss/styles.scss'
 import callAPI from '../../axios'
-import { ABIERC20, addressERC20, paymentList } from '../../contracts/ERC20'
+import { paymentList } from '../../contracts/ERC20'
+import { useWeb3React } from '@web3-react/core'
+import { useContractERC20 , useContractMarket} from '../../components/ConnectWalletButton/contract'
 import { addressMarket } from '../../contracts/Market'
-
+import avatarDefault from '../../assets/svg/avatarDefault.svg'
+import { STORAGE_DOMAIN } from '../../constant'
+import {Decimal} from 'decimal.js'
 export default function NFT() {
+  const userRedux = useSelector((state) => state.user)
   const history = useHistory()
   const [PopulateList, setPopulateList] = useState([])
   const [top9List, setTop9List] = useState([])
-  const [total, setTotal] = useState(0)
   const [itemBuy, setItemBuy] = useState({})
   const [isApproval, setIsApproval] = useState(false)
-  const [error, setError] = useState('')
-  const [amountBuy, setAmountBuy] = useState(0)
-  const [netTotal, setNetTotal] = useState(0)
+  const [isOwner, setIsOwner] = useState(false)
 
-  const [topQuantity, setTopQuantityList] = useState([])
+  const [amountBuy, setAmountBuy] = useState(0)
+  const [price, setPrice] = useState(0)
+
+
+  const [topRevenue, setRevenue] = useState([])
+  const [topQuantity, setTopQuantity] = useState([])
   const [ActiveTop9, setActiveTop9] = useState(0)
   const [ActiveRanking, setActiveRanking] = useState(0)
   const isLoadMore = useRef(true)
   const isLoadingAPI = useRef(false)
-  const [, setIsLoading] = useState(false)
-  const { Decimal } = require('decimal.js')
   const [isOpenBuy, setIsOpenBuy] = useState(false)
+  const { account } = useWeb3React()
+  const contractERC20 = useContractERC20()
+  const contractMarket = useContractMarket()
+  const address = useMemo(() => userRedux?.address, [userRedux])
+
+
+  const total = useMemo(() => {
+    if (itemBuy?.type === 1 && amountBuy && itemBuy?.price) {
+      return new Decimal(amountBuy).mul(itemBuy?.price).div(new Decimal(10).pow(18)).toNumber()
+    }
+    if (itemBuy?.type === 2 && amountBuy && price) {
+      return new Decimal(amountBuy).mul(price).toNumber()
+    }
+  }, [amountBuy, itemBuy, price])
+
+
 
   const getAssets = useCallback(async () => {
     var ids = PopulateList.map((o) => o._id)
 
-    const res = await callAPI.get(`/listing-asset?limit=9&${ids.length ? `ids=${ids}` : ''}`, true)
-
+    const res = await callAPI.get(`/market/get-top-populate?limit=9&${ids.length ? `ids=${ids}` : ''}`, true)
     if (res?.data?.length === 0) {
       isLoadMore.current = false
       setPopulateList([...PopulateList])
       return
     }
-    setPopulateList([...PopulateList, ...res.data])
+    setPopulateList([...PopulateList, ...(res?.data ? res.data : [])])
   }, [PopulateList])
 
   const getTop9 = useCallback(async () => {
-    const res = await callAPI.get(`/listing-asset?limit=9`, true)
+    const res = await callAPI.get(`/market/get-top-assets?limit=9`, true)
 
     if (res?.data?.length === 0) {
       return
     }
-    setTop9List([...res.data])
+    setTop9List([...(res?.data ? res.data : [])])
   }, [])
 
   useEffect(() => {
@@ -57,9 +79,7 @@ export default function NFT() {
 
       if (isEnd && isLoadMore.current && !isLoadingAPI.current) {
         isLoadingAPI.current = true
-        setIsLoading(true)
         await getAssets()
-        setIsLoading(false)
         isLoadingAPI.current = false
       }
     }
@@ -70,33 +90,65 @@ export default function NFT() {
   }, [getAssets])
 
   useEffect(() => {
-    ;(async () => {
-      const res = await callAPI.get(`/listing-asset?limit=9&`, true)
+    ; (async () => {
+      const res = await callAPI.get(`/market/get-top-assets?limit=9`, true)
       if (res?.data?.length) {
         setTop9List(res.data)
-        setTopQuantityList(res.data)
+      }
+      const res2 = await callAPI.get(`/market/get-top-populate?limit=10`, true)
+      if (res2?.data?.length) {
+        setPopulateList(res2.data)
+      }
+      const res3 = await callAPI.get(`/top-sellers-quantity?limit=6`, true)
+      if (res3?.data?.length) {
+        setTopQuantity(res3.data)
+      }
+      const res4 = await callAPI.get(`/top-sellers-revenue?limit=6`, true)
+      if (res4?.data?.length) {
+        setRevenue(res4.data)
       }
     })()
-  }, [])
+  }, [address])
 
-  useEffect(() => {
-    ;(async () => {
-      const res = await callAPI.get(`/listing-asset?limit=9&`)
-      setTop9List(res.data)
-      setTopQuantityList(res.data)
-    })()
-  }, [])
 
   const handleBuy = async (e) => {
     e.preventDefault()
+    if(!account) return
     const listId = e.target._listid.value
+    const type = Number(e.target._type.value)
     const amount = new Decimal(e.target._amount.value).toHex()
-    const paymentToken = itemBuy.payment_token
-    const netTotalPayment = new Decimal(e.target._netTotal.value).toHex()
-    console.log('netTotalPayment', netTotalPayment)
-    window.contractMarket.methods
-      .buy(listId, amount, paymentToken, netTotalPayment)
-      .send({ from: window.ethereum.selectedAddress })
+    const token = paymentList[e.target._paymentToken.value]
+    const paymentToken = token.address
+    const netTotalPayment = new Decimal(total).mul(new Decimal(10).pow(token.decimal)).toHex()
+    if (type === 1) {
+      contractMarket.buy(listId, amount, paymentToken, netTotalPayment)
+        .then((result) => {
+          if (result) {
+            top9List.length = 0
+            PopulateList.length = 0
+            getTop9()
+            getAssets()
+            setIsOpenBuy(false)
+          }
+        })
+    } else {
+      const netPaymentPrice = new Decimal(price).mul(new Decimal(10).pow(token.decimal)).toHex()
+      contractMarket.bid(listId, amount, paymentToken, netPaymentPrice, 100000000)
+        .then((result) => {
+          if (result) {
+            top9List.length = 0
+            PopulateList.length = 0
+            getTop9()
+            getAssets()
+            setIsOpenBuy(false)
+          }
+        })
+    }
+  }
+
+  const handleApproval = async () => {
+    if(!account) return 
+    contractERC20.approve(addressMarket, '0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff')
       .then((result) => {
         if (result) {
           top9List.length = 0
@@ -108,172 +160,402 @@ export default function NFT() {
       })
   }
 
-  const handleApproval = async () => {
-    window.contractERC20.methods
-      .approve(addressMarket, '0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff')
-      .send({ from: window.ethereum.selectedAddress })
+  const handleDelist = async (item) => {
+    if(!account) return 
+    contractMarket.cancelListed(item)
       .then((result) => {
-        setIsApproval(true)
+        top9List.length = 0
+        PopulateList.length = 0
+        getTop9()
+        getAssets()
+        setIsOpenBuy(false)
       })
   }
 
   const checkApproval = useCallback(
     async (item) => {
-      if (window?.web3?.eth) {
-        const allowance = await new window.web3.eth.Contract(ABIERC20, addressERC20).methods
-          .allowance(window.ethereum.selectedAddress, addressMarket)
-          .call()
+      if (!account) return 
+       
+        const allowance = await contractERC20.allowance(account, addressMarket)
         if (allowance && item) {
           if (new Decimal(allowance).gt(new Decimal(item.price).mul(item?.quantity))) {
             setIsApproval(true)
           }
-        }
+        } 
+      if (account === item?.owner?.address) {
+        setIsOwner(true)
+      } else {
+        setIsOwner(false)
       }
-      if (window.ethereum.selectedAddress === item?.owner?.address) {
-        setError("Owner can't Buy")
-      }
-    },
-    [Decimal]
+    },[account,contractERC20]
   )
+  const handleChangeAmount = (event) => {
+    let { value, min, max } = event.target;
+    value = Math.max(Number(min), Math.min(Number(max), Number(value)));
+    setAmountBuy(value)
+  }
 
-  const handleChangeAmount = async (amount) => {
-    const { Decimal } = require('decimal.js')
-    if (amount && amount.length && !isNaN(amount)) {
-      paymentList.forEach((token) => {
-        if (token.address === itemBuy.payment_token) {
-          if (new Decimal(amount).gt(itemBuy.quantity)) {
-            setAmountBuy(itemBuy.quantity)
-            setTotal(
-              new Decimal(itemBuy.quantity).mul(
-                Decimal(itemBuy.price).div(new Decimal(10).pow(token.decimal))
-              )
-            )
-            setNetTotal(new Decimal(itemBuy.quantity).mul(Decimal(itemBuy.price)))
-            return
-          } else {
-            setAmountBuy(new Decimal(amount))
-            setTotal(
-              new Decimal(amount).mul(
-                Decimal(itemBuy.price).div(new Decimal(10).pow(token.decimal))
-              )
-            )
-            setNetTotal(new Decimal(amount).mul(Decimal(itemBuy.price)))
-            return
-          }
-        }
-      })
-    } else {
-      setTotal(0)
-      setAmountBuy(0)
-      return
-    }
+  const handleChangePrice = (event) => {
+    let { value, min, max } = event.target;
+    value = Math.max(Number(min), Math.min(Number(max), Number(value)));
+    setPrice(value)
+  }
+
+
+
+  const handleShowDetailTop9 = async () => {
+    var ids = top9List.map((o) => o?._id)
+    history.push(`/nft-detail?ids=${ids}&index=${ActiveTop9}`)
+  }
+  const handleShowDetailPopulate = async (index) => {
+    var ids = PopulateList.map((o) => o?._id)
+    history.push(`/nft-detail?ids=${ids}&index=${index}`)
   }
 
   const handleMouseOverNFT = useCallback((e) => {
     let target = e.target
     while (true) {
       const targetClassList = Array.from(target.classList)
-      if(targetClassList.includes('mid')) {
+      if (targetClassList.includes('mid') || targetClassList.includes('blur')) {
         break
       }
       target = target.parentElement
     }
     target.classList.add('active-video')
     const video = target.querySelector('video')
-    if(video) {
+    if (video) {
       video.play()
     }
-  },[])
+  }, [])
 
   const handleMouseOutNFT = useCallback((e) => {
     let target = e.target
     while (true) {
       const targetClassList = Array.from(target.classList)
-      if(targetClassList.includes('mid')) {
+      if (targetClassList.includes('mid') || targetClassList.includes('blur')) {
         break
       }
       target = target.parentElement
     }
     target.classList.remove('active-video')
     const video = target.querySelector('video')
-    if(video) {
+    if (video) {
       video.pause()
-      video.currentTime=0
+      video.currentTime = 0
     }
-  })
+  },[]);
+
+
+
 
   return (
     <>
       {isOpenBuy && (
-        <div key={itemBuy._id} className='popupX' onClick={() => setIsOpenBuy(false)}>
-          <form className='containerX' onSubmit={handleBuy} onClick={(e) => e.stopPropagation()}>
-            <img className='preview-image mb-25' src={itemBuy?.asset?.metadata?.image} alt='' />
-            <div className='form-control'>
-              <div className='label'>NFT</div>
-              <input type='text' name='_name' readOnly value={itemBuy?.asset?.metadata?.name} />
-              <input
-                type='hidden'
-                name='_contract'
-                readOnly
-                value={itemBuy?.asset?.collection_id}
-              />
-              <input type='hidden' name='_id' readOnly value={itemBuy?.asset?.id} />
-              <input type='hidden' name='_listid' readOnly value={itemBuy?.id} />
-            </div>
-            <div className='form-control'>
-              <div className='label'>Available</div>
-              <input type='number' readOnly value={itemBuy?.quantity} name='_quantity' />
-            </div>
-            <div className='form-control'>
-              <div className='label'>Amount to buy</div>
-              <input
-                type='number'
-                id='_amount'
-                name='_amount'
-                min='1'
-                max={itemBuy?.quantity}
-                value={amountBuy}
-                onChange={(e) =>handleChangeAmount(e.target.value)}
-              />
-            </div>
-            <div className='form-control'>
-              <div className='label'>Price</div>
-              {paymentList.map((token) => {
-                if (token.address === itemBuy?.payment_token) {
-                  return (
-                    <div className='price'>
-                      {new Decimal(itemBuy.price).div(new Decimal(10).pow(token.decimal)) +
-                        ' ' +
-                        token.coin}{' '}
-                    </div>
-                  )
-                }
-                return null
-              })}
-            </div>
+        <div key={itemBuy._id} className='market-popupX' onClick={() => setIsOpenBuy(false)}>
+
+          <form
+            className='containerX'
+            onSubmit={handleBuy}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/*new element: popup name */}
+            {itemBuy?.type === 1 && (
+              <h1>Checkout</h1>
+            )}
+            {itemBuy?.type === 2 && (
+              <h1>Bidding</h1>
+            )}
+            <span className='close_popup' onClick={() => setIsOpenBuy(false)}></span>
+
+            {/* e:new element: content container */}
+            <div className='contents_box'>
+
+              <div className='form-control'>
+                <img className='preview-image 25mb' src={itemBuy?.asset?.metadata?.image} alt='' />
+
+                {/* e:new element: items_information : contain items information */}
+                <div className="items_information">
+
+                  {/* e:new element: item Name */}
+                  <h2>{itemBuy?.asset?.metadata?.name}</h2>
+
+                  {/* e:new element: Type */}
+                  <p>Avaiable {itemBuy?.quantity}<br />
+
+                    {/* e:new element: Price */}
+                    <strong>
+                      {paymentList.map((token) => {
+                        if (token.address === itemBuy?.payment_token) {
+                          return (
+                            <div className='price'>
+                              {new Decimal(itemBuy.price).div(new Decimal(10).pow(token.decimal)) +
+                                ' ' +
+                                token.coin}{' '}
+                            </div>
+                          )
+                        }
+                        return null
+                      })}
+                    </strong>{/* ---e:Price--- */}
+                  </p>{/* ---e:Type--- */}
+                </div>{/* --------------e:item_information------------------------ */}
+
+              </div>{/* --------------e:form-control------------------------ */}
+              {/*
+              <div className='form-control'>
+
+                
+                <div className='label'>NFT</div>
+
+                <input
+                  type='hidden'
+                  name='_contract'
+                  readOnly
+                  value={itemBuy?.asset?.collection_id}
+                />
+                <input type='hidden' name='_type' readOnly value={itemBuy?.type} />
+                <input type='hidden' name='_id' readOnly value={itemBuy?.asset?.id} />
+                <input type='hidden' name='_listid' readOnly value={itemBuy?.id} />
+                </div>
+              <div className='form-control'>
+                <div className='label'>Available</div>
+                <input type='number' readOnly value={itemBuy?.quantity} name='_quantity' />
+              </div>*/}
+              <div className='form-control'>
+                <div className="flex_column">
+                  <label>Quantity</label>
+                  <div className="input_boundingbox">
+                    <input
+                      type='hidden'
+                      id='_listid'
+                      name='_listid'
+                      value={itemBuy?.id}
+                    />
+                    <input
+                      type='hidden'
+                      id='_type'
+                      name='_type'
+                      value={itemBuy?.type}
+                    />
+                    <input
+                      type='number'
+                      id='_amount'
+                      name='_amount'
+                      min='1'
+                      step='1'
+                      max={itemBuy?.quantity}
+                      value={amountBuy}
+                      onChange={(e) => handleChangeAmount(e)}
+                    />
+                    <span className="increment" onClick={() => {
+                      if (amountBuy >= itemBuy?.quantity) return
+                      setAmountBuy(amountBuy + 1)
+                    }
+                    }></span>
+                    <span className="decrement" onClick={() => {
+                      if (amountBuy <= 1) return
+                      setAmountBuy(amountBuy - 1)
+                    }
+                    }></span>
+                  </div>{/* ---e:input_boundingbox---*/}
+
+                </div>{/* ---e:flex_column---*/}
+                {itemBuy?.type === 2 && (
+                  <div className="flex_column">
+                    <label className='label'>Price</label>
+                    <div className="input_boundingbox">
+                      <input
+                        type='number'
+                        id='_price'
+                        name='_price'
+                        min={new Decimal(itemBuy.price).div(new Decimal(10).pow(18)).toNumber()}
+                        max='100000'
+                        readOnly={itemBuy.type === 1}
+                        value={price}
+                        onChange={(e) => handleChangePrice(e)}
+                      />
+                      <span className="increment" onClick={() => {
+                        if (price >= 100000) return
+                        setPrice(price + 1)
+                      }
+                      }></span>
+                      <span className="decrement" onClick={() => {
+                        if (price <= new Decimal(itemBuy.price).div(new Decimal(10).pow(18)).toNumber()) return
+                        setPrice(price - 1)
+                      }
+                      }></span>
+                    </div>{/* ---e:input_boundingbox---*/}
+
+                  </div>
+                )}
+
+                <div className="flex_column">
+                  <label className='label'>Payment Token</label>
+                  <div className="box">
+                    <select name='_paymentToken'>
+                      {paymentList.map((pm, i) => (
+                        <option value={i}>{pm.coin}</option>
+                      ))}
+                    </select>
+                  </div>{/* ---e:box---*/}
+
+                  {/*<input type='number' readOnly name='_total' value={total} />
+                  <input type='hidden' readOnly name='_netTotal' value={netTotal} />*/}
+
+                </div>{/* ---e:flex_column---*/}
+
+                <div className="extra_row">
+                  <p>Estimated Amount:
+                    <strong>{total} KDG </strong>
+                  </p>
+                </div>{/* ---e:extra_row---*/}
+
+              </div>{/* --------------e:form-control------------------------ */}
+
+
+              {/*
+            {itemBuy?.type === 1 && (
+              <div className='form-control'>
+                <div className='label'>Price</div>
+                {paymentList.map((token) => {
+                  if (token.address === itemBuy?.payment_token) {
+                    return (
+                      <div className='price'>
+                        {new Decimal(itemBuy.price).div(new Decimal(10).pow(token.decimal)) +
+                          ' ' +
+                          token.coin}{' '}
+                      </div>
+                    )
+                  }
+                  return null
+                })}
+              </div>
+            )}{/* --------------e:form-control------------------------ */}
+
+              {/* --------------e:form-control------------------------
+            {/*
             <div className='form-control'>
               <div className='label'>Total</div>
               <input type='number' readOnly name='_total' value={total} />
               <input type='hidden' readOnly name='_netTotal' value={netTotal} />
+            </div>{/* --------------e:form-control------------------------ */}
+              {isOwner && (
+                <button className='buttonX' onClick={() => handleDelist(itemBuy.id)}>
+                  Delisting
+                </button>
+              )}
+              {!isOwner && itemBuy?.type === 1 && isApproval && (
+                <button type='submit' className='buttonX'>
+                  Buy
+                </button>
+              )}
+              {!isOwner && itemBuy?.type === 2 && isApproval && (
+                <button type='submit' className='buttonX'>
+                  Bid orders
+                </button>
+              )}
+              {!isOwner && !isApproval && (
+                <div className='form-control submit_box'>
+                  <button className='buttonX' onClick={handleApproval}>
+                    Approval
+                  </button>
+                  <button className='buttonX--cancel' onClick={() => setIsOpenBuy(false)}>
+                    Cancel
+                  </button>
+                </div>
+              )}{/* ------e:form-control------------- */}
+              {/*
+            {itemBuy?.type === 1 && (
+              <>
+                <div className='label'>Transaction history</div>
+                <table className='market-tableX'>
+                  <thead>
+                    <th>From</th>
+                    <th>Amount</th>
+                    <th>Payment Amount</th>
+                  </thead>
+                  {itemBuy?.buys.map((b) => (
+                    <>
+                      <tbody>
+                        <td>
+                          {b?.from?.kyc?.last_name
+                            ? b?.from?.kyc?.last_name + ' ' + b?.from?.kyc?.first_name
+                            : b?.from?.address}
+                        </td>
+                        <td>{b?.quantity}</td>
+                        {paymentList.map((token) => {
+                          if (token.address === itemBuy?.payment_token) {
+                            return (
+                              <td>
+                                {new Decimal(b?.payment_amount).div(
+                                  new Decimal(10).pow(token.decimal)
+                                ) +
+                                  ' ' +
+                                  token.coin}{' '}
+                              </td>
+                            )
+                          }
+                        })}
+                      </tbody>
+                    </>
+                  ))}
+                </table>
+              </>
+            )}{/* --------------e:label------------------------ */}
+
+              {/*itemBuy?.type === 2 && (
+              <>{}
+                <div className='label'>Bid orders</div>
+                <table className='market-tableX'>
+                  <thead>
+                    <th>From</th>
+                    <th>Amount</th>
+                    <th>Price</th>
+                    <th>Action</th>
+                  </thead>
+                  {itemBuy?.bid_orders.map((b) => (
+                    <>
+                      <tbody>
+                        <td>
+                          {b?.from?.kyc?.last_name
+                            ? b?.from?.kyc?.last_name + ' ' + b?.from?.kyc?.first_name
+                            : b?.from?.address}
+                        </td>
+                        <td>{b?.quantity}</td>
+                        {paymentList.map((token) => {
+                          if (token.address === itemBuy?.payment_token) {
+                            return (
+                              <td>
+                                {new Decimal(b?.payment_price).div(
+                                  new Decimal(10).pow(token.decimal)
+                                ) +
+                                  ' ' +
+                                  token.coin}{' '}
+                              </td>
+                            )
+                          }
+                        })}
+                        {isOwner && b?.status === 1 && (
+                          <td>
+                            <button onClick={() => handleAcceptBid(b.id)}>Accept</button>
+                          </td>
+                        )}
+                        {isOwner && b?.status === 2 && (
+                          <td>
+                            <button>Accepted</button>
+                          </td>
+                        )}
+                        {!isOwner && b?.status === 1 && <td></td>}
+                      </tbody>
+                    </>
+                  ))}
+                </table>
+              </>
+            )*/}
             </div>
-            {error && (
-              <div className='form-control'>
-                <div className='error'>{error}</div>
-              </div>
-            )}
-            {!error && isApproval && (
-              <button type='submit' className='buttonX'>
-                Buy
-              </button>
-            )}
-            {!isApproval && (
-              <button className='buttonX' onClick={handleApproval}>
-                Approval
-              </button>
-            )}
           </form>
         </div>
-      )}
+      )}{/* --------------e:market-popupX------------------------ */}
       <div className='nft-market'>
         <div className='banner'>
           <img src={banner} alt='' />
@@ -303,196 +585,243 @@ export default function NFT() {
               </svg>
               Create New NFT
             </div>
-            {top9List.length && (
-              <div className='list'>
-                <div className='left'>
-                  {top9List.map((o, index) => (
-                    <span
-                      key={index}
-                      onClick={() => {
-                        setActiveTop9(index)
-                      }}
-                      className={`item ${ActiveTop9 === index ? 'active' : ''}`}
-                    >
-                      <img src={o.asset?.metadata?.image} alt='' />
-                    </span>
-                  ))}
-                </div>
-                <div className='mid' 
-                onMouseOver={handleMouseOverNFT}
-                onMouseOut={handleMouseOutNFT}>
-                  
-                      {top9List[ActiveTop9]?.asset?.metadata?.mimetype.startsWith('image') && (
-                        <>
-                        <div className='img'>
-                            <img key={'image' + top9List[ActiveTop9]?._id} src={top9List[ActiveTop9]?.asset?.metadata?.image} alt='' />
-                         </div>
-                        </>
-                      )}
-                      {top9List[ActiveTop9]?.asset?.metadata?.mimetype.startsWith('video/mp4') && (
-                        <>
-                          <div className='video'>
-                            <img key={'image' + top9List[ActiveTop9]?._id} src={top9List[ActiveTop9]?.asset?.metadata?.image} alt='' />
-                            <video muted autoPlay key={'video' + top9List[ActiveTop9]?._id} src={top9List[ActiveTop9]?.asset?.metadata?.animation_url} alt='' />
-                         </div>
-                        </>
-                        )}
-                </div>
-                <div className='right'>
-                  <div className='name'>{top9List[ActiveTop9]?.asset?.metadata?.name}</div>
-                  {paymentList.map((token) => {
-                    if (token.address === top9List[ActiveTop9]?.payment_token) {
-                      return (
-                        <div className='price'>
-                          {new Decimal(top9List[ActiveTop9]?.price).div(
-                            new Decimal(10).pow(token.decimal)
-                          ) +
-                            ' ' +
-                            token.coin}{' '}
-                        </div>
-                      )
-                    }
-                    return null
-                  })}
-
-                  <div className='info'>
-                    <div className='row'>
-                      {top9List[ActiveTop9]?.owner?.kyc?.last_name && (
-                        <span>{'Artist : ' + top9List[ActiveTop9]?.owner?.kyc?.last_name + ' ' +top9List[ActiveTop9]?.owner?.kyc?.first_name}</span>
-                      )}
-                       {!top9List[ActiveTop9]?.owner?.kyc?.last_name && (
-                        <span>{'Artist : 0x..' + top9List[ActiveTop9]?.owner?.address.substring(top9List[ActiveTop9]?.owner?.address.length - 10, top9List[ActiveTop9]?.owner?.address.length)}</span>
-                      )}
-                    </div>
-                    <div className='row'>
-                      <span>
-                        {' '}
-                        {'Created : ' +
-                          new Date(top9List[ActiveTop9]?.asset?.time * 1000).toDateString()}{' '}
-                      </span>
-                    </div>
-                    <div className='row'>
-                      <span> {'Avaiable : ' + top9List[ActiveTop9]?.quantity} </span>
-                    </div>
-                  </div>
-
+            <div className='list'>
+              <div className='left'>
+                {top9List.map((o, index) => (
                   <span
-                    className='btn'
-                    onClick={async () => {
-                      await setItemBuy(top9List[ActiveTop9])
-                      await checkApproval(top9List[ActiveTop9])
-                      await handleChangeAmount(0)
-                      await setIsOpenBuy(true)
+                    key={index}
+                    onClick={() => {
+                      setActiveTop9(index)
                     }}
+                    className={`item ${ActiveTop9 === index ? 'active' : ''}`}
                   >
-                    Buy Now
+                    <img src={o.asset?.metadata?.image} alt='' />
                   </span>
-                </div>
+                ))}
               </div>
-            )}
-          </div>
-        </div>
+              <div
+                className='mid'
+                onMouseOver={handleMouseOverNFT}
+                onMouseOut={handleMouseOutNFT}
+              >
+                {top9List[ActiveTop9]?.asset?.metadata?.mimetype.startsWith('image') && (
+                  <>
+                    <div className='img'>
+                      <img
+                        key={'image' + top9List[ActiveTop9]?._id}
+                        src={top9List[ActiveTop9]?.asset?.metadata?.image}
+                        alt=''
+                      />
+                    </div>
+                  </>
+                )}
+                {top9List[ActiveTop9]?.asset?.metadata?.mimetype.startsWith('video/mp4') && (
+                  <>
+                    <div className='video'>
+                      <img
+                        key={'image' + top9List[ActiveTop9]?._id}
+                        src={top9List[ActiveTop9]?.asset?.metadata?.image}
+                        alt=''
+                      />
+                      <video
+                        muted
+                        autoPlay
+                        key={'video' + top9List[ActiveTop9]?._id}
+                        src={top9List[ActiveTop9]?.asset?.metadata?.animation_url}
+                        alt=''
+                      />
+                    </div>
+                  </>
+                )}
+              </div>
+              <div className='right'>
+                <div className='name'>{top9List[ActiveTop9]?.asset?.metadata?.name}</div>
+                {paymentList.map((token) => {
+                  if (token.address === top9List[ActiveTop9]?.payment_token) {
+                    return (
+                      <div className='price'>
+                        {new Decimal(top9List[ActiveTop9]?.price).div(
+                          new Decimal(10).pow(token.decimal)
+                        ) +
+                          ' ' +
+                          token.coin}{' '}
+                      </div>
+                    )
+                  }
+                  return null
+                })}
 
-        <div className='ranking'>
-          <div className='title'>Ranking</div>
-          <div className='tabs'>
-            <div
-              onClick={() => setActiveRanking(0)}
-              className={`tab ${ActiveRanking === 0 ? 'active' : ''}`}
-            >
-              Top Seller (Quatity)
-            </div>
-            <div
-              onClick={() => setActiveRanking(1)}
-              className={`tab ${ActiveRanking === 1 ? 'active' : ''}`}
-            >
-              Top Seller (revenue)
-            </div>
-          </div>
-          <div className='list'>
-            <div className={`top-quatity ${ActiveRanking === 0 ? 'show' : ''}`}>
-              {topQuantity.map((o, index) => (
-                <div className='item'>
-                  <span className='index'>{index + 1}</span>
-                  <span className='avatar'>
-                    <img src={o.avatar} alt='' />
-                  </span>
-                  <span className='info'>
-                    <span className='name'>{o.name}</span>
-                    <span className='quatity'>{o.quatity} Artworks</span>
-                  </span>
-                </div>
-              ))}
-            </div>
-            <div className={`top-seller ${ActiveRanking === 1 ? 'show' : ''}`}>
-              {topQuantity.map((o, index) => (
-                <div className='item'>
-                  <span className='index'>{index + 1}</span>
-                  <span className='avatar'>
-                    <img src={o.avatar} alt='' />
-                  </span>
-                  <span className='info'>
-                    <span className='name'>{o.name}</span>
-                    <span className='quatity'>{o.quatity} Artworks</span>
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-        <div className='popular-nft'>
-          <div className='title'>Popular NFT</div>
-          <div className='list'>
-            {PopulateList.map((o, index) => (
-              <div className='item'>
-                <div key={'avt' + index} className='avatar-container'>
-                  <span className='avatar'>
-                    <img src={o.owner?.avatar} alt='' />
-                  </span>
-                </div>
-                <div key={'nft' + index} className='nft-blur'>
-                  <div className='blur'>
-                    <img src={o.asset?.metadata?.image} alt='' />
+                <div className='info'>
+                  <div className='row'>
+                    {top9List[ActiveTop9]?.owner?.kyc?.last_name && (
+                      <span>
+                        {'Artist : ' +
+                          top9List[ActiveTop9]?.owner?.kyc?.last_name +
+                          ' ' +
+                          top9List[ActiveTop9]?.owner?.kyc?.first_name}
+                      </span>
+                    )}
+                    {!top9List[ActiveTop9]?.owner?.kyc?.last_name && (
+                      <span>
+                        {'Artist : 0x..' +
+                          top9List[ActiveTop9]?.owner?.address.substring(
+                            top9List[ActiveTop9]?.owner?.address.length - 10,
+                            top9List[ActiveTop9]?.owner?.address.length
+                          )}
+                      </span>
+                    )}
                   </div>
-                  <div className='nft'>
-                    <img src={o.asset?.metadata?.image} alt='' />
+                  <div className='row'>
+                    <span>
+                      {' '}
+                      {'Created : ' +
+                        new Date(top9List[ActiveTop9]?.asset?.time).toDateString()}{' '}
+                    </span>
                   </div>
-                </div>
-                <span key={'name' + index} className='name'>
-                  {o.asset?.metadata?.name}
-                </span>
-                <div key={'price' + index} className='info'>
-                  {paymentList.map((token) => {
-                    if (token.address === o.payment_token) {
-                      return (
-                        <span className='price'>
-                          {new Decimal(o.price).div(new Decimal(10).pow(token.decimal)) +
-                            ' ' +
-                            token.coin}{' '}
-                        </span>
-                      )
-                    }
-                    return null
-                  })}
 
-                  <span key={'amount' + index} className='amount'>
-                    Amount: {o.quantity}
-                  </span>
+                  <div className='row'>
+                    <span> {'Avaiable : ' + top9List[ActiveTop9]?.quantity} </span>
+                  </div>
+
+                  <span className="open_detail_btn" onClick={() => handleShowDetailTop9()}>{`Detail >>`}</span>
                 </div>
-                <div
-                  key={'btn' + index}
+
+                <span
                   className='btn'
                   onClick={async () => {
-                    await setItemBuy(o)
-                    await checkApproval(o)
-                    await handleChangeAmount(0)
+                    await setItemBuy(top9List[ActiveTop9])
+                    await checkApproval(top9List[ActiveTop9])
                     await setIsOpenBuy(true)
+                    await setAmountBuy(0)
+                    setPrice(new Decimal(top9List[ActiveTop9]?.price).div(new Decimal(10).pow(18)).toNumber())
                   }}
                 >
-                  Buy
-                </div>
+                  Buy Now
+                </span>
               </div>
-            ))}
+            </div>
+          </div>
+
+          <div className='ranking'>
+            <div className='title'>Ranking</div>
+            <div className='tabs'>
+              <div
+                onClick={() => setActiveRanking(0)}
+                className={`tab ${ActiveRanking === 0 ? 'active' : ''}`}
+              >
+                Top Seller (Quatity)
+              </div>
+              <div
+                onClick={() => setActiveRanking(1)}
+                className={`tab ${ActiveRanking === 1 ? 'active' : ''}`}
+              >
+                Top Seller (revenue)
+              </div>
+            </div>
+            <div className='list'>
+              <div className={`top-quatity ${ActiveRanking === 0 ? 'show' : ''}`}>
+                {topQuantity.map((o, index) => (
+                  <div className='item'>
+                    <span className='index'>{index + 1}</span>
+                    <span className='avatar'>
+                      <img alt="" src={o.user?.kyc?.avatar?.path ? `${STORAGE_DOMAIN}${o.user?.kyc?.avatar?.path}` : avatarDefault} />
+                    </span>
+                    <span className='info'>
+                      <span className='name'>{o.user?.kyc?.last_name ? o.user?.kyc?.last_name + ' ' + o.user?.kyc?.first_name : '0x....' + o.user?.address.substring(o.user?.address.length - 8, o.user?.address.length)}</span>
+                      <span className='quatity'>{o.quantity} Artworks</span>
+                    </span>
+                  </div>
+                ))}
+              </div>
+              <div className={`top-seller ${ActiveRanking === 1 ? 'show' : ''}`}>
+                {topRevenue.map((o, index) => (
+                  <div className='item'>
+                    <span className='index'>{index + 1}</span>
+                    <span className='avatar'>
+                      <img alt="" src={o.user?.kyc?.avatar?.path ? `${STORAGE_DOMAIN}${o.user?.kyc?.avatar?.path}` : avatarDefault} />
+                    </span>
+                    <span className='info'>
+                      <span className='name'>{o.user?.kyc?.last_name ? o.user?.kyc?.last_name + ' ' + o.user?.kyc?.first_name : ''}</span>
+                      <span className='quatity'>{new Decimal(o?.payment_amount).div(new Decimal(10).pow(18)).toString()} KGD</span>
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+          <div className='popular-nft'>
+            <div className='title'>Popular NFT</div>
+            <div className='list'>
+              {PopulateList.map((o, index) => (
+                <div className='item'>
+                  <div key={'avt' + index} className='avatar-container'>
+                    <span className='avatar'>
+                      <img alt="" src={o.owner?.kyc?.avatar?.path ? `${STORAGE_DOMAIN}${o.owner?.kyc?.avatar?.path}` : avatarDefault} />
+                    </span>
+                  </div>
+                  <div key={'nft' + index} className='nft-blur'>
+                    <div
+                      className='blur'
+                      onMouseOver={handleMouseOverNFT}
+                      onMouseOut={handleMouseOutNFT}
+                    >
+                      {o?.asset?.metadata?.mimetype.startsWith('image') && (
+                        <>
+                          <div className='img'>
+                            <img key={'image' + o?._id} src={o.asset?.metadata?.image} alt='' />
+                          </div>
+                        </>
+                      )}
+                      {o?.asset?.metadata?.mimetype.startsWith('video/mp4') && (
+                        <>
+                          <div className='video'>
+                            <img key={'image' + o?._id} src={o?.asset?.metadata?.image} alt='' />
+                            <video
+                              muted
+                              autoPlay
+                              key={'video' + o?._id}
+                              src={o?.asset?.metadata?.animation_url}
+                              alt=''
+                            />
+                          </div>
+                        </>
+                      )}
+                    </div>
+                    <div className='nft'>
+                      <img key={'image' + o?._id} src={o.asset?.metadata?.image} alt='' />
+                    </div>
+                  </div>
+                  <span key={'name' + index} className='name'>
+                    {o.asset?.metadata?.name}
+                  </span>
+                  <div key={'price' + index} className='info'>
+                    {paymentList.map((token) => {
+                      if (token.address === o.payment_token) {
+                        return (
+                          <span className='price'>
+                            {new Decimal(o.price).div(new Decimal(10).pow(token.decimal)) +
+                              ' ' +
+                              token.coin}{' '}
+                          </span>
+                        )
+                      }
+                      return null
+                    })}
+
+                    <span key={'amount' + index} className='amount'>
+                      Amount: {o.quantity}
+                    </span>
+                  </div>
+                  <div
+                    key={'btn' + index}
+                    className='btn'
+                    onClick={() => handleShowDetailPopulate(index)}
+                  >
+                    Detail
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>

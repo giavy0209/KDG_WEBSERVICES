@@ -1,12 +1,15 @@
 import { useEffect, useRef, useState } from 'react'
+
 import '../../assets/scss/mint-nft.scss'
 import checkSVG from '../../assets/svg/check.svg'
 import closeSVG from '../../assets/svg/close.svg'
 import errorSVG from '../../assets/svg/error.svg'
 import uploadSVG from '../../assets/svg/upload.svg'
 import callAPI from '../../axios'
-import { ABIKL1155, addressKL1155 } from '../../contracts/KL1155'
-import { ABIERC20, addressERC20 } from '../../contracts/ERC20'
+import {  addressKL1155 } from '../../contracts/KL1155'
+import { useContractKL1155, useContractERC20 } from '../../components/ConnectWalletButton/contract'
+import { useWeb3React } from '@web3-react/core'
+
 
 export default function MintNFT() {
   const inputVideoRef = useRef()
@@ -14,11 +17,11 @@ export default function MintNFT() {
   const imagePreviewRef = useRef()
   const titleRef = useRef()
   const descRef = useRef()
-
+  const { account } = useWeb3React()
+  const contractKL1155 = useContractKL1155()
+  const contractERC20 = useContractERC20()
   const [isApproval, setIsApproval] = useState(false)
   const [file, setFile] = useState([])
-  const [image, setImage] = useState({})
-
   const [percent, setPercent] = useState(0)
   const [isUploading, setIsUploading] = useState(false)
   const [uploadSuccess, setUploadSuccess] = useState(false)
@@ -27,17 +30,14 @@ export default function MintNFT() {
 
   useEffect(() => {
     async function getAllowance() {
-      if (window?.web3?.eth) {
-        const allowance = await window.contractERC20.methods
-          .allowance(window.ethereum.selectedAddress, addressKL1155)
-          .call()
+      if(!account) return
+        const allowance = await contractERC20?.allowance(account, addressKL1155)
         if (Number(allowance) >= 20000000000000000000) {
           setIsApproval(true)
         }
-      }
     }
     getAllowance()
-  }, [window.ethereum.selectedAddress])
+  },[account,contractERC20])
 
   const handlePreviewVideo = async (e) => {
     const files = e.target.files || []
@@ -63,12 +63,14 @@ export default function MintNFT() {
   }
 
   const handleApproval = async () => {
-    const approval = await window.contractERC20.methods
-      .approve(addressKL1155, '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff')
-      .send({ from: window.ethereum.selectedAddress })
-    if (approval) {
-      setIsApproval(true)
-    }
+    if(!account) setIsApproval(false)
+
+    const approval = await contractERC20.approve(addressKL1155, '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff')
+      if (approval) {
+        setIsApproval(true)
+      }else {
+        setIsApproval(false)
+      }
   }
 
   const handleClearInput = () => {
@@ -85,7 +87,6 @@ export default function MintNFT() {
     setIsUploading(true)
 
     const data = new FormData()
-    data.append('image', image)
     data.append('file', file)
     data.append('name', e.target.name.value)
     data.append('numEditions', e.target.numEditions.value)
@@ -107,18 +108,16 @@ export default function MintNFT() {
         },
       })
 
-      // console.log("res",res);
+      if(!account) return
 
       if (res?.data?.hashes[0]) {
-        const transaction = await new window.web3.eth.Contract(ABIKL1155, addressKL1155).methods
-          .create(
+        const transaction = await contractKL1155.create(
             e.target.numEditions.value,
             e.target.numEditions.value,
             2500,
             res?.data?.hashes[0],
             '0x00'
-          )
-          .send({ from: window.ethereum.selectedAddress })
+        )
         if (transaction) {
           // console.log('upload thanh cong')
           setUploadSuccess(true)
@@ -318,11 +317,11 @@ export default function MintNFT() {
               </button>
             )}
             {!isApproval && (
-              <button className='upload__button mr-15' onClick={handleApproval}>
+              <button className='upload__button mr-15' onClick={() =>handleApproval()}>
                 Approve
               </button>
             )}
-            <div className='upload__button upload__button--cancel' onClick={handleClearInput}>
+            <div className='upload__button upload__button--cancel' onClick={()=>handleClearInput()}>
               Cancel
             </div>
           </div>

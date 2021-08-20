@@ -1,35 +1,32 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
+import { useHistory } from "react-router-dom";
 import '../../assets/scss/my-artwork.scss'
 import callAPI from '../../axios'
 import { STORAGE_DOMAIN } from '../../constant'
-import { ABIKL1155, addressKL1155 } from '../../contracts/KL1155'
-import { paymentList } from '../../contracts/ERC20'
-import { ABIMarket, addressMarket } from '../../contracts/Market'
+
 import convertPositionIMG from '../../helpers/convertPositionIMG'
 
 export default function MyArtwork() {
   const userRedux = useSelector((state) => state.user)
+  const history = useHistory()
   const [status, setStatus] = useState(1)
   const [previewIMG, setPreviewIMG] = useState('')
   const [AssetList, setAssetList] = useState([])
-  const [sellingItem, setSellingItem] = useState('')
 
   const isLoadMore = useRef(true)
   const isLoadingAPI = useRef(false)
-  const [, setIsLoading] = useState(false)
-  const [isApprovedForAll, setIsApprovedForAll] = useState(false)
 
   const [userData, setUserData] = useState({})
   const avatar = useMemo(() => userData?.kyc?.avatar?.path, [userData])
   const avatarPos = useMemo(() => userData?.kyc?.avatar_pos, [userData])
   const cover = useMemo(() => userData?.kyc?.cover?.path, [userData])
   const coverPos = useMemo(() => userData?.kyc?.cover_pos, [userData])
-  const isReviewer = useMemo(() => userRedux?.isReviewer, [userRedux])
   const userName = useMemo(
     () => `${userData?.kyc?.first_name} ${userData?.kyc?.last_name}`,
     [userData]
   )
+  const address = useMemo(() => userRedux?.address, [userRedux])
 
   const handleChangeStatus = async (status) => {
     setStatus(status)
@@ -37,36 +34,49 @@ export default function MyArtwork() {
     await getAssets(status)
   }
 
-  const handleApprove = async () => {
-    if (window.web3.eth) {
-      const approved = await new window.web3.eth.Contract(ABIKL1155, addressKL1155).methods
-        .setApprovalForAll(addressMarket, true)
-        .send({ from: window.ethereum.selectedAddress })
-      if (approved) {
-        setIsApprovedForAll(true)
-      }
-    }
-  }
+  
 
   const getAssets = useCallback(
     async (status) => {
-      var ids = AssetList.map((o) => o._id)
+      if(status !==3)
+      {
+        const ids = AssetList.map((o) => o._id)
+        const res = await callAPI.get(
+          `/user-asset?limit=20&${ids.length ? `ids=${ids}` : ''}&status=${status}`,
+          true) 
+        if (res?.data?.length === 0) {
+          isLoadMore.current = false
+          setAssetList([...AssetList])
+          return
+        }
+        setAssetList([...AssetList, ...(res?.data ? res.data : [])])
+      } else {
+        const ids = AssetList.map((o) => o._id)
+        const res = await callAPI.get(
+          `/buys/bidding?limit=20&${ids.length ? `ids=${ids}` : ''}`,
+          true) 
+        if (res?.data?.length === 0) {
+          isLoadMore.current = false
+          setAssetList([...AssetList])
+          return
+        } else {
+          const bidings = res?.data.map(bid =>{
+            return {
+              user :bid.from,
+              asset: bid.asset,
+              listId: bid.list_id?._id
+            }
+          })
+          setAssetList([...AssetList, ...bidings])
+        }
 
-      const res = await callAPI.get(
-        `/user-asset?limit=20&${ids.length ? `ids=${ids}` : ''}&status=${status}`,
-        true
-      )
-
-      if (res?.data?.length === 0) {
-        isLoadMore.current = false
-        setAssetList([...AssetList])
-        return
       }
-
-      setAssetList([...AssetList, ...(res?.data ? res.data : [])])
+      
     },
     [AssetList]
   )
+
+  
 
   useEffect(() => {
     const handleLoad = async () => {
@@ -77,9 +87,7 @@ export default function MyArtwork() {
 
       if (isEnd && isLoadMore.current && !isLoadingAPI.current) {
         isLoadingAPI.current = true
-        setIsLoading(true)
         await getAssets(status)
-        setIsLoading(false)
         isLoadingAPI.current = false
       }
     }
@@ -106,68 +114,23 @@ export default function MyArtwork() {
       callAPI.get(`/user-asset?limit=20&status=${status}`, true).then((res) => {
         setAssetList(res?.data ? res.data : [])
       })
-
-      if (window.web3.eth && window.ethereum.selectedAddress) {
-        new window.web3.eth.Contract(ABIKL1155, addressKL1155).methods
-          .isApprovedForAll(window.ethereum.selectedAddress, addressMarket)
-          .call()
-          .then((approved) => {
-            setIsApprovedForAll(approved)
-          })
-      }
     })()
-  }, [status])
+  }, [status,address])
 
-  const [isOpenSell, setIsOpenSell] = useState(false)
 
-  const handleSell = async (e) => {
-    e.preventDefault()
-    const { Decimal } = require('decimal.js')
-    const paymentToken = paymentList[e.target._paymentToken.value]
-    const price = new Decimal(e.target._price.value)
-      .mul(new Decimal(10).pow(paymentToken.decimal))
-      .toHex()
-    await new window.web3.eth.Contract(ABIMarket, addressMarket).methods
-      .list(
-        e.target._contract.value,
-        e.target._id.value,
-        new Decimal(e.target._quantity.value).toHex(),
-        e.target._mask.value,
-        price,
-        paymentToken.address,
-        100000000
-      )
-      .send({ from: window.ethereum.selectedAddress })
-    AssetList.length = 0
-    await getAssets(status)
+  
 
-    setIsOpenSell(false)
-  }
-
-  const handleSellButton = async (item) => {
-    setIsOpenSell(true)
-    setSellingItem(item)
-  }
-
-  const handleAccept = async (item) => {
-    const result = await new window.web3.eth.Contract(ABIKL1155, addressKL1155).methods
-      .reviewAsset(item.asset.id, true)
-      .send({ from: window.ethereum.selectedAddress })
-    if (result) {
-      AssetList.length = 0
-      await getAssets(status)
+  const handleShowDetail = async (index) => {
+    if(status === 3 ){
+      const ids = AssetList.map((o) => o?.listId)
+      history.push(`/nft-detail?ids=${ids}&index=${index}`)
+    } else {
+      const ids = AssetList.map((o) => o?._id)
+      history.push(`/my-artwork-detail?ids=${ids}&index=${index}`)
     }
   }
 
-  const handleDeny = async (item) => {
-    const result = await new window.web3.eth.Contract(ABIKL1155, addressKL1155).methods
-      .reviewAsset(item.asset.id, false)
-      .send({ from: window.ethereum.selectedAddress })
-    if (result) {
-      AssetList.length = 0
-      await getAssets(status)
-    }
-  }
+  
 
   const handleMouseOverNFT = useCallback((e) => {
     let target = e.target
@@ -181,7 +144,11 @@ export default function MyArtwork() {
     target.classList.add('active-video')
     const video = target.querySelector('video')
     if(video) {
-      video.play()
+      var isPlaying = video.currentTime > 0 && !video.paused && !video.ended 
+      && video.readyState > video.HAVE_CURRENT_DATA;
+      if(!isPlaying){
+        video.play()
+      }
     }
   },[])
 
@@ -199,55 +166,11 @@ export default function MyArtwork() {
     if(video) {
       video.pause()
       video.currentTime=0
-    }
-  })
+  }
+  },[])
 
   return (
     <>
-      {isOpenSell && (
-        <div key={sellingItem?._id} className='popupX' onClick={() => setIsOpenSell(false)}>
-          <form className='containerX' onSubmit={handleSell} onClick={(e) => e.stopPropagation()}>
-            <div className='form-control'>
-              <div class='label'>NFT</div>
-              <input type='text' name='_name' readOnly value={sellingItem?.asset?.metadata?.name} />
-              <input
-                type='hidden'
-                name='_contract'
-                readOnly
-                value={sellingItem?.asset?.collection_id}
-              />
-              <input type='hidden' name='_id' readOnly value={sellingItem?.asset?.id} />
-            </div>
-            <div className='form-control'>
-              <div class='label'>Quantity</div>
-              <input type='number' min='1' max={sellingItem.amount} name='_quantity' />
-            </div>
-            <div className='form-control'>
-              <div class='label'>Mask</div>
-              <select name='_mask'>
-                <option value='1'>Sell</option>
-                <option value='2'>Aution</option>
-              </select>
-            </div>
-            <div className='form-control'>
-              <div class='label'>Price</div>
-              <input type='number' name='_price' />
-            </div>
-            <div className='form-control'>
-              <div class='label'>Payment Token</div>
-              <select name='_paymentToken'>
-                {paymentList.map((pm, i) => (
-                  <option value={i}>{pm.coin}</option>
-                ))}
-              </select>
-            </div>
-            <button type='submit' className='buttonX'>
-              Confirm
-            </button>
-          </form>
-        </div>
-      )}
-
       <div className='myartwork profile😢 container'>
         <div style={{ position: 'relative', marginBottom: 60 }}>
           {previewIMG && (
@@ -320,12 +243,12 @@ export default function MyArtwork() {
 
           {AssetList?.length > 0 && (
             <div className='myartwork__list'>
-              {AssetList.map((al) => (
+              {AssetList.map((al,index) => (
                 <div 
                 onMouseOver={handleMouseOverNFT}
                 onMouseOut={handleMouseOutNFT}
                 key={'artwork' + al._id} className='myartwork__list-item'>
-                  <div className='artwork'>
+                  <div className='artwork' onClick={() => handleShowDetail(index)}>
                       {al.asset?.metadata?.mimetype.startsWith('image') && (
                          <div className='img'>
                             <img key={'image' + al._id} src={al.asset?.metadata?.image} alt='' />
@@ -366,42 +289,10 @@ export default function MyArtwork() {
                           fill='#6A6A6D'
                         />
                       </svg>
-
-                      <span>{new Date(al.asset?.time * 1000).toDateString()}</span>
+                      <span>{new Date(al.asset?.time).toDateString()}</span>
                     </div>
                   </div>
-                  {status === 1 && isApprovedForAll > 0 && (
-                    <div
-                      key={'sell' + al._id}
-                      className='buttonX'
-                      onClick={() => handleSellButton(al)}
-                    >
-                      Sell
-                    </div>
-                  )}
-                  {status === 1 && !isApprovedForAll > 0 && (
-                    <div
-                      key={'approve' + al._id}
-                      className='buttonX'
-                      onClick={() => handleApprove()}
-                    >
-                      Approval for sell
-                    </div>
-                  )}
-                  {isReviewer && status === 0 && (
-                    <div>
-                      <div
-                        key={'review' + al._id}
-                        className='buttonX'
-                        onClick={() => handleAccept(al)}
-                      >
-                        Accept
-                      </div>
-                      <div key={'deny' + al._id} className='buttonX' onClick={() => handleDeny(al)}>
-                        Deny
-                      </div>
-                    </div>
-                  )}
+
                 </div>
               ))}
             </div>
