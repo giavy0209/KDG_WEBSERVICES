@@ -44,11 +44,11 @@ export default function Setup() {
   const [changeStepError, setChangeStepError] = useState(false)
 
   const [streamData, setStreamData] = useState({})
-  const streamKey = useMemo(() => streamData.key, [streamData])
-  const streamID = useMemo(() => streamData._id, [streamData])
-  const streamTags = useMemo(() => streamData.tags?.join(', '), [streamData])
-  const status = useMemo(() => streamData.status, [streamData])
-  const connect_status = useMemo(() => streamData.connect_status, [streamData])
+  const streamKey = useMemo(() => streamData?.key, [streamData])
+  const streamID = useMemo(() => streamData?._id, [streamData])
+  const streamTags = useMemo(() => streamData?.tags?.join(', '), [streamData])
+  const status = useMemo(() => streamData?.status, [streamData])
+  const connect_status = useMemo(() => streamData?.connect_status, [streamData])
 
   const [currentStep, setCurrentStep] = useState(1)
 
@@ -69,7 +69,10 @@ export default function Setup() {
   }, [])
 
   useEffect(() => {
-    const handleStream = (data) => setStreamData(data)
+    const handleStream = (data) => {
+      console.log(data);
+      setStreamData(data)
+    }
     socket.on('stream', handleStream)
     return () => socket.removeEventListener('stream', handleStream)
   }, [])

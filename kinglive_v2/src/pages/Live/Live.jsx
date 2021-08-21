@@ -24,38 +24,27 @@ export default function Live() {
 
   const [ActiveSlide, setActiveSlide] = useState(0)
   const [ActiveTab, setActiveTab] = useState(0)
-  const timeout = useRef(null)
-  useEffect(() => {
-    timeout.current = setTimeout(() => {
-      if (ActiveSlide < slide.length - 1) {
-        setActiveSlide(ActiveSlide + 1)
-      } else {
-        setActiveSlide(0)
-      }
-    }, 5000)
-  }, [ActiveSlide])
+  const [streamList, setStreamList] = useState([])
+  const [Ranking, setRanking] = useState({ views: [], follows: [] })
 
   const manualChangeSlide = useCallback((index) => {
-    if (timeout.current) {
-      clearTimeout(timeout.current)
-    }
     setActiveSlide(index)
   }, [])
 
-  const [streamList, setStreamList] = useState([])
+
 
   useEffect(() => {
     callAPI
       .get('/streammings')
       .then((res) => {
         if (res.status === 1) {
-          console.log({ streamList: res.data })
           setStreamList(res.data)
         }
       })
-      .catch((error) => {
-        console.log('error get streamList')
-        console.log(error)
+
+    callAPI.get('/ranking')
+      .then(res => {
+        setRanking(res.data)
       })
   }, [])
 
@@ -253,26 +242,27 @@ export default function Live() {
               <div className='track-tabs'>
                 <div className='tabs-items'>
                   <div className='tab-item'>
-                    <div className='item'>
+                    {Ranking.follows.map(o => <div className='item'>
                       <div className='avatar'>
                         <img src={avatarDefault} alt='' />
                       </div>
                       <div className='info'>
-                        <div className='name'>Tên nà</div>
-                        <div className='rank-info'>63 Followers</div>
+                        <div className='name'>{o.kyc.first_name} {o.kyc.last_name}</div>
+                        <div className='rank-info'>{o.kinglive.total_follower} Followers</div>
                       </div>
-                    </div>
+                    </div>)}
+
                   </div>
                   <div className='tab-item'>
-                    <div className='item'>
+                    {Ranking.views.map(o => <div className='item'>
                       <div className='avatar'>
                         <img src={avatarDefault} alt='' />
                       </div>
                       <div className='info'>
-                        <div className='name'>Tên nà</div>
-                        <div className='rank-info'>63 Followers</div>
+                        <div className='name'>{o.kyc.first_name} {o.kyc.last_name}</div>
+                        <div className='rank-info'>{o.kinglive.total_views} Views</div>
                       </div>
-                    </div>
+                    </div>)}
                   </div>
                 </div>
               </div>

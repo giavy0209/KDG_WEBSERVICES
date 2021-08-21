@@ -63,7 +63,7 @@ export default function NFT() {
 
   const getTop9 = useCallback(async () => {
     const res = await callAPI.get(`/market/get-top-assets?limit=9`, true)
-
+    console.log(res);
     if (res?.data?.length === 0) {
       return
     }
@@ -286,6 +286,7 @@ export default function NFT() {
                     <strong>
                       {paymentList.map((token) => {
                         if (token.address === itemBuy?.payment_token) {
+                          console.log(token);
                           return (
                             <div className='price'>
                               {new Decimal(itemBuy.price).div(new Decimal(10).pow(token.decimal)) +
@@ -300,27 +301,7 @@ export default function NFT() {
                   </p>{/* ---e:Type--- */}
                 </div>{/* --------------e:item_information------------------------ */}
 
-              </div>{/* --------------e:form-control------------------------ */}
-              {/*
-              <div className='form-control'>
-
-                
-                <div className='label'>NFT</div>
-
-                <input
-                  type='hidden'
-                  name='_contract'
-                  readOnly
-                  value={itemBuy?.asset?.collection_id}
-                />
-                <input type='hidden' name='_type' readOnly value={itemBuy?.type} />
-                <input type='hidden' name='_id' readOnly value={itemBuy?.asset?.id} />
-                <input type='hidden' name='_listid' readOnly value={itemBuy?.id} />
-                </div>
-              <div className='form-control'>
-                <div className='label'>Available</div>
-                <input type='number' readOnly value={itemBuy?.quantity} name='_quantity' />
-              </div>*/}
+              </div>
               <div className='form-control'>
                 <div className="flex_column">
                   <label>Quantity</label>
@@ -589,7 +570,7 @@ export default function NFT() {
               <div className='left'>
                 {top9List.map((o, index) => (
                   <span
-                    key={index}
+                    key={o._id}
                     onClick={() => {
                       setActiveTop9(index)
                     }}
@@ -639,7 +620,7 @@ export default function NFT() {
                 {paymentList.map((token) => {
                   if (token.address === top9List[ActiveTop9]?.payment_token) {
                     return (
-                      <div className='price'>
+                      <div key={token.coin} className='price'>
                         {new Decimal(top9List[ActiveTop9]?.price).div(
                           new Decimal(10).pow(token.decimal)
                         ) +
@@ -721,7 +702,7 @@ export default function NFT() {
             <div className='list'>
               <div className={`top-quatity ${ActiveRanking === 0 ? 'show' : ''}`}>
                 {topQuantity.map((o, index) => (
-                  <div className='item'>
+                  <div key={o._id} className='item'>
                     <span className='index'>{index + 1}</span>
                     <span className='avatar'>
                       <img alt="" src={o.user?.kyc?.avatar?.path ? `${STORAGE_DOMAIN}${o.user?.kyc?.avatar?.path}` : avatarDefault} />
@@ -735,7 +716,7 @@ export default function NFT() {
               </div>
               <div className={`top-seller ${ActiveRanking === 1 ? 'show' : ''}`}>
                 {topRevenue.map((o, index) => (
-                  <div className='item'>
+                  <div key={o._id} className='item'>
                     <span className='index'>{index + 1}</span>
                     <span className='avatar'>
                       <img alt="" src={o.user?.kyc?.avatar?.path ? `${STORAGE_DOMAIN}${o.user?.kyc?.avatar?.path}` : avatarDefault} />
@@ -753,7 +734,7 @@ export default function NFT() {
             <div className='title'>Popular NFT</div>
             <div className='list'>
               {PopulateList.map((o, index) => (
-                <div className='item'>
+                <div key={o._id} className='item'>
                   <div key={'avt' + index} className='avatar-container'>
                     <span className='avatar'>
                       <img alt="" src={o.owner?.kyc?.avatar?.path ? `${STORAGE_DOMAIN}${o.owner?.kyc?.avatar?.path}` : avatarDefault} />

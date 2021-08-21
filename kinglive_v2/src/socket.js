@@ -21,13 +21,15 @@ socket.on('connect_error', (r) => {
 
 socket.on('disconnect', (r) => {
   if (r === 'io server disconnect') {
-    // console.log({ r })
-    setTimeout(async () => {
+    console.log({ r })
+    const interval = setInterval(async () => {
       await refreshToken()
       const token = await storage.getToken()
+      console.log(token);
       if (token) {
         socket.auth.token = token
         socket.connect()
+        clearInterval(interval)
       }
     }, 1000)
   }

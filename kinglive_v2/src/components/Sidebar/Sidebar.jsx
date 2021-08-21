@@ -148,11 +148,11 @@ export default function Sidebar({ IsOpenSidebar }) {
 
           <div>
             <form>
-              <label class="switch" id="display_mode">
+              <label className="switch" id="display_mode">
                 <input type="checkbox" 
                   defaultChecked={state.isChecked}
                   />
-                <span class="slider round"></span>
+                <span className="slider round"></span>
               </label>{/*---e:display_mode---*/}      
             </form>
           </div>
