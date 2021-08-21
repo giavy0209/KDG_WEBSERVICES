@@ -48,8 +48,14 @@ export function actChangeNoties(noties) {
 export function asyncGetNoti() {
   return async dispatch => {
     const res = await callAPI.get('/noti');
-    console.log(res);
     dispatch(actChangeNoties(res.data));
     dispatch(actChangeUnreadNoti(res.unread));
   };
+}
+
+export function asyncInitData() {
+  return async dispath => {
+    await dispath(asyncGetNoti())
+    await dispath(asyncChangeUser())
+  }
 }
