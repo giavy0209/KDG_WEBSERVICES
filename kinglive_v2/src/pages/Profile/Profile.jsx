@@ -7,7 +7,6 @@ import checkSVG from '../../assets/svg/check.svg'
 import closeSVG from '../../assets/svg/close.svg'
 import coverDefault from '../../assets/svg/coverDefault.jpg'
 import editSVG from '../../assets/svg/edit.svg'
-import trashSVG from '../../assets/svg/trash.svg'
 import emptyGift from '../../assets/svg/emptyGift.svg'
 import errorSVG from '../../assets/svg/error.svg'
 import kdgSVG from '../../assets/svg/kdg.svg'
@@ -16,6 +15,7 @@ import radioSVG from '../../assets/svg/radio.svg'
 import thumb from '../../assets/svg/thumb.png'
 import titleSVG from '../../assets/svg/title.svg'
 import tradeSVG from '../../assets/svg/trade.svg'
+import trashSVG from '../../assets/svg/trash.svg'
 import callAPI from '../../axios'
 import DemoCrop from '../../components/DemoCrop/DemoCrop'
 import TableX from '../../components/TableX'
@@ -161,15 +161,17 @@ export default function Profile() {
 
   const [uploadList, setUploadList] = useState([])
   const [seeMoreCount, setSeeMoreCount] = useState(0)
+  const initLimit = 6
+  const afterLimit = 12
 
   useEffect(() => {
     callAPI
-      .get(`/videos?user=${userId}&limit=6`)
+      .get(`/videos?user=${userId}&limit=${initLimit}`)
       .then((res) => {
         if (res.status === 1) {
-          console.log(res.data)
+          console.log(res)
           setUploadList(res.data)
-          const count = Math.ceil((res.total - 6) / 12)
+          const count = Math.ceil((res.total - initLimit) / afterLimit)
           if (count <= 0) return
           setSeeMoreCount(count)
         }
@@ -182,7 +184,9 @@ export default function Profile() {
 
     try {
       const lastVideoId = uploadList[uploadList.length - 1]._id
-      const res = await callAPI.get(`/videos?user=${userId}&limit=12&last=${lastVideoId}`)
+      const res = await callAPI.get(
+        `/videos?user=${userId}&limit=${afterLimit}&last=${lastVideoId}`
+      )
       console.log(res)
       setUploadList((list) => [...list, ...res.data])
       setSeeMoreCount((x) => x - 1)

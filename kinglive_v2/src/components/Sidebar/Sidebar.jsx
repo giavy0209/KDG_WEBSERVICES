@@ -14,7 +14,7 @@ import { useHistory, useLocation } from 'react-router'
 
 const state = {
   isChecked: true,
-};
+}
 
 const page = [
   {
@@ -46,7 +46,7 @@ const page = [
       {
         route: '/mint-nft',
         name: 'Mint NFT',
-      }
+      },
     ],
   },
   {
@@ -100,8 +100,6 @@ export default function Sidebar({ IsOpenSidebar }) {
     })
   }, [IsOpenSidebar])
 
-  
-
   const location = useLocation()
   const history = useHistory()
 
@@ -117,10 +115,8 @@ export default function Sidebar({ IsOpenSidebar }) {
             <img src={location.pathname === o.route ? o.active : o.icon} alt='' />
             <span>{o.name}</span>
             {/*---------btn:arrow onclick show/hide child_box---------*/}
-            {o.child && (              
-              
+            {o.child && (
               <div className='child'>
-                
                 {o.child.map((child) => (
                   <div
                     key={child.route}
@@ -134,30 +130,30 @@ export default function Sidebar({ IsOpenSidebar }) {
                   </div>
                 ))}
               </div>
-            )}{/*-----e:child------ */}  
+            )}
+            {/*-----e:child------ */}
           </div>
         ))}
         {/*---------bottom box:arrow onclick show/hide child_box---------*/}
 
-        <div className="bottom_box">
-          <span className="setting_ico" ></span>
+        <div className='bottom_box'>
+          <span className='setting_ico'></span>
           <div>
-            <span className="coin_KDG"></span>
+            <span className='coin_KDG'></span>
             <p>12,370</p>
           </div>
 
           <div>
             <form>
-              <label class="switch" id="display_mode">
-                <input type="checkbox" 
-                  defaultChecked={state.isChecked}
-                  />
-                <span class="slider round"></span>
-              </label>{/*---e:display_mode---*/}      
+              <label className='switch' id='display_mode'>
+                <input type='checkbox' defaultChecked={state.isChecked} />
+                <span className='slider round'></span>
+              </label>
+              {/*---e:display_mode---*/}
             </form>
           </div>
-
-        </div>{/*-----e:bottom_box------ */}  
+        </div>
+        {/*-----e:bottom_box------ */}
       </aside>
     </>
   )

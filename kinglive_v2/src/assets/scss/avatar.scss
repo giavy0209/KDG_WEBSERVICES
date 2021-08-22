@@ -1,0 +1,26 @@
+@import './common.scss';
+
+.avatar😀 {
+  overflow: hidden;
+  position: relative;
+  display: inline-block;
+  width: 100px;
+  border-radius: 50%;
+
+  &::before {
+    content: '';
+    display: block;
+    padding-top: 100%;
+  }
+
+  > img {
+    --x: 0%;
+    --y: 0%;
+    --zoom: 100%;
+    top: 0;
+    left: 0;
+    position: absolute;
+    width: var(--zoom);
+    transform: translate(var(--x), var(--y));
+  }
+}
