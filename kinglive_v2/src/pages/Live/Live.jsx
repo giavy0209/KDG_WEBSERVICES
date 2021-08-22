@@ -1,16 +1,16 @@
-import '../../assets/scss/live.scss'
+import { useCallback, useEffect, useState } from 'react'
+import { useHistory } from 'react-router-dom'
 // import banner from '../../assets/images/live/banner.png'
 import banner01 from '../../assets/images/home/b01.jpg'
 import banner02 from '../../assets/images/home/b02.jpg'
 import banner03 from '../../assets/images/home/b03.jpg'
-import { useCallback, useEffect, useRef, useState } from 'react'
-import callAPI from '../../axios'
-import emptyGift from '../../assets/svg/emptyGift.svg'
-import coverDefault from '../../assets/svg/coverDefault.jpg'
+import '../../assets/scss/live.scss'
 import avatarDefault from '../../assets/svg/avatarDefault.svg'
+import coverDefault from '../../assets/svg/coverDefault.jpg'
+import emptyGift from '../../assets/svg/emptyGift.svg'
+import callAPI from '../../axios'
 import { STORAGE_DOMAIN } from '../../constant'
 import convertDateAgo from '../../helpers/convertDateAgo'
-import { useHistory } from 'react-router-dom'
 
 // const slide = [banner, banner, banner]
 const slide = [banner01, banner02, banner03]
@@ -31,21 +31,16 @@ export default function Live() {
     setActiveSlide(index)
   }, [])
 
-
-
   useEffect(() => {
-    callAPI
-      .get('/streammings')
-      .then((res) => {
-        if (res.status === 1) {
-          setStreamList(res.data)
-        }
-      })
+    callAPI.get('/streammings').then((res) => {
+      if (res.status === 1) {
+        setStreamList(res.data)
+      }
+    })
 
-    callAPI.get('/ranking')
-      .then(res => {
-        setRanking(res.data)
-      })
+    callAPI.get('/ranking').then((res) => {
+      setRanking(res.data)
+    })
   }, [])
 
   return (
@@ -242,27 +237,34 @@ export default function Live() {
               <div className='track-tabs'>
                 <div className='tabs-items'>
                   <div className='tab-item'>
-                    {Ranking.follows.map(o => <div className='item'>
-                      <div className='avatar'>
-                        <img src={avatarDefault} alt='' />
+                    {Ranking.follows.map((o) => (
+                      <div className='item'>
+                        <div className='avatar'>
+                          <img src={avatarDefault} alt='' />
+                        </div>
+                        <div className='info'>
+                          <div className='name'>
+                            {o.kyc.first_name} {o.kyc.last_name}
+                          </div>
+                          <div className='rank-info'>{o.kinglive.total_follower} Followers</div>
+                        </div>
                       </div>
-                      <div className='info'>
-                        <div className='name'>{o.kyc.first_name} {o.kyc.last_name}</div>
-                        <div className='rank-info'>{o.kinglive.total_follower} Followers</div>
-                      </div>
-                    </div>)}
-
+                    ))}
                   </div>
                   <div className='tab-item'>
-                    {Ranking.views.map(o => <div className='item'>
-                      <div className='avatar'>
-                        <img src={avatarDefault} alt='' />
+                    {Ranking.views.map((o) => (
+                      <div className='item'>
+                        <div className='avatar'>
+                          <img src={avatarDefault} alt='' />
+                        </div>
+                        <div className='info'>
+                          <div className='name'>
+                            {o.kyc.first_name} {o.kyc.last_name}
+                          </div>
+                          <div className='rank-info'>{o.kinglive.total_views} Views</div>
+                        </div>
                       </div>
-                      <div className='info'>
-                        <div className='name'>{o.kyc.first_name} {o.kyc.last_name}</div>
-                        <div className='rank-info'>{o.kinglive.total_views} Views</div>
-                      </div>
-                    </div>)}
+                    ))}
                   </div>
                 </div>
               </div>
