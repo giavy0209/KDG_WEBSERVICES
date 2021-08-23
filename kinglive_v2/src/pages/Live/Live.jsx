@@ -249,7 +249,7 @@ export default function Live() {
                   <div className='tab-item'>
                     {Ranking.follows.map((o) => (
                       <div
-                        onClick={() => history.push(`/profile?uid=${o._id}`)}
+                        onClick={() => history.push(`/user?uid=${o._id}`)}
                         key={o._id + 'followers'}
                         className='item'
                       >
@@ -270,7 +270,7 @@ export default function Live() {
                   <div className='tab-item'>
                     {Ranking.views.map((o) => (
                       <div
-                        onClick={() => history.push(`/profile?uid=${o._id}`)}
+                        onClick={() => history.push(`/user?uid=${o._id}`)}
                         key={o._id + 'views'}
                         className='item'
                       >
