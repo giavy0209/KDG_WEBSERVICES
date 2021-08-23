@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import ReactHlsPlayer from 'react-hls-player/dist'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import arrowSVG from '../../assets/svg/arrow.svg'
@@ -11,8 +12,8 @@ import emptyGift from '../../assets/svg/emptyGift.svg'
 import errorSVG from '../../assets/svg/error.svg'
 import kdgSVG from '../../assets/svg/kdg.svg'
 import menuSVG from '../../assets/svg/menu.svg'
+import pintopSVG from '../../assets/svg/pintop.svg'
 import radioSVG from '../../assets/svg/radio.svg'
-import thumb from '../../assets/svg/thumb.png'
 import titleSVG from '../../assets/svg/title.svg'
 import tradeSVG from '../../assets/svg/trade.svg'
 import trashSVG from '../../assets/svg/trash.svg'
@@ -20,21 +21,17 @@ import callAPI from '../../axios'
 import DemoCrop from '../../components/DemoCrop/DemoCrop'
 import TableX from '../../components/TableX'
 import VideoPlayer from '../../components/VideoPlayer'
-import { STORAGE_DOMAIN } from '../../constant'
+import { PLAY_STREAM, STORAGE_DOMAIN } from '../../constant'
 import convertDateAgo from '../../helpers/convertDateAgo'
 import convertPositionIMG from '../../helpers/convertPositionIMG'
 import isValidDate from '../../helpers/isValidDate'
-import { statisticArray } from '../../mock/profile'
+// import { statisticArray } from '../../mock/profile'
 import { body1, body2, head1, head2 } from '../../mock/table'
 import { asyncChangeUser } from '../../store/actions'
 
 export default function Profile() {
   const dispatch = useDispatch()
   const history = useHistory()
-  const uid = new URLSearchParams(window.location.search).get('uid')
-
-  const [OwnerData, setOwnerData] = useState({})
-  const [IsFollow, setIsFollow] = useState(false)
 
   const [isEdit, setIsEdit] = useState(false)
   const [editSuccess, setEditSuccess] = useState(false)
@@ -58,27 +55,60 @@ export default function Profile() {
   const lastName = userData?.kyc?.last_name
   const firstName = userData?.kyc?.first_name
   const phone = userData?.kyc?.phone
+  const sex = userData?.kyc?.sex
   const address = userData?.kyc?.address
   const userName = `${userData?.kyc?.first_name} ${userData?.kyc?.last_name}`
-
   const introduce = userData?.kinglive?.introduce
-
-  useEffect(() => {
-    if (!uid && !userId) history.push('/')
-    if (uid) {
-      callAPI.get(`/user?uid=${uid}`)
-        .then(res => {
-          setOwnerData(res.data)
-          setIsFollow(res.data.isFollowed)
-        })
-    }
-  }, [uid, userId])
-
   const birthday = useMemo(() => {
     if (!userData?.kyc?.birth_day) return ''
     const [month, day, year] = userData?.kyc?.birth_day.split('/')
     return `${day}/${month}/${year}`
   }, [userData])
+
+  const statisticArray = [
+    // {
+    //   amount: 234,
+    //   name: 'KDG',
+    //   color1: '#01C5FF',
+    //   color2: '#FE02F7',
+    // },
+    {
+      amount: userData?.kinglive?.total_video,
+      name: 'Total Videos Owner',
+      color1: '#24B7E8',
+      color2: '#24B7E8',
+    },
+    {
+      amount: userData?.kinglive?.total_stream_views,
+      name: 'Total Views',
+      color1: '#2CE999',
+      color2: '#2CE999',
+    },
+    // {
+    //   amount: 23,
+    //   name: 'Total Gifts',
+    //   color1: '#FF6A97',
+    //   color2: '#FF6A97',
+    // },
+    {
+      amount: userData?.kinglive?.total_follower,
+      name: 'Followers',
+      color1: '#FA528D',
+      color2: '#C954F0',
+    },
+    {
+      amount: userData?.kinglive?.total_followed,
+      name: 'Followings',
+      color1: '#F52871',
+      color2: '#F52871',
+    },
+    {
+      amount: userData?.kinglive?.live_hours,
+      name: 'Total Live (hours)',
+      color1: '#2CE999',
+      color2: '#2CE999',
+    },
+  ]
 
   const handleEditUser = async (e) => {
     e.preventDefault()
@@ -174,21 +204,21 @@ export default function Profile() {
   const [uploadList, setUploadList] = useState([])
   const [seeMoreCount, setSeeMoreCount] = useState(0)
   const initLimit = 6
-  const afterLimit = 12
+  const seeMoreLimit = 12
 
   useEffect(() => {
     callAPI
-      .get(`/videos?user=${uid ? uid : userId}&limit=${initLimit}`)
+      .get(`/videos?user=${userId}&limit=${initLimit}`)
       .then((res) => {
         if (res.status === 1) {
           setUploadList(res.data)
-          const count = Math.ceil((res.total - initLimit) / afterLimit)
+          const count = Math.ceil((res.total - initLimit) / seeMoreLimit)
           if (count <= 0) return
           setSeeMoreCount(count)
         }
       })
       .catch((error) => console.log(error))
-  }, [userId, uid])
+  }, [userId])
 
   const handleSeeMore = async () => {
     if (uploadList.length === 0) return
@@ -196,24 +226,24 @@ export default function Profile() {
     try {
       const lastVideoId = uploadList[uploadList.length - 1]._id
       const res = await callAPI.get(
-        `/videos?user=${userId}&limit=${afterLimit}&last=${lastVideoId}`
+        `/videos?user=${userId}&limit=${seeMoreLimit}&last=${lastVideoId}`
       )
       setUploadList((list) => [...list, ...res.data])
       setSeeMoreCount((x) => x - 1)
     } catch (error) {
-
+      console.log(error)
     }
   }
 
-  // const handleSetIntroduce = async (videoId) => {
-  //   try {
-  //     const res = await callAPI.post('/set_introduce', { video: videoId })
-  //     console.log(res)
-  //     dispatch(asyncChangeUser())
-  //   } catch (error) {
-  //     console.log(error)
-  //   }
-  // }
+  const handleSetIntroduce = async (videoId) => {
+    try {
+      const res = await callAPI.post('/set_introduce', { video: videoId })
+      console.log(res)
+      dispatch(asyncChangeUser())
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   const handleDeleteVideo = async (videoId) => {
     try {
@@ -226,18 +256,21 @@ export default function Profile() {
     }
   }
 
-  const handleFollow = async () => {
-    try {
-      const res = await callAPI.post(`follow?id=${uid}`)
-      if (res.status === 1) setIsFollow((x) => !x)
-    } catch (error) {
-      console.log('error follow or unfollow', error)
-    }
-  }
+  const [streaming, setStreaming] = useState(null)
+  useEffect(() => {
+    callAPI
+      .get(`/streammings?uid=${userId}`)
+      .then((res) => {
+        if (res.status === 1 && res.data.length !== 0) {
+          setStreaming(res.data[0])
+        }
+      })
+      .catch((error) => console.log(error))
+  }, [userId])
 
   return (
     <>
-      {showCrop && !uid && (
+      {showCrop && (
         <div className={`popupX ${typeImage === 1 ? 'avatarX' : ''}`}>
           <DemoCrop
             image={image}
@@ -248,7 +281,7 @@ export default function Profile() {
         </div>
       )}
 
-      {!uid && <div className={`popupGift ${showPickImage ? 'show' : ''}`}>
+      <div className={`popupGift ${showPickImage ? 'show' : ''}`}>
         <div className='popupGift__mask' onClick={() => setShowPickImage(false)}></div>
 
         <div className='popupGift__content'>
@@ -309,7 +342,7 @@ export default function Profile() {
             </div>
           )}
         </div>
-      </div>}
+      </div>
 
       {editError && (
         <div className='popupX'>
@@ -361,9 +394,9 @@ export default function Profile() {
           <div className='profile😢__cover'>
             <img
               alt=''
-              style={convertPositionIMG(uid ? OwnerData?.kyc?.cover_pos : coverPos)}
+              style={convertPositionIMG(coverPos)}
               onClick={(e) => setPreviewIMG(e.target.src)}
-              src={uid ? `${STORAGE_DOMAIN}${OwnerData?.kyc?.cover?.path}` : cover ? `${STORAGE_DOMAIN}${cover}` : coverDefault}
+              src={cover ? `${STORAGE_DOMAIN}${cover}` : coverDefault}
             />
             <span></span>
           </div>
@@ -377,18 +410,10 @@ export default function Profile() {
             }}
           >
             {!isEdit && (
-              <>
-              {
-                !uid ? <div className='profile😢__button-edit' onClick={() => setIsEdit(true)}>
-                  <img src={editSVG} alt='' />
-                  <span>Change profile information</span>
-                </div> :
-                userId ? <div className='profile😢__button-edit' onClick={handleFollow}>
-                  <span>{IsFollow ? 'Unfollow' : 'Follow'}</span>
-                </div> :
-                null
-              }
-              </>
+              <div className='profile😢__button-edit' onClick={() => setIsEdit(true)}>
+                <img src={editSVG} alt='' />
+                <span>Change profile information</span>
+              </div>
             )}
 
             {isEdit && (
@@ -420,9 +445,9 @@ export default function Profile() {
             <div className='profile😢__avatar'>
               <img
                 alt=''
-                style={convertPositionIMG(uid ? OwnerData?.kyc?.avatar_pos : avatarPos)}
+                style={convertPositionIMG(avatarPos)}
                 onClick={(e) => setPreviewIMG(e.target.src)}
-                src={uid ? `${STORAGE_DOMAIN}${OwnerData?.kyc?.avatar?.path}` : avatar ? `${STORAGE_DOMAIN}${avatar}` : avatarDefault}
+                src={avatar ? `${STORAGE_DOMAIN}${avatar}` : avatarDefault}
               />
               <span></span>
             </div>
@@ -430,7 +455,7 @@ export default function Profile() {
         </div>
 
         <div className='profile😢__name'>
-          {uid ? `${OwnerData?.kyc?.first_name} ${OwnerData?.kyc?.last_name}` : !userName ? 'Username' : userName}
+          {!userName || userName === ' ' ? 'Username' : userName}
         </div>
 
         {isEdit && (
@@ -456,14 +481,14 @@ export default function Profile() {
               <div className='label'>Gender</div>
               <div style={{ display: 'flex' }}>
                 <div className='radioContainer mr-30'>
-                  <input type='radio' name='sex' value={1} id='male' defaultChecked />
+                  <input type='radio' name='sex' value={0} id='male' defaultChecked={sex === 0} />
                   <div className='pseudo-radio'>
                     <img src={radioSVG} alt='' />
                   </div>
                   <label htmlFor='male'>Male</label>
                 </div>
                 <div className='radioContainer'>
-                  <input type='radio' name='sex' value={0} id='female' />
+                  <input type='radio' name='sex' value={1} id='female' defaultChecked={sex === 1} />
                   <div className='pseudo-radio'>
                     <img src={radioSVG} alt='' />
                   </div>
@@ -500,7 +525,7 @@ export default function Profile() {
 
         {!isEdit && (
           <div className='tabsX'>
-            {!uid && <div className='tabsX__header'>
+            <div className='tabsX__header'>
               <div
                 className={`item ${tabIndex === 0 ? 'active' : ''}`}
                 onClick={() => setTabIndex(0)}
@@ -519,11 +544,11 @@ export default function Profile() {
               >
                 Top Donate
               </div>
-            </div>}
+            </div>
 
             <div className='tabsX__body'>
               <div className={`item ${tabIndex === 0 ? 'active' : ''}`}>
-                {!uid && <div className='profile😢__statistic'>
+                <div className='profile😢__statistic'>
                   {statisticArray.map((item) => (
                     <div
                       key={item.name}
@@ -536,23 +561,59 @@ export default function Profile() {
                       </div>
                     </div>
                   ))}
-                </div>}
+                </div>
 
                 {introduce && (
-                  <div className='profile😢__introduce'>
-                    <VideoPlayer guid={introduce.guid} />
+                  <div>
+                    <div className='profile😢__title'>
+                      <span>Video Introduce</span>
+                      <img src={titleSVG} alt='' />
+                    </div>
 
-                    <div>
-                      <div onClick={() => history.push(`/watchvideo?v=${introduce.short_id}`)}>
-                        {introduce.name}
-                      </div>
+                    <div className='profile😢__introduce'>
+                      <VideoPlayer guid={introduce.guid} />
+
                       <div>
-                        {introduce.views} views • {convertDateAgo(introduce.create_date)}
+                        <div onClick={() => history.push(`/watchvideo?v=${introduce.short_id}`)}>
+                          {introduce.name}
+                        </div>
+                        <div>
+                          {introduce.views} views • {convertDateAgo(introduce.create_date)}
+                        </div>
+                        <div>{introduce.description}</div>
                       </div>
-                      <div>{introduce.description}</div>
                     </div>
                   </div>
                 )}
+
+                {streaming && (
+                  <div>
+                    <div className='profile😢__title'>
+                      <span>Streaming</span>
+                      <img src={titleSVG} alt='' />
+                    </div>
+
+                    <div className='profile😢__introduce'>
+                      <ReactHlsPlayer
+                        src={`${PLAY_STREAM}${streaming.key}/index.m3u8`}
+                        autoPlay={true}
+                        controls={true}
+                        muted={false}
+                      />
+
+                      <div>
+                        <div onClick={() => history.push(`/watchlive?s=${streaming._id}`)}>
+                          {streaming.name}
+                        </div>
+                        <div>
+                          {streaming.views} views • {convertDateAgo(streaming.start_date)}
+                        </div>
+                        <div>{streaming.description}</div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 <div>
                   <div className='profile😢__title'>
                     <span>Video Uploaded</span>
@@ -567,11 +628,28 @@ export default function Profile() {
                             key={video._id}
                             className='flexbox__item profile😢__video'
                             onClick={() => history.push(`/watchvideo?v=${video.short_id}`)}
+                            onMouseEnter={(e) => {
+                              e.target
+                                .closest('.profile😢__video')
+                                .querySelector('.thumbnail > img')
+                                .setAttribute(
+                                  'src',
+                                  `https://vz-eb27802e-8db.b-cdn.net/${video.guid}/preview.webp`
+                                )
+                            }}
+                            onMouseLeave={(e) => {
+                              e.target
+                                .closest('.profile😢__video')
+                                .querySelector('.thumbnail > img')
+                                .setAttribute(
+                                  'src',
+                                  `https://vz-eb27802e-8db.b-cdn.net/${video.guid}/thumbnail.jpg`
+                                )
+                            }}
                           >
                             <div className='thumbnail'>
                               <img
                                 src={`https://vz-eb27802e-8db.b-cdn.net/${video.guid}/thumbnail.jpg`}
-                                // src={thumb}
                                 alt=''
                               />
                             </div>
@@ -579,14 +657,14 @@ export default function Profile() {
                             <div className='info'>
                               <div>{video.name}</div>
 
-                              {!uid && <img
+                              <img
                                 src={menuSVG}
                                 alt=''
                                 onClick={(e) => {
                                   e.stopPropagation()
                                   e.target.nextElementSibling.classList.toggle('show')
                                 }}
-                              />}
+                              />
 
                               <div
                                 className='menu'
@@ -610,10 +688,10 @@ export default function Profile() {
                                   <span>Statistics</span>
                                 </div> */}
 
-                                {/* <div className='item' onClick={() => handleSetIntroduce(video._id)}>
+                                <div className='item' onClick={() => handleSetIntroduce(video._id)}>
                                   <img src={pintopSVG} alt='' />
                                   <span>Pin top</span>
-                                </div> */}
+                                </div>
                               </div>
                             </div>
                           </div>

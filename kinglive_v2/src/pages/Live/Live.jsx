@@ -20,6 +20,7 @@ const live = []
 for (let index = 0; index < 100; index++) {
   live.push(index)
 }
+
 export default function Live() {
   const history = useHistory()
 
@@ -239,8 +240,16 @@ export default function Live() {
                 <div className='tabs-items'>
                   <div className='tab-item'>
                     {Ranking.follows.map((o) => (
-                      <div onClick={()=>history.push(`/profile?uid=${o._id}`)} key={o._id} className='item'>
-                        <Avatar style={{width : '65px'}} image={o.kyc.avatar?.path} pos={o.kyc.avatar_pos} />
+                      <div
+                        onClick={() => history.push(`/profile?uid=${o._id}`)}
+                        key={o._id}
+                        className='item'
+                      >
+                        <Avatar
+                          style={{ width: '65px' }}
+                          image={o.kyc.avatar?.path}
+                          pos={o.kyc.avatar_pos}
+                        />
                         <div className='info'>
                           <div className='name'>
                             {o.kyc.first_name} {o.kyc.last_name}
@@ -253,7 +262,11 @@ export default function Live() {
                   <div className='tab-item'>
                     {Ranking.views.map((o) => (
                       <div key={o._id} className='item'>
-                        <Avatar style={{width : '65px'}} image={o.kyc.avatar?.path} pos={o.kyc.avatar_pos} />
+                        <Avatar
+                          style={{ width: '65px' }}
+                          image={o.kyc.avatar?.path}
+                          pos={o.kyc.avatar_pos}
+                        />
                         <div className='info'>
                           <div className='name'>
                             {o.kyc.first_name} {o.kyc.last_name}

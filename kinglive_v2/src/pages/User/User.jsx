@@ -1,18 +1,18 @@
 import { useEffect, useState } from 'react'
+import ReactHlsPlayer from 'react-hls-player/dist'
 import { useHistory } from 'react-router-dom'
 import '../../assets/scss/profile.scss'
 import avatarDefault from '../../assets/svg/avatarDefault.svg'
 import coverDefault from '../../assets/svg/coverDefault.jpg'
 import emptyGift from '../../assets/svg/emptyGift.svg'
-import thumb from '../../assets/svg/thumb.png'
 import titleSVG from '../../assets/svg/title.svg'
 import callAPI from '../../axios'
 import ButtonFollow from '../../components/ButtonFollow'
 import VideoPlayer from '../../components/VideoPlayer'
-import { STORAGE_DOMAIN } from '../../constant'
+import { PLAY_STREAM, STORAGE_DOMAIN } from '../../constant'
 import convertDateAgo from '../../helpers/convertDateAgo'
 import convertPositionIMG from '../../helpers/convertPositionIMG'
-import { statisticArray } from '../../mock/user'
+// import { statisticArray } from '../../mock/user'
 
 export default function User() {
   const history = useHistory()
@@ -26,8 +26,28 @@ export default function User() {
   const cover = userData?.kyc?.cover?.path
   const coverPos = userData?.kyc?.cover_pos
   const userName = `${userData?.kyc?.first_name} ${userData?.kyc?.last_name}`
-
   const introduce = userData?.kinglive?.introduce
+
+  const statisticArray = [
+    {
+      amount: userData?.kinglive?.total_follower,
+      name: 'Followers',
+      color1: '#FA528D',
+      color2: '#C954F0',
+    },
+    {
+      amount: userData?.kinglive?.total_followed,
+      name: 'Followings',
+      color1: '#F52871',
+      color2: '#F52871',
+    },
+    {
+      amount: userData?.kinglive?.total_stream_views,
+      name: 'Total Views',
+      color1: '#2CE999',
+      color2: '#2CE999',
+    },
+  ]
 
   const uid = new URLSearchParams(window.location.search).get('uid')
   if (!uid) history.push('/')
@@ -37,6 +57,7 @@ export default function User() {
       .get(`/user?uid=${uid}`)
       .then((res) => {
         if (res.status === 1) {
+          console.log(res.data)
           setUserData(res.data)
           setIsFollow(!!res.data.isFollowed)
         }
@@ -55,14 +76,16 @@ export default function User() {
 
   const [uploadList, setUploadList] = useState([])
   const [seeMoreCount, setSeeMoreCount] = useState(0)
+  const initLimit = 6
+  const seeMoreLimit = 12
 
   useEffect(() => {
     callAPI
-      .get(`/videos?user=${uid}&limit=6`)
+      .get(`/videos?user=${uid}&limit=${initLimit}`)
       .then((res) => {
         if (res.status === 1) {
           setUploadList(res.data)
-          const count = Math.ceil((res.total - 6) / 12)
+          const count = Math.ceil((res.total - initLimit) / seeMoreLimit)
           if (count <= 0) return
           setSeeMoreCount(count)
         }
@@ -75,14 +98,25 @@ export default function User() {
 
     try {
       const lastVideoId = uploadList[uploadList.length - 1]._id
-      const res = await callAPI.get(`/videos?user=${uid}&limit=12&last=${lastVideoId}`)
-      console.log(res)
+      const res = await callAPI.get(`/videos?user=${uid}&limit=${seeMoreLimit}&last=${lastVideoId}`)
       setUploadList((list) => [...list, ...res.data])
       setSeeMoreCount((x) => x - 1)
     } catch (error) {
       console.log(error)
     }
   }
+
+  const [streaming, setStreaming] = useState(null)
+  useEffect(() => {
+    callAPI
+      .get(`/streammings?uid=${uid}`)
+      .then((res) => {
+        if (res.status === 1 && res.data.length !== 0) {
+          setStreaming(res.data[0])
+        }
+      })
+      .catch((error) => console.log(error))
+  }, [uid])
 
   return (
     <div className='profile😢 container'>
@@ -145,44 +179,55 @@ export default function User() {
       </div>
 
       {introduce && (
-        <div className='profile😢__introduce'>
-          <VideoPlayer guid={introduce.guid} />
+        <div>
+          <div className='profile😢__title'>
+            <span>Video Introduce</span>
+            <img src={titleSVG} alt='' />
+          </div>
 
-          <div>
-            <div onClick={() => history.push(`/watchvideo?v=${introduce.short_id}`)}>
-              {introduce.name}
-            </div>
+          <div className='profile😢__introduce'>
+            <VideoPlayer guid={introduce.guid} />
+
             <div>
-              {introduce.views} views • {convertDateAgo(introduce.create_date)}
+              <div onClick={() => history.push(`/watchvideo?v=${introduce.short_id}`)}>
+                {introduce.name}
+              </div>
+              <div>
+                {introduce.views} views • {convertDateAgo(introduce.create_date)}
+              </div>
+              <div>{introduce.description}</div>
             </div>
-            <div>{introduce.description}</div>
           </div>
         </div>
       )}
 
-      {/* <div>
-        <div className='profile😢__title'>
-          <span>Live</span>
-          <img src={titleSVG} alt='' />
-        </div>
+      {streaming && (
+        <div>
+          <div className='profile😢__title'>
+            <span>Streaming</span>
+            <img src={titleSVG} alt='' />
+          </div>
 
-        <div className='profile😢__introduce'>
-          <VideoPlayer guid={`7ba74ab1-fc07-4a55-8394-2a1b1f771049`} />
+          <div className='profile😢__introduce'>
+            <ReactHlsPlayer
+              src={`${PLAY_STREAM}${streaming.key}/index.m3u8`}
+              autoPlay={true}
+              controls={true}
+              muted={false}
+            />
 
-          <div>
-            <div>Epic Riddles Marathon Only Bravest Detectives Can Pass</div>
-            <div>39 views • 8 days ago</div>
             <div>
-              Are you a fan of solving different puzzles, sudoku or crosswords? Here's a fresh set
-              of riddles to entertain and train your brain. Let's see how many you can crack and
-              share your number down. Here's a fresh set of riddles to entertain and train your
-              brain. Let's see how many you can crack and share your number down. Here's a fresh set
-              of riddles to entertain and train your brain. Let's see how many you can crack and
-              share your number down.
+              <div onClick={() => history.push(`/watchlive?s=${streaming._id}`)}>
+                {streaming.name}
+              </div>
+              <div>
+                {streaming.views} views • {convertDateAgo(streaming.start_date)}
+              </div>
+              <div>{streaming.description}</div>
             </div>
           </div>
         </div>
-      </div> */}
+      )}
 
       <div>
         <div className='profile😢__title'>
@@ -198,11 +243,28 @@ export default function User() {
                   key={video._id}
                   className='flexbox__item profile😢__video'
                   onClick={() => history.push(`/watchvideo?v=${video.short_id}`)}
+                  onMouseEnter={(e) => {
+                    e.target
+                      .closest('.profile😢__video')
+                      .querySelector('.thumbnail > img')
+                      .setAttribute(
+                        'src',
+                        `https://vz-eb27802e-8db.b-cdn.net/${video.guid}/preview.webp`
+                      )
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target
+                      .closest('.profile😢__video')
+                      .querySelector('.thumbnail > img')
+                      .setAttribute(
+                        'src',
+                        `https://vz-eb27802e-8db.b-cdn.net/${video.guid}/thumbnail.jpg`
+                      )
+                  }}
                 >
                   <div className='thumbnail'>
                     <img
-                      // src={`https://vz-3f44931c-ed0.b-cdn.net/${video.guid}/thumbnail.jpg`}
-                      src={thumb}
+                      src={`https://vz-eb27802e-8db.b-cdn.net/${video.guid}/thumbnail.jpg`}
                       alt=''
                     />
                   </div>
