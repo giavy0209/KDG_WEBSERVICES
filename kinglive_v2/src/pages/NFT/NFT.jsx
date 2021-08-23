@@ -731,7 +731,7 @@ export default function NFT() {
               {PopulateList.map((o, index) => (
                 <div key={o._id} className='item'>
                   <div key={'avt' + index} className='avatar-container'>
-                    <Avatar style={{width : '65px'}} pos={o.owner?.kyc?.avatar_pos}/>
+                    <Avatar style={{width : '35px'}} pos={o.owner?.kyc?.avatar_pos}/>
                     {/* <span className='avatar'>
                       <img alt="" src={o.owner?.kyc?.avatar?.path ? `${STORAGE_DOMAIN}${o.owner?.kyc?.avatar?.path}` : avatarDefault} />
                     </span> */}
