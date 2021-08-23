@@ -1,7 +1,6 @@
 import { useMemo, useState } from "react"
 import { useSelector } from "react-redux"
 import { useHistory } from "react-router-dom"
-import logo from '../../assets/images/header/logo.svg'
 import kdg from '../../assets/images/header/kdg.png'
 import { EXPLORER_URL } from '../../constant'
 import Avatar from "components/Avatar"

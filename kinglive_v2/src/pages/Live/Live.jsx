@@ -1,3 +1,4 @@
+import Avatar from 'components/Avatar'
 import { useCallback, useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 // import banner from '../../assets/images/live/banner.png'
@@ -238,10 +239,8 @@ export default function Live() {
                 <div className='tabs-items'>
                   <div className='tab-item'>
                     {Ranking.follows.map((o) => (
-                      <div className='item'>
-                        <div className='avatar'>
-                          <img src={avatarDefault} alt='' />
-                        </div>
+                      <div key={o._id} className='item'>
+                        <Avatar style={{width : '65px'}} image={o.kyc.avatar?.path} pos={o.kyc.avatar_pos} />
                         <div className='info'>
                           <div className='name'>
                             {o.kyc.first_name} {o.kyc.last_name}
@@ -253,10 +252,8 @@ export default function Live() {
                   </div>
                   <div className='tab-item'>
                     {Ranking.views.map((o) => (
-                      <div className='item'>
-                        <div className='avatar'>
-                          <img src={avatarDefault} alt='' />
-                        </div>
+                      <div key={o._id} className='item'>
+                        <Avatar style={{width : '65px'}} image={o.kyc.avatar?.path} pos={o.kyc.avatar_pos} />
                         <div className='info'>
                           <div className='name'>
                             {o.kyc.first_name} {o.kyc.last_name}

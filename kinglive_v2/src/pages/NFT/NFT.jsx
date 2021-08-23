@@ -9,8 +9,6 @@ import { paymentList } from '../../contracts/ERC20'
 import { useWeb3React } from '@web3-react/core'
 import { useContractERC20 , useContractMarket} from '../../components/ConnectWalletButton/contract'
 import { addressMarket } from '../../contracts/Market'
-import avatarDefault from '../../assets/svg/avatarDefault.svg'
-import { STORAGE_DOMAIN } from '../../constant'
 import {Decimal} from 'decimal.js'
 import Avatar from 'components/Avatar'
 export default function NFT() {

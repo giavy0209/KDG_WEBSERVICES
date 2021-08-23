@@ -80,9 +80,6 @@ export default function Profile() {
       submitData[field[0]] = field[1]
     }
 
-    submitData.gioi_tinh_id = Number(submitData.gioi_tinh_id)
-    submitData.id = userData?._id
-
     const [day, month, year] = submitData.birth_day.split('/')
     submitData.birth_day = `${month}/${day}/${year}`
 
@@ -429,14 +426,14 @@ export default function Profile() {
               <div className='label'>Gender</div>
               <div style={{ display: 'flex' }}>
                 <div className='radioContainer mr-30'>
-                  <input type='radio' name='gioi_tinh_id' value={0} id='male' defaultChecked />
+                  <input type='radio' name='sex' value={1} id='male' defaultChecked />
                   <div className='pseudo-radio'>
                     <img src={radioSVG} alt='' />
                   </div>
                   <label htmlFor='male'>Male</label>
                 </div>
                 <div className='radioContainer'>
-                  <input type='radio' name='gioi_tinh_id' value={1} id='female' />
+                  <input type='radio' name='sex' value={0} id='female' />
                   <div className='pseudo-radio'>
                     <img src={radioSVG} alt='' />
                   </div>

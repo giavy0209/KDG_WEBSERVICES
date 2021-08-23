@@ -2,7 +2,6 @@ import { useCallback, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import callAPI from '../../axios'
 import { actChangeUnreadNoti, asyncGetNoti } from '../../store/actions'
-import logo from '../../assets/images/header/logo.svg'
 import convertDateAgo from '../../helpers/convertDateAgo'
 import Avatar from 'components/Avatar'
 
