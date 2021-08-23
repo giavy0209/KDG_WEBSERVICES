@@ -239,7 +239,7 @@ export default function Live() {
                 <div className='tabs-items'>
                   <div className='tab-item'>
                     {Ranking.follows.map((o) => (
-                      <div key={o._id} className='item'>
+                      <div onClick={()=>history.push(`/profile?uid=${o._id}`)} key={o._id} className='item'>
                         <Avatar style={{width : '65px'}} image={o.kyc.avatar?.path} pos={o.kyc.avatar_pos} />
                         <div className='info'>
                           <div className='name'>

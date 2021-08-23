@@ -31,7 +31,10 @@ import { asyncChangeUser } from '../../store/actions'
 export default function Profile() {
   const dispatch = useDispatch()
   const history = useHistory()
+  const uid = new URLSearchParams(window.location.search).get('uid')
 
+  const [OwnerData , setOwnerData] = useState({})
+  console.log(OwnerData);
   const [isEdit, setIsEdit] = useState(false)
   const [editSuccess, setEditSuccess] = useState(false)
   const [editError, setEditError] = useState(false)
@@ -58,6 +61,17 @@ export default function Profile() {
   const userName = `${userData?.kyc?.first_name} ${userData?.kyc?.last_name}`
 
   const introduce = userData?.kinglive?.introduce
+
+  useEffect(() => {
+    if(!uid && !userId) history.push('/')
+    if(uid) {
+      callAPI.get(`/user?uid=${uid}`)
+      .then(res => {
+        console.log(res);
+        setOwnerData(res.data)
+      })
+    }
+  },[uid , userId])
 
   const birthday = useMemo(() => {
     if (!userData?.kyc?.birth_day) return ''
@@ -163,10 +177,9 @@ export default function Profile() {
 
   useEffect(() => {
     callAPI
-      .get(`/videos?user=${userId}&limit=${initLimit}`)
+      .get(`/videos?user=${uid ? uid : userId}&limit=${initLimit}`)
       .then((res) => {
         if (res.status === 1) {
-          console.log(res)
           setUploadList(res.data)
           const count = Math.ceil((res.total - initLimit) / afterLimit)
           if (count <= 0) return
@@ -174,7 +187,7 @@ export default function Profile() {
         }
       })
       .catch((error) => console.log(error))
-  }, [userId])
+  }, [userId, uid])
 
   const handleSeeMore = async () => {
     if (uploadList.length === 0) return
@@ -184,11 +197,10 @@ export default function Profile() {
       const res = await callAPI.get(
         `/videos?user=${userId}&limit=${afterLimit}&last=${lastVideoId}`
       )
-      console.log(res)
       setUploadList((list) => [...list, ...res.data])
       setSeeMoreCount((x) => x - 1)
-    } catch (error) {
-      console.log(error)
+    }catch(error) {
+
     }
   }
 
@@ -215,7 +227,7 @@ export default function Profile() {
 
   return (
     <>
-      {showCrop && (
+      {showCrop && !uid && (
         <div className={`popupX ${typeImage === 1 ? 'avatarX' : ''}`}>
           <DemoCrop
             image={image}
@@ -226,7 +238,7 @@ export default function Profile() {
         </div>
       )}
 
-      <div className={`popupGift ${showPickImage ? 'show' : ''}`}>
+      {!uid && <div className={`popupGift ${showPickImage ? 'show' : ''}`}>
         <div className='popupGift__mask' onClick={() => setShowPickImage(false)}></div>
 
         <div className='popupGift__content'>
@@ -287,7 +299,7 @@ export default function Profile() {
             </div>
           )}
         </div>
-      </div>
+      </div>}
 
       {editError && (
         <div className='popupX'>
@@ -339,9 +351,9 @@ export default function Profile() {
           <div className='profile😢__cover'>
             <img
               alt=''
-              style={convertPositionIMG(coverPos)}
+              style={convertPositionIMG(uid ? OwnerData?.kyc?.cover_pos : coverPos)}
               onClick={(e) => setPreviewIMG(e.target.src)}
-              src={cover ? `${STORAGE_DOMAIN}${cover}` : coverDefault}
+              src={uid ? `${STORAGE_DOMAIN}${OwnerData?.kyc?.cover?.path}` : cover ? `${STORAGE_DOMAIN}${cover}` : coverDefault}
             />
             <span></span>
           </div>
@@ -354,7 +366,7 @@ export default function Profile() {
               display: 'flex',
             }}
           >
-            {!isEdit && (
+            {!isEdit && !uid && (
               <div className='profile😢__button-edit' onClick={() => setIsEdit(true)}>
                 <img src={editSVG} alt='' />
                 <span>Change profile information</span>
@@ -390,9 +402,9 @@ export default function Profile() {
             <div className='profile😢__avatar'>
               <img
                 alt=''
-                style={convertPositionIMG(avatarPos)}
+                style={convertPositionIMG(uid? OwnerData?.kyc?.avatar_pos : avatarPos)}
                 onClick={(e) => setPreviewIMG(e.target.src)}
-                src={avatar ? `${STORAGE_DOMAIN}${avatar}` : avatarDefault}
+                src={uid? `${STORAGE_DOMAIN}${OwnerData?.kyc?.avatar?.path}` : avatar ? `${STORAGE_DOMAIN}${avatar}` : avatarDefault}
               />
               <span></span>
             </div>
@@ -400,7 +412,7 @@ export default function Profile() {
         </div>
 
         <div className='profile😢__name'>
-          {!userName || userName === ' ' ? 'Username' : userName}
+          {uid ? `${OwnerData.kyc.first_name} ${OwnerData.kyc.last_name}`  : !userName ? 'Username' : userName}
         </div>
 
         {isEdit && (
@@ -470,7 +482,7 @@ export default function Profile() {
 
         {!isEdit && (
           <div className='tabsX'>
-            <div className='tabsX__header'>
+            {!uid && <div className='tabsX__header'>
               <div
                 className={`item ${tabIndex === 0 ? 'active' : ''}`}
                 onClick={() => setTabIndex(0)}
@@ -489,11 +501,11 @@ export default function Profile() {
               >
                 Top Donate
               </div>
-            </div>
+            </div>}
 
             <div className='tabsX__body'>
               <div className={`item ${tabIndex === 0 ? 'active' : ''}`}>
-                <div className='profile😢__statistic'>
+                {!uid && <div className='profile😢__statistic'>
                   {statisticArray.map((item) => (
                     <div
                       key={item.name}
@@ -506,7 +518,7 @@ export default function Profile() {
                       </div>
                     </div>
                   ))}
-                </div>
+                </div>}
 
                 {introduce && (
                   <div className='profile😢__introduce'>
@@ -523,31 +535,6 @@ export default function Profile() {
                     </div>
                   </div>
                 )}
-
-                {/* <div>
-                  <div className='profile😢__title'>
-                    <span>Live</span>
-                    <img src={titleSVG} alt='' />
-                  </div>
-
-                  <div className='profile😢__introduce'>
-                    <VideoPlayer guid={`7ba74ab1-fc07-4a55-8394-2a1b1f771049`} />
-
-                    <div>
-                      <div>Epic Riddles Marathon Only Bravest Detectives Can Pass</div>
-                      <div>39 views • 8 days ago</div>
-                      <div>
-                        Are you a fan of solving different puzzles, sudoku or crosswords? Here's a
-                        fresh set of riddles to entertain and train your brain. Let's see how many
-                        you can crack and share your number down. Here's a fresh set of riddles to
-                        entertain and train your brain. Let's see how many you can crack and share
-                        your number down. Here's a fresh set of riddles to entertain and train your
-                        brain. Let's see how many you can crack and share your number down.
-                      </div>
-                    </div>
-                  </div>
-                </div> */}
-
                 <div>
                   <div className='profile😢__title'>
                     <span>Video Uploaded</span>
@@ -565,8 +552,8 @@ export default function Profile() {
                           >
                             <div className='thumbnail'>
                               <img
-                                // src={`https://vz-3f44931c-ed0.b-cdn.net/${video.guid}/thumbnail.jpg`}
-                                src={thumb}
+                                src={`https://vz-eb27802e-8db.b-cdn.net/${video.guid}/thumbnail.jpg`}
+                                // src={thumb}
                                 alt=''
                               />
                             </div>
