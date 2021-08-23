@@ -180,6 +180,14 @@ export default function Live() {
                         />
                       </div>
                       <div className='detail-avatar'>
+                        <Avatar
+                          image={
+                            stream.user?.kyc?.avatar?.path
+                              ? `${STORAGE_DOMAIN}${stream.user.kyc.avatar.path}`
+                              : avatarDefault
+                          }
+                          pos={stream.user?.kyc?.avatar_pos}
+                        />
                         <div className='avatar'>
                           <img
                             src={
@@ -242,7 +250,7 @@ export default function Live() {
                     {Ranking.follows.map((o) => (
                       <div
                         onClick={() => history.push(`/profile?uid=${o._id}`)}
-                        key={o._id}
+                        key={o._id + 'followers'}
                         className='item'
                       >
                         <Avatar
@@ -261,7 +269,11 @@ export default function Live() {
                   </div>
                   <div className='tab-item'>
                     {Ranking.views.map((o) => (
-                      <div key={o._id} className='item'>
+                      <div
+                        onClick={() => history.push(`/profile?uid=${o._id}`)}
+                        key={o._id + 'views'}
+                        className='item'
+                      >
                         <Avatar
                           style={{ width: '65px' }}
                           image={o.kyc.avatar?.path}

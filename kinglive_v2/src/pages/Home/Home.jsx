@@ -71,7 +71,7 @@ export default function Home() {
             className='slide'
           >
             {slide.map((o) => (
-              <div className='item'>
+              <div key={o} className='item'>
                 <img src={o} alt='' />
               </div>
             ))}
