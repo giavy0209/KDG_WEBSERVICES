@@ -285,9 +285,8 @@ export default function NFT() {
                     <strong>
                       {paymentList.map((token) => {
                         if (token.address === itemBuy?.payment_token) {
-                          console.log(token);
                           return (
-                            <div className='price'>
+                            <div key={token.coin + '1'} className='price'>
                               {new Decimal(itemBuy.price).div(new Decimal(10).pow(token.decimal)) +
                                 ' ' +
                                 token.coin}{' '}
@@ -374,7 +373,7 @@ export default function NFT() {
                   <div className="box">
                     <select name='_paymentToken'>
                       {paymentList.map((pm, i) => (
-                        <option value={i}>{pm.coin}</option>
+                        <option key={pm.coin + '2'} value={i}>{pm.coin}</option>
                       ))}
                     </select>
                   </div>{/* ---e:box---*/}
@@ -569,7 +568,7 @@ export default function NFT() {
               <div className='left'>
                 {top9List.map((o, index) => (
                   <span
-                    key={o._id}
+                    key={o._id + 'top9'}
                     onClick={() => {
                       setActiveTop9(index)
                     }}
@@ -619,7 +618,7 @@ export default function NFT() {
                 {paymentList.map((token) => {
                   if (token.address === top9List[ActiveTop9]?.payment_token) {
                     return (
-                      <div key={token.coin} className='price'>
+                      <div key={token.coin + '3'} className='price'>
                         {new Decimal(top9List[ActiveTop9]?.price).div(
                           new Decimal(10).pow(token.decimal)
                         ) +
@@ -701,7 +700,7 @@ export default function NFT() {
             <div className='list'>
               <div className={`top-quatity ${ActiveRanking === 0 ? 'show' : ''}`}>
                 {topQuantity.map((o, index) => (
-                  <div key={o._id} className='item'>
+                  <div key={o._id + 'top-quantity'} className='item'>
                     <span className='index'>{index + 1}</span>
                     <Avatar style={{width : '65px'}} pos={o.user?.kyc?.avatar_pos} image={o.user?.kyc?.avatar?.path}/>
                     <span className='info'>
@@ -713,7 +712,7 @@ export default function NFT() {
               </div>
               <div className={`top-seller ${ActiveRanking === 1 ? 'show' : ''}`}>
                 {topRevenue.map((o, index) => (
-                  <div key={o._id} className='item'>
+                  <div key={o._id + 'top-seller'} className='item'>
                     <span className='index'>{index + 1}</span>
                     <Avatar style={{width : '65px'}} pos={o.user?.kyc?.avatar_pos} image={o.user?.kyc?.avatar?.path}/>
                     <span className='info'>
@@ -729,12 +728,9 @@ export default function NFT() {
             <div className='title'>Popular NFT</div>
             <div className='list'>
               {PopulateList.map((o, index) => (
-                <div key={o._id} className='item'>
-                  <div key={'avt' + index} className='avatar-container'>
-                    <Avatar style={{width : '35px'}} pos={o.owner?.kyc?.avatar_pos}/>
-                    {/* <span className='avatar'>
-                      <img alt="" src={o.owner?.kyc?.avatar?.path ? `${STORAGE_DOMAIN}${o.owner?.kyc?.avatar?.path}` : avatarDefault} />
-                    </span> */}
+                <div key={o._id + 'popular'} className='item'>
+                  <div className='avatar-container'>
+                    <Avatar style={{width : '35px'}} image={o.owner?.kyc?.avatar?.path} pos={o.owner?.kyc?.avatar_pos}/>
                   </div>
                   <div key={'nft' + index} className='nft-blur'>
                     <div
@@ -775,7 +771,7 @@ export default function NFT() {
                     {paymentList.map((token) => {
                       if (token.address === o.payment_token) {
                         return (
-                          <span className='price'>
+                          <span key={token} className='price'>
                             {new Decimal(o.price).div(new Decimal(10).pow(token.decimal)) +
                               ' ' +
                               token.coin}{' '}

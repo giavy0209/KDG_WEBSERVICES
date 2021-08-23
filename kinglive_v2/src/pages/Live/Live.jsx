@@ -179,6 +179,14 @@ export default function Live() {
                         />
                       </div>
                       <div className='detail-avatar'>
+                        <Avatar 
+                        image={
+                          stream.user?.kyc?.avatar?.path
+                          ? `${STORAGE_DOMAIN}${stream.user.kyc.avatar.path}`
+                          : avatarDefault
+                        } 
+                        pos={stream.user?.kyc?.avatar_pos}
+                          />
                         <div className='avatar'>
                           <img
                             src={
@@ -239,8 +247,8 @@ export default function Live() {
                 <div className='tabs-items'>
                   <div className='tab-item'>
                     {Ranking.follows.map((o) => (
-                      <div onClick={()=>history.push(`/profile?uid=${o._id}`)} key={o._id} className='item'>
-                        <Avatar style={{width : '65px'}} image={o.kyc.avatar?.path} pos={o.kyc.avatar_pos} />
+                      <div onClick={() => history.push(`/profile?uid=${o._id}`)} key={o._id + 'followers'} className='item'>
+                        <Avatar style={{ width: '65px' }} image={o.kyc.avatar?.path} pos={o.kyc.avatar_pos} />
                         <div className='info'>
                           <div className='name'>
                             {o.kyc.first_name} {o.kyc.last_name}
@@ -252,8 +260,8 @@ export default function Live() {
                   </div>
                   <div className='tab-item'>
                     {Ranking.views.map((o) => (
-                      <div key={o._id} className='item'>
-                        <Avatar style={{width : '65px'}} image={o.kyc.avatar?.path} pos={o.kyc.avatar_pos} />
+                      <div onClick={() => history.push(`/profile?uid=${o._id}`)} key={o._id + 'views'} className='item'>
+                        <Avatar style={{ width: '65px' }} image={o.kyc.avatar?.path} pos={o.kyc.avatar_pos} />
                         <div className='info'>
                           <div className='name'>
                             {o.kyc.first_name} {o.kyc.last_name}
