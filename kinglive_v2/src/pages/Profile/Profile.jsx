@@ -383,9 +383,10 @@ export default function Profile() {
                   <img src={editSVG} alt='' />
                   <span>Change profile information</span>
                 </div> :
-                <div className='profile😢__button-edit' onClick={handleFollow}>
+                userId ? <div className='profile😢__button-edit' onClick={handleFollow}>
                   <span>{IsFollow ? 'Unfollow' : 'Follow'}</span>
-                </div>
+                </div> :
+                null
               }
               </>
             )}
@@ -578,14 +579,14 @@ export default function Profile() {
                             <div className='info'>
                               <div>{video.name}</div>
 
-                              <img
+                              {!uid && <img
                                 src={menuSVG}
                                 alt=''
                                 onClick={(e) => {
                                   e.stopPropagation()
                                   e.target.nextElementSibling.classList.toggle('show')
                                 }}
-                              />
+                              />}
 
                               <div
                                 className='menu'
