@@ -33,8 +33,9 @@ export default function Profile() {
   const history = useHistory()
   const uid = new URLSearchParams(window.location.search).get('uid')
 
-  const [OwnerData , setOwnerData] = useState({})
-  console.log(OwnerData);
+  const [OwnerData, setOwnerData] = useState({})
+  const [IsFollow, setIsFollow] = useState(false)
+
   const [isEdit, setIsEdit] = useState(false)
   const [editSuccess, setEditSuccess] = useState(false)
   const [editError, setEditError] = useState(false)
@@ -63,15 +64,15 @@ export default function Profile() {
   const introduce = userData?.kinglive?.introduce
 
   useEffect(() => {
-    if(!uid && !userId) history.push('/')
-    if(uid) {
+    if (!uid && !userId) history.push('/')
+    if (uid) {
       callAPI.get(`/user?uid=${uid}`)
-      .then(res => {
-        console.log(res);
-        setOwnerData(res.data)
-      })
+        .then(res => {
+          setOwnerData(res.data)
+          setIsFollow(res.data.isFollowed)
+        })
     }
-  },[uid , userId])
+  }, [uid, userId])
 
   const birthday = useMemo(() => {
     if (!userData?.kyc?.birth_day) return ''
@@ -199,7 +200,7 @@ export default function Profile() {
       )
       setUploadList((list) => [...list, ...res.data])
       setSeeMoreCount((x) => x - 1)
-    }catch(error) {
+    } catch (error) {
 
     }
   }
@@ -222,6 +223,15 @@ export default function Profile() {
       }
     } catch (error) {
       console.log(error)
+    }
+  }
+
+  const handleFollow = async () => {
+    try {
+      const res = await callAPI.post(`follow?id=${uid}`)
+      if (res.status === 1) setIsFollow((x) => !x)
+    } catch (error) {
+      console.log('error follow or unfollow', error)
     }
   }
 
@@ -366,11 +376,18 @@ export default function Profile() {
               display: 'flex',
             }}
           >
-            {!isEdit && !uid && (
-              <div className='profile😢__button-edit' onClick={() => setIsEdit(true)}>
-                <img src={editSVG} alt='' />
-                <span>Change profile information</span>
-              </div>
+            {!isEdit && (
+              <>
+              {
+                !uid ? <div className='profile😢__button-edit' onClick={() => setIsEdit(true)}>
+                  <img src={editSVG} alt='' />
+                  <span>Change profile information</span>
+                </div> :
+                <div className='profile😢__button-edit' onClick={handleFollow}>
+                  <span>{IsFollow ? 'Unfollow' : 'Follow'}</span>
+                </div>
+              }
+              </>
             )}
 
             {isEdit && (
@@ -402,9 +419,9 @@ export default function Profile() {
             <div className='profile😢__avatar'>
               <img
                 alt=''
-                style={convertPositionIMG(uid? OwnerData?.kyc?.avatar_pos : avatarPos)}
+                style={convertPositionIMG(uid ? OwnerData?.kyc?.avatar_pos : avatarPos)}
                 onClick={(e) => setPreviewIMG(e.target.src)}
-                src={uid? `${STORAGE_DOMAIN}${OwnerData?.kyc?.avatar?.path}` : avatar ? `${STORAGE_DOMAIN}${avatar}` : avatarDefault}
+                src={uid ? `${STORAGE_DOMAIN}${OwnerData?.kyc?.avatar?.path}` : avatar ? `${STORAGE_DOMAIN}${avatar}` : avatarDefault}
               />
               <span></span>
             </div>
@@ -412,7 +429,7 @@ export default function Profile() {
         </div>
 
         <div className='profile😢__name'>
-          {uid ? `${OwnerData.kyc.first_name} ${OwnerData.kyc.last_name}`  : !userName ? 'Username' : userName}
+          {uid ? `${OwnerData?.kyc?.first_name} ${OwnerData?.kyc?.last_name}` : !userName ? 'Username' : userName}
         </div>
 
         {isEdit && (
