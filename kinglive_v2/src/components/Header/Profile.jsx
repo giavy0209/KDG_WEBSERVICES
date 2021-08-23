@@ -4,13 +4,14 @@ import { useHistory } from "react-router-dom"
 import logo from '../../assets/images/header/logo.svg'
 import kdg from '../../assets/images/header/kdg.png'
 import { EXPLORER_URL } from '../../constant'
+import Avatar from "components/Avatar"
 // import { actChangeAddress, actChangeUser } from '../../store/actions'
 // import storage from '../../helpers/storage'
 
 export default function Profile({ balance }) {
     const history = useHistory()
     // const dispatch = useDispatch()
-    
+
     const [IsOpenProfile, setIsOpenProfile] = useState(false)
     const userRedux = useSelector((state) => state.user)
     const userName = useMemo(
@@ -22,13 +23,11 @@ export default function Profile({ balance }) {
         [userRedux]
     )
 
- 
+
     return (
         <>
             <div onClick={() => setIsOpenProfile(!IsOpenProfile)} className='profile'>
-                <span className='avatar'>
-                    <img src={logo} alt='' />
-                </span>
+                <Avatar style={{ width: '33px' }} />
                 <span className='name'>{userName}</span>
                 <svg
                     width='10'
@@ -45,9 +44,7 @@ export default function Profile({ balance }) {
                 <div className={`dropdown ${IsOpenProfile ? 'show' : ''}`}>
                     <div className='top'>
                         <div className='avatar-name'>
-                            <span className='avatar'>
-                                <img src={logo} alt='' />
-                            </span>
+                            <Avatar style={{ width: '33px' }} />
                             <div className='name'>
                                 <span>{userName}</span>
                                 <span>{followers} Followers</span>

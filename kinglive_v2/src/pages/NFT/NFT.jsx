@@ -12,6 +12,7 @@ import { addressMarket } from '../../contracts/Market'
 import avatarDefault from '../../assets/svg/avatarDefault.svg'
 import { STORAGE_DOMAIN } from '../../constant'
 import {Decimal} from 'decimal.js'
+import Avatar from 'components/Avatar'
 export default function NFT() {
   const userRedux = useSelector((state) => state.user)
   const history = useHistory()
@@ -704,9 +705,7 @@ export default function NFT() {
                 {topQuantity.map((o, index) => (
                   <div key={o._id} className='item'>
                     <span className='index'>{index + 1}</span>
-                    <span className='avatar'>
-                      <img alt="" src={o.user?.kyc?.avatar?.path ? `${STORAGE_DOMAIN}${o.user?.kyc?.avatar?.path}` : avatarDefault} />
-                    </span>
+                    <Avatar style={{width : '65px'}} pos={o.user?.kyc?.avatar_pos} image={o.user?.kyc?.avatar?.path}/>
                     <span className='info'>
                       <span className='name'>{o.user?.kyc?.last_name ? o.user?.kyc?.last_name + ' ' + o.user?.kyc?.first_name : '0x....' + o.user?.address.substring(o.user?.address.length - 8, o.user?.address.length)}</span>
                       <span className='quatity'>{o.quantity} Artworks</span>
@@ -718,9 +717,7 @@ export default function NFT() {
                 {topRevenue.map((o, index) => (
                   <div key={o._id} className='item'>
                     <span className='index'>{index + 1}</span>
-                    <span className='avatar'>
-                      <img alt="" src={o.user?.kyc?.avatar?.path ? `${STORAGE_DOMAIN}${o.user?.kyc?.avatar?.path}` : avatarDefault} />
-                    </span>
+                    <Avatar style={{width : '65px'}} pos={o.user?.kyc?.avatar_pos} image={o.user?.kyc?.avatar?.path}/>
                     <span className='info'>
                       <span className='name'>{o.user?.kyc?.last_name ? o.user?.kyc?.last_name + ' ' + o.user?.kyc?.first_name : ''}</span>
                       <span className='quatity'>{new Decimal(o?.payment_amount).div(new Decimal(10).pow(18)).toString()} KGD</span>
@@ -736,9 +733,10 @@ export default function NFT() {
               {PopulateList.map((o, index) => (
                 <div key={o._id} className='item'>
                   <div key={'avt' + index} className='avatar-container'>
-                    <span className='avatar'>
+                    <Avatar style={{width : '65px'}} pos={o.owner?.kyc?.avatar_pos}/>
+                    {/* <span className='avatar'>
                       <img alt="" src={o.owner?.kyc?.avatar?.path ? `${STORAGE_DOMAIN}${o.owner?.kyc?.avatar?.path}` : avatarDefault} />
-                    </span>
+                    </span> */}
                   </div>
                   <div key={'nft' + index} className='nft-blur'>
                     <div

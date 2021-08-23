@@ -4,6 +4,7 @@ import callAPI from '../../axios'
 import { actChangeUnreadNoti, asyncGetNoti } from '../../store/actions'
 import logo from '../../assets/images/header/logo.svg'
 import convertDateAgo from '../../helpers/convertDateAgo'
+import Avatar from 'components/Avatar'
 
 export default function Noti() {
   const unread = useSelector((state) => state.unread_noti)
@@ -40,9 +41,7 @@ export default function Noti() {
           <p>Notification</p>
           {noties?.map((o) => (
             <div className='item' key={o._id}>
-              <span className='avatar'>
-                <img src={o.data.avatar ? o.data.avatar : logo} alt='' />
-              </span>
+              <Avatar />
               <div className='content'>
                 {o.type === 101 ? (
                   <p>{o.data.name} is follow you</p>
