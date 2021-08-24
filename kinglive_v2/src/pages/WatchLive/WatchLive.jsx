@@ -28,8 +28,6 @@ export default function WatchLive() {
   const user = useMemo(() => streamData.user, [streamData])
   const streamKey = useMemo(() => streamData.key, [streamData])
 
-  const [streamData1, setStreamData1] = useState({})
-
   const [chatData, setChatData] = useState([])
   const [liveList, setLiveList] = useState([])
   const [isFollow, setIsFollow] = useState(false)
@@ -41,12 +39,18 @@ export default function WatchLive() {
   if (!id) history.push('/')
 
   useEffect(() => {
-    const handleStream = (data) => setStreamData1(data)
+    const handleStream = (data) => {
+      setStreamData(data)
+    }
     socket.on('stream', handleStream)
     return () => socket.removeEventListener('stream', handleStream)
   }, [])
 
-  useEffect(() => console.log({ streamData1 }), [streamData1])
+  useEffect(() => {
+    if(streamData.status !== 1) {
+      history.push(`/user?uid=${streamData.user._id}`)
+    }
+  },[streamData])
 
   useEffect(() => {
     const streamId = new URLSearchParams(window.location.search).get('s')

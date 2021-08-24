@@ -688,13 +688,13 @@ export default function NFT() {
                 onClick={() => setActiveRanking(0)}
                 className={`tab ${ActiveRanking === 0 ? 'active' : ''}`}
               >
-                Top Seller (Quatity)
+                Top Seller (Quantity)
               </div>
               <div
                 onClick={() => setActiveRanking(1)}
                 className={`tab ${ActiveRanking === 1 ? 'active' : ''}`}
               >
-                Top Seller (revenue)
+                Top Seller (Revenue)
               </div>
             </div>
             <div className='list'>
