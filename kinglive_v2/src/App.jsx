@@ -22,6 +22,7 @@ import Upload from './pages/Upload'
 import User from './pages/User'
 import WatchLive from './pages/WatchLive'
 import WatchVideo from './pages/WatchVideo'
+import Search from './pages/Search'
 import socket from './socket'
 import { actChangeUnreadNoti, asyncGetNoti } from './store/actions'
 
@@ -90,22 +91,19 @@ function App() {
       <main className={`${IsOpenSidebar ? 'small' : ''}`}>
         <Switch>
           <Route path='/' component={Home} exact />
-          {account && (
-            <>
-              <Route path='/live' component={Live} exact />
-              <Route path='/nft-market' component={NFT} exact />
-              <Route path='/my-artwork' component={MyArtwork} exact />
-              <Route path='/my-artwork-detail' component={MyArtworkDetail} exact />
-              <Route path='/mint-nft' component={MintNFT} exact />
-              <Route path='/nft-detail' component={NFTDetail} exact />
-              <Route path='/upload' component={Upload} exact />
-              <Route path='/setup' component={Setup} exact />
-              <Route path='/profile' component={Profile} exact />
-              <Route path='/user' component={User} exact />
-              <Route path='/watchlive' component={WatchLive} exact />
-              <Route path='/watchvideo' component={WatchVideo} exact />
-            </>
-          )}
+          <Route path='/live' component={Live} exact />
+          <Route path='/nft-market' component={NFT} exact />
+          <Route path='/my-artwork' component={MyArtwork} exact />
+          <Route path='/my-artwork-detail' component={MyArtworkDetail} exact />
+          <Route path='/mint-nft' component={MintNFT} exact />
+          <Route path='/nft-detail' component={NFTDetail} exact />
+          <Route path='/upload' component={Upload} exact />
+          <Route path='/setup' component={Setup} exact />
+          <Route path='/profile' component={Profile} exact />
+          <Route path='/user' component={User} exact />
+          <Route path='/watchlive' component={WatchLive} exact />
+          <Route path='/watchvideo' component={WatchVideo} exact />
+          <Route path='/search' component={Search} exact />
         </Switch>
       </main>
     </>

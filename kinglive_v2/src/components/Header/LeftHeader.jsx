@@ -1,8 +1,15 @@
+import { useCallback } from "react"
 import { useHistory } from "react-router-dom"
 import logoSVG from '../../assets/svg/logo.svg'
 
 export default function LeftHeader({toggleSidebar ,IsOpenSidebar }) {
     const history = useHistory()
+    const handleSearch = useCallback(e => {
+        e.preventDefault()
+        const data = new FormData(e.target)
+        const s = data.get('s')
+        history.push(`/search?s=${s}`)
+    },[])
     return (
         <>
             <div className='left'>
@@ -16,7 +23,7 @@ export default function LeftHeader({toggleSidebar ,IsOpenSidebar }) {
                     <img src={logoSVG} alt='' />
                 </div>
 
-                <div className='search-box'>
+                <form onSubmit={handleSearch} className='search-box'>
                     <svg
                         width='17'
                         height='17'
@@ -40,8 +47,8 @@ export default function LeftHeader({toggleSidebar ,IsOpenSidebar }) {
                         />
                     </svg>
 
-                    <input type='text' className='search' placeholder='Search' />
-                </div>
+                    <input type='text' className='search' placeholder='Search' name="s" />
+                </form>
             </div>
         </>
     )
