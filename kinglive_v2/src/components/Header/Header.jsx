@@ -15,6 +15,9 @@ export default function Header({ toggleSidebar = () => {}, IsOpenSidebar = false
   const contractERC20 = useContractERC20()
 
   const [balance, setBalance] = useState(0)
+  const [IsOpenLive, setIsOpenLive] = useState(false)
+  const [IsOpenNoti, setIsOpenNoti] = useState(false)
+  const [IsOpenProfile, setIsOpenProfile] = useState(false)
 
   useEffect(() => {
     if (!account) return
@@ -28,7 +31,6 @@ export default function Header({ toggleSidebar = () => {}, IsOpenSidebar = false
       })
       .catch((error) => console.log(error))
   }, [account, contractERC20])
-
   return (
     <>
       <header>
@@ -36,12 +38,12 @@ export default function Header({ toggleSidebar = () => {}, IsOpenSidebar = false
         <div className='right'>
           {userRedux && (
             <>
-              <Noti />
-              <LiveSetup />
+              <Noti IsOpenNoti={IsOpenNoti} setIsOpenNoti={setIsOpenNoti} />
+              <LiveSetup IsOpenLive={IsOpenLive} setIsOpenLive={setIsOpenLive} />
             </>
           )}
           <UnlockButton />
-          {userRedux && <Profile balance={balance} />}
+          {userRedux && <Profile balance={balance} IsOpenProfile={IsOpenProfile} setIsOpenProfile={setIsOpenProfile} />}
         </div>
       </header>
     </>

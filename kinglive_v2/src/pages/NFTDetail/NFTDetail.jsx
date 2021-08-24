@@ -504,7 +504,7 @@ const NFTDetail = () => {
                     <div className="artist-content">
                         <div className="artist-content-top">
                             <p className="text-artist">
-                                Artists
+                            NFT details
                             </p>
                             <h2 className="title-artist">
                                 {marketList[currentIndex]?.asset?.metadata?.name}
@@ -524,7 +524,7 @@ const NFTDetail = () => {
                         <div className="artist-content-body">
                             <div className="desciption-artist">
                                 <p className="desc">
-                                    Artist: <span className="color-fff"> {marketList[currentIndex]?.owner?.kyc?.last_name ? marketList[currentIndex]?.owner?.kyc?.last_name + ' ' + marketList[currentIndex]?.owner?.kyc?.first_name : marketList[currentIndex]?.owner?.address} </span>
+                                    Owner: <span className="color-fff"> {marketList[currentIndex]?.owner?.kyc?.last_name ? marketList[currentIndex]?.owner?.kyc?.last_name + ' ' + marketList[currentIndex]?.owner?.kyc?.first_name : marketList[currentIndex]?.owner?.address} </span>
                                 </p>
                                 {/* <p className="desc">
                                     Size: <span className="color-fff"> 366x435px </span>

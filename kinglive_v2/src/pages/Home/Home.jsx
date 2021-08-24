@@ -43,7 +43,6 @@ export default function Home() {
   const timeout = useRef(null)
   useEffect(() => {
     timeout.current = setTimeout(() => {
-      console.log(slide.length)
       if (ActiveSlide < slide.length - 1) {
         setActiveSlide(ActiveSlide + 1)
       } else {

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import ReactHlsPlayer from 'react-hls-player'
 import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
@@ -140,21 +140,23 @@ export default function WatchLive() {
   const [showGift, setShowGift] = useState(false)
   const [NFTList, setNFTList] = useState([])
 
-  useEffect(() => {
-    ;(async () => {
-      try {
-        const res = await callAPI.get(`/user-asset?limit=20&status=1&`)
+  const handleGetUserAssets = useCallback(async () => {
+    try {
+      const res = await callAPI.get(`/user-asset?limit=20&status=1&`)
 
-        if (res.status === 1) {
-          console.log({ NFTList: res.data })
-          setNFTList(res.data)
-        }
-      } catch (error) {
-        console.log('error get my nft')
-        console.log(error)
+      if (res.status === 1) {
+        console.log({ NFTList: res.data })
+        setNFTList(res.data)
       }
-    })()
-  }, [])
+    } catch (error) {
+      console.log('error get my nft')
+      console.log(error)
+    }
+  })
+
+  useEffect(() => {
+    handleGetUserAssets()
+  }, [handleGetUserAssets])
 
   const handleDonate = async (e) => {
     e.preventDefault()
@@ -178,12 +180,7 @@ export default function WatchLive() {
       if(!account) return
       await contractKL1155.safeTransferFrom(_from, _to, _id, _amount, _data)
 
-      const res = await callAPI.get(`/user-asset?limit=20&status=1&`)
-
-      if (res.status === 1) {
-        console.log({ NFTList: res.data })
-        setNFTList(res.data)
-      }
+      await handleGetUserAssets()
     } catch (error) {
       console.log(error)
     }

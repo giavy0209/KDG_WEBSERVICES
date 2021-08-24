@@ -1,9 +1,8 @@
 import { useState } from "react"
 import { useHistory } from "react-router-dom"
 
-export default function LiveSetup() {
+export default function LiveSetup({setIsOpenLive , IsOpenLive}) {
     const history = useHistory()
-    const [IsOpenLive, setIsOpenLive] = useState(false)
     return (
         <>
             <div onClick={() => setIsOpenLive(!IsOpenLive)} className='live'>

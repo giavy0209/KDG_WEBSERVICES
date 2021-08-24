@@ -4,14 +4,10 @@ import { useHistory } from "react-router-dom"
 import kdg from '../../assets/images/header/kdg.png'
 import { EXPLORER_URL } from '../../constant'
 import Avatar from "components/Avatar"
-// import { actChangeAddress, actChangeUser } from '../../store/actions'
-// import storage from '../../helpers/storage'
 
-export default function Profile({ balance }) {
+export default function Profile({ balance ,IsOpenProfile, setIsOpenProfile}) {
     const history = useHistory()
-    // const dispatch = useDispatch()
 
-    const [IsOpenProfile, setIsOpenProfile] = useState(false)
     const userRedux = useSelector((state) => state.user)
     const userName = useMemo(
         () => (userRedux ? `${userRedux?.kyc?.first_name} ${userRedux?.kyc?.last_name}` : 'Username'),
