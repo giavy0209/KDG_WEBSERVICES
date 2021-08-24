@@ -134,6 +134,7 @@ export default function Profile() {
       if (res.status === 1) {
         dispatch(asyncChangeUser())
         setEditSuccess(true)
+        setIsEdit(false)
       }
     } catch (error) {
       console.log(error)
