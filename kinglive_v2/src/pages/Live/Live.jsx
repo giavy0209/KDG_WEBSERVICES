@@ -205,7 +205,7 @@ export default function Live() {
                           <div className='name'>
                             {o.kyc.first_name} {o.kyc.last_name}
                           </div>
-                          <div className='rank-info'>{o.kinglive.total_views} Views</div>
+                          <div className='rank-info'>{o.kinglive.total_view} Views</div>
                         </div>
                       </div>
                     ))}

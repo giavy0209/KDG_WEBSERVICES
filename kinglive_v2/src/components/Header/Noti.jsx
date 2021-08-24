@@ -40,7 +40,12 @@ export default function Noti() {
           <p>Notification</p>
           {noties?.map((o) => (
             <div className='item' key={o._id}>
-              <Avatar />
+              {
+                o.type === 101 || o.type === 102 || o.type === 105? 
+                <Avatar image={o.data?.avatar?.path} pos={o.data.avatar_pos}/>
+                :
+                <Avatar />
+              }
               <div className='content'>
                 {o.type === 101 ? (
                   <p>{o.data.name} is follow you</p>

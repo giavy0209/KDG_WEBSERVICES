@@ -11,6 +11,7 @@ import { useMemo } from 'react'
 import { useHistory } from 'react-router-dom'
 
 import axios from 'axios'
+import formatNumber from 'helpers/formatNumber'
 
 
 const slide = [banner01, banner02, banner03]
@@ -110,19 +111,19 @@ export default function Home() {
 
           {/* ------------------------div: split -----------------------*/}
           <div className='split info_box'>
-            <span>Number of streamers<strong>{Dashboard.total_stream}</strong></span>
-            <span>Number of videos<strong>{Dashboard.total_video}</strong></span>
-            <span>Number of hours watched<strong>{Dashboard.watched_time}</strong></span>
-            <span>Number of views<strong>{Dashboard.total_views}</strong></span>
+            <span>Number of streamers<strong>{formatNumber(Dashboard.total_stream)}</strong></span>
+            <span>Number of videos<strong>{formatNumber(Dashboard.total_video)}</strong></span>
+            <span>Number of hours watched<strong>{formatNumber(Dashboard.watched_time)}</strong></span>
+            <span>Number of views<strong>{formatNumber(Dashboard.total_views)}</strong></span>
             
           </div>{/* --- e:split -----------------------*/}
 
           {/* ------------------------div: split -----------------------*/}
           <div className='split info_box'>
-            <span>Minted NFT<strong>{Dashboard.minted_nft}</strong></span>
-            <span>NFT transaction<strong>{Dashboard.transaction}</strong></span>
-            <span>NFT Trading volume<strong>{Dashboard.volumn_transaction}</strong></span>
-            <span>Volume donate<strong>{Dashboard.watched_time}</strong></span>
+            <span>Minted NFT<strong>{formatNumber(Dashboard.minted_nft)}</strong></span>
+            <span>NFT transaction<strong>{formatNumber(Dashboard.transaction)}</strong></span>
+            <span>NFT Trading volume<strong>{formatNumber(Dashboard.volumn_transaction)}</strong></span>
+            <span>Volume donate<strong>{formatNumber(Dashboard.watched_time)}</strong></span>
            
           </div>{/* --- e:split -----------------------*/}
 
@@ -131,9 +132,9 @@ export default function Home() {
 
         <div className='bottom_line'>
           <div className='container'>
-            <span>Total supply:<strong>988,125,000 KDG</strong></span>
-            <span>Circulating:<strong>{MarketCap.circulating_supply}</strong></span>
-            <span>Marketcap:<strong>{MarketCap.market_cap}</strong></span>
+            <span>Total supply:<strong>{formatNumber(MarketCap.total_supply)} KDG</strong></span>
+            <span>Circulating:<strong>{formatNumber(MarketCap.circulating_supply)} KDG</strong></span>
+            <span>Marketcap:<strong>{formatNumber(MarketCap.market_cap)} KDG</strong></span>
 
           </div>{/* --- e:bottom_line -----------------------*/} 
         </div>{/* --- e:bottom_line -----------------------*/}  

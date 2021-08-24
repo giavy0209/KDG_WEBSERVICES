@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import '../../assets/scss/sidebar.scss'
 import home from '../../assets/images/sidebar/home.svg'
 import homeactive from '../../assets/images/sidebar/homeactive.svg'
@@ -11,10 +11,7 @@ import swapactive from '../../assets/images/sidebar/swapactive.svg'
 import more from '../../assets/images/sidebar/more.svg'
 import moreactive from '../../assets/images/sidebar/moreactive.svg'
 import { useHistory, useLocation } from 'react-router'
-
-const state = {
-  isChecked: true,
-}
+import axios from 'axios'
 
 const page = [
   {
@@ -78,6 +75,7 @@ const page = [
 ]
 
 export default function Sidebar({ IsOpenSidebar }) {
+  const [MarketCap, setMarketCap] = useState({})
   useEffect(() => {
     const headerHeight = document.querySelector('header').offsetHeight
     const aside = document.querySelector('aside')
@@ -99,6 +97,13 @@ export default function Sidebar({ IsOpenSidebar }) {
       }
     })
   }, [IsOpenSidebar])
+
+  useEffect(() => {
+    axios.get('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=kingdom-game-4-0')
+    .then(res => {
+      setMarketCap(res.data[0])
+    })
+  },[])
 
   const location = useLocation()
   const history = useHistory()
@@ -140,17 +145,12 @@ export default function Sidebar({ IsOpenSidebar }) {
           <span className='setting_ico'></span>
           <div>
             <span className='coin_KDG'></span>
-            <p>12,370</p>
+            <p>{MarketCap.current_price}</p>
           </div>
-
           <div>
-            <form>
-              <label className='switch' id='display_mode'>
-                <input type='checkbox' defaultChecked={state.isChecked} />
-                <span className='slider round'></span>
-              </label>
-              {/*---e:display_mode---*/}
-            </form>
+            <a href="#" class="_transit link medium"></a>
+            <a href="#" class="_transit link telegram"></a>
+            <a href="#" class="_transit link twitter"></a>
           </div>
         </div>
         {/*-----e:bottom_box------ */}

@@ -283,7 +283,7 @@ export default function MintNFT() {
               className='upload__input mb-25'
               type='number'
               placeholder='1'
-              defaultValue='1'
+              defaultValue='0'
             />
           </div>
 
