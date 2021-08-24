@@ -1,4 +1,17 @@
-@import "./common.scss";
+@import './common.scss';
+
+.containerToggleMenu {
+  cursor: pointer;
+  user-select: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
 header {
   padding: 16px 23px;
@@ -25,10 +38,9 @@ header {
   .toggle-menu {
     height: 14px;
     width: 25px;
-    cursor: pointer;
     position: relative;
     span {
-      content: "";
+      content: '';
       position: absolute;
       left: 0;
       background-color: #c4c4c4;
@@ -63,7 +75,7 @@ header {
 
     width: 146px;
     height: 32px;
-    margin-left: 29px;
+    margin-left: 53px;
 
     > img {
       display: block;
@@ -93,51 +105,73 @@ header {
     margin-right: 32px;
     position: relative;
     cursor: pointer;
-    span {
+
+    > span {
       color: #f52871;
       margin-right: 4px;
     }
+
     .dropdown {
       position: absolute;
       top: calc(100% + 30px);
       right: 0;
       border-radius: 10px;
       width: 295px;
-      height: 348px;
-      overflow-y: scroll;
       background-color: #353849;
       opacity: 0;
       pointer-events: none;
       transition: 0.3s;
+
       &.show {
-        top: calc(100% + 16px);
+        top: calc(100% + 20px);
         opacity: 1;
         pointer-events: all;
       }
-      &::-webkit-scrollbar {
-        display: none;
-      }
+
       > p {
-        padding: 20px;
+        padding: 10px 20px;
         border-bottom: 1px solid #000;
-        color: #ffffff;
+        color: #fff;
       }
-      .item {
-        margin-top: 17px;
-        display: flex;
-        padding: 0 20px;
-        align-items: center;
-        span {
-          margin-right: 12px;
-          width: 35px;
-          height: 35px;
-          border-radius: 50%;
-          overflow: hidden;
+
+      .containerDropdownNoti {
+        height: 350px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        &::-webkit-scrollbar {
+          display: none;
         }
-        p {
+      }
+
+      .item {
+        display: flex;
+        padding: 10px 20px;
+        align-items: center;
+
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        &:nth-child(1) {
+          margin-top: 10px;
+        }
+
+        &:last-child {
+          margin-bottom: 17px;
+        }
+
+        .content {
+          width: calc(100% - 35px);
+          padding-left: 12px;
+
           font-size: 14px;
           color: #fff;
-          & + p {
+
+          p {
+            @include show-text-line(2);
+          }
+
+          p + p {
             font-size: 12px;
             color: #98999a;
           }
@@ -145,6 +179,7 @@ header {
       }
     }
   }
+
   .live {
     border-radius: 50px;
     padding: 7px 30px;
@@ -361,7 +396,7 @@ header {
         height: 22px;
         cursor: pointer;
         &::before {
-          content: "";
+          content: '';
           width: 31px;
           height: 1px;
           background-color: #fff;
@@ -370,7 +405,7 @@ header {
         }
 
         &::after {
-          content: "";
+          content: '';
           width: 31px;
           height: 1px;
           background-color: #fff;
@@ -431,5 +466,5 @@ header .connect-custom {
   margin-right: 30px;
   cursor: pointer;
   font-weight: 500 !important;
-  box-shadow :none !important
+  box-shadow: none !important;
 }

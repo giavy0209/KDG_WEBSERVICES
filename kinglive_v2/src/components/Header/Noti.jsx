@@ -16,6 +16,7 @@ export default function Noti() {
     await callAPI.post('/readed')
     dispatch(actChangeUnreadNoti(0))
   }, [IsOpenNoti, dispatch])
+
   return (
     <>
       <div onClick={handleOpenNoti} className='noti'>
@@ -38,32 +39,38 @@ export default function Noti() {
         </svg>
         <div className={`dropdown ${IsOpenNoti ? 'show' : ''}`}>
           <p>Notification</p>
-          {noties?.map((o) => (
-            <div className='item' key={o._id}>
-              {
-                o.type === 101 || o.type === 102 || o.type === 105? 
-                <Avatar image={o.data?.avatar?.path} pos={o.data.avatar_pos}/>
-                :
-                <Avatar />
-              }
-              <div className='content'>
-                {o.type === 101 ? (
-                  <p>{o.data.name} is follow you</p>
-                ) : o.type === 102 ? (
-                  <p>{o.data.name} is comment on your video</p>
-                ) : o.type === 103 ? (
-                  <p>Your video {o.data.video_name} upload success</p>
-                ) : o.type === 104 ? (
-                  <p>
-                    {o.data.name} upload new video {o.data.video_name}
-                  </p>
-                ) : o.type === 105 ? (
-                  <p>{o.data.name} is streaming</p>
-                ) : null}
-                <p>{convertDateAgo(o.last_update)}</p>
+
+          <div className='containerDropdownNoti'>
+            {noties?.map((o) => (
+              <div className='item' key={o._id}>
+                {o.type === 101 || o.type === 102 || o.type === 105 ? (
+                  <Avatar
+                    style={{ width: 35 }}
+                    image={o.data?.avatar?.path}
+                    pos={o.data.avatar_pos}
+                  />
+                ) : (
+                  <Avatar style={{ width: 35 }} />
+                )}
+                <div className='content'>
+                  {o.type === 101 ? (
+                    <p>{o.data.name} is follow you</p>
+                  ) : o.type === 102 ? (
+                    <p>{o.data.name} is comment on your video</p>
+                  ) : o.type === 103 ? (
+                    <p>Your video {o.data.video_name} upload success</p>
+                  ) : o.type === 104 ? (
+                    <p>
+                      {o.data.name} upload new video {o.data.video_name}
+                    </p>
+                  ) : o.type === 105 ? (
+                    <p>{o.data.name} is streaming</p>
+                  ) : null}
+                  <p>{convertDateAgo(o.last_update)}</p>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </>

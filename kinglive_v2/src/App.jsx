@@ -1,4 +1,4 @@
-import { useWeb3React } from '@web3-react/core'
+// import { useWeb3React } from '@web3-react/core'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Route, Switch } from 'react-router'
@@ -30,7 +30,7 @@ function App() {
   const history = useHistory()
   const dispatch = useDispatch()
   const [IsOpenSidebar, setIsOpenSidebar] = useState(false)
-  const { account } = useWeb3React()
+  // const { account } = useWeb3React()
 
   useEffect(() => {
     window.addEventListener('click', () =>
@@ -77,9 +77,7 @@ function App() {
       toast(<div onClick={() => handleClickNoti(data)}>{handleType(data)}</div>)
     })
 
-    return () => {
-      // cho nay huy event listener nhu nao ta? :3
-    }
+    return () => socket.disconnect()
   }, [dispatch, handleClickNoti, handleType])
 
   return (
