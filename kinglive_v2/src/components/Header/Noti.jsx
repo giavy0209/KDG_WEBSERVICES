@@ -5,7 +5,7 @@ import { actChangeUnreadNoti, asyncGetNoti } from '../../store/actions'
 import convertDateAgo from '../../helpers/convertDateAgo'
 import Avatar from 'components/Avatar'
 
-export default function Noti({IsOpenNoti, setIsOpenNoti}) {
+export default function Noti({ IsOpenNoti, setIsOpenNoti }) {
   const unread = useSelector((state) => state.unread_noti)
   const noties = useSelector((state) => state.noties)
   const dispatch = useDispatch()
@@ -45,7 +45,7 @@ export default function Noti({IsOpenNoti, setIsOpenNoti}) {
                 {o.type === 101 || o.type === 102 || o.type === 105 ? (
                   <Avatar
                     style={{ width: 35 }}
-                    image={o.data?.avatar?.path}
+                    image={o.data?.avatar?.path ? o.data?.avatar?.path : null}
                     pos={o.data.avatar_pos}
                   />
                 ) : (
