@@ -279,7 +279,7 @@ export default function NFT() {
                   <h2>{itemBuy?.asset?.metadata?.name}</h2>
 
                   {/* e:new element: Type */}
-                  <p>Avaiable {itemBuy?.quantity}<br />
+                  <p>Available {itemBuy?.quantity}<br />
 
                     {/* e:new element: Price */}
                     <strong>
@@ -659,7 +659,7 @@ export default function NFT() {
                   </div>
 
                   <div className='row'>
-                    <span> {'Avaiable : ' + top9List[ActiveTop9]?.quantity} </span>
+                    <span> {'Available : ' + top9List[ActiveTop9]?.quantity} </span>
                   </div>
 
                   <span className="open_detail_btn" onClick={() => handleShowDetailTop9()}>{`Detail >>`}</span>

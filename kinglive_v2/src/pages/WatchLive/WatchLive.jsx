@@ -26,7 +26,6 @@ export default function WatchLive() {
 
   const [streamData, setStreamData] = useState({})
   const user = useMemo(() => streamData.user, [streamData])
-  const streamKey = useMemo(() => streamData.key, [streamData])
 
   const [chatData, setChatData] = useState([])
   const [liveList, setLiveList] = useState([])
@@ -57,8 +56,7 @@ export default function WatchLive() {
     const streamId = new URLSearchParams(window.location.search).get('s')
     ;(async () => {
       try {
-        const res = await callAPI.get(`/streamming?id=${id}`)
-        console.log(res.data);
+        const res = await callAPI.get(`/streamming?id=${streamId}`)
         setStreamData(res.data)
 
         if (res.is_followed) {
@@ -83,11 +81,8 @@ export default function WatchLive() {
     ;(async () => {
       try {
         const res = await callAPI.get(`/chats?stream=${id}`)
-        console.log({ chatData: res })
         setChatData(res.data)
       } catch (error) {
-        console.log('error get chat')
-        console.log(error)
       }
     })()
 
@@ -128,14 +123,14 @@ export default function WatchLive() {
     })()
   }, [])
 
-  const handleFollow = async () => {
+  const handleFollow = useCallback(async () => {
     try {
       const res = await callAPI.post(`follow?id=${user?._id}`)
       if (res.status === 1) setIsFollow((x) => !x)
     } catch (error) {
       console.log('error follow or unfollow', error)
     }
-  }
+  },[user])
 
   const [showGift, setShowGift] = useState(false)
   const [NFTList, setNFTList] = useState([])
@@ -152,13 +147,13 @@ export default function WatchLive() {
       console.log('error get my nft')
       console.log(error)
     }
-  })
+  },[])
 
   useEffect(() => {
     handleGetUserAssets()
-  }, [handleGetUserAssets])
+  }, [])
 
-  const handleDonate = async (e) => {
+  const handleDonate = useCallback(async (e) => {
     e.preventDefault()
     setShowGift(false)
 
@@ -184,7 +179,7 @@ export default function WatchLive() {
     } catch (error) {
       console.log(error)
     }
-  }
+  },[account,contractKL1155])
 
   return (
     <>
@@ -273,7 +268,7 @@ export default function WatchLive() {
           <div className='watchlive__videoContainer'>
             <ReactHlsPlayer
               className='watchlive__videoPlayer'
-              src={`${PLAY_STREAM}${streamKey}/index.m3u8`}
+              src={`${PLAY_STREAM}${streamData?.key}/index.m3u8`}
               autoPlay={true}
               controls={true}
               muted={false}
