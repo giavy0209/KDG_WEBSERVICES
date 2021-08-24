@@ -102,9 +102,10 @@ header {
   }
 
   .noti {
+    cursor: pointer;
+    user-select: none;
     margin-right: 32px;
     position: relative;
-    cursor: pointer;
 
     > span {
       color: #f52871;
@@ -187,10 +188,12 @@ header {
     margin-right: 30px;
     cursor: pointer;
     position: relative;
+
     span {
       color: #f52871;
       margin-left: 10px;
     }
+
     .dropdown {
       padding: 20px;
       background-color: #353849;
@@ -202,16 +205,19 @@ header {
       transition: 0.3s;
       width: 176px;
       border-radius: 10px;
+
       &.show {
         top: calc(100% + 16px);
         opacity: 1;
         pointer-events: all;
       }
+
       span {
         color: #fff;
       }
     }
   }
+
   .connect {
     color: #fefefe;
     padding: 7px 26px;

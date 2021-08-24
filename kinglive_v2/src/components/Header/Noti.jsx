@@ -1,14 +1,17 @@
-import { useCallback, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import callAPI from '../../axios'
-import { actChangeUnreadNoti, asyncGetNoti } from '../../store/actions'
-import convertDateAgo from '../../helpers/convertDateAgo'
 import Avatar from 'components/Avatar'
+import { useCallback } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { useHistory } from 'react-router-dom'
+import callAPI from '../../axios'
+import convertDateAgo from '../../helpers/convertDateAgo'
+import { actChangeUnreadNoti, asyncGetNoti } from '../../store/actions'
 
 export default function Noti({ IsOpenNoti, setIsOpenNoti }) {
+  const dispatch = useDispatch()
+  const history = useHistory()
   const unread = useSelector((state) => state.unread_noti)
   const noties = useSelector((state) => state.noties)
-  const dispatch = useDispatch()
+
   const handleOpenNoti = useCallback(async () => {
     setIsOpenNoti(!IsOpenNoti)
     dispatch(asyncGetNoti())
@@ -16,10 +19,20 @@ export default function Noti({ IsOpenNoti, setIsOpenNoti }) {
     dispatch(actChangeUnreadNoti(0))
   }, [IsOpenNoti, dispatch])
 
+  const handleClickNoti = useCallback(
+    ({ type, data }) => {
+      if (type === 101) history.push(`/user?uid=${data.user}`)
+      if (type === 102 || type === 103 || type === 104) history.push(`/watchvideo?v=${data.video}`)
+      if (type === 105) history.push(`/watchlive?s=${data.video}`)
+    },
+    [history]
+  )
+
   return (
     <>
       <div onClick={handleOpenNoti} className='noti'>
         <span>{unread}</span>
+
         <svg
           width='18'
           height='21'
@@ -36,16 +49,17 @@ export default function Noti({ IsOpenNoti, setIsOpenNoti }) {
             stroke='#C4C4C4'
           />
         </svg>
+
         <div className={`dropdown ${IsOpenNoti ? 'show' : ''}`}>
           <p>Notification</p>
 
           <div className='containerDropdownNoti'>
             {noties?.map((o) => (
-              <div className='item' key={o._id}>
+              <div className='item' key={o._id} onClick={() => handleClickNoti(o)}>
                 {o.type === 101 || o.type === 102 || o.type === 105 ? (
                   <Avatar
                     style={{ width: 35 }}
-                    image={o.data?.avatar?.path ? o.data?.avatar?.path : null}
+                    image={o.data?.avatar?.path ? o.data.avatar.path : null}
                     pos={o.data.avatar_pos}
                   />
                 ) : (
