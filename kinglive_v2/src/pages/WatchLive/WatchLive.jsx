@@ -16,6 +16,7 @@ import socket from '../../socket'
 import emptyGift from '../../assets/svg/emptyGift.svg'
 import { useWeb3React } from '@web3-react/core'
 import {  useContractKL1155 } from '../../components/ConnectWalletButton/contract'
+import VideoPlayer from './VideoPlayer'
 
 export default function WatchLive() {
   const history = useHistory()
@@ -265,17 +266,7 @@ export default function WatchLive() {
 
       <div className='watchlive'>
         <div className='watchlive__left'>
-          <div className='watchlive__videoContainer'>
-            <ReactHlsPlayer
-              className='watchlive__videoPlayer'
-              src={`${PLAY_STREAM}${streamData?.key}/index.m3u8`}
-              autoPlay={true}
-              controls={true}
-              muted={false}
-              width='100%'
-              height='100%'
-            />
-          </div>
+          <VideoPlayer streamData={streamData} />
 
           <div className='watchlive__titleVideo'>{streamData.name}</div>
 
