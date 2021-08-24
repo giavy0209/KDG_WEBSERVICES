@@ -49,21 +49,18 @@ export default function WatchLive() {
   useEffect(() => console.log({ streamData1 }), [streamData1])
 
   useEffect(() => {
-    let streamId
+    const streamId = new URLSearchParams(window.location.search).get('s')
     ;(async () => {
       try {
         const res = await callAPI.get(`/streamming?id=${id}`)
-        console.log({ streamData: res })
         setStreamData(res.data)
 
-        // Check Follow Yet
         if (res.is_followed) {
           setIsFollow(true)
         } else {
           setIsFollow(false)
         }
 
-        streamId = res.data._id
         socket.emit('join_stream', streamId)
       } catch (error) {
         console.log('error get video livestream')
@@ -74,7 +71,7 @@ export default function WatchLive() {
     return () => {
       socket.emit('leave_stream', streamId)
     }
-  }, [id, history])
+  }, [ history])
 
   useEffect(() => {
     ;(async () => {

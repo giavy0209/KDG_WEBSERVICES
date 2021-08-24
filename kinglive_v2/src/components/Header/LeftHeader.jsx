@@ -47,7 +47,7 @@ export default function LeftHeader({toggleSidebar ,IsOpenSidebar }) {
                         />
                     </svg>
 
-                    <input type='text' className='search' placeholder='Search' name="s" />
+                    <input type='text' autoComplete="off" className='search' placeholder='Search' name="s" />
                 </form>
             </div>
         </>
