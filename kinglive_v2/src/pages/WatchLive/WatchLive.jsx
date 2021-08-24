@@ -322,7 +322,7 @@ export default function WatchLive() {
         </div>
 
         <div className='watchlive__right'>
-          <div className='watchlive__chatContainer'>
+          {account && <div className='watchlive__chatContainer'>
             <div className={`${hideChat ? 'hide' : ''}`}>
               <div ref={chatListRef} className='watchlive__chatList'>
                 {chatData.map((chatItem) => (
@@ -375,7 +375,7 @@ export default function WatchLive() {
             </div>
 
             <div onClick={() => setHideChat((x) => !x)}>Hide chat</div>
-          </div>
+          </div>}
 
           <div className='watchlive__buttonToggle' onClick={() => setHideLive((x) => !x)}>
             Watch Live
