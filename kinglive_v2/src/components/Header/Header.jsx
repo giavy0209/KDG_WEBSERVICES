@@ -8,6 +8,7 @@ import LeftHeader from './LeftHeader'
 import LiveSetup from './LiveSetup'
 import Noti from './Noti'
 import Profile from './Profile'
+import { Decimal } from 'decimal.js'
 
 export default function Header({ toggleSidebar = () => {}, IsOpenSidebar = false }) {
   const userRedux = useSelector((state) => state.user)
@@ -22,7 +23,6 @@ export default function Header({ toggleSidebar = () => {}, IsOpenSidebar = false
   useEffect(() => {
     if (!account) return
 
-    const { Decimal } = require('decimal.js')
     contractERC20
       .balanceOf(account)
       .then((balance) => {

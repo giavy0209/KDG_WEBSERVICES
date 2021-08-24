@@ -517,7 +517,7 @@ const NFTDetail = () => {
                                     $1000
                                 </span> */}
                                 <span className="txt">
-                                    {marketList[currentIndex]?.quantity} of {marketList[currentIndex]?.asset.total_editions}
+                                    {marketList[currentIndex]?.quantity}}
                                 </span>
                             </p>
                         </div>

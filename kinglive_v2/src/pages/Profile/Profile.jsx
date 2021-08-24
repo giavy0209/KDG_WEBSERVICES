@@ -1,3 +1,4 @@
+import { useWeb3React } from '@web3-react/core'
 import { useEffect, useMemo, useState } from 'react'
 import ReactHlsPlayer from 'react-hls-player/dist'
 import { useDispatch, useSelector } from 'react-redux'
@@ -28,10 +29,15 @@ import isValidDate from '../../helpers/isValidDate'
 // import { statisticArray } from '../../mock/profile'
 import { body1, body2, head1, head2 } from '../../mock/table'
 import { asyncChangeUser } from '../../store/actions'
+import { Decimal } from 'decimal.js'
+import { useContractERC20 } from 'components/ConnectWalletButton/contract'
 
 export default function Profile() {
   const dispatch = useDispatch()
   const history = useHistory()
+  const { account } = useWeb3React()
+  const [balance, setBalance] = useState(0)
+  const contractERC20 = useContractERC20()
 
   const [isEdit, setIsEdit] = useState(false)
   const [editSuccess, setEditSuccess] = useState(false)
@@ -45,6 +51,19 @@ export default function Profile() {
   const [tabIndex, setTabIndex] = useState(0)
   const [typeImage, setTypeImage] = useState(1)
   const [imageList, setImageList] = useState([])
+
+  
+  useEffect(() => {
+    if (!account) return
+
+    contractERC20
+      .balanceOf(account)
+      .then((balance) => {
+        const grossBalance = new Decimal(balance._hex).div(new Decimal(10).pow(18))
+        setBalance(grossBalance.toNumber())
+      })
+      .catch((error) => console.log(error))
+  }, [account, contractERC20])
 
   const userData = useSelector((state) => state.user)
   const userId = userData?._id
@@ -732,7 +751,7 @@ export default function Profile() {
                   <div>
                     <div className='profile😢__coin mb-20'>
                       <img src={kdgSVG} alt='' />
-                      <span>2,000</span>
+                      <span>{balance}</span>
                       <span>KDG</span>
                     </div>
 
