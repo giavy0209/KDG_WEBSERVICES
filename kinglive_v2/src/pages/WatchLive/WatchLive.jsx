@@ -47,7 +47,8 @@ export default function WatchLive() {
   }, [])
 
   useEffect(() => {
-    if(streamData.status !== 1) {
+    console.log(streamData);
+    if(streamData.status && streamData.status !== 1) {
       history.push(`/user?uid=${streamData.user._id}`)
     }
   },[streamData])
@@ -57,6 +58,7 @@ export default function WatchLive() {
     ;(async () => {
       try {
         const res = await callAPI.get(`/streamming?id=${id}`)
+        console.log(res.data);
         setStreamData(res.data)
 
         if (res.is_followed) {
@@ -98,7 +100,7 @@ export default function WatchLive() {
   }, [id])
 
   useEffect(() => {
-    chatListRef.current.scroll(0, chatListRef.current.scrollHeight)
+    chatListRef.current?.scroll(0, chatListRef.current.scrollHeight)
   }, [chatData])
 
   const handleChat = (e) => {
