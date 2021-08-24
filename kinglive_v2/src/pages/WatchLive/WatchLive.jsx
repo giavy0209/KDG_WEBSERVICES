@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import ReactHlsPlayer from 'react-hls-player'
 import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
@@ -28,8 +28,6 @@ export default function WatchLive() {
   const user = useMemo(() => streamData.user, [streamData])
   const streamKey = useMemo(() => streamData.key, [streamData])
 
-  const [streamData1, setStreamData1] = useState({})
-
   const [chatData, setChatData] = useState([])
   const [liveList, setLiveList] = useState([])
   const [isFollow, setIsFollow] = useState(false)
@@ -41,29 +39,34 @@ export default function WatchLive() {
   if (!id) history.push('/')
 
   useEffect(() => {
-    const handleStream = (data) => setStreamData1(data)
+    const handleStream = (data) => {
+      setStreamData(data)
+    }
     socket.on('stream', handleStream)
     return () => socket.removeEventListener('stream', handleStream)
   }, [])
 
-  useEffect(() => console.log({ streamData1 }), [streamData1])
+  useEffect(() => {
+    console.log(streamData);
+    if(streamData.status && streamData.status !== 1) {
+      history.push(`/user?uid=${streamData.user._id}`)
+    }
+  },[streamData])
 
   useEffect(() => {
-    let streamId
+    const streamId = new URLSearchParams(window.location.search).get('s')
     ;(async () => {
       try {
         const res = await callAPI.get(`/streamming?id=${id}`)
-        console.log({ streamData: res })
+        console.log(res.data);
         setStreamData(res.data)
 
-        // Check Follow Yet
         if (res.is_followed) {
           setIsFollow(true)
         } else {
           setIsFollow(false)
         }
 
-        streamId = res.data._id
         socket.emit('join_stream', streamId)
       } catch (error) {
         console.log('error get video livestream')
@@ -74,7 +77,7 @@ export default function WatchLive() {
     return () => {
       socket.emit('leave_stream', streamId)
     }
-  }, [id, history])
+  }, [ history])
 
   useEffect(() => {
     ;(async () => {
@@ -97,7 +100,7 @@ export default function WatchLive() {
   }, [id])
 
   useEffect(() => {
-    chatListRef.current.scroll(0, chatListRef.current.scrollHeight)
+    chatListRef.current?.scroll(0, chatListRef.current.scrollHeight)
   }, [chatData])
 
   const handleChat = (e) => {
@@ -137,21 +140,23 @@ export default function WatchLive() {
   const [showGift, setShowGift] = useState(false)
   const [NFTList, setNFTList] = useState([])
 
-  useEffect(() => {
-    ;(async () => {
-      try {
-        const res = await callAPI.get(`/user-asset?limit=20&status=1&`)
+  const handleGetUserAssets = useCallback(async () => {
+    try {
+      const res = await callAPI.get(`/user-asset?limit=20&status=1&`)
 
-        if (res.status === 1) {
-          console.log({ NFTList: res.data })
-          setNFTList(res.data)
-        }
-      } catch (error) {
-        console.log('error get my nft')
-        console.log(error)
+      if (res.status === 1) {
+        console.log({ NFTList: res.data })
+        setNFTList(res.data)
       }
-    })()
-  }, [])
+    } catch (error) {
+      console.log('error get my nft')
+      console.log(error)
+    }
+  })
+
+  useEffect(() => {
+    handleGetUserAssets()
+  }, [handleGetUserAssets])
 
   const handleDonate = async (e) => {
     e.preventDefault()
@@ -175,12 +180,7 @@ export default function WatchLive() {
       if(!account) return
       await contractKL1155.safeTransferFrom(_from, _to, _id, _amount, _data)
 
-      const res = await callAPI.get(`/user-asset?limit=20&status=1&`)
-
-      if (res.status === 1) {
-        console.log({ NFTList: res.data })
-        setNFTList(res.data)
-      }
+      await handleGetUserAssets()
     } catch (error) {
       console.log(error)
     }
@@ -325,7 +325,7 @@ export default function WatchLive() {
         </div>
 
         <div className='watchlive__right'>
-          <div className='watchlive__chatContainer'>
+          {account && <div className='watchlive__chatContainer'>
             <div className={`${hideChat ? 'hide' : ''}`}>
               <div ref={chatListRef} className='watchlive__chatList'>
                 {chatData.map((chatItem) => (
@@ -378,7 +378,7 @@ export default function WatchLive() {
             </div>
 
             <div onClick={() => setHideChat((x) => !x)}>Hide chat</div>
-          </div>
+          </div>}
 
           <div className='watchlive__buttonToggle' onClick={() => setHideLive((x) => !x)}>
             Watch Live

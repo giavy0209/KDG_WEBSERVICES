@@ -111,6 +111,7 @@ export default function Sidebar({ IsOpenSidebar }) {
   return (
     <>
       <aside className={`${IsOpenSidebar ? 'large' : ''}`}>
+        <div className="menu">
         {page.map((o) => (
           <div
             key={o.route}
@@ -139,7 +140,7 @@ export default function Sidebar({ IsOpenSidebar }) {
             {/*-----e:child------ */}
           </div>
         ))}
-        {/*---------bottom box:arrow onclick show/hide child_box---------*/}
+        </div>
 
         <div className='bottom_box'>
           <span className='setting_ico'></span>
@@ -148,9 +149,9 @@ export default function Sidebar({ IsOpenSidebar }) {
             <p>{MarketCap.current_price}</p>
           </div>
           <div>
-            <a href="#" class="_transit link medium"></a>
-            <a href="#" class="_transit link telegram"></a>
-            <a href="#" class="_transit link twitter"></a>
+            <a target="_blank" href="https://medium.com/kingdom-game-4-0" class="_transit link medium"></a>
+            <a target="_blank" href="https://t.me/kdg_en" class="_transit link telegram"></a>
+            <a target="_blank" href="https://twitter.com/KingdomGame_KDG" class="_transit link twitter"></a>
           </div>
         </div>
         {/*-----e:bottom_box------ */}

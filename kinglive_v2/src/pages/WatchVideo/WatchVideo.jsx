@@ -46,8 +46,7 @@ export default function WatchVideo() {
   useEffect(() => {
     ;(async () => {
       try {
-        const res = await callAPI.get('/streammings')
-        console.log({ liveList: res })
+        const res = await callAPI.get('/recommend')
         setLiveList(res.data)
       } catch (error) {
         console.log('error get live list', error)
@@ -113,7 +112,7 @@ export default function WatchVideo() {
 
       <div className='watchlive__right'>
         <div className='watchlive__buttonToggle' onClick={() => setHideLive((x) => !x)}>
-          Watch Live
+          Watch
         </div>
 
         {!hideLive && (
@@ -125,13 +124,13 @@ export default function WatchVideo() {
                     key={live._id}
                     className='watchlive__livevideo'
                     onClick={() => {
-                      history.push(`/watchlive?s=${live._id}`)
+                      history.push(`/watchvideo?v=${live.short_id}`)
                       window.scroll(0, 0)
                     }}
                   >
                     <div>
                       <img
-                        src={live.thumbnail ? `${STORAGE_DOMAIN}${live.thumbnail.path}` : thumb}
+                        src={`https://vz-eb27802e-8db.b-cdn.net/${live.guid}/thumbnail.jpg`}
                         alt=''
                       />
                     </div>

@@ -5,11 +5,10 @@ import { actChangeUnreadNoti, asyncGetNoti } from '../../store/actions'
 import convertDateAgo from '../../helpers/convertDateAgo'
 import Avatar from 'components/Avatar'
 
-export default function Noti() {
+export default function Noti({IsOpenNoti, setIsOpenNoti}) {
   const unread = useSelector((state) => state.unread_noti)
   const noties = useSelector((state) => state.noties)
   const dispatch = useDispatch()
-  const [IsOpenNoti, setIsOpenNoti] = useState(false)
   const handleOpenNoti = useCallback(async () => {
     setIsOpenNoti(!IsOpenNoti)
     dispatch(asyncGetNoti())
