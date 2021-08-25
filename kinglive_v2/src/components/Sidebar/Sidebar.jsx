@@ -99,11 +99,12 @@ export default function Sidebar({ IsOpenSidebar }) {
   }, [IsOpenSidebar])
 
   useEffect(() => {
-    axios.get('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=kingdom-game-4-0')
-    .then(res => {
-      setMarketCap(res.data[0])
-    })
-  },[])
+    axios
+      .get('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=kingdom-game-4-0')
+      .then((res) => {
+        setMarketCap(res.data[0])
+      })
+  }, [])
 
   const location = useLocation()
   const history = useHistory()
@@ -111,35 +112,35 @@ export default function Sidebar({ IsOpenSidebar }) {
   return (
     <>
       <aside className={`${IsOpenSidebar ? 'large' : ''}`}>
-        <div className="menu">
-        {page.map((o) => (
-          <div
-            key={o.route}
-            onClick={() => history.push(o.route)}
-            className={`item _transit ${location.pathname === o.route ? 'active' : ''}`}
-          >
-            <img src={location.pathname === o.route ? o.active : o.icon} alt='' />
-            <span>{o.name}</span>
-            {/*---------btn:arrow onclick show/hide child_box---------*/}
-            {o.child && (
-              <div className='child'>
-                {o.child.map((child) => (
-                  <div
-                    key={child.route}
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      history.push(child.route)
-                    }}
-                    className='child-item _transit'
-                  >
-                    <span>{child.name}</span>
-                  </div>
-                ))}
-              </div>
-            )}
-            {/*-----e:child------ */}
-          </div>
-        ))}
+        <div className='menu'>
+          {page.map((o) => (
+            <div
+              key={o.route}
+              onClick={() => history.push(o.route)}
+              className={`item _transit ${location.pathname === o.route ? 'active' : ''}`}
+            >
+              <img src={location.pathname === o.route ? o.active : o.icon} alt='' />
+              <span>{o.name}</span>
+              {/*---------btn:arrow onclick show/hide child_box---------*/}
+              {o.child && (
+                <div className='child'>
+                  {o.child.map((child) => (
+                    <div
+                      key={child.route}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        history.push(child.route)
+                      }}
+                      className='child-item _transit'
+                    >
+                      <span>{child.name}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+              {/*-----e:child------ */}
+            </div>
+          ))}
         </div>
 
         <div className='bottom_box'>
@@ -149,9 +150,24 @@ export default function Sidebar({ IsOpenSidebar }) {
             <p>{MarketCap.current_price}</p>
           </div>
           <div>
-            <a target="_blank" href="https://medium.com/kingdom-game-4-0" class="_transit link medium"></a>
-            <a target="_blank" href="https://t.me/kdg_en" class="_transit link telegram"></a>
-            <a target="_blank" href="https://twitter.com/KingdomGame_KDG" class="_transit link twitter"></a>
+            <a
+              target='_blank'
+              rel='noreferrer'
+              href='https://medium.com/kingdom-game-4-0'
+              class='_transit link medium'
+            ></a>
+            <a
+              target='_blank'
+              rel='noreferrer'
+              href='https://t.me/kdg_en'
+              class='_transit link telegram'
+            ></a>
+            <a
+              target='_blank'
+              rel='noreferrer'
+              href='https://twitter.com/KingdomGame_KDG'
+              class='_transit link twitter'
+            ></a>
           </div>
         </div>
         {/*-----e:bottom_box------ */}

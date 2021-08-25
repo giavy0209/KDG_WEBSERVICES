@@ -1,11 +1,11 @@
 import { useHistory } from 'react-router-dom'
 
-export default function LiveSetup({ setIsOpenLive, IsOpenLive }) {
+export default function LiveSetup({ toggleHeader, IsOpenLive }) {
   const history = useHistory()
 
   return (
     <>
-      <div onClick={() => setIsOpenLive(!IsOpenLive)} className='live'>
+      <div onClick={(e) => toggleHeader(2, e)} className='live'>
         <svg
           width='17'
           height='13'
@@ -38,7 +38,7 @@ export default function LiveSetup({ setIsOpenLive, IsOpenLive }) {
         <span>Live</span>
 
         <div className={`dropdown ${IsOpenLive ? 'show' : ''}`}>
-          <div onClick={() => history.push('/upload')}>
+          <div className='dropdownItem' onClick={() => history.push('/upload')}>
             <svg
               width='18'
               height='11'
@@ -54,7 +54,7 @@ export default function LiveSetup({ setIsOpenLive, IsOpenLive }) {
             <span>Upload video</span>
           </div>
 
-          <div onClick={() => history.push('/setup')}>
+          <div className='dropdownItem' onClick={() => history.push('/setup')}>
             <svg
               width='18'
               height='13'

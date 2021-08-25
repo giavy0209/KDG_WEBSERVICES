@@ -6,18 +6,21 @@ import callAPI from '../../axios'
 import convertDateAgo from '../../helpers/convertDateAgo'
 import { actChangeUnreadNoti, asyncGetNoti } from '../../store/actions'
 
-export default function Noti({ IsOpenNoti, setIsOpenNoti }) {
+export default function Noti({ IsOpenNoti, toggleHeader }) {
   const dispatch = useDispatch()
   const history = useHistory()
   const unread = useSelector((state) => state.unread_noti)
   const noties = useSelector((state) => state.noties)
 
-  const handleOpenNoti = useCallback(async () => {
-    setIsOpenNoti(!IsOpenNoti)
-    dispatch(asyncGetNoti())
-    await callAPI.post('/readed')
-    dispatch(actChangeUnreadNoti(0))
-  }, [IsOpenNoti, dispatch])
+  const handleOpenNoti = useCallback(
+    async (e) => {
+      toggleHeader(1, e)
+      dispatch(asyncGetNoti())
+      await callAPI.post('/readed')
+      dispatch(actChangeUnreadNoti(0))
+    },
+    [toggleHeader, dispatch]
+  )
 
   const handleClickNoti = useCallback(
     ({ type, data }) => {
@@ -51,7 +54,7 @@ export default function Noti({ IsOpenNoti, setIsOpenNoti }) {
         </svg>
 
         <div className={`dropdown ${IsOpenNoti ? 'show' : ''}`}>
-          <p>Notification</p>
+          <p>Notifications</p>
 
           <div className='containerDropdownNoti'>
             {noties?.map((o) => (

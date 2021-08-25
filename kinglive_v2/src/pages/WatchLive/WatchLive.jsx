@@ -1,21 +1,20 @@
+import { useWeb3React } from '@web3-react/core'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import ReactHlsPlayer from 'react-hls-player'
 import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import '../../assets/scss/watchlive.scss'
 import avatarDefaultSVG from '../../assets/svg/avatarDefault.svg'
-import thumb from '../../assets/svg/thumb.png'
+import emptyGift from '../../assets/svg/emptyGift.svg'
 import giftPNG from '../../assets/svg/gift.png'
 import sendSVG from '../../assets/svg/send.svg'
+import thumb from '../../assets/svg/thumb.png'
 // import shareSVG from '../../assets/svg/share.svg'
 import callAPI from '../../axios'
 import ButtonFollow from '../../components/ButtonFollow'
-import { PLAY_STREAM, STORAGE_DOMAIN } from '../../constant'
+import { useContractKL1155 } from '../../components/ConnectWalletButton/contract'
+import { STORAGE_DOMAIN } from '../../constant'
 import convertDateAgo from '../../helpers/convertDateAgo'
 import socket from '../../socket'
-import emptyGift from '../../assets/svg/emptyGift.svg'
-import { useWeb3React } from '@web3-react/core'
-import {  useContractKL1155 } from '../../components/ConnectWalletButton/contract'
 import VideoPlayer from './VideoPlayer'
 
 export default function WatchLive() {
@@ -50,11 +49,11 @@ export default function WatchLive() {
   }, [])
 
   useEffect(() => {
-    console.log(streamData);
-    if(streamData.status && streamData.status !== 1) {
+    console.log(streamData)
+    if (streamData.status && streamData.status !== 1) {
       history.push(`/user?uid=${streamData.user._id}`)
     }
-  },[streamData])
+  }, [history, streamData])
 
   useEffect(() => {
     const streamId = new URLSearchParams(window.location.search).get('s')
@@ -79,15 +78,14 @@ export default function WatchLive() {
     return () => {
       socket.emit('leave_stream', streamId)
     }
-  }, [ history])
+  }, [history])
 
   useEffect(() => {
     ;(async () => {
       try {
         const res = await callAPI.get(`/chats?stream=${id}`)
         setChatData(res.data)
-      } catch (error) {
-      }
+      } catch (error) {}
     })()
 
     const handleReceiveChat = (chatItem) => setChatData((_chatData) => [..._chatData, chatItem])
@@ -134,7 +132,7 @@ export default function WatchLive() {
     } catch (error) {
       console.log('error follow or unfollow', error)
     }
-  },[user])
+  }, [user])
 
   const [showGift, setShowGift] = useState(false)
   const [NFTList, setNFTList] = useState([])
@@ -151,87 +149,87 @@ export default function WatchLive() {
       console.log('error get my nft')
       console.log(error)
     }
-  },[])
+  }, [])
 
   useEffect(() => {
     handleGetUserAssets()
-  }, [])
+  }, [handleGetUserAssets])
 
-  const [ShowListGift , setShowListGift] = useState([])
-  const [CurrentShowGift , setCurrentShowGift] = useState(null)
-  const isShowGift = useRef(false);
+  const [ShowListGift, setShowListGift] = useState([])
+  const [CurrentShowGift, setCurrentShowGift] = useState(null)
+  const isShowGift = useRef(false)
 
   useEffect(() => {
-    const handleGiftData = giftData => {
-      console.log(giftData);
-      setShowListGift(_showListGift => [..._showListGift, giftData])
+    const handleGiftData = (giftData) => {
+      console.log(giftData)
+      setShowListGift((_showListGift) => [..._showListGift, giftData])
     }
-    socket.on('gift' , handleGiftData)
+    socket.on('gift', handleGiftData)
 
     return () => {
       socket.removeEventListener('gift', handleGiftData)
     }
-  },[])
+  }, [])
 
   useEffect(() => {
-    console.log(ShowListGift);
-    if (ShowListGift.length === 0 || isShowGift.current) return;
-    isShowGift.current = true;
-    const currentGift = ShowListGift[0];
-    ShowListGift.splice(0, 1);
-    setShowListGift([...ShowListGift]);
+    console.log(ShowListGift)
+    if (ShowListGift.length === 0 || isShowGift.current) return
+    isShowGift.current = true
+    const currentGift = ShowListGift[0]
+    ShowListGift.splice(0, 1)
+    setShowListGift([...ShowListGift])
     setCurrentShowGift({
       ...currentGift,
       img: currentGift.gift + `?${Date.now()}`,
-    });
+    })
     setTimeout(() => {
-      isShowGift.current = false;
-      setCurrentShowGift(null);
-    }, 5000);
-  }, [ShowListGift, CurrentShowGift]);
+      isShowGift.current = false
+      setCurrentShowGift(null)
+    }, 5000)
+  }, [ShowListGift, CurrentShowGift])
 
+  const handleDonate = useCallback(
+    async (e) => {
+      e.preventDefault()
+      if (!account) return
+      setShowGift(false)
 
+      const formData = new FormData(e.target)
+      const data = {}
+      for (const x of formData) {
+        const [key, value] = x
+        data[key] = value
+      }
+      data.amount = Number(data.amount) || 1
 
-  const handleDonate = useCallback(async (e) => {
-    e.preventDefault()
-    setShowGift(false)
+      const _from = account
+      const _to = user?.address
+      const _id = data.id
+      const _amount = data.amount
+      const _data = 0x00
 
-    const formData = new FormData(e.target)
-    const data = {}
-    for (const x of formData) {
-      const [key, value] = x
-      data[key] = value
-    }
-    data.amount = Number(data.amount) || 1
+      try {
+        await contractKL1155.safeTransferFrom(_from, _to, _id, _amount, _data)
 
-    const _from = window.ethereum.selectedAddress
-    const _to = user?.address
-    const _id = data.id
-    const _amount = data.amount
-    const _data = 0x00
+        await handleGetUserAssets()
+        const streamId = new URLSearchParams(window.location.search).get('s')
 
-    try {
-      if(!account) return
-      await contractKL1155.safeTransferFrom(_from, _to, _id, _amount, _data)
-      
-      await handleGetUserAssets()
-      const streamId = new URLSearchParams(window.location.search).get('s')
-
-      socket.emit('gift', {
-        gift_id : data._id,
-        room : streamId
-      })
-
-    } catch (error) {
-      console.log(error)
-    }
-  },[account,contractKL1155,userRedux])
+        socket.emit('gift', {
+          gift_id: data._id,
+          room: streamId,
+        })
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    [account, contractKL1155, handleGetUserAssets, user]
+  )
 
   return (
     <>
       <div className={`popup-show-gift ${CurrentShowGift ? 'show' : ''}`}>
-        <div className="gift">
-          <img src={CurrentShowGift?.img} alt="" />
+        <div className='gift'>
+          <img src={CurrentShowGift?.img} alt='' />
           <p>{CurrentShowGift?.name} sent you a gift</p>
         </div>
       </div>
@@ -248,7 +246,12 @@ export default function WatchLive() {
                   key={nft._id}
                   className='popupGift__gift flexbox__item'
                 >
-                  <input type="text" defaultValue={nft._id} name="_id" style={{display : 'none'}}/>
+                  <input
+                    type='text'
+                    defaultValue={nft._id}
+                    name='_id'
+                    style={{ display: 'none' }}
+                  />
                   <img src={nft.asset.metadata.image_thumbnail} alt='gift' />
                   <p>{nft.asset.metadata.name}</p>
                   <div style={{ position: 'relative' }}>
@@ -319,7 +322,6 @@ export default function WatchLive() {
       <div className='watchlive'>
         <div className='watchlive__left'>
           <div className='watchlive__videoContainer'>
-            
             <VideoPlayer streamData={streamData} />
           </div>
 
@@ -366,60 +368,62 @@ export default function WatchLive() {
         </div>
 
         <div className='watchlive__right'>
-          {account && <div className='watchlive__chatContainer'>
-            <div className={`${hideChat ? 'hide' : ''}`}>
-              <div ref={chatListRef} className='watchlive__chatList'>
-                {chatData.map((chatItem) => (
-                  <div key={chatItem._id} className='watchlive__chatItem'>
-                    <div>
-                      <img
-                        src={
-                          chatItem.user?.kyc?.avatar?.path
-                            ? `${STORAGE_DOMAIN}${chatItem.user.kyc.avatar.path}`
-                            : avatarDefaultSVG
-                        }
-                        alt=''
-                      />
-                    </div>
+          {account && (
+            <div className='watchlive__chatContainer'>
+              <div className={`${hideChat ? 'hide' : ''}`}>
+                <div ref={chatListRef} className='watchlive__chatList'>
+                  {chatData.map((chatItem) => (
+                    <div key={chatItem._id} className='watchlive__chatItem'>
+                      <div>
+                        <img
+                          src={
+                            chatItem.user?.kyc?.avatar?.path
+                              ? `${STORAGE_DOMAIN}${chatItem.user.kyc.avatar.path}`
+                              : avatarDefaultSVG
+                          }
+                          alt=''
+                        />
+                      </div>
 
-                    <div>
-                      <span>
-                        {chatItem.user.kyc.first_name || chatItem.user.kyc.last_name
-                          ? `${chatItem.user.kyc.first_name} ${chatItem.user.kyc.last_name}`
-                          : 'Username'}
-                      </span>
-                      <span>{chatItem.chat}</span>
+                      <div>
+                        <span>
+                          {chatItem.user.kyc.first_name || chatItem.user.kyc.last_name
+                            ? `${chatItem.user.kyc.first_name} ${chatItem.user.kyc.last_name}`
+                            : 'Username'}
+                        </span>
+                        <span>{chatItem.chat}</span>
+                      </div>
                     </div>
+                  ))}
+                </div>
+
+                <form className='watchlive__chatInput' onSubmit={handleChat}>
+                  <div>
+                    <img
+                      src={
+                        user?.kyc?.avatar?.path
+                          ? `${STORAGE_DOMAIN}${user.kyc.avatar.path}`
+                          : avatarDefaultSVG
+                      }
+                      alt=''
+                    />
                   </div>
-                ))}
+
+                  <div>
+                    <input type='text' name='chat' />
+                    <button type='submit'>
+                      <img src={sendSVG} alt='' />
+                    </button>
+                    {userRedux && user && userRedux.address !== user.address && (
+                      <img src={giftPNG} alt='' onClick={() => setShowGift(true)} />
+                    )}
+                  </div>
+                </form>
               </div>
 
-              <form className='watchlive__chatInput' onSubmit={handleChat}>
-                <div>
-                  <img
-                    src={
-                      user?.kyc?.avatar?.path
-                        ? `${STORAGE_DOMAIN}${user.kyc.avatar.path}`
-                        : avatarDefaultSVG
-                    }
-                    alt=''
-                  />
-                </div>
-
-                <div>
-                  <input type='text' name='chat' />
-                  <button type='submit'>
-                    <img src={sendSVG} alt='' />
-                  </button>
-                  {userRedux && user && userRedux.address !== user.address && (
-                    <img src={giftPNG} alt='' onClick={() => setShowGift(true)} />
-                  )}
-                </div>
-              </form>
+              <div onClick={() => setHideChat((x) => !x)}>Hide chat</div>
             </div>
-
-            <div onClick={() => setHideChat((x) => !x)}>Hide chat</div>
-          </div>}
+          )}
 
           <div className='watchlive__buttonToggle' onClick={() => setHideLive((x) => !x)}>
             Watch Live

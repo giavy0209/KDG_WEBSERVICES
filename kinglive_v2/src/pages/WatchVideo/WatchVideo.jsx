@@ -3,13 +3,12 @@ import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import '../../assets/scss/watchlive.scss'
 import avatarDefaultSVG from '../../assets/svg/avatarDefault.svg'
-import thumb from '../../assets/svg/thumb.png'
+import emptyGift from '../../assets/svg/emptyGift.svg'
 import callAPI from '../../axios'
 import ButtonFollow from '../../components/ButtonFollow'
 import VideoPlayer from '../../components/VideoPlayer'
 import { STORAGE_DOMAIN } from '../../constant'
 import convertDateAgo from '../../helpers/convertDateAgo'
-import emptyGift from '../../assets/svg/emptyGift.svg'
 
 export default function WatchVideo() {
   const history = useHistory()
