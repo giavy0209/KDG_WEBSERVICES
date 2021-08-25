@@ -5,6 +5,7 @@ import { useHistory } from 'react-router-dom'
 import banner01 from '../../assets/images/home/b01.jpg'
 import banner02 from '../../assets/images/home/b02.jpg'
 import banner03 from '../../assets/images/home/b03.jpg'
+import bannerKinglive from '../../assets/images/live/bannerKinglive.gif'
 import '../../assets/scss/live.scss'
 import rank1 from '../../assets/svg/rank1.svg'
 import rank2 from '../../assets/svg/rank2.svg'
@@ -15,7 +16,8 @@ import callAPI from '../../axios'
 import { STORAGE_DOMAIN } from '../../constant'
 import convertDateAgo from '../../helpers/convertDateAgo'
 
-const slide = [banner01, banner02, banner03]
+// const slide = [banner01, banner02, banner03]
+const slide = [bannerKinglive]
 
 const live = []
 for (let index = 0; index < 100; index++) {
@@ -60,14 +62,16 @@ export default function Live() {
               </div>
             ))}
           </div>
-          <div className='controls'>
-            {slide.map((o, index) => (
-              <div
-                onClick={() => manualChangeSlide(index)}
-                className={`btn ${ActiveSlide === index ? 'active' : ''}`}
-              ></div>
-            ))}
-          </div>
+          {slide.length >= 2 && (
+            <div className='controls'>
+              {slide.map((o, index) => (
+                <div
+                  onClick={() => manualChangeSlide(index)}
+                  className={`btn ${ActiveSlide === index ? 'active' : ''}`}
+                ></div>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className='container live-container'>
