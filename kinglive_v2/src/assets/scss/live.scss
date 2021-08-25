@@ -1,17 +1,23 @@
+@import './common.scss';
+
 .live {
+  padding-bottom: 100px;
+
   .live-container {
     display: flex;
     flex-wrap: wrap;
     margin-top: 35px;
   }
+
   .left {
     width: 75%;
-    padding-right: 12.5px;
+    padding-right: 10px;
   }
+
   .right {
     width: 25%;
-    padding-left: 12.5px;
   }
+
   .slide-track {
     overflow: hidden;
     position: relative;
@@ -63,6 +69,7 @@
       }
     }
   }
+
   .title-controls {
     display: flex;
     justify-content: space-between;
@@ -121,6 +128,7 @@
       }
     }
   }
+
   .watch-live-track {
     margin-top: 20px;
     overflow: hidden;
@@ -134,6 +142,7 @@
       }
     }
   }
+
   .watch-live,
   .recommend {
     display: flex;
@@ -185,24 +194,21 @@
           }
         }
       }
+
       .detail-avatar {
         display: flex;
-        padding: 5px 10px;
-        .avatar {
-          width: 25px;
-          height: 25px;
-          border-radius: 50%;
-          overflow: hidden;
-          position: relative;
-          img {
-            position: absolute;
-          }
-        }
+        align-items: flex-start;
+        padding: 10px 0;
+
         .detail {
-          margin-left: 8px;
+          width: calc(100% - 25px);
+          padding-left: 10px;
+
           .name {
             color: #fff;
+            @include show-text-line(1);
           }
+
           .view-time,
           .user-name {
             color: #98999a;
@@ -212,77 +218,105 @@
       }
     }
   }
+
   .ranking {
-    background-color: #353849;
-    border-radius: 5px;
     padding: 15px;
+    border-radius: 5px;
+    background-color: #353849;
+
     .title {
-      font-weight: 500;
-      font-size: 24px;
-      padding: 15px 0;
-      padding-bottom: 9px;
-      border-bottom: 1px solid #171a2b;
       color: #fff;
+      font-size: 24px;
+      line-height: 1;
+      font-weight: 500;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #171a2b;
     }
+
     .tabs {
       margin-top: 25px;
       display: flex;
       position: relative;
+
       &::before {
         content: '';
-        width: 50%;
-        height: 2px;
-        background-color: #f52871;
         position: absolute;
         bottom: 0;
         left: calc(50% * var(--item));
+        width: 50%;
+        height: 2px;
+        background-color: #f52871;
         transition: 0.3s ease;
       }
+
       .tab {
         cursor: pointer;
-        width: 50%;
-        text-align: center;
-        font-size: 18px;
+        user-select: none;
+
         color: #98999a;
-        padding-bottom: 14px;
+        font-size: 18px;
+        line-height: 1;
+
+        text-align: center;
+        width: 50%;
+        padding-bottom: 12px;
         border-bottom: 1px solid #6a6a6d;
         transition: 0.3s ease;
+
         &.active {
           color: #f52871;
         }
       }
     }
+
     .track-tabs {
       margin-top: 20px;
       overflow: hidden;
+
       .tabs-items {
         width: 200%;
         display: flex;
         transform: translate(calc(-50% * var(--item)), 0);
         transition: 0.3s;
+
         .tab-item {
           width: 50%;
+
           .item {
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+
+            padding: 7px 0;
+            border-radius: 10px;
             display: flex;
             align-items: center;
-            .avatar {
-              width: 65px;
-              height: 65px;
-              border-radius: 50%;
-              overflow: hidden;
-              > img {
-                width: 100%;
-                height: 100%;
-                object-fit: contain;
-              }
+
+            &:hover {
+              background-color: rgba(255, 255, 255, 0.1);
             }
+
+            .rank {
+              position: absolute;
+              top: 0;
+              left: 40px;
+            }
+
             .info {
-              margin-left: 16px;
+              width: calc(100% - 65px);
+              padding-left: 16px;
+
               .name {
+                margin-bottom: 5px;
                 color: #fff;
+                line-height: 1;
+                @include show-text-line(1);
               }
+
               .rank-info {
                 font-size: 14px;
+                line-height: 1;
+                @include show-text-line(1);
               }
             }
           }
@@ -291,6 +325,3 @@
     }
   }
 }
-
-// 100%     1000%
-// 33.333   33.333% * 1000

@@ -6,7 +6,9 @@ import banner01 from '../../assets/images/home/b01.jpg'
 import banner02 from '../../assets/images/home/b02.jpg'
 import banner03 from '../../assets/images/home/b03.jpg'
 import '../../assets/scss/live.scss'
-import avatarDefault from '../../assets/svg/avatarDefault.svg'
+import rank1 from '../../assets/svg/rank1.svg'
+import rank2 from '../../assets/svg/rank2.svg'
+import rank3 from '../../assets/svg/rank3.svg'
 import coverDefault from '../../assets/svg/coverDefault.jpg'
 import emptyGift from '../../assets/svg/emptyGift.svg'
 import callAPI from '../../axios'
@@ -67,9 +69,10 @@ export default function Live() {
             ))}
           </div>
         </div>
+
         <div className='container live-container'>
           <div className='left'>
-            <div className='title-controls'>
+            <div className='title-controls mb-10'>
               <h2 className='title'>Watch Live</h2>
             </div>
 
@@ -101,39 +104,20 @@ export default function Live() {
                           alt=''
                         />
                       </div>
+
                       <div className='detail-avatar'>
                         <Avatar
+                          style={{ width: 25, marginTop: 5 }}
                           image={
-                            stream.user?.kyc?.avatar?.path
-                              ? `${STORAGE_DOMAIN}${stream.user.kyc.avatar.path}`
-                              : avatarDefault
+                            stream.user?.kyc?.avatar?.path ? stream.user.kyc.avatar.path : null
                           }
                           pos={stream.user?.kyc?.avatar_pos}
                         />
-                        <div className='avatar'>
-                          <img
-                            src={
-                              stream.user?.kyc?.avatar?.path
-                                ? `${STORAGE_DOMAIN}${stream.user.kyc.avatar.path}`
-                                : avatarDefault
-                            }
-                            alt=''
-                          />
-                        </div>
+
                         <div className='detail'>
                           <div className='name'>{stream.name}</div>
                           <div className='view-time'>
-                            {stream.views} views
-                            <svg
-                              width='4'
-                              height='4'
-                              viewBox='0 0 4 4'
-                              fill='none'
-                              xmlns='http://www.w3.org/2000/svg'
-                            >
-                              <circle cx='1.67185' cy='2.23797' r='1.40135' fill='#98999A' />
-                            </svg>
-                            {convertDateAgo(stream.start_date)}
+                            {stream.views} views • {convertDateAgo(stream.start_date)}
                           </div>
                           <div className='user-name'>
                             {stream.user?.kyc?.first_name
@@ -152,6 +136,7 @@ export default function Live() {
           <div className='right'>
             <div style={{ '--item': ActiveTab }} className='ranking'>
               <div className='title'>Ranking</div>
+
               <div className='tabs'>
                 <div
                   onClick={() => setActiveTab(0)}
@@ -166,20 +151,24 @@ export default function Live() {
                   Views
                 </div>
               </div>
+
               <div className='track-tabs'>
                 <div className='tabs-items'>
                   <div className='tab-item'>
-                    {Ranking.follows.map((o) => (
+                    {Ranking.follows.map((o, idx) => (
                       <div
                         onClick={() => history.push(`/user?uid=${o._id}`)}
                         key={o._id + 'followers'}
                         className='item'
                       >
                         <Avatar
-                          style={{ width: '65px' }}
-                          image={o.kyc.avatar?.path}
+                          style={{ width: 65 }}
+                          image={o.kyc.avatar?.path ? o.kyc.avatar.path : null}
                           pos={o.kyc.avatar_pos}
                         />
+                        {idx === 0 && <img className='rank' src={rank1} alt='' />}
+                        {idx === 1 && <img className='rank' src={rank2} alt='' />}
+                        {idx === 2 && <img className='rank' src={rank3} alt='' />}
                         <div className='info'>
                           <div className='name'>
                             {o.kyc.first_name} {o.kyc.last_name}
@@ -189,18 +178,22 @@ export default function Live() {
                       </div>
                     ))}
                   </div>
+
                   <div className='tab-item'>
-                    {Ranking.views.map((o) => (
+                    {Ranking.views.map((o, idx) => (
                       <div
                         onClick={() => history.push(`/user?uid=${o._id}`)}
                         key={o._id + 'views'}
                         className='item'
                       >
                         <Avatar
-                          style={{ width: '65px' }}
-                          image={o.kyc.avatar?.path}
+                          style={{ width: 65 }}
+                          image={o.kyc.avatar?.path ? o.kyc.avatar.path : null}
                           pos={o.kyc.avatar_pos}
                         />
+                        {idx === 0 && <img className='rank' src={rank1} alt='' />}
+                        {idx === 1 && <img className='rank' src={rank2} alt='' />}
+                        {idx === 2 && <img className='rank' src={rank3} alt='' />}
                         <div className='info'>
                           <div className='name'>
                             {o.kyc.first_name} {o.kyc.last_name}
