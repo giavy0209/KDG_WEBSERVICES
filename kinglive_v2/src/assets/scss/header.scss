@@ -278,10 +278,12 @@ header {
               color: #fff;
               font-size: 20px;
               font-weight: 500;
+              @include show-text-line(1);
             }
 
             > *:nth-child(2) {
               color: #c4c4c4;
+              @include show-text-line(1);
             }
 
             > *:nth-child(3) {
