@@ -43,7 +43,10 @@ export default function WatchLive() {
       setStreamData(data)
     }
     socket.on('stream', handleStream)
-    return () => socket.removeEventListener('stream', handleStream)
+    return () => {
+      socket.removeEventListener('stream', handleStream)
+      setChatData([...[]])
+    }
   }, [])
 
   useEffect(() => {
