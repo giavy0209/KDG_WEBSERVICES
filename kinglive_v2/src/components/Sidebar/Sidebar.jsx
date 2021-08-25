@@ -34,7 +34,7 @@ const page = [
     child: [
       {
         route: '/nft-market',
-        name: 'NFT Market',
+        name: 'King Market',
       },
       {
         route: '/my-artwork',
