@@ -61,12 +61,12 @@ export default function Noti({ IsOpenNoti, toggleHeader }) {
               <div className='item' key={o._id} onClick={() => handleClickNoti(o)}>
                 {o.type === 101 || o.type === 102 || o.type === 105 ? (
                   <Avatar
-                    style={{ width: 35 }}
+                    style={{ width: 35, marginTop: 5 }}
                     image={o.data?.avatar?.path ? o.data.avatar.path : null}
                     pos={o.data.avatar_pos}
                   />
                 ) : (
-                  <Avatar style={{ width: 35 }} />
+                  <Avatar style={{ width: 35, marginTop: 5 }} />
                 )}
                 <div className='content'>
                   {o.type === 101 ? (

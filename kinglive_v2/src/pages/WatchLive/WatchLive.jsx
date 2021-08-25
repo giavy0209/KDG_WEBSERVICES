@@ -1,9 +1,9 @@
 import { useWeb3React } from '@web3-react/core'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import Avatar from 'components/Avatar'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import '../../assets/scss/watchlive.scss'
-import avatarDefaultSVG from '../../assets/svg/avatarDefault.svg'
 import emptyGift from '../../assets/svg/emptyGift.svg'
 import giftPNG from '../../assets/svg/gift.png'
 import sendSVG from '../../assets/svg/send.svg'
@@ -19,13 +19,12 @@ import VideoPlayer from './VideoPlayer'
 
 export default function WatchLive() {
   const history = useHistory()
-  const userRedux = useSelector((state) => state.user)
+
   const { account } = useWeb3React()
   const contractKL1155 = useContractKL1155()
-  const chatListRef = useRef()
 
-  const [streamData, setStreamData] = useState({})
-  const user = useMemo(() => streamData.user, [streamData])
+  const userRedux = useSelector((state) => state.user)
+  const chatListRef = useRef()
 
   const [chatData, setChatData] = useState([])
   const [liveList, setLiveList] = useState([])
@@ -34,14 +33,16 @@ export default function WatchLive() {
   const [hideChat, setHideChat] = useState(false)
   const [hideLive, setHideLive] = useState(false)
 
-  const id = new URLSearchParams(window.location.search).get('s')
-  if (!id) history.push('/')
+  const [streamData, setStreamData] = useState({})
+  const user = streamData?.user
+
+  const streamId = new URLSearchParams(window.location.search).get('s')
+  !streamId && history.push('/')
 
   useEffect(() => {
-    const handleStream = (data) => {
-      setStreamData(data)
-    }
+    const handleStream = (data) => setStreamData(data)
     socket.on('stream', handleStream)
+
     return () => {
       socket.removeEventListener('stream', handleStream)
       setChatData([...[]])
@@ -49,41 +50,38 @@ export default function WatchLive() {
   }, [])
 
   useEffect(() => {
-    console.log(streamData)
-    if (streamData.status && streamData.status !== 1) {
+    if (streamData?.status && streamData.status !== 1) {
       history.push(`/user?uid=${streamData.user._id}`)
     }
   }, [history, streamData])
 
   useEffect(() => {
-    const streamId = new URLSearchParams(window.location.search).get('s')
     ;(async () => {
       try {
         const res = await callAPI.get(`/streamming?id=${streamId}`)
-        setStreamData(res.data)
+        console.log(res)
+        res.status === 1 && setStreamData(res.data)
 
         if (res.is_followed) {
           setIsFollow(true)
         } else {
           setIsFollow(false)
         }
-
-        socket.emit('join_stream', streamId)
       } catch (error) {
-        console.log('error get video livestream')
         console.log(error)
       }
     })()
 
+    socket.emit('join_stream', streamId)
     return () => {
       socket.emit('leave_stream', streamId)
     }
-  }, [history])
+  }, [history, streamId])
 
   useEffect(() => {
     ;(async () => {
       try {
-        const res = await callAPI.get(`/chats?stream=${id}`)
+        const res = await callAPI.get(`/chats?stream=${streamId}`)
         setChatData(res.data)
       } catch (error) {}
     })()
@@ -94,7 +92,7 @@ export default function WatchLive() {
     return () => {
       socket.removeEventListener('chat', handleReceiveChat)
     }
-  }, [id])
+  }, [streamId])
 
   useEffect(() => {
     chatListRef.current?.scroll(0, chatListRef.current.scrollHeight)
@@ -116,10 +114,8 @@ export default function WatchLive() {
     ;(async () => {
       try {
         const res = await callAPI.get('/streammings')
-        console.log({ liveList: res })
-        setLiveList(res.data)
+        res.status === 1 && setLiveList(res.data)
       } catch (error) {
-        console.log('error get live list')
         console.log(error)
       }
     })()
@@ -128,9 +124,9 @@ export default function WatchLive() {
   const handleFollow = useCallback(async () => {
     try {
       const res = await callAPI.post(`follow?id=${user?._id}`)
-      if (res.status === 1) setIsFollow((x) => !x)
+      res.status === 1 && setIsFollow((x) => !x)
     } catch (error) {
-      console.log('error follow or unfollow', error)
+      console.log(error)
     }
   }, [user])
 
@@ -139,14 +135,12 @@ export default function WatchLive() {
 
   const handleGetUserAssets = useCallback(async () => {
     try {
-      const res = await callAPI.get(`/user-asset?limit=20&status=1&`)
+      const res = await callAPI.get(`/user-asset?limit=20&status=1`)
 
       if (res.status === 1) {
-        console.log({ NFTList: res.data })
         setNFTList(res.data)
       }
     } catch (error) {
-      console.log('error get my nft')
       console.log(error)
     }
   }, [])
@@ -161,11 +155,10 @@ export default function WatchLive() {
 
   useEffect(() => {
     const handleGiftData = (giftData) => {
-      console.log(giftData)
       setShowListGift((_showListGift) => [..._showListGift, giftData])
     }
-    socket.on('gift', handleGiftData)
 
+    socket.on('gift', handleGiftData)
     return () => {
       socket.removeEventListener('gift', handleGiftData)
     }
@@ -210,9 +203,7 @@ export default function WatchLive() {
 
       try {
         await contractKL1155.safeTransferFrom(_from, _to, _id, _amount, _data)
-
         await handleGetUserAssets()
-        const streamId = new URLSearchParams(window.location.search).get('s')
 
         socket.emit('gift', {
           gift_id: data._id,
@@ -222,7 +213,7 @@ export default function WatchLive() {
         console.log(error)
       }
     },
-    [account, contractKL1155, handleGetUserAssets, user]
+    [account, contractKL1155, handleGetUserAssets, user, streamId]
   )
 
   return (
@@ -233,13 +224,14 @@ export default function WatchLive() {
           <p>{CurrentShowGift?.name} sent you a gift</p>
         </div>
       </div>
+
       <div className={`popupGift ${showGift ? 'show' : ''}`}>
         <div className='popupGift__mask' onClick={() => setShowGift(false)}></div>
 
         <div className='popupGift__content'>
           <div style={{ color: '#fefefe', marginBottom: 16 }}>Gift</div>
           {NFTList.length !== 0 && (
-            <div className='flexbox flex4' style={{ height: 362, overflowY: 'auto' }}>
+            <div className='flexbox flex4 hideScrollbar' style={{ height: 362, overflowY: 'auto' }}>
               {NFTList.map((nft) => (
                 <form
                   onSubmit={handleDonate}
@@ -325,11 +317,11 @@ export default function WatchLive() {
             <VideoPlayer streamData={streamData} />
           </div>
 
-          <div className='watchlive__titleVideo'>{streamData.name}</div>
+          <div className='watchlive__titleVideo'>{streamData?.name}</div>
 
           <div className='mb-30'>
             <span>
-              {streamData.views} views • {convertDateAgo(streamData.start_date)}
+              {streamData?.views} views • {convertDateAgo(streamData?.start_date)}
             </span>
             {/* <span className='button-share'>
               <img src={shareSVG} alt='' />
@@ -339,13 +331,10 @@ export default function WatchLive() {
 
           <div className='watchlive__infoVideo'>
             <div onClick={() => history.push(`/user?uid=${user?._id}`)}>
-              <img
-                src={
-                  user?.kyc?.avatar?.path
-                    ? `${STORAGE_DOMAIN}${user.kyc.avatar.path}`
-                    : avatarDefaultSVG
-                }
-                alt=''
+              <Avatar
+                style={{ width: 45 }}
+                image={user?.kyc?.avatar?.path ? user.kyc.avatar.path : null}
+                pos={user?.kyc?.avatar_pos}
               />
             </div>
 
@@ -355,10 +344,10 @@ export default function WatchLive() {
                   ? `${user?.kyc?.first_name} ${user?.kyc?.last_name}`
                   : 'Username'}
               </div>
-              <div>{user?.kinglive.total_follower} followers</div>
-              <div>{streamData.description}</div>
+              <div>{user?.kinglive?.total_follower} followers</div>
+              <div>{streamData?.description}</div>
 
-              {userRedux?._id !== user?._id && (
+              {account && user && userRedux && userRedux._id !== user._id && (
                 <div style={{ position: 'absolute', top: 0, right: 0 }}>
                   <ButtonFollow isFollow={isFollow} handleFollow={handleFollow} />
                 </div>
@@ -375,13 +364,14 @@ export default function WatchLive() {
                   {chatData.map((chatItem) => (
                     <div key={chatItem._id} className='watchlive__chatItem'>
                       <div>
-                        <img
-                          src={
-                            chatItem.user?.kyc?.avatar?.path
-                              ? `${STORAGE_DOMAIN}${chatItem.user.kyc.avatar.path}`
-                              : avatarDefaultSVG
+                        <Avatar
+                          style={{ width: 25 }}
+                          image={
+                            chatItem?.user?.kyc?.avatar?.path
+                              ? chatItem?.user?.kyc?.avatar?.path
+                              : null
                           }
-                          alt=''
+                          pos={chatItem?.user?.kyc?.avatar_pos}
                         />
                       </div>
 
@@ -399,14 +389,7 @@ export default function WatchLive() {
 
                 <form className='watchlive__chatInput' onSubmit={handleChat}>
                   <div>
-                    <img
-                      src={
-                        user?.kyc?.avatar?.path
-                          ? `${STORAGE_DOMAIN}${user.kyc.avatar.path}`
-                          : avatarDefaultSVG
-                      }
-                      alt=''
-                    />
+                    <Avatar style={{ width: 25 }} />
                   </div>
 
                   <div>
