@@ -1,18 +1,13 @@
-import '../../assets/scss/home.scss'
+import axios from 'axios'
+import formatNumber from 'helpers/formatNumber'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useHistory } from 'react-router-dom'
 import banner01 from '../../assets/images/home/b01.jpg'
 import banner02 from '../../assets/images/home/b02.jpg'
 import banner03 from '../../assets/images/home/b03.jpg'
 import kingIMG from '../../assets/images/home/King.gif'
-
-
-import { useCallback, useEffect, useRef, useState } from 'react'
+import '../../assets/scss/home.scss'
 import callAPI from '../../axios'
-import { useMemo } from 'react'
-import { useHistory } from 'react-router-dom'
-
-import axios from 'axios'
-import formatNumber from 'helpers/formatNumber'
-
 
 const slide = [banner01, banner02, banner03]
 
@@ -21,26 +16,27 @@ for (let index = 0; index < 100; index++) {
   live.push(index)
 }
 
-
 export default function Home() {
   const history = useHistory()
-  
+
   const [ActiveSlide, setActiveSlide] = useState(0)
   const [Dashboard, setDashboard] = useState({})
   const [MarketCap, setMarketCap] = useState({})
-  
+
   useMemo(() => {
-    callAPI.get('/dashboard')
-    .then(res => {
+    callAPI.get('/dashboard').then((res) => {
       setDashboard(res.data)
     })
-    axios.get('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=kingdom-game-4-0')
-    .then(res => {
-      setMarketCap(res.data[0])
-    })
-  },[])
-  
+
+    axios
+      .get('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=kingdom-game-4-0')
+      .then((res) => {
+        setMarketCap(res.data[0])
+      })
+  }, [])
+
   const timeout = useRef(null)
+
   useEffect(() => {
     timeout.current = setTimeout(() => {
       if (ActiveSlide < slide.length - 1) {
@@ -58,9 +54,6 @@ export default function Home() {
     setActiveSlide(index)
   }, [])
 
- 
-
-  
   return (
     <>
       <div className='home'>
@@ -84,60 +77,103 @@ export default function Home() {
               ></div>
             ))}
           </div>
-        </div>{/* ------------------------ e:slider -----------------------*/}
+        </div>
+        {/* ------------------------ e:slider -----------------------*/}
 
         <div className='container home_container'>
           {/* ------------------------div: split -----------------------*/}
           <div className='split'>
-            <span className='kinglive_vector'></span >
+            <span className='kinglive_vector'></span>
             <h3>For passionate community of streamers, gamers, fans & developers</h3>
 
-            <ul className="home_navigator">
-              <li><span onClick={()=>history.push('/setup')} className='options _transit'>Livestreaming</span><span className="shake"></span></li>
-              <li><span onClick={()=>history.push('/mint-nft')} className='options _transit'>Mint NFT</span><span className="shake"></span></li>
-              <li><span onClick={()=>history.push('/live')} className='options _transit'>Donate</span><span className="shake"></span></li>
-              <li><span onClick={()=>history.push('/nft-market')} className='options _transit'>Buy/Sell/Auction NFT</span><span className="shake"></span></li>
+            <ul className='home_navigator'>
+              <li>
+                <span onClick={() => history.push('/setup')} className='options _transit'>
+                  Livestreaming
+                </span>
+                <span className='shake'></span>
+              </li>
+              <li>
+                <span onClick={() => history.push('/mint-nft')} className='options _transit'>
+                  Mint NFT
+                </span>
+                <span className='shake'></span>
+              </li>
+              <li>
+                <span onClick={() => history.push('/live')} className='options _transit'>
+                  Donate
+                </span>
+                <span className='shake'></span>
+              </li>
+              <li>
+                <span onClick={() => history.push('/nft-market')} className='options _transit'>
+                  Buy/Sell/Auction NFT
+                </span>
+                <span className='shake'></span>
+              </li>
             </ul>
-          </div>{/* --- e:split -----------------------*/}
+          </div>
+          {/* --- e:split -----------------------*/}
 
           {/* ------------------------div: split -----------------------*/}
           <div className='split'>
-            <img className='king_IMG'
-              src={kingIMG}
-              alt="kinglive images"
-            />
-          </div>{/* --- e:split -----------------------*/}
+            <img className='king_IMG' src={kingIMG} alt='kinglive images' />
+          </div>
+          {/* --- e:split -----------------------*/}
 
           {/* ------------------------div: split -----------------------*/}
           <div className='split info_box'>
-            <span>Number of streamers<strong>{formatNumber(Dashboard.total_stream)}</strong></span>
-            <span>Number of videos<strong>{formatNumber(Dashboard.total_video)}</strong></span>
-            <span>Number of hours watched<strong>{formatNumber(Dashboard.watched_time)}</strong></span>
-            <span>Number of views<strong>{formatNumber(Dashboard.total_views)}</strong></span>
-            
-          </div>{/* --- e:split -----------------------*/}
+            <span>
+              Number of streamers<strong>{formatNumber(Dashboard.total_stream)}</strong>
+            </span>
+            <span>
+              Number of videos<strong>{formatNumber(Dashboard.total_video)}</strong>
+            </span>
+            <span>
+              Number of hours watched<strong>{formatNumber(Dashboard.watched_time)}</strong>
+            </span>
+            <span>
+              Number of views<strong>{formatNumber(Dashboard.total_views)}</strong>
+            </span>
+          </div>
+          {/* --- e:split -----------------------*/}
 
           {/* ------------------------div: split -----------------------*/}
           <div className='split info_box'>
-            <span>Minted NFT<strong>{formatNumber(Dashboard.minted_nft)}</strong></span>
-            <span>NFT transaction<strong>{formatNumber(Dashboard.transaction)}</strong></span>
-            <span>NFT Trading volume<strong>{formatNumber(Dashboard.volumn_transaction)}</strong></span>
-            <span>Volume donate<strong>{formatNumber(Dashboard.watched_time)}</strong></span>
-           
-          </div>{/* --- e:split -----------------------*/}
-
-
-        </div>{/* --- e:home_container -----------------------*/}
+            <span>
+              Minted NFT<strong>{formatNumber(Dashboard.minted_nft)}</strong>
+            </span>
+            <span>
+              NFT transaction<strong>{formatNumber(Dashboard.transaction)}</strong>
+            </span>
+            <span>
+              NFT Trading volume<strong>{formatNumber(Dashboard.volumn_transaction)}</strong>
+            </span>
+            <span>
+              Volume donate<strong>{formatNumber(Dashboard.watched_time)}</strong>
+            </span>
+          </div>
+          {/* --- e:split -----------------------*/}
+        </div>
+        {/* --- e:home_container -----------------------*/}
 
         <div className='bottom_line'>
           <div className='container'>
-            <span>Total supply:<strong>{formatNumber(MarketCap.total_supply)} KDG</strong></span>
-            <span>Circulating:<strong>{formatNumber(MarketCap.circulating_supply)} KDG</strong></span>
-            <span>Marketcap:<strong>{formatNumber(MarketCap.market_cap)} KDG</strong></span>
-
-          </div>{/* --- e:bottom_line -----------------------*/} 
-        </div>{/* --- e:bottom_line -----------------------*/}  
-      </div>{/* --- e:home -----------------------*/}
+            <span>
+              Total supply:<strong>{formatNumber(MarketCap.total_supply)} KDG</strong>
+            </span>
+            <span>
+              Circulating:<strong>{formatNumber(MarketCap.circulating_supply)} KDG</strong>
+            </span>
+            <span>
+              Marketcap:<strong>{formatNumber(MarketCap.market_cap)} KDG</strong>
+            </span>
+          </div>
+          {/* --- e:bottom_line -----------------------*/}
+        </div>
+        {/* --- e:bottom_line -----------------------*/}
+      </div>
+      {/* --- e:home -----------------------*/}
     </>
   )
 }

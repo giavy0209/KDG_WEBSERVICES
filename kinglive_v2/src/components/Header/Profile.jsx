@@ -58,7 +58,7 @@ export default function Profile({ IsOpenProfile, toggleHeader }) {
         <div className={`dropdown ${IsOpenProfile ? 'show' : ''}`}>
           <div className='top'>
             <div className='avatar-name'>
-              <Avatar style={{ width: 35 }} />
+              <Avatar style={{ width: 50, marginTop: 5 }} />
               <div className='name'>
                 <div>{userName}</div>
                 <div className='mb-10'>{followers} Followers</div>
