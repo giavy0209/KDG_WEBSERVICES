@@ -30,19 +30,19 @@ export default function User() {
 
   const statisticArray = [
     {
-      amount: userData?.kinglive?.total_follower,
+      amount: userData?.kinglive?.total_follower || 0,
       name: 'Followers',
       color1: '#FA528D',
       color2: '#C954F0',
     },
     {
-      amount: userData?.kinglive?.total_followed,
+      amount: userData?.kinglive?.total_followed || 0,
       name: 'Followings',
       color1: '#F52871',
       color2: '#F52871',
     },
     {
-      amount: userData?.kinglive?.total_stream_views,
+      amount: userData?.kinglive?.total_stream_views || 0,
       name: 'Total Views',
       color1: '#2CE999',
       color2: '#2CE999',

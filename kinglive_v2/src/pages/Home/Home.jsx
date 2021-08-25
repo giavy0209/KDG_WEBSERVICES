@@ -5,6 +5,8 @@ import { useHistory } from 'react-router-dom'
 import banner01 from '../../assets/images/home/b01.jpg'
 import banner02 from '../../assets/images/home/b02.jpg'
 import banner03 from '../../assets/images/home/b03.jpg'
+import arrowLeftBanner from 'assets/svg/arrowLeftBanner.svg'
+import arrowRightBanner from 'assets/svg/arrowRightBanner.svg'
 import kingIMG from '../../assets/images/home/King.gif'
 import '../../assets/scss/home.scss'
 import callAPI from '../../axios'
@@ -54,6 +56,22 @@ export default function Home() {
     setActiveSlide(index)
   }, [])
 
+  const clickArrowLeft = () => {
+    if (ActiveSlide === 0) {
+      manualChangeSlide(slide.length - 1)
+    } else {
+      manualChangeSlide((x) => x - 1)
+    }
+  }
+
+  const clickArrowRight = () => {
+    if (ActiveSlide === slide.length - 1) {
+      manualChangeSlide(0)
+    } else {
+      manualChangeSlide((x) => x + 1)
+    }
+  }
+
   return (
     <>
       <div className='home'>
@@ -76,6 +94,12 @@ export default function Home() {
                 className={`btn ${ActiveSlide === index ? 'active' : ''}`}
               ></div>
             ))}
+          </div>
+          <div className='controlsLeft' onClick={clickArrowLeft}>
+            <img src={arrowLeftBanner} alt='' />
+          </div>
+          <div className='controlsRight' onClick={clickArrowRight}>
+            <img src={arrowRightBanner} alt='' />
           </div>
         </div>
         {/* ------------------------ e:slider -----------------------*/}
@@ -122,7 +146,7 @@ export default function Home() {
           {/* --- e:split -----------------------*/}
 
           {/* ------------------------div: split -----------------------*/}
-          <div className='split info_box'>
+          <div className='split info_box mt-30'>
             <span>
               Number of streamers<strong>{formatNumber(Dashboard.total_stream)}</strong>
             </span>
@@ -139,7 +163,7 @@ export default function Home() {
           {/* --- e:split -----------------------*/}
 
           {/* ------------------------div: split -----------------------*/}
-          <div className='split info_box'>
+          <div className='split info_box mt-30'>
             <span>
               Minted NFT<strong>{formatNumber(Dashboard.minted_nft)}</strong>
             </span>

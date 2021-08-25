@@ -35,6 +35,7 @@ import { useContractERC20 } from 'components/ConnectWalletButton/contract'
 export default function Profile() {
   const dispatch = useDispatch()
   const history = useHistory()
+
   const { account } = useWeb3React()
   const [balance, setBalance] = useState(0)
   const contractERC20 = useContractERC20()
@@ -52,7 +53,6 @@ export default function Profile() {
   const [typeImage, setTypeImage] = useState(1)
   const [imageList, setImageList] = useState([])
 
-  
   useEffect(() => {
     if (!account) return
 
@@ -85,20 +85,20 @@ export default function Profile() {
   }, [userData])
 
   const statisticArray = [
-    // {
-    //   amount: 234,
-    //   name: 'KDG',
-    //   color1: '#01C5FF',
-    //   color2: '#FE02F7',
-    // },
     {
-      amount: userData?.kinglive?.total_video,
+      amount: balance,
+      name: 'KDG',
+      color1: '#01C5FF',
+      color2: '#FE02F7',
+    },
+    {
+      amount: userData?.kinglive?.total_video || 0,
       name: 'Total Videos Owner',
       color1: '#24B7E8',
       color2: '#24B7E8',
     },
     {
-      amount: userData?.kinglive?.total_stream_views,
+      amount: userData?.kinglive?.total_stream_views || 0,
       name: 'Total Views',
       color1: '#2CE999',
       color2: '#2CE999',
@@ -110,19 +110,19 @@ export default function Profile() {
     //   color2: '#FF6A97',
     // },
     {
-      amount: userData?.kinglive?.total_follower,
+      amount: userData?.kinglive?.total_follower || 0,
       name: 'Followers',
       color1: '#FA528D',
       color2: '#C954F0',
     },
     {
-      amount: userData?.kinglive?.total_followed,
+      amount: userData?.kinglive?.total_followed || 0,
       name: 'Followings',
       color1: '#F52871',
       color2: '#F52871',
     },
     {
-      amount: userData?.kinglive?.live_hours,
+      amount: userData?.kinglive?.live_hours || 0,
       name: 'Total Live (hours)',
       color1: '#2CE999',
       color2: '#2CE999',
