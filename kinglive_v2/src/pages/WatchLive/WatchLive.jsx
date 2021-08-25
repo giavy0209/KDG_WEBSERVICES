@@ -154,6 +154,41 @@ export default function WatchLive() {
     handleGetUserAssets()
   }, [])
 
+  const [ShowListGift , setShowListGift] = useState([])
+  const [CurrentShowGift , setCurrentShowGift] = useState(null)
+  const isShowGift = useRef(false);
+
+  useEffect(() => {
+    const handleGiftData = giftData => {
+      console.log(giftData);
+      setShowListGift(_showListGift => [..._showListGift, giftData])
+    }
+    socket.on('gift' , handleGiftData)
+
+    return () => {
+      socket.removeEventListener('gift', handleGiftData)
+    }
+  },[])
+
+  useEffect(() => {
+    console.log(ShowListGift);
+    if (ShowListGift.length === 0 || isShowGift.current) return;
+    isShowGift.current = true;
+    const currentGift = ShowListGift[0];
+    ShowListGift.splice(0, 1);
+    setShowListGift([...ShowListGift]);
+    setCurrentShowGift({
+      ...currentGift,
+      img: currentGift.gift + `?${Date.now()}`,
+    });
+    setTimeout(() => {
+      isShowGift.current = false;
+      setCurrentShowGift(null);
+    }, 5000);
+  }, [ShowListGift, CurrentShowGift]);
+
+
+
   const handleDonate = useCallback(async (e) => {
     e.preventDefault()
     setShowGift(false)
@@ -175,15 +210,28 @@ export default function WatchLive() {
     try {
       if(!account) return
       await contractKL1155.safeTransferFrom(_from, _to, _id, _amount, _data)
-
+      
       await handleGetUserAssets()
+      const streamId = new URLSearchParams(window.location.search).get('s')
+
+      socket.emit('gift', {
+        gift_id : data._id,
+        room : streamId
+      })
+
     } catch (error) {
       console.log(error)
     }
-  },[account,contractKL1155])
+  },[account,contractKL1155,userRedux])
 
   return (
     <>
+      <div className={`popup-show-gift ${CurrentShowGift ? 'show' : ''}`}>
+        <div className="gift">
+          <img src={CurrentShowGift?.img} alt="" />
+          <p>{CurrentShowGift?.name} sent you a gift</p>
+        </div>
+      </div>
       <div className={`popupGift ${showGift ? 'show' : ''}`}>
         <div className='popupGift__mask' onClick={() => setShowGift(false)}></div>
 
@@ -197,6 +245,7 @@ export default function WatchLive() {
                   key={nft._id}
                   className='popupGift__gift flexbox__item'
                 >
+                  <input type="text" defaultValue={nft._id} name="_id" style={{display : 'none'}}/>
                   <img src={nft.asset.metadata.image_thumbnail} alt='gift' />
                   <p>{nft.asset.metadata.name}</p>
                   <div style={{ position: 'relative' }}>
@@ -266,7 +315,10 @@ export default function WatchLive() {
 
       <div className='watchlive'>
         <div className='watchlive__left'>
-          <VideoPlayer streamData={streamData} />
+          <div className='watchlive__videoContainer'>
+            
+            <VideoPlayer streamData={streamData} />
+          </div>
 
           <div className='watchlive__titleVideo'>{streamData.name}</div>
 

@@ -1,10 +1,42 @@
 @import './common.scss';
 
+.popup-show-gift {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: .3s;
+  &.show {
+    opacity: 1;
+  }
+  .gift {
+    width: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50% , -50%);
+    z-index: 99;
+    img{
+      width: 100%;
+    }
+    p {
+      font-size: 30px;
+      font-weight: 600;
+      color: $primary-color;
+      text-align: center;
+    }
+  }
+}
 .watchlive {
   padding: 35px 15px 70px;
 
   display: flex;
   justify-content: space-between;
+
+  
 
   &__left {
     width: calc(70% - 25px);
@@ -16,6 +48,10 @@
 
   &__videoContainer {
     position: relative;
+    &-gift {
+      opacity: 0;
+      position: absolute;
+    }
 
     &::before {
       content: '';
