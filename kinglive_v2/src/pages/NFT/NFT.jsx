@@ -634,7 +634,7 @@ export default function NFT() {
                   <div className='row'>
                     {top9List[ActiveTop9]?.owner?.kyc?.last_name && (
                       <span>
-                        {'Artist : ' +
+                        {'Owner : ' +
                           top9List[ActiveTop9]?.owner?.kyc?.last_name +
                           ' ' +
                           top9List[ActiveTop9]?.owner?.kyc?.first_name}
@@ -642,7 +642,7 @@ export default function NFT() {
                     )}
                     {!top9List[ActiveTop9]?.owner?.kyc?.last_name && (
                       <span>
-                        {'Artist : 0x..' +
+                        {'Owner : 0x..' +
                           top9List[ActiveTop9]?.owner?.address.substring(
                             top9List[ActiveTop9]?.owner?.address.length - 10,
                             top9List[ActiveTop9]?.owner?.address.length
