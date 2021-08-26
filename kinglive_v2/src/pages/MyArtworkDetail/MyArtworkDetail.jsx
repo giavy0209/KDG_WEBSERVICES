@@ -361,7 +361,7 @@ const MyArtworkDetail = () => {
                                     $1000
                                 </span> */}
                                 <span className="txt">
-                                    {userAssetList[currentIndex]?.amount} of {userAssetList[currentIndex]?.asset.total_editions}
+                                    {userAssetList[currentIndex]?.amount}
                                 </span>
                             </p>
                         </div>
