@@ -26,11 +26,13 @@ import Search from './pages/Search'
 import Swap from './pages/Swap'
 import socket from './socket'
 import { actChangeUnreadNoti, asyncGetNoti } from './store/actions'
+import bannermobile from './assets/images/home/bannermobile.png'
 
 function App() {
   const history = useHistory()
   const dispatch = useDispatch()
   const [IsOpenSidebar, setIsOpenSidebar] = useState(false)
+  const [ScreenWidth , setScreenWidth] = useState([0])
   // const { account } = useWeb3React()
 
   useEffect(() => {
@@ -39,6 +41,7 @@ function App() {
         .querySelectorAll('.profile😢__video .menu')
         .forEach((menu) => menu.classList.remove('show'))
     )
+    setScreenWidth(window.innerWidth)
   }, [])
 
   useMemo(() => {
@@ -81,33 +84,56 @@ function App() {
     return () => socket.disconnect()
   }, [dispatch, handleClickNoti, handleType])
 
-  return (
-    <>
-      <ToastContainer />
-      <Header IsOpenSidebar={IsOpenSidebar} toggleSidebar={() => setIsOpenSidebar((x) => !x)} />
-      <Sidebar IsOpenSidebar={IsOpenSidebar} />
-
-      <main className={`${IsOpenSidebar ? 'small' : ''}`}>
-        <Switch>
-          <Route path='/' component={Home} exact />
-          <Route path='/live' component={Live} exact />
-          <Route path='/nft-market' component={NFT} exact />
-          <Route path='/my-artwork' component={MyArtwork} exact />
-          <Route path='/my-artwork-detail' component={MyArtworkDetail} exact />
-          <Route path='/mint-nft' component={MintNFT} exact />
-          <Route path='/nft-detail' component={NFTDetail} exact />
-          <Route path='/upload' component={Upload} exact />
-          <Route path='/setup' component={Setup} exact />
-          <Route path='/profile' component={Profile} exact />
-          <Route path='/user' component={User} exact />
-          <Route path='/watchlive' component={WatchLive} exact />
-          <Route path='/watchvideo' component={WatchVideo} exact />
-          <Route path='/search' component={Search} exact />
-          <Route path='/swap' component={Swap} exact />
-        </Switch>
-      </main>
-    </>
-  )
+  if(ScreenWidth > 1200) {
+    return (
+      <>
+        <ToastContainer />
+        <Header IsOpenSidebar={IsOpenSidebar} toggleSidebar={() => setIsOpenSidebar((x) => !x)} />
+        <Sidebar IsOpenSidebar={IsOpenSidebar} />
+  
+        <main className={`${IsOpenSidebar ? 'small' : ''}`}>
+          <Switch>
+            <Route path='/' component={Home} exact />
+            <Route path='/live' component={Live} exact />
+            <Route path='/nft-market' component={NFT} exact />
+            <Route path='/my-artwork' component={MyArtwork} exact />
+            <Route path='/my-artwork-detail' component={MyArtworkDetail} exact />
+            <Route path='/mint-nft' component={MintNFT} exact />
+            <Route path='/nft-detail' component={NFTDetail} exact />
+            <Route path='/upload' component={Upload} exact />
+            <Route path='/setup' component={Setup} exact />
+            <Route path='/profile' component={Profile} exact />
+            <Route path='/user' component={User} exact />
+            <Route path='/watchlive' component={WatchLive} exact />
+            <Route path='/watchvideo' component={WatchVideo} exact />
+            <Route path='/search' component={Search} exact />
+            <Route path='/swap' component={Swap} exact />
+          </Switch>
+        </main>
+      </>
+    )
+  }else {
+    return (
+      <div style={{
+        position: 'fixed',
+        width: '100vw',
+        height: '100vh',
+        top: 0,
+        left : 0,
+        backgroundColor : 'rgb(8,8,8)'
+      }}>
+        <img src={bannermobile} style={{
+        position: 'absolute',
+        top: '50%',
+        left : '50%',
+        transform: 'translate(-50% , -50%)',
+        width: '100vw',
+        height : '100vh',
+        objectFit : 'contain'
+      }} alt="" />
+      </div>
+    )
+  }
 }
 
 export default App
