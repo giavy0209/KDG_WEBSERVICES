@@ -72,7 +72,7 @@ export default function Live() {
         <div className='container live-container'>
           <div className='left'>
             <div className='title-controls mb-10'>
-              <h2 className='title'>Watch Live</h2>
+              <h2 className='title'>Streaming</h2>
             </div>
 
             {streamList.length === 0 && (

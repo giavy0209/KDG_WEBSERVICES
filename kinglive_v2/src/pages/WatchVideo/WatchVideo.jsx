@@ -1,28 +1,29 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useWeb3React } from '@web3-react/core'
+import Avatar from 'components/Avatar'
+import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import '../../assets/scss/watchlive.scss'
-import avatarDefaultSVG from '../../assets/svg/avatarDefault.svg'
 import emptyGift from '../../assets/svg/emptyGift.svg'
 import callAPI from '../../axios'
 import ButtonFollow from '../../components/ButtonFollow'
 import VideoPlayer from '../../components/VideoPlayer'
-import { STORAGE_DOMAIN } from '../../constant'
 import convertDateAgo from '../../helpers/convertDateAgo'
 
 export default function WatchVideo() {
   const history = useHistory()
+  const { account } = useWeb3React()
   const userRedux = useSelector((state) => state.user)
 
   const [videoData, setVideoData] = useState({})
-  const user = useMemo(() => videoData.user, [videoData])
+  const user = videoData?.user
 
   const [liveList, setLiveList] = useState([])
   const [isFollow, setIsFollow] = useState(false)
-  const [hideLive, setHideLive] = useState(false)
+  const [hideLive] = useState(false)
 
   const id = new URLSearchParams(window.location.search).get('v')
-  if (!id) history.push('/')
+  !id && history.push('/')
 
   useEffect(() => {
     ;(async () => {
@@ -48,7 +49,7 @@ export default function WatchVideo() {
         const res = await callAPI.get('/recommend')
         setLiveList(res.data)
       } catch (error) {
-        console.log('error get live list', error)
+        console.log(error)
       }
     })()
   }, [])
@@ -56,9 +57,9 @@ export default function WatchVideo() {
   const handleFollow = async () => {
     try {
       const res = await callAPI.post(`follow?id=${user?._id}`)
-      if (res.status === 1) setIsFollow((x) => !x)
+      res.status === 1 && setIsFollow((x) => !x)
     } catch (error) {
-      console.log('error follow or unfollow', error)
+      console.log(error)
     }
   }
 
@@ -81,13 +82,10 @@ export default function WatchVideo() {
 
         <div className='watchlive__infoVideo'>
           <div onClick={() => history.push(`/user?uid=${user?._id}`)}>
-            <img
-              src={
-                user?.kyc?.avatar?.path
-                  ? `${STORAGE_DOMAIN}${user.kyc.avatar.path}`
-                  : avatarDefaultSVG
-              }
-              alt=''
+            <Avatar
+              style={{ width: 45 }}
+              image={user?.kyc?.avatar?.path ? user.kyc.avatar.path : null}
+              pos={user?.kyc?.avatar_pos}
             />
           </div>
 
@@ -100,7 +98,7 @@ export default function WatchVideo() {
             <div>{user?.kinglive.total_follower} followers</div>
             <div>{videoData.description}</div>
 
-            {userRedux?._id !== user?._id && (
+            {account && user && userRedux && userRedux._id !== user._id && (
               <div style={{ position: 'absolute', top: 0, right: 0 }}>
                 <ButtonFollow isFollow={isFollow} handleFollow={handleFollow} />
               </div>
@@ -110,9 +108,7 @@ export default function WatchVideo() {
       </div>
 
       <div className='watchlive__right'>
-        <div className='watchlive__buttonToggle' onClick={() => setHideLive((x) => !x)}>
-          Watch
-        </div>
+        <div className='watchlive__buttonToggle'>Watch Video</div>
 
         {!hideLive && (
           <>
@@ -142,7 +138,7 @@ export default function WatchVideo() {
                           : 'Username'}
                       </div>
                       <div>
-                        {live.views} views • {convertDateAgo(live.start_date)}
+                        {live.views} views • {convertDateAgo(live.create_date)}
                       </div>
                     </div>
                   </div>
