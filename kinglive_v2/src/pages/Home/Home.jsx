@@ -2,16 +2,17 @@ import axios from 'axios'
 import formatNumber from 'helpers/formatNumber'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import banner01 from '../../assets/images/home/b01.jpg'
-import banner02 from '../../assets/images/home/b02.jpg'
-import banner03 from '../../assets/images/home/b03.jpg'
+import banner01 from '../../assets/images/home/b01.png'
+import banner02 from '../../assets/images/home/b02.png'
+import banner03 from '../../assets/images/home/b03.png'
+import banner04 from '../../assets/images/home/b04.png'
 import arrowLeftBanner from 'assets/svg/arrowLeftBanner.svg'
 import arrowRightBanner from 'assets/svg/arrowRightBanner.svg'
 import kingIMG from '../../assets/images/home/King.gif'
 import '../../assets/scss/home.scss'
 import callAPI from '../../axios'
 
-const slide = [banner01, banner02, banner03]
+const slide = [banner01, banner02, banner03,banner04]
 
 const live = []
 for (let index = 0; index < 100; index++) {
