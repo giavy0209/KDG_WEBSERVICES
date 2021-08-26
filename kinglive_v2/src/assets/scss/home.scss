@@ -177,7 +177,7 @@ a {
   margin-bottom: 15px;
   width: 100%;
   .slide {
-    width: 300%;
+    width: calc(100% * var(--total-item));
     display: flex;
     transform: translate(var(--translate), 0);
     transition: 0.3s;
@@ -195,7 +195,7 @@ a {
 .slide {
   .item {
     position: relative;
-    width: 33.3333%;
+    width: calc(100% / var(--total-item));;
     overflow: hidden;
     &::before {
       content: '';

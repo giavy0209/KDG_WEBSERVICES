@@ -79,7 +79,7 @@ export default function Home() {
         {/* ------------------------div: slider -----------------------*/}
         <div className='slide-track'>
           <div
-            style={{ '--translate': -(100 / slide.length) * ActiveSlide + '%' }}
+            style={{ '--translate': -(100 / slide.length) * ActiveSlide + '%' , '--total-item' : slide.length}}
             className='slide'
           >
             {slide.map((o) => (
