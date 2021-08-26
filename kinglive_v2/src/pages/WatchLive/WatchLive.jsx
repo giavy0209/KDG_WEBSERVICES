@@ -31,7 +31,7 @@ export default function WatchLive() {
   const [isFollow, setIsFollow] = useState(false)
 
   const [hideChat, setHideChat] = useState(false)
-  const [hideLive, setHideLive] = useState(false)
+  const [hideLive] = useState(false)
 
   const [streamData, setStreamData] = useState({})
   const user = streamData?.user
@@ -408,9 +408,7 @@ export default function WatchLive() {
             </div>
           )}
 
-          <div className='watchlive__buttonToggle' onClick={() => setHideLive((x) => !x)}>
-            Watch Live
-          </div>
+          <div className='watchlive__buttonToggle'>Streaming</div>
 
           {!hideLive && (
             <>

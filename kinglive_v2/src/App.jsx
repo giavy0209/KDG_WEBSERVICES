@@ -1,10 +1,12 @@
 // import { useWeb3React } from '@web3-react/core'
+import useWindowSize from 'hooks/useWindowSize'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Route, Switch } from 'react-router'
 import { useHistory } from 'react-router-dom'
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import bannermobile from './assets/images/home/bannermobile.png'
 import './assets/scss/profile.scss'
 import './assets/scss/styles.scss'
 import Header from './components/Header'
@@ -17,22 +19,21 @@ import MyArtworkDetail from './pages/MyArtworkDetail'
 import NFT from './pages/NFT'
 import NFTDetail from './pages/NFTDetail'
 import Profile from './pages/Profile'
+import Search from './pages/Search'
 import Setup from './pages/Setup'
+import Swap from './pages/Swap'
 import Upload from './pages/Upload'
 import User from './pages/User'
 import WatchLive from './pages/WatchLive'
 import WatchVideo from './pages/WatchVideo'
-import Search from './pages/Search'
-import Swap from './pages/Swap'
 import socket from './socket'
 import { actChangeUnreadNoti, asyncGetNoti } from './store/actions'
-import bannermobile from './assets/images/home/bannermobile.png'
 
 function App() {
   const history = useHistory()
   const dispatch = useDispatch()
   const [IsOpenSidebar, setIsOpenSidebar] = useState(false)
-  const [ScreenWidth , setScreenWidth] = useState([0])
+  const [width] = useWindowSize()
   // const { account } = useWeb3React()
 
   useEffect(() => {
@@ -41,7 +42,6 @@ function App() {
         .querySelectorAll('.profile😢__video .menu')
         .forEach((menu) => menu.classList.remove('show'))
     )
-    setScreenWidth(window.innerWidth)
   }, [])
 
   useMemo(() => {
@@ -84,13 +84,13 @@ function App() {
     return () => socket.disconnect()
   }, [dispatch, handleClickNoti, handleType])
 
-  if(ScreenWidth > 1200) {
+  if (width > 1200) {
     return (
       <>
         <ToastContainer />
         <Header IsOpenSidebar={IsOpenSidebar} toggleSidebar={() => setIsOpenSidebar((x) => !x)} />
         <Sidebar IsOpenSidebar={IsOpenSidebar} />
-  
+
         <main className={`${IsOpenSidebar ? 'small' : ''}`}>
           <Switch>
             <Route path='/' component={Home} exact />
@@ -112,25 +112,31 @@ function App() {
         </main>
       </>
     )
-  }else {
+  } else {
     return (
-      <div style={{
-        position: 'fixed',
-        width: '100vw',
-        height: '100vh',
-        top: 0,
-        left : 0,
-        backgroundColor : 'rgb(8,8,8)'
-      }}>
-        <img src={bannermobile} style={{
-        position: 'absolute',
-        top: '50%',
-        left : '50%',
-        transform: 'translate(-50% , -50%)',
-        width: '100vw',
-        height : '100vh',
-        objectFit : 'contain'
-      }} alt="" />
+      <div
+        style={{
+          position: 'fixed',
+          width: '100vw',
+          height: '100vh',
+          top: 0,
+          left: 0,
+          backgroundColor: 'rgb(8,8,8)',
+        }}
+      >
+        <img
+          src={bannermobile}
+          style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50% , -50%)',
+            width: '100vw',
+            height: '100vh',
+            objectFit: 'contain',
+          }}
+          alt=''
+        />
       </div>
     )
   }
