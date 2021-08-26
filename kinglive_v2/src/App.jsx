@@ -23,6 +23,7 @@ import User from './pages/User'
 import WatchLive from './pages/WatchLive'
 import WatchVideo from './pages/WatchVideo'
 import Search from './pages/Search'
+import Swap from './pages/Swap'
 import socket from './socket'
 import { actChangeUnreadNoti, asyncGetNoti } from './store/actions'
 
@@ -102,6 +103,7 @@ function App() {
           <Route path='/watchlive' component={WatchLive} exact />
           <Route path='/watchvideo' component={WatchVideo} exact />
           <Route path='/search' component={Search} exact />
+          <Route path='/swap' component={Swap} exact />
         </Switch>
       </main>
     </>

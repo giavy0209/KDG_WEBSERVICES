@@ -1,0 +1,53 @@
+.swap {
+    .banner {
+        img {
+            width: 100%;
+        }
+    }
+    .title {
+        font-size: 24px;
+        font-weight: 500;
+        color: #fff;
+        text-align: center;
+        margin-top: 50px;
+    }
+    .des {
+        text-align: center;
+        font-size: 18px;
+        color: #98999A;
+        margin-top: 15px;
+    }
+    .list-swap {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 36px;
+        padding-bottom: 190px;
+        .item {
+            width: calc(33.33333% - 11px);
+            .swap-method {
+                border-radius: 10px;
+                padding-top: 80px;
+                padding-bottom: 47px;
+                background-color: #171A2B;
+                display: flex;
+                align-items: center;
+                justify-content: flex-end;
+                flex-direction: column;
+                height: 100%;
+                img {
+                    width: 60%;
+                }
+                .swap-btn{
+                    margin-top: 36px;
+                    cursor: pointer;
+                    color: #fff;
+                    background: linear-gradient(92.61deg, #FA528D -2.68%, #C954F0 98.14%);
+                    border-radius: 5px;
+                    width: 40%;
+                    text-align: center;
+                    padding: 5px 0;
+                }
+            }
+        }
+    }
+}
