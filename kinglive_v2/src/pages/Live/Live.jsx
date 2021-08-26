@@ -1,10 +1,6 @@
 import Avatar from 'components/Avatar'
 import { useCallback, useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
-// import banner from '../../assets/images/live/banner.png'
-import banner01 from '../../assets/images/home/b01.jpg'
-import banner02 from '../../assets/images/home/b02.jpg'
-import banner03 from '../../assets/images/home/b03.jpg'
 import bannerKinglive from '../../assets/images/live/bannerKinglive.gif'
 import '../../assets/scss/live.scss'
 import rank1 from '../../assets/svg/rank1.svg'
@@ -16,7 +12,6 @@ import callAPI from '../../axios'
 import { STORAGE_DOMAIN } from '../../constant'
 import convertDateAgo from '../../helpers/convertDateAgo'
 
-// const slide = [banner01, banner02, banner03]
 const slide = [bannerKinglive]
 
 const live = []

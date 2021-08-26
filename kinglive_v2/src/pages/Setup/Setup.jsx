@@ -70,7 +70,7 @@ export default function Setup() {
 
   useEffect(() => {
     const handleStream = (data) => {
-      console.log(data);
+      console.log(data)
       setStreamData(data)
     }
     socket.on('stream', handleStream)
