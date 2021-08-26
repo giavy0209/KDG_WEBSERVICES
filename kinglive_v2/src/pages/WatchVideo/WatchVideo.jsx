@@ -47,7 +47,7 @@ export default function WatchVideo() {
     ;(async () => {
       try {
         const res = await callAPI.get('/recommend')
-        setLiveList(res.data)
+        res.status === 1 && setLiveList(res.data)
       } catch (error) {
         console.log(error)
       }
@@ -133,7 +133,7 @@ export default function WatchVideo() {
                     <div>
                       <div>{live.name}</div>
                       <div>
-                        {live.user.kyc.first_name || live.user.kyc.last_name
+                        {live.user?.kyc.first_name || live.user?.kyc.last_name
                           ? `${live.user.kyc.first_name} ${live.user.kyc.last_name}`
                           : 'Username'}
                       </div>
