@@ -94,9 +94,7 @@ const UnlockButton: React.FC<ButtonProps> = (props) => {
         <div className='popupX'>
           <div className='containerX' style={{ padding: '15px 0' }}>
             <img className='closeX' src={closeSVG} alt='' onClick={() => setShowPopup(false)} />
-            <div className='titleX' style={{ textAlign: 'center', fontSize: 24 }}>
-              Your wallet
-            </div>
+            <div className='titleX1'>Your wallet</div>
             <div className='descriptionX'>
               <span
                 className='addressCopy'

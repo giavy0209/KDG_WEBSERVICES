@@ -223,6 +223,7 @@ main {
 
       padding-left: 37px;
     }
+
     > table {
       cursor: pointer;
       user-select: none;
@@ -325,7 +326,7 @@ main {
     display: flex;
     flex-flow: column nowrap;
 
-    background-color: #171a2b;
+    background: #171a2b url(../images/nft-market/popup_background.jpg) top right no-repeat;
 
     border-radius: 5px;
   }
@@ -346,6 +347,17 @@ main {
     font-size: 18px;
     line-height: 1;
 
+    margin-bottom: 20px;
+  }
+
+  .titleX1 {
+    color: $text-color-light;
+    font-size: 24px;
+    line-height: 1;
+    text-align: center;
+    border-bottom: 1px solid #353849;
+
+    padding-bottom: 19px;
     margin-bottom: 20px;
   }
 
@@ -411,10 +423,6 @@ main {
   &__gift {
     text-align: center;
 
-    // &:hover > img {
-    //   transform: scale(1.2);
-    // }
-
     > img {
       transition: 0.3s;
       width: 100%;
@@ -446,7 +454,6 @@ main {
 
 .tableX {
   width: 100%;
-  // border-collapse: collapse;
 
   thead {
     th {
@@ -486,5 +493,20 @@ main {
 
   &:hover {
     text-decoration: underline;
+  }
+}
+
+.titleY {
+  color: #fff;
+  font-size: 24px;
+  font-weight: 500;
+
+  margin-bottom: 25px;
+
+  display: flex;
+  align-items: center;
+
+  > span:nth-child(1) {
+    margin-right: 8px;
   }
 }

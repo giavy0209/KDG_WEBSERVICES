@@ -154,19 +154,19 @@ export default function Sidebar({ IsOpenSidebar }) {
               target='_blank'
               rel='noreferrer'
               href='https://medium.com/kingdom-game-4-0'
-              class='_transit link medium'
+              className='_transit link medium'
             ></a>
             <a
               target='_blank'
               rel='noreferrer'
               href='https://t.me/kdg_en'
-              class='_transit link telegram'
+              className='_transit link telegram'
             ></a>
             <a
               target='_blank'
               rel='noreferrer'
               href='https://twitter.com/KingdomGame_KDG'
-              class='_transit link twitter'
+              className='_transit link twitter'
             ></a>
           </div>
         </div>
