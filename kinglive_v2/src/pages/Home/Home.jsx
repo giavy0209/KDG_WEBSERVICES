@@ -12,7 +12,7 @@ import kingIMG from '../../assets/images/home/King.gif'
 import '../../assets/scss/home.scss'
 import callAPI from '../../axios'
 
-const slide = [banner01, banner02, banner03,banner04]
+const slide = [banner01, banner02, banner03, banner04]
 
 const live = []
 for (let index = 0; index < 100; index++) {
@@ -79,7 +79,10 @@ export default function Home() {
         {/* ------------------------div: slider -----------------------*/}
         <div className='slide-track'>
           <div
-            style={{ '--translate': -(100 / slide.length) * ActiveSlide + '%' , '--total-item' : slide.length}}
+            style={{
+              '--translate': -(100 / slide.length) * ActiveSlide + '%',
+              '--total-item': slide.length,
+            }}
             className='slide'
           >
             {slide.map((o) => (
@@ -191,7 +194,7 @@ export default function Home() {
               Circulating:<strong>{formatNumber(MarketCap.circulating_supply)} KDG</strong>
             </span>
             <span>
-              Marketcap:<strong>{formatNumber(MarketCap.market_cap)} KDG</strong>
+              Marketcap:<strong>{formatNumber(MarketCap.market_cap)} $</strong>
             </span>
           </div>
           {/* --- e:bottom_line -----------------------*/}
