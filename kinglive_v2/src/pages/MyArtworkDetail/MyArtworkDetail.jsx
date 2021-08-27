@@ -348,7 +348,7 @@ const MyArtworkDetail = () => {
                     <div className="artist-content">
                         <div className="artist-content-top">
                             <p className="text-artist">
-                                Artists
+                            NFT details
                             </p>
                             <h2 className="title-artist">
                                 {userAssetList[currentIndex]?.asset?.metadata?.name}
@@ -368,7 +368,7 @@ const MyArtworkDetail = () => {
                         <div className="artist-content-body">
                             <div className="desciption-artist">
                                 <p className="desc">
-                                    Artist: <span className="color-fff"> {userAssetList[currentIndex]?.user?.kyc?.last_name ? userAssetList[currentIndex]?.user?.kyc?.last_name + ' ' + userAssetList[currentIndex]?.user?.kyc?.first_name : userAssetList[currentIndex]?.user?.address} </span>
+                                    Owner: <span className="color-fff"> {userAssetList[currentIndex]?.user?.kyc?.last_name ? userAssetList[currentIndex]?.user?.kyc?.last_name + ' ' + userAssetList[currentIndex]?.user?.kyc?.first_name : userAssetList[currentIndex]?.user?.address} </span>
                                 </p>
                                 {/* <p className="desc">
                                     Size: <span className="color-fff"> 366x435px </span>
