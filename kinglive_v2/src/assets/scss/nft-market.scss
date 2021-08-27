@@ -556,11 +556,13 @@ input[type='number'] {
           .img {
             @include img(0.8421);
             border-radius: 10px;
+            cursor: initial;
           }
 
           .video {
             @include img(0.8421);
             border-radius: 10px;
+            cursor: initial;
             video {
               opacity: 0;
             }
