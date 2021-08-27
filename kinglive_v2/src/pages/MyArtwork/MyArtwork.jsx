@@ -1,10 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { useHistory } from "react-router-dom";
-import '../../assets/scss/my-artwork.scss'
+import { useHistory } from 'react-router-dom'
 import callAPI from '../../axios'
 import { STORAGE_DOMAIN } from '../../constant'
-
 import convertPositionIMG from '../../helpers/convertPositionIMG'
 
 export default function MyArtwork() {
@@ -32,58 +30,61 @@ export default function MyArtwork() {
   const handleChangeStatus = async (status) => {
     setStatus(status)
     AssetList.length = 0
-    await getAssets(status,mimetype)
+    await getAssets(status, mimetype)
   }
 
-  const handleChangeMimeType = async (mimetype) => {
-    setMimetype(mimetype)
-    AssetList.length = 0
-    await getAssets(status,mimetype)
-  }
-
+  // const handleChangeMimeType = async (mimetype) => {
+  //   setMimetype(mimetype)
+  //   AssetList.length = 0
+  //   await getAssets(status, mimetype)
+  // }
 
   const getAssets = useCallback(
-    async (status,mimetype) => {
-      if(status === 3 )
-      {
+    async (status, mimetype) => {
+      if (status === 3) {
         const ids = AssetList.map((o) => o._id)
         const res = await callAPI.get(
-          `/buys/bidding?limit=20&${ids.length ? `ids=${ids}` : ''}&${mimetype.length ? `mimetype=${mimetype}` : ''}`,
-          true) 
+          `/buys/bidding?limit=20&${ids.length ? `ids=${ids}` : ''}&${
+            mimetype.length ? `mimetype=${mimetype}` : ''
+          }`,
+          true
+        )
         if (res?.data?.length === 0) {
           isLoadMore.current = false
           setAssetList([...AssetList])
           return
         } else {
-          const bidings = res?.data.map(bid =>{
+          const bidings = res?.data.map((bid) => {
             return {
               _id: bid._id,
-              user :bid.from,
+              user: bid.from,
               asset: bid.asset,
               listId: bid.list_id?._id,
-              amount:bid.quantity
+              amount: bid.quantity,
             }
           })
           setAssetList([...AssetList, ...bidings])
         }
-      } else if(status === 4)
-      {
+      } else if (status === 4) {
         const ids = AssetList.map((o) => o._id)
         const res = await callAPI.get(
-          `/listing-assets?limit=20&${ids.length ? `ids=${ids}` : ''}&${mimetype.length ? `mimetype=${mimetype}` : ''}`,
-          true) 
+          `/listing-assets?limit=20&${ids.length ? `ids=${ids}` : ''}&${
+            mimetype.length ? `mimetype=${mimetype}` : ''
+          }`,
+          true
+        )
         if (res?.data?.length === 0) {
           isLoadMore.current = false
           setAssetList([...AssetList])
           return
         } else {
-          const listing = res?.data.map(list =>{
+          const listing = res?.data.map((list) => {
             return {
               _id: list._id,
-              user :list.owner,
+              user: list.owner,
               asset: list.asset,
               listId: list._id,
-              amout:list.quantity
+              amout: list.quantity,
             }
           })
           setAssetList([...AssetList, ...listing])
@@ -91,22 +92,21 @@ export default function MyArtwork() {
       } else {
         const ids = AssetList.map((o) => o._id)
         const res = await callAPI.get(
-          `/user-asset?limit=20&${ids.length ? `ids=${ids}` : ''}&status=${status}&${mimetype.length ? `mimetype=${mimetype}` : ''}`,
-          true) 
+          `/user-asset?limit=20&${ids.length ? `ids=${ids}` : ''}&status=${status}&${
+            mimetype.length ? `mimetype=${mimetype}` : ''
+          }`,
+          true
+        )
         if (res?.data?.length === 0) {
           isLoadMore.current = false
           setAssetList([...AssetList])
           return
         }
         setAssetList([...AssetList, ...(res?.data ? res.data : [])])
-
       }
-      
     },
     [AssetList]
   )
-
-  
 
   useEffect(() => {
     const handleLoad = async () => {
@@ -117,7 +117,7 @@ export default function MyArtwork() {
 
       if (isEnd && isLoadMore.current && !isLoadingAPI.current) {
         isLoadingAPI.current = true
-        await getAssets(status,mimetype)
+        await getAssets(status, mimetype)
         isLoadingAPI.current = false
       }
     }
@@ -127,7 +127,7 @@ export default function MyArtwork() {
     return () => {
       window.removeEventListener('scroll', handleLoad)
     }
-  }, [getAssets,status,mimetype])
+  }, [getAssets, status, mimetype])
 
   useEffect(() => {
     ;(async () => {
@@ -143,20 +143,14 @@ export default function MyArtwork() {
       try {
         setStatus(1)
         setMimetype('')
-        const res = await callAPI.get(
-          `/user-asset?limit=20&status=1`,
-          true) 
-        setAssetList(res.data)  
+        const res = await callAPI.get(`/user-asset?limit=20&status=1`, true)
+        setAssetList(res.data)
       } catch (error) {}
     })()
   }, [address])
 
-
-
-  
-
   const handleShowDetail = async (index) => {
-    if(status === 3 || status === 4 ){
+    if (status === 3 || status === 4) {
       const ids = AssetList.map((o) => o?.listId)
       history.push(`/nft-detail?ids=${ids}&index=${index}`)
     } else {
@@ -165,48 +159,48 @@ export default function MyArtwork() {
     }
   }
 
-
   const handleMouseOverNFT = useCallback((e) => {
     let target = e.target
     while (true) {
       const targetClassList = Array.from(target.classList)
-      if(targetClassList.includes('myartwork__list-item')) {
+      if (targetClassList.includes('myartwork__list-item')) {
         break
       }
       target = target.parentElement
     }
     target.classList.add('active-video')
     const video = target.querySelector('video')
-    if(video) {
-      var isPlaying = video.currentTime > 0 && !video.paused && !video.ended 
-      && video.readyState > video.HAVE_CURRENT_DATA;
-      if(!isPlaying){
+    if (video) {
+      var isPlaying =
+        video.currentTime > 0 &&
+        !video.paused &&
+        !video.ended &&
+        video.readyState > video.HAVE_CURRENT_DATA
+      if (!isPlaying) {
         video.play()
       }
     }
-  },[])
+  }, [])
 
   const handleMouseOutNFT = useCallback((e) => {
     let target = e.target
     while (true) {
       const targetClassList = Array.from(target.classList)
-      if(targetClassList.includes('myartwork__list-item')) {
+      if (targetClassList.includes('myartwork__list-item')) {
         break
       }
       target = target.parentElement
     }
     target.classList.remove('active-video')
     const video = target.querySelector('video')
-    if(video) {
+    if (video) {
       video.pause()
-      video.currentTime=0
-  }
-  },[])
+      video.currentTime = 0
+    }
+  }, [])
 
   return (
     <>
-
-              
       <div className='myartwork profile😢 container'>
         <div style={{ position: 'relative', marginBottom: 60 }}>
           {previewIMG && (
@@ -282,7 +276,7 @@ export default function MyArtwork() {
               On Sale <span>On Sale</span>{' '}
             </div>
           </div>
-          
+
           {/* <div className="myartwork__filterBlock">
                 
                 <div className="select">
@@ -312,30 +306,36 @@ export default function MyArtwork() {
    
                 <span>Short by</span>
               </div> */}
-             
+
           {AssetList?.length > 0 && (
             <div className='myartwork__list'>
-                
-              {AssetList.map((al,index) => (
-                <div 
-                onMouseOver={handleMouseOverNFT}
-                onMouseOut={handleMouseOutNFT}
-                key={'artwork' + al._id} className='myartwork__list-item'>
+              {AssetList.map((al, index) => (
+                <div
+                  onMouseOver={handleMouseOverNFT}
+                  onMouseOut={handleMouseOutNFT}
+                  key={'artwork' + al._id}
+                  className='myartwork__list-item'
+                >
                   <div className='artwork' onClick={() => handleShowDetail(index)}>
-                      {al.asset?.metadata?.mimetype.startsWith('image') && (
-                         <div className='img'>
-                            <img key={'image' + al._id} src={al.asset?.metadata?.image} alt='' />
-                         </div>
-
-                      )}
-                      {al.asset?.metadata?.mimetype.startsWith('video/mp4') && (
-                        <>
-                          <div className='video'>
-                            <img key={'image' + al._id} src={al.asset?.metadata?.image} alt='' />
-                            <video muted autoPlay key={'video' + al._id} src={al.asset?.metadata?.animation_url} alt='' />
-                         </div>
-                        </>
-                        )}
+                    {al.asset?.metadata?.mimetype.startsWith('image') && (
+                      <div className='img'>
+                        <img key={'image' + al._id} src={al.asset?.metadata?.image} alt='' />
+                      </div>
+                    )}
+                    {al.asset?.metadata?.mimetype.startsWith('video/mp4') && (
+                      <>
+                        <div className='video'>
+                          <img key={'image' + al._id} src={al.asset?.metadata?.image} alt='' />
+                          <video
+                            muted
+                            autoPlay
+                            key={'video' + al._id}
+                            src={al.asset?.metadata?.animation_url}
+                            alt=''
+                          />
+                        </div>
+                      </>
+                    )}
                     <div key={'type' + al._id} className='type'>
                       {al.asset?.metadata?.mimetype}
                     </div>
@@ -365,7 +365,6 @@ export default function MyArtwork() {
                       <span>{new Date(al.asset?.time).toDateString()}</span>
                     </div>
                   </div>
-
                 </div>
               ))}
             </div>

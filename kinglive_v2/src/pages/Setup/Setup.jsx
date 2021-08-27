@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import ReactHlsPlayer from 'react-hls-player'
 import { useHistory } from 'react-router-dom'
-import '../../assets/scss/upload.scss'
 import checkSVG from '../../assets/svg/check.svg'
 import closeSVG from '../../assets/svg/close.svg'
 import copySVG from '../../assets/svg/copy.svg'

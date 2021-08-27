@@ -1,16 +1,13 @@
+import { useWeb3React } from '@web3-react/core'
+import { Decimal } from 'decimal.js'
 import { useEffect, useRef, useState } from 'react'
-
-import '../../assets/scss/mint-nft.scss'
 import checkSVG from '../../assets/svg/check.svg'
 import closeSVG from '../../assets/svg/close.svg'
 import errorSVG from '../../assets/svg/error.svg'
 import uploadSVG from '../../assets/svg/upload.svg'
 import callAPI from '../../axios'
-import {  addressKL1155 } from '../../contracts/KL1155'
-import { useContractKL1155, useContractERC20 } from '../../components/ConnectWalletButton/contract'
-import { useWeb3React } from '@web3-react/core'
-import {Decimal} from 'decimal.js'
-
+import { useContractERC20, useContractKL1155 } from '../../components/ConnectWalletButton/contract'
+import { addressKL1155 } from '../../contracts/KL1155'
 
 export default function MintNFT() {
   const inputVideoRef = useRef()
@@ -31,14 +28,14 @@ export default function MintNFT() {
 
   useEffect(() => {
     async function getAllowance() {
-      if(!account) return
-        const allowance = await contractERC20?.allowance(account, addressKL1155)
-        if (new Decimal(allowance.toString()).gt(20000000000000000000)) {
-          setIsApproval(true)
-        }
+      if (!account) return
+      const allowance = await contractERC20?.allowance(account, addressKL1155)
+      if (new Decimal(allowance.toString()).gt(20000000000000000000)) {
+        setIsApproval(true)
+      }
     }
     getAllowance()
-  },[account,contractERC20])
+  }, [account, contractERC20])
 
   const handlePreviewVideo = async (e) => {
     const files = e.target.files || []
@@ -64,14 +61,17 @@ export default function MintNFT() {
   }
 
   const handleApproval = async () => {
-    if(!account) setIsApproval(false)
+    if (!account) setIsApproval(false)
 
-    const approval = await contractERC20.approve(addressKL1155, '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff')
-      if (approval) {
-        setIsApproval(true)
-      }else {
-        setIsApproval(false)
-      }
+    const approval = await contractERC20.approve(
+      addressKL1155,
+      '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
+    )
+    if (approval) {
+      setIsApproval(true)
+    } else {
+      setIsApproval(false)
+    }
   }
 
   const handleClearInput = () => {
@@ -109,15 +109,15 @@ export default function MintNFT() {
         },
       })
 
-      if(!account) return
+      if (!account) return
 
       if (res?.data?.hashes[0]) {
         const transaction = await contractKL1155.create(
-            e.target.numEditions.value,
-            e.target.numEditions.value,
-            2500,
-            res?.data?.hashes[0],
-            '0x00'
+          e.target.numEditions.value,
+          e.target.numEditions.value,
+          2500,
+          res?.data?.hashes[0],
+          '0x00'
         )
         if (transaction) {
           // console.log('upload thanh cong')
@@ -308,13 +308,13 @@ export default function MintNFT() {
               placeholder='Enter description for video'
             ></textarea>
 
-            <input 
-              type="checkbox"
-              className="upload__checkbox"
-            />
-            <label>I declare that this is an original artwork.
-I understand that no plagiarism is allowed, and that the artwork can be removed anytime if detected.<br />
-            <span>*** Note: </span>Mint an NFT charges 5 KDG, please do not upload my sensitive content
+            <input type='checkbox' className='upload__checkbox' />
+            <label>
+              I declare that this is an original artwork. I understand that no plagiarism is
+              allowed, and that the artwork can be removed anytime if detected.
+              <br />
+              <span>*** Note: </span>Mint an NFT charges 5 KDG, please do not upload my sensitive
+              content
             </label>
           </div>
         </div>
@@ -327,11 +327,14 @@ I understand that no plagiarism is allowed, and that the artwork can be removed 
               </button>
             )}
             {!isApproval && (
-              <button className='upload__button mr-15' onClick={() =>handleApproval()}>
+              <button className='upload__button mr-15' onClick={() => handleApproval()}>
                 Approve
               </button>
             )}
-            <div className='upload__button upload__button--cancel' onClick={()=>handleClearInput()}>
+            <div
+              className='upload__button upload__button--cancel'
+              onClick={() => handleClearInput()}
+            >
               Cancel
             </div>
           </div>

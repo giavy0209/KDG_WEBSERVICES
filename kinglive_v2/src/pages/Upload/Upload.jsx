@@ -1,10 +1,9 @@
 import { useRef, useState } from 'react'
-import '../../assets/scss/upload.scss'
-import plusSVG from '../../assets/svg/plus.svg'
-import uploadSVG from '../../assets/svg/upload.svg'
 import checkSVG from '../../assets/svg/check.svg'
 import closeSVG from '../../assets/svg/close.svg'
 import errorSVG from '../../assets/svg/error.svg'
+import plusSVG from '../../assets/svg/plus.svg'
+import uploadSVG from '../../assets/svg/upload.svg'
 import callAPI from '../../axios'
 
 export default function Upload() {

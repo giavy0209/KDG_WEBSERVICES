@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import ReactHlsPlayer from 'react-hls-player/dist'
 import { useHistory } from 'react-router-dom'
-import '../../assets/scss/profile.scss'
 import avatarDefault from '../../assets/svg/avatarDefault.svg'
 import coverDefault from '../../assets/svg/coverDefault.jpg'
 import emptyGift from '../../assets/svg/emptyGift.svg'
